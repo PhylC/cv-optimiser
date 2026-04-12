@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CV Optimiser Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1080px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    h1, h2, h3 {
+      margin-bottom: 10px;
+    }
+    p {
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      margin: 10px 0 20px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: white;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: white;
+      box-sizing: border-box;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .secondary-btn {
+      background: #334155;
+    }
+    .secondary-btn:hover {
+      background: #475569;
+    }
+    .card {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 1px solid #334155;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .hidden {
+      display: none;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    li {
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .small {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    .dropzone {
+      margin: 12px 0 20px;
+      padding: 24px;
+      border: 2px dashed #475569;
+      border-radius: 12px;
+      background: #111827;
+      text-align: center;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .dropzone.dragover {
+      border-color: #60a5fa;
+      background: #172033;
+    }
+    .dropzone input {
+      display: none;
+    }
+    .file-note {
+      margin-top: 10px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+    .linkish {
+      color: #93c5fd;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .pill {
+      display: inline-block;
+      margin-top: 8px;
+      margin-right: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #0b1220;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+    }
+    .section-title {
+      margin-top: 26px;
+      margin-bottom: 10px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .history-item {
+      border-top: 1px solid #334155;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+    .price-box {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    .muted {
+      color: #94a3b8;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <h1>CV Optimiser Pro</h1>
+      <p>AI-powered CV tailoring with upload support, saved history, and a paid Pro tier.</p>
+    </div>
+    <div>
+      <span id="planBadge" class="pill">Plan: signed out</span>
+      <span id="usageBadge" class="pill hidden"></span>
+    </div>
+  </div>
+
+  <div id="authCard" class="card">
+    <h2>Sign in to use the tool</h2>
+    <p>Use an email magic link so your results, usage, and Pro access stay attached to your account.</p>
+    <input id="emailInput" type="email" placeholder="you@example.com">
+    <div style="margin-top:12px;">
+      <button id="sendMagicLinkBtn">Send magic link</button>
+      <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
+    </div>
+    <p id="authStatus" class="small">Not signed in.</p>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <label for="jobDescription">Job description</label>
+        <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
+
+        <label for="cvText">Your CV text (optional if uploading a file)</label>
+        <textarea id="cvText" placeholder="Paste your CV here, or leave blank if uploading a file..."></textarea>
+
+        <div id="dropzone" class="dropzone">
+          <p><strong>Drag and drop your CV here</strong></p>
+          <p class="small">Supports PDF, DOCX, and TXT</p>
+          <p><label for="cvFileInput" class="linkish">Or click to choose a file</label></p>
+          <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+          <div id="fileName" class="file-note">No file selected</div>
+        </div>
+
+        <div>
+          <button id="optimiseBtn">Optimise My CV</button>
+          <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
+          <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
+        </div>
+
+        <p id="status" class="small">Ready.</p>
+      </div>
+
+      <div id="results" class="card hidden">
+        <h2>Match score: <span id="score"></span>%</h2>
+        <div class="pill">Source: <span id="source"></span></div>
+
+        <h3 class="section-title">Matched keywords</h3>
+        <ul id="matchedKeywords"></ul>
+
+        <h3 class="section-title">Missing keywords</h3>
+        <ul id="keywords"></ul>
+
+        <h3 class="section-title">Strong points</h3>
+        <ul id="strongPoints"></ul>
+
+        <h3 class="section-title">Weak points</h3>
+        <ul id="weakPoints"></ul>
+
+        <h3 class="section-title">Rewritten CV bullets</h3>
+        <ul id="bullets"></ul>
+
+        <h3 class="section-title">Next step</h3>
+        <p id="nextStep"></p>
+
+        <p class="small">Tip: copy these bullets into your CV and edit them to keep them fully truthful and specific to your real experience.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Your plan</h3>
+        <div class="price-box">
+          <p><strong>Free</strong></p>
+          <p class="muted">3 analyses per day.</p>
+        </div>
+        <div class="price-box">
+          <p><strong>Pro</strong></p>
+          <p class="muted">Unlimited analyses, saved history, and future premium features.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Recent history</h3>
+        <div id="historyList" class="small">Sign in to view saved analyses.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
+
+    let sbClient = null;
+    if (window.supabase && !SUPABASE_URL.startsWith("PASTE_")) {
+      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    let accessToken = null;
+    let selectedFile = null;
+    let authRefreshInProgress = false;
+
+    const btn = document.getElementById("optimiseBtn");
+    const clearFileBtn = document.getElementById("clearFileBtn");
+    const upgradeBtn = document.getElementById("upgradeBtn");
+    const status = document.getElementById("status");
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("cvFileInput");
+    const fileName = document.getElementById("fileName");
+    const sendMagicLinkBtn = document.getElementById("sendMagicLinkBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+    const emailInput = document.getElementById("emailInput");
+    const authStatus = document.getElementById("authStatus");
+    const planBadge = document.getElementById("planBadge");
+    const usageBadge = document.getElementById("usageBadge");
+    const historyList = document.getElementById("historyList");
+
+    function resetSelectedFile() {
+      selectedFile = null;
+      fileInput.value = "";
+      fileName.textContent = "No file selected";
+    }
+
+    function setSelectedFile(file) {
+      const lowerName = file.name.toLowerCase();
+
+      if (lowerName.endsWith(".doc")) {
+        resetSelectedFile();
+        status.textContent = ".doc files are not supported yet. Please save your file as .docx or PDF and try again.";
+        return;
+      }
+
+      selectedFile = file;
+      fileName.textContent = "Selected file: " + file.name;
+      status.textContent = "Ready.";
+    }
+
+    function setPlanUi(plan) {
+      if (!plan) {
+        planBadge.textContent = "Plan: signed out";
+        usageBadge.classList.add("hidden");
+        return;
+      }
+
+      planBadge.textContent = "Plan: " + plan.plan;
+      usageBadge.classList.remove("hidden");
+
+      if (plan.is_pro) {
+        usageBadge.textContent = "Unlimited analyses";
+      } else {
+        usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
+      }
+    }
+
+    function renderHistory(items) {
+      if (!items || !items.length) {
+        historyList.textContent = "No saved analyses yet.";
+        return;
+      }
+
+      historyList.innerHTML = "";
+      items.forEach(function(item) {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        const when = new Date(item.created_at).toLocaleString();
+        div.innerHTML = "<strong>" + (item.job_title || "Untitled role") + "</strong><br><span class='muted'>Score: " + (item.score ?? "") + " | " + when + "</span>";
+        historyList.appendChild(div);
+      });
+    }
+
+    async function getSessionToken() {
+      if (!sbClient) return null;
+      const result = await sbClient.auth.getSession();
+      accessToken = result && result.data && result.data.session ? result.data.session.access_token : null;
+      return accessToken;
+    }
+
+    async function refreshAuthUi() {
+      if (authRefreshInProgress) return;
+      authRefreshInProgress = true;
+
+      try {
+        if (!sbClient) {
+          authStatus.textContent = "Add your Supabase URL and anon key in static/index.html to enable login.";
+          return;
+        }
+
+        const result = await sbClient.auth.getSession();
+        const session = result && result.data ? result.data.session : null;
+        accessToken = session ? session.access_token : null;
+
+        if (!session) {
+          authStatus.textContent = "Not signed in.";
+          sendMagicLinkBtn.classList.remove("hidden");
+          signOutBtn.classList.add("hidden");
+          setPlanUi(null);
+          renderHistory([]);
+          return;
+        }
+
+        authStatus.textContent = "Signed in as " + session.user.email;
+        sendMagicLinkBtn.classList.add("hidden");
+        signOutBtn.classList.remove("hidden");
+
+        const meRes = await fetch("/api/me", {
+          headers: { Authorization: "Bearer " + accessToken }
+        });
+        const me = await meRes.json();
+
+        if (me.error) {
+          authStatus.textContent = "Signed in, but backend error: " + me.error;
+          return;
+        }
+
+        setPlanUi(me.plan);
+
+        const historyRes = await fetch("/api/history", {
+          headers: { Authorization: "Bearer " + accessToken }
+        });
+        const historyData = await historyRes.json();
+
+        if (historyData.error) {
+          historyList.textContent = "History error: " + historyData.error;
+          return;
+        }
+
+        renderHistory(historyData.items || []);
+      } catch (err) {
+        console.error("refreshAuthUi error:", err);
+        authStatus.textContent = "Auth refresh failed. Check browser console.";
+      } finally {
+        authRefreshInProgress = false;
+      }
+    }
+
+    sendMagicLinkBtn.addEventListener("click", async function() {
+      if (!sbClient) {
+        authStatus.textContent = "Supabase not configured in the HTML yet.";
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      if (!email) {
+        authStatus.textContent = "Enter your email first.";
+        return;
+      }
+
+      const result = await sbClient.auth.signInWithOtp({
+        email: email,
+        options: { emailRedirectTo: window.location.origin }
+      });
+
+      authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
+    });
+
+    signOutBtn.addEventListener("click", async function() {
+      if (!sbClient) return;
+      await sbClient.auth.signOut();
+      location.reload();
+    });
+
+    clearFileBtn.addEventListener("click", function() {
+      resetSelectedFile();
+      status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
+    });
+
+    upgradeBtn.addEventListener("click", async function() {
+      const token = await getSessionToken();
+      if (!token) {
+        status.textContent = "Sign in first before upgrading.";
+        return;
+      }
+
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token }
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        status.textContent = data.detail || data.error || "Could not start checkout.";
+      }
+    });
+
+    dropzone.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", function() {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", function(e) {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      if (file) setSelectedFile(file);
+    });
+
+    fileInput.addEventListener("change", function() {
+      const file = fileInput.files[0];
+      if (file) setSelectedFile(file);
+    });
+
+    btn.addEventListener("click", async function() {
+      console.log("optimise clicked");
+
+      const token = await getSessionToken();
+      if (!token) {
+        status.textContent = "Sign in first to use the tool.";
+        return;
+      }
+
+      const jobDescription = document.getElementById("jobDescription").value.trim();
+      const cvText = document.getElementById("cvText").value.trim();
+
+      if (!jobDescription) {
+        status.textContent = "Paste the job description first.";
+        return;
+      }
+
+      if (!cvText && !selectedFile) {
+        status.textContent = "Paste your CV text or upload a CV file.";
+        return;
+      }
+
+      status.textContent = "Analysing...";
+      btn.disabled = true;
+
+      try {
+        const formData = new FormData();
+        formData.append("jobDescription", jobDescription || "");
+        formData.append("cvText", cvText || "");
+
+        if (selectedFile) {
+          formData.append("cvFile", selectedFile, selectedFile.name);
+        }
+
+        const res = await fetch("/api/optimise", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + token },
+          body: formData
+        });
+
+        const raw = await res.text();
+        console.log("RAW RESPONSE:", raw);
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          status.textContent = "Server returned invalid response. Check terminal and browser console.";
+          btn.disabled = false;
+          return;
+        }
+
+        if (data.code === "PAYWALL") {
+          status.textContent = data.error;
+          setPlanUi(data.plan);
+          btn.disabled = false;
+          return;
+        }
+
+        if (data.error) {
+          status.textContent = data.error;
+          btn.disabled = false;
+          return;
+        }
+
+        document.getElementById("score").textContent = data.score ?? "";
+        document.getElementById("nextStep").textContent = data.nextStep || "";
+        document.getElementById("source").textContent = data.source || "unknown";
+
+        const sections = [
+          ["matchedKeywords", data.matchedKeywords || []],
+          ["keywords", data.missingKeywords || []],
+          ["strongPoints", data.strongPoints || []],
+          ["weakPoints", data.weakPoints || []],
+          ["bullets", data.bulletPoints || []]
+        ];
+
+        sections.forEach(function(pair) {
+          const id = pair[0];
+          const items = pair[1];
+          const el = document.getElementById(id);
+          el.innerHTML = "";
+          items.forEach(function(item) {
+            const li = document.createElement("li");
+            li.textContent = item;
+            el.appendChild(li);
+          });
+        });
+
+        document.getElementById("results").classList.remove("hidden");
+        status.textContent = "Done.";
+
+        if (data.plan) {
+          setPlanUi(data.plan);
+        }
+
+        await refreshAuthUi();
+      } catch (err) {
+        console.error(err);
+        status.textContent = "Something went wrong. Check terminal or browser console for details.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    if (sbClient) {
+      sbClient.auth.onAuthStateChange(function() {
+        refreshAuthUi();
+      });
+    }
+
+    window.addEventListener("load", function() {
+      refreshAuthUi();
+    });
+  </script>
+</body>
+</html>
