@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pypdf import PdfReader
-from stripe import StripeClient
+import stripe
 from supabase import Client, create_client
 
 app = FastAPI(title="CV Optimiser V2")
@@ -35,9 +35,12 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
-STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
+STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "").strip()
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "").strip()
+
+if STRIPE_SECRET_KEY:
+    stripe.api_key = STRIPE_SECRET_KEY
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 stripe_client = StripeClient(STRIPE_SECRET_KEY) if STRIPE_SECRET_KEY else None
@@ -59,10 +62,11 @@ def require_supabase() -> Client:
     return supabase_admin
 
 
-def require_stripe() -> StripeClient:
-    if not stripe_client:
+def require_stripe():
+    if not STRIPE_SECRET_KEY:
         raise HTTPException(status_code=500, detail="Stripe not configured.")
-    return stripe_client
+    stripe.api_key = STRIPE_SECRET_KEY
+    return stripe
 
 
 def parse_bearer_token(authorization: Optional[str]) -> str:
@@ -284,15 +288,15 @@ def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict
     if not STRIPE_PRICE_ID:
         raise HTTPException(status_code=500, detail="Stripe price ID not configured.")
 
-    session = require_stripe().checkout.sessions.create({
-    "mode": "subscription",
-    "success_url": f"{APP_BASE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
-    "cancel_url": f"{APP_BASE_URL}/cancel",
-    "line_items": [{"price": STRIPE_PRICE_ID, "quantity": 1}],
-    "customer_email": user["email"],
-    "client_reference_id": user["id"],
-    "metadata": {"user_id": user["id"]},
-})
+    session = require_stripe().checkout.Session.create(
+    mode="subscription",
+    success_url=f"{APP_BASE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
+    cancel_url=f"{APP_BASE_URL}/cancel",
+    line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
+    customer_email=user["email"],
+    client_reference_id=user["id"],
+    metadata={"user_id": user["id"]},
+)
     return {"url": session.url}
 
 
