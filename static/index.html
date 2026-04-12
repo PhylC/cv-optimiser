@@ -436,24 +436,45 @@ const result = await sbClient.auth.signInWithOtp({
     });
 
     upgradeBtn.addEventListener("click", async function() {
-      const token = await getSessionToken();
-      if (!token) {
-        status.textContent = "Sign in first before upgrading.";
-        return;
-      }
+  console.log("upgrade clicked");
 
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { Authorization: "Bearer " + token }
-      });
+  try {
+    const token = await getSessionToken();
+    console.log("token exists:", !!token);
 
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        status.textContent = data.detail || data.error || "Could not start checkout.";
-      }
+    if (!token) {
+      status.textContent = "Sign in first before upgrading.";
+      return;
+    }
+
+    status.textContent = "Starting checkout...";
+
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token }
     });
+
+    const raw = await res.text();
+    console.log("checkout raw response:", raw);
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      status.textContent = "Checkout returned invalid response.";
+      return;
+    }
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      status.textContent = data.detail || data.error || "Could not start checkout.";
+    }
+  } catch (err) {
+    console.error("upgrade error:", err);
+    status.textContent = "Upgrade failed. Check browser console.";
+  }
+});
 
     dropzone.addEventListener("dragover", function(e) {
       e.preventDefault();
