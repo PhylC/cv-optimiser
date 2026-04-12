@@ -43,7 +43,6 @@ if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
-stripe_client = StripeClient(STRIPE_SECRET_KEY) if STRIPE_SECRET_KEY else None
 supabase_admin: Optional[Client] = None
 
 if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
