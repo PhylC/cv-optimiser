@@ -416,10 +416,10 @@
         return;
       }
 
-      const result = await sbClient.auth.signInWithOtp({
-        email: email,
-        options: { emailRedirectTo: window.location.origin }
-      });
+const result = await sbClient.auth.signInWithOtp({
+  email: email,
+  options: { emailRedirectTo: "https://cv-optimiser-nq8r.onrender.com" }
+});
 
       authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
     });
