@@ -284,15 +284,15 @@ def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict
     if not STRIPE_PRICE_ID:
         raise HTTPException(status_code=500, detail="Stripe price ID not configured.")
 
-    session = require_stripe().checkout.sessions.create(
-        mode="subscription",
-        success_url=f"{APP_BASE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
-        cancel_url=f"{APP_BASE_URL}/cancel",
-        line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
-        customer_email=user["email"],
-        client_reference_id=user["id"],
-        metadata={"user_id": user["id"]},
-    )
+    session = require_stripe().checkout.sessions.create({
+    "mode": "subscription",
+    "success_url": f"{APP_BASE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
+    "cancel_url": f"{APP_BASE_URL}/cancel",
+    "line_items": [{"price": STRIPE_PRICE_ID, "quantity": 1}],
+    "customer_email": user["email"],
+    "client_reference_id": user["id"],
+    "metadata": {"user_id": user["id"]},
+})
     return {"url": session.url}
 
 
