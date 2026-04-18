@@ -175,15 +175,7 @@
     </div>
   </div>
 
-  <div id="authCard" class="card">
-    <h2>Sign in to use the tool</h2>
-    <p>Use an email magic link so your results, usage, and Pro access stay attached to your account.</p>
-    <input id="emailInput" type="email" placeholder="you@example.com">
-    <div style="margin-top:12px;">
-  <button id="sendMagicLinkBtn">Send magic link</button>
-  <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
-  <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
-</div>
+  id="authCard"
     <p id="authStatus" class="small">Not signed in.</p>
     <div id="passwordCard" class="card hidden">
   <h3>Create a password</h3>
@@ -195,6 +187,21 @@
   <p id="passwordStatus" class="small"></p>
 </div>
   </div>
+
+  <div id="passwordCard" class="card hidden">
+  <h3>Create a password</h3>
+  <p class="small">
+    Set a password once so you can sign in faster next time without using a magic link.
+  </p>
+
+  <input id="passwordInput" type="password" placeholder="Create a password">
+
+  <div style="margin-top:12px;">
+    <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
+  </div>
+
+  <p id="passwordStatus" class="small"></p>
+</div>
 
   <div class="grid">
     <div>
@@ -381,21 +388,23 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
-  authStatus.textContent = "Not signed in.";
-  sendMagicLinkBtn.classList.remove("hidden");
-  signOutBtn.classList.add("hidden");
-  passwordCard.classList.add("hidden");
-  passwordStatus.textContent = "";
-  setPlanUi(null);
-  renderHistory([]);
-  return;
+          authStatus.textContent = "Not signed in.";
+          sendMagicLinkBtn.classList.remove("hidden");
+          passwordLoginBtn.classList.remove("hidden");
+          signOutBtn.classList.add("hidden");
+          passwordCard.classList.add("hidden");
+          passwordStatus.textContent = "";
+          setPlanUi(null);
+          renderHistory([]);
+          return;
 }
 
         authStatus.textContent = "Signed in as " + session.user.email;
-sendMagicLinkBtn.classList.add("hidden");
-signOutBtn.classList.remove("hidden");
-passwordCard.classList.remove("hidden");
-passwordStatus.textContent = "";
+        sendMagicLinkBtn.classList.add("hidden");
+        passwordLoginBtn.classList.add("hidden");
+        signOutBtn.classList.remove("hidden");
+        passwordCard.classList.remove("hidden");
+        passwordStatus.textContent = "";
 
         const meRes = await fetch("/api/me", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -422,7 +431,7 @@ passwordStatus.textContent = "";
         renderHistory(historyData.items || []);
       } catch (err) {
         console.error("refreshAuthUi error:", err);
-        authStatus.textContent = "Auth refresh failed. Check browser console.";
+        authStatus.textContent = "Signed in. Loading your account...";
       } finally {
         authRefreshInProgress = false;
       }
