@@ -283,7 +283,9 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     user = get_user_from_token(authorization)
     upsert_profile(user["id"], user["email"])
-
+    active_subscription = get_active_subscription(user["id"])
+    if active_subscription:
+        return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
     if not STRIPE_PRICE_ID:
         raise HTTPException(status_code=500, detail="Stripe price ID not configured.")
 

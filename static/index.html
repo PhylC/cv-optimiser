@@ -180,15 +180,16 @@
     <p>Use an email magic link so your results, usage, and Pro access stay attached to your account.</p>
     <input id="emailInput" type="email" placeholder="you@example.com">
     <div style="margin-top:12px;">
-      <button id="sendMagicLinkBtn">Send magic link</button>
-      <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
-    </div>
+  <button id="sendMagicLinkBtn">Send magic link</button>
+  <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
+  <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
+</div>
     <p id="authStatus" class="small">Not signed in.</p>
-    <div class="card">
-  <h3>Set or use a password</h3>
-  <input id="passwordInput" type="password" placeholder="Enter a password" style="width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box;">
+    <div id="passwordCard" class="card hidden">
+  <h3>Create a password</h3>
+  <p class="small">Set a password once so you can sign in faster next time without using a magic link.</p>
+  <input id="passwordInput" type="password" placeholder="Create a password" style="width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box;">
   <div style="margin-top:12px;">
-    <button id="passwordLoginBtn" type="button">Sign in with password</button>
     <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
   </div>
   <p id="passwordStatus" class="small"></p>
@@ -298,6 +299,7 @@
     const passwordLoginBtn = document.getElementById("passwordLoginBtn");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
     const passwordStatus = document.getElementById("passwordStatus");
+    const passwordCard = document.getElementById("passwordCard");
 
     function resetSelectedFile() {
       selectedFile = null;
@@ -379,17 +381,21 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
-          authStatus.textContent = "Not signed in.";
-          sendMagicLinkBtn.classList.remove("hidden");
-          signOutBtn.classList.add("hidden");
-          setPlanUi(null);
-          renderHistory([]);
-          return;
-        }
+  authStatus.textContent = "Not signed in.";
+  sendMagicLinkBtn.classList.remove("hidden");
+  signOutBtn.classList.add("hidden");
+  passwordCard.classList.add("hidden");
+  passwordStatus.textContent = "";
+  setPlanUi(null);
+  renderHistory([]);
+  return;
+}
 
         authStatus.textContent = "Signed in as " + session.user.email;
-        sendMagicLinkBtn.classList.add("hidden");
-        signOutBtn.classList.remove("hidden");
+sendMagicLinkBtn.classList.add("hidden");
+signOutBtn.classList.remove("hidden");
+passwordCard.classList.remove("hidden");
+passwordStatus.textContent = "";
 
         const meRes = await fetch("/api/me", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -454,6 +460,14 @@ const result = await sbClient.auth.signInWithOtp({
     return;
   }
 
+  const sessionResult = await sbClient.auth.getSession();
+  const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+
+  if (!session) {
+    passwordStatus.textContent = "You need to be signed in before setting a password.";
+    return;
+  }
+
   const newPassword = passwordInput.value.trim();
 
   if (!newPassword || newPassword.length < 8) {
@@ -465,14 +479,18 @@ const result = await sbClient.auth.signInWithOtp({
     password: newPassword
   });
 
-  passwordStatus.textContent = result.error
-    ? result.error.message
-    : "Password saved. You can now sign in with email and password.";
+  if (result.error) {
+    passwordStatus.textContent = result.error.message;
+    return;
+  }
+
+  passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
+  passwordInput.value = "";
 });
 
 passwordLoginBtn.addEventListener("click", async function() {
   if (!sbClient) {
-    passwordStatus.textContent = "Auth is not configured.";
+    authStatus.textContent = "Auth is not configured.";
     return;
   }
 
@@ -480,12 +498,12 @@ passwordLoginBtn.addEventListener("click", async function() {
   const password = passwordInput.value.trim();
 
   if (!email) {
-    passwordStatus.textContent = "Enter your email first.";
+    authStatus.textContent = "Enter your email first.";
     return;
   }
 
   if (!password) {
-    passwordStatus.textContent = "Enter your password.";
+    authStatus.textContent = "Enter your password to sign in.";
     return;
   }
 
@@ -495,13 +513,15 @@ passwordLoginBtn.addEventListener("click", async function() {
   });
 
   if (result.error) {
-    passwordStatus.textContent = result.error.message;
+    authStatus.textContent = result.error.message;
     return;
   }
 
-  passwordStatus.textContent = "Signed in successfully.";
+  authStatus.textContent = "Signed in successfully.";
   await refreshAuthUi();
 });
+
+
     clearFileBtn.addEventListener("click", function() {
       resetSelectedFile();
       status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
