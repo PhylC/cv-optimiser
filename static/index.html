@@ -175,33 +175,46 @@
     </div>
   </div>
 
-  id="authCard"
+  <div id="authCard" class="card" style="margin-bottom: 20px;">
+    <h2 style="margin-bottom:8px;">Sign in to use the tool</h2>
+    <p class="small" style="margin-bottom:18px;">
+      Paste a job description, upload your CV, and get tailored improvements instantly.
+    </p>
+
+    <div style="margin-bottom:14px;">
+      <label for="emailInput" class="small" style="display:block; margin-bottom:8px;">Email address</label>
+      <input id="emailInput" type="email" placeholder="you@example.com">
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+      <button id="sendMagicLinkBtn">Send magic link</button>
+      <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
+      <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
+    </div>
+
+    <div style="padding:12px 14px; border:1px solid #334155; border-radius:10px; background:#162033; margin-bottom:12px;">
+      <p class="small" style="margin:0;">
+        First time here? Enter your email and we will send you a magic link to sign in.
+      </p>
+    </div>
+
     <p id="authStatus" class="small">Not signed in.</p>
-    <div id="passwordCard" class="card hidden">
-  <h3>Create a password</h3>
-  <p class="small">Set a password once so you can sign in faster next time without using a magic link.</p>
-  <input id="passwordInput" type="password" placeholder="Create a password" style="width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box;">
-  <div style="margin-top:12px;">
-    <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
-  </div>
-  <p id="passwordStatus" class="small"></p>
-</div>
   </div>
 
-  <div id="passwordCard" class="card hidden">
-  <h3>Create a password</h3>
-  <p class="small">
-    Set a password once so you can sign in faster next time without using a magic link.
-  </p>
+  <div id="passwordCard" class="card hidden" style="margin-top: 0; margin-bottom: 22px;">
+    <h3 style="margin-bottom:8px;">Create a password</h3>
+    <p class="small" style="margin-bottom:16px;">
+      Set a password once so you can sign in faster next time without using a magic link.
+    </p>
 
-  <input id="passwordInput" type="password" placeholder="Create a password">
+    <input id="passwordInput" type="password" placeholder="Create a password">
 
-  <div style="margin-top:12px;">
-    <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
+    <div style="margin-top:12px;">
+      <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
+    </div>
+
+    <p id="passwordStatus" class="small" style="margin-top:12px;"></p>
   </div>
-
-  <p id="passwordStatus" class="small"></p>
-</div>
 
   <div class="grid">
     <div>
@@ -397,7 +410,7 @@
           setPlanUi(null);
           renderHistory([]);
           return;
-}
+        }
 
         authStatus.textContent = "Signed in as " + session.user.email;
         sendMagicLinkBtn.classList.add("hidden");
@@ -528,6 +541,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
   authStatus.textContent = "Signed in successfully.";
   await refreshAuthUi();
+  passwordCard.classList.add("hidden");
 });
 
 
