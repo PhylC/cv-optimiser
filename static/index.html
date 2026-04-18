@@ -184,6 +184,15 @@
       <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
     </div>
     <p id="authStatus" class="small">Not signed in.</p>
+    <div class="card">
+  <h3>Set or use a password</h3>
+  <input id="passwordInput" type="password" placeholder="Enter a password" style="width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;box-sizing:border-box;">
+  <div style="margin-top:12px;">
+    <button id="passwordLoginBtn" type="button">Sign in with password</button>
+    <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
+  </div>
+  <p id="passwordStatus" class="small"></p>
+</div>
   </div>
 
   <div class="grid">
@@ -285,6 +294,10 @@
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const historyList = document.getElementById("historyList");
+    const passwordInput = document.getElementById("passwordInput");
+    const passwordLoginBtn = document.getElementById("passwordLoginBtn");
+    const setPasswordBtn = document.getElementById("setPasswordBtn");
+    const passwordStatus = document.getElementById("passwordStatus");
 
     function resetSelectedFile() {
       selectedFile = null;
@@ -307,21 +320,26 @@
     }
 
     function setPlanUi(plan) {
-      if (!plan) {
-        planBadge.textContent = "Plan: signed out";
-        usageBadge.classList.add("hidden");
-        return;
-      }
+  if (!plan) {
+    planBadge.textContent = "Plan: signed out";
+    usageBadge.classList.add("hidden");
+    upgradeBtn.classList.remove("hidden");
+    upgradeBtn.textContent = "Upgrade to Pro";
+    return;
+  }
 
-      planBadge.textContent = "Plan: " + plan.plan;
-      usageBadge.classList.remove("hidden");
+  planBadge.textContent = "Plan: " + plan.plan;
+  usageBadge.classList.remove("hidden");
 
-      if (plan.is_pro) {
-        usageBadge.textContent = "Unlimited analyses";
-      } else {
-        usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
-      }
-    }
+  if (plan.is_pro) {
+    usageBadge.textContent = "Unlimited analyses";
+    upgradeBtn.classList.add("hidden");
+  } else {
+    usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
+    upgradeBtn.classList.remove("hidden");
+    upgradeBtn.textContent = "Upgrade to Pro";
+  }
+}
 
     function renderHistory(items) {
       if (!items || !items.length) {
@@ -430,6 +448,60 @@ const result = await sbClient.auth.signInWithOtp({
       location.reload();
     });
 
+    setPasswordBtn.addEventListener("click", async function() {
+  if (!sbClient) {
+    passwordStatus.textContent = "Auth is not configured.";
+    return;
+  }
+
+  const newPassword = passwordInput.value.trim();
+
+  if (!newPassword || newPassword.length < 8) {
+    passwordStatus.textContent = "Please use at least 8 characters.";
+    return;
+  }
+
+  const result = await sbClient.auth.updateUser({
+    password: newPassword
+  });
+
+  passwordStatus.textContent = result.error
+    ? result.error.message
+    : "Password saved. You can now sign in with email and password.";
+});
+
+passwordLoginBtn.addEventListener("click", async function() {
+  if (!sbClient) {
+    passwordStatus.textContent = "Auth is not configured.";
+    return;
+  }
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!email) {
+    passwordStatus.textContent = "Enter your email first.";
+    return;
+  }
+
+  if (!password) {
+    passwordStatus.textContent = "Enter your password.";
+    return;
+  }
+
+  const result = await sbClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (result.error) {
+    passwordStatus.textContent = result.error.message;
+    return;
+  }
+
+  passwordStatus.textContent = "Signed in successfully.";
+  await refreshAuthUi();
+});
     clearFileBtn.addEventListener("click", function() {
       resetSelectedFile();
       status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
@@ -466,10 +538,12 @@ const result = await sbClient.auth.signInWithOtp({
     }
 
     if (data.url) {
-      window.location.href = data.url;
-    } else {
-      status.textContent = data.detail || data.error || "Could not start checkout.";
-    }
+  window.location.href = data.url;
+} else if (data.code === "ALREADY_PRO") {
+  status.textContent = "You already have an active Pro subscription.";
+} else {
+  status.textContent = data.detail || data.error || "Could not start checkout.";
+}
   } catch (err) {
     console.error("upgrade error:", err);
     status.textContent = "Upgrade failed. Check browser console.";
