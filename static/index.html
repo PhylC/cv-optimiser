@@ -186,6 +186,11 @@
       <input id="emailInput" type="email" placeholder="you@example.com">
     </div>
 
+    <div id="loginPasswordWrap" style="margin-bottom:14px;">
+      <label for="loginPasswordInput" class="small" style="display:block; margin-bottom:8px;">Password</label>
+      <input id="loginPasswordInput" type="password" placeholder="Enter your password">
+    </div>
+
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
       <button id="sendMagicLinkBtn">Send magic link</button>
       <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
@@ -315,6 +320,8 @@
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const historyList = document.getElementById("historyList");
+    const loginPasswordWrap = document.getElementById("loginPasswordWrap");
+    const loginPasswordInput = document.getElementById("loginPasswordInput");
     const passwordInput = document.getElementById("passwordInput");
     const passwordLoginBtn = document.getElementById("passwordLoginBtn");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
@@ -401,10 +408,11 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
-          authStatus.textContent = "Not signed in.";
+          authStatus.textContent = "Use a magic link or password to sign in.";
           sendMagicLinkBtn.classList.remove("hidden");
           passwordLoginBtn.classList.remove("hidden");
           signOutBtn.classList.add("hidden");
+          loginPasswordWrap.classList.remove("hidden");
           passwordCard.classList.add("hidden");
           passwordStatus.textContent = "";
           setPlanUi(null);
@@ -416,6 +424,7 @@
         sendMagicLinkBtn.classList.add("hidden");
         passwordLoginBtn.classList.add("hidden");
         signOutBtn.classList.remove("hidden");
+        loginPasswordWrap.classList.add("hidden");
         passwordCard.classList.remove("hidden");
         passwordStatus.textContent = "";
 
@@ -517,7 +526,7 @@ passwordLoginBtn.addEventListener("click", async function() {
   }
 
   const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+  const password = loginPasswordInput.value.trim();
 
   if (!email) {
     authStatus.textContent = "Enter your email first.";
