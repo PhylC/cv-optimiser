@@ -482,8 +482,6 @@
   .account-menu-wrap {
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
     justify-content: flex-end;
   }
 
@@ -499,6 +497,121 @@
     color: #9FB0D4;
     font-size: 13px;
     margin-top: 10px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .account-chip {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    background: rgba(12, 23, 43, 0.86);
+    border: 1px solid rgba(80, 103, 146, 0.42);
+    color: #E8EEFC;
+    cursor: pointer;
+    min-width: 230px;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  .account-chip:hover {
+    transform: translateY(-1px);
+    border-color: #5B78FF;
+  }
+
+  .account-chip-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .account-chip-email {
+    font-size: 13px;
+    font-weight: 700;
+    color: #E8EEFC;
+    line-height: 1.2;
+  }
+
+  .account-chip-plan {
+    font-size: 12px;
+    color: #9FB0D4;
+    line-height: 1.2;
+  }
+
+  .account-chip-caret {
+    margin-left: auto;
+    font-size: 12px;
+    color: #9FB0D4;
+    padding-top: 2px;
+  }
+
+  .account-menu-wrap {
+    position: relative;
+  }
+
+  .account-menu-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 250px;
+    background: rgba(25, 39, 66, 0.98);
+    border: 1px solid rgba(80, 103, 146, 0.42);
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    z-index: 50;
+  }
+
+  .account-menu-dropdown button {
+    width: 100%;
+    text-align: left;
+    margin-right: 0;
+    margin-bottom: 8px;
+    box-shadow: none;
+  }
+
+  .account-menu-dropdown button:last-child {
+    margin-bottom: 0;
+  }
+
+  .account-menu-label {
+    font-size: 12px;
+    color: #9FB0D4;
+    margin-bottom: 8px;
+    padding: 4px 6px 8px;
+    border-bottom: 1px solid rgba(48, 70, 110, 0.45);
+  }
+
+  .top-status-row {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .topbar-right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .account-chip {
+      width: 100%;
+      min-width: 0;
+    }
   }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -522,17 +635,20 @@
       </p>
     </div>
 
-    <div>
-      <span id="planBadge" class="pill">Plan: signed out</span>
-      <span id="usageBadge" class="pill hidden"></span>
+    <div class="topbar-right">
+      <div id="topStatusRow" class="top-status-row">
+        <span id="planBadge" class="pill">Plan: signed out</span>
+        <span id="usageBadge" class="pill hidden"></span>
+      </div>
 
-      <div id="accountMenuWrap" class="account-menu-wrap hidden" style="margin-top:10px;">
-        <div id="accountSummary" class="pill" style="display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:10px 14px;">
-          <span id="accountEmail" style="font-size:12px; color:#E8EEFC;">Logged in</span>
-          <span id="accountPlanText" style="font-size:11px; color:#9FB0D4;">Plan: Free</span>
+      <div id="accountMenuWrap" class="account-menu-wrap hidden">
+        <div id="accountChip" class="account-chip" role="button" tabindex="0">
+          <div class="account-chip-text">
+            <span id="accountEmail" class="account-chip-email">Logged out</span>
+            <span id="accountPlanText" class="account-chip-plan">Plan: Free</span>
+          </div>
+          <span class="account-chip-caret">▾</span>
         </div>
-
-        <button id="accountMenuBtn" class="account-menu-btn secondary-btn" type="button">Account</button>
 
         <div id="accountMenuDropdown" class="account-menu-dropdown hidden">
           <div id="accountMenuLabel" class="account-menu-label">Signed in</div>
@@ -793,11 +909,11 @@
     const authStatus = document.getElementById("authStatus");
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
-    const accountSummary = document.getElementById("accountSummary");
+    const topStatusRow = document.getElementById("topStatusRow");
+    const accountChip = document.getElementById("accountChip");
     const accountEmail = document.getElementById("accountEmail");
     const accountPlanText = document.getElementById("accountPlanText");
     const accountMenuWrap = document.getElementById("accountMenuWrap");
-    const accountMenuBtn = document.getElementById("accountMenuBtn");
     const accountMenuDropdown = document.getElementById("accountMenuDropdown");
     const accountMenuLabel = document.getElementById("accountMenuLabel");
     const menuPasswordBtn = document.getElementById("menuPasswordBtn");
@@ -883,18 +999,16 @@
   if (!plan) {
     planBadge.textContent = "Plan: signed out";
     usageBadge.classList.add("hidden");
-    accountSummary.classList.add("hidden");
-    accountEmail.textContent = "Logged out";
-    accountPlanText.textContent = "Plan: signed out";
+    topStatusRow.classList.add("hidden");
     upgradeBtn.classList.remove("hidden");
-    upgradeBtn.textContent = "Unlock Pro rewrites";
+    upgradeBtn.textContent = "Upgrade to Pro";
     return;
   }
 
+  topStatusRow.classList.add("hidden");
+
   planBadge.textContent = "Plan: " + plan.plan;
   usageBadge.classList.remove("hidden");
-  accountSummary.classList.remove("hidden");
-  accountPlanText.textContent = "Plan: " + (plan.is_pro ? "Pro" : "Free");
 
   if (plan.is_pro) {
     usageBadge.textContent = "Unlimited analyses";
@@ -902,7 +1016,7 @@
   } else {
     usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
     upgradeBtn.classList.remove("hidden");
-    upgradeBtn.textContent = "Unlock Pro rewrites";
+    upgradeBtn.textContent = "Upgrade to Pro";
   }
 }
 
@@ -1024,7 +1138,7 @@
         authCard.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
         accountMenuLabel.textContent = session.user.email || "Signed in";
-        accountEmail.textContent = "Logged in as " + (session.user.email || "");
+        accountEmail.textContent = session.user.email || "Signed in";
         closeAccountMenu();
 
         passwordCard.classList.add("hidden");
@@ -1121,8 +1235,15 @@ const result = await sbClient.auth.signInWithOtp({
     signOutBtn.addEventListener("click", handleSignOut);
     menuLogoutBtn.addEventListener("click", handleSignOut);
 
-    accountMenuBtn.addEventListener("click", function() {
+    accountChip.addEventListener("click", function() {
       accountMenuDropdown.classList.toggle("hidden");
+    });
+
+    accountChip.addEventListener("keydown", function(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        accountMenuDropdown.classList.toggle("hidden");
+      }
     });
 
     document.addEventListener("click", function(event) {
