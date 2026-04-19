@@ -55,3 +55,6 @@ on analytics_events(event_name);
 
 create index if not exists analytics_events_user_id_idx
 on analytics_events(user_id);
+
+alter table profiles
+add column if not exists password_ready boolean not null default false;

@@ -2152,9 +2152,9 @@ const result = await sbClient.auth.signInWithOtp({
 
       const result = await sbClient.auth.getSession();
       const session = result && result.data ? result.data.session : null;
-      const userMeta = session && session.user && session.user.user_metadata ? session.user.user_metadata : {};
+      if (!session) return;
 
-      openPasswordCardForUser(!!userMeta.password_set);
+      openPasswordCardForUser(!shouldPromptPasswordSetup);
       closeAccountMenu();
     });
 
@@ -2294,8 +2294,7 @@ const result = await sbClient.auth.signInWithOtp({
   }
 
   const result = await sbClient.auth.updateUser({
-    password: newPassword,
-    data: { password_set: true }
+    password: newPassword
   });
 
   if (result.error) {
@@ -2304,11 +2303,19 @@ const result = await sbClient.auth.signInWithOtp({
   }
 
   sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
-  trackEvent("password_set");
+  trackEvent("password_saved");
   passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
   passwordInput.value = "";
   passwordCard.classList.add("hidden");
   shouldPromptPasswordSetup = false;
+
+  await fetch("/api/mark-password-ready", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + accessToken
+    }
+  });
+
   status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });
@@ -2347,6 +2354,17 @@ passwordLoginBtn.addEventListener("click", async function() {
   authStatus.textContent = "Signed in successfully.";
   passwordCard.classList.add("hidden");
   shouldPromptPasswordSetup = false;
+
+  const tokenAfterLogin = await getSessionToken();
+  if (tokenAfterLogin) {
+    await fetch("/api/mark-password-ready", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + tokenAfterLogin
+      }
+    });
+  }
+
   status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });

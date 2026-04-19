@@ -81,11 +81,10 @@ def get_user_from_token(authorization: Optional[str]) -> dict[str, Any]:
     user = getattr(user_result, "user", None)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid session.")
-    metadata = getattr(user, "user_metadata", None) or {}
     return {
         "id": user.id,
         "email": getattr(user, "email", None),
-        "password_set": bool(metadata.get("password_set")),
+        "password_ready": get_profile_password_ready(user.id),
     }
 
 
@@ -237,6 +236,27 @@ def upsert_profile(user_id: str, email: Optional[str]) -> None:
         "email": email,
         "updated_at": current_utc().isoformat(),
     }).execute()
+
+
+def get_profile_password_ready(user_id: str) -> bool:
+    result = (
+        require_supabase()
+        .table("profiles")
+        .select("password_ready")
+        .eq("id", user_id)
+        .limit(1)
+        .execute()
+    )
+    rows = result.data or []
+    if not rows:
+        return False
+    return bool(rows[0].get("password_ready"))
+
+
+def set_profile_password_ready(user_id: str, value: bool = True) -> None:
+    require_supabase().table("profiles").update(
+        {"password_ready": value}
+    ).eq("id", user_id).execute()
 
 
 def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
@@ -698,8 +718,11 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     user = get_user_from_token(authorization)
     upsert_profile(user["id"], user["email"])
-    if not user.get("password_set"):
-        return {"error": "Set a password before upgrading to Pro.", "code": "PASSWORD_REQUIRED"}
+    if not get_profile_password_ready(user["id"]):
+        return {
+            "error": "Please create a password before upgrading to Pro.",
+            "code": "PASSWORD_SETUP_REQUIRED"
+        }
     track_event(
         event_name="upgrade_clicked",
         user_id=user["id"],
@@ -759,6 +782,18 @@ def create_portal_session(authorization: Optional[str] = Header(None)) -> dict[s
 
     except Exception as e:
         print("STRIPE PORTAL ERROR:", repr(e))
+        return {"error": str(e)}
+
+
+@app.post("/api/mark-password-ready")
+def mark_password_ready(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+    try:
+        user = get_user_from_token(authorization)
+        upsert_profile(user["id"], user["email"])
+        set_profile_password_ready(user["id"], True)
+        return {"ok": True}
+    except Exception as e:
+        print("MARK PASSWORD READY ERROR:", repr(e))
         return {"error": str(e)}
 
 
