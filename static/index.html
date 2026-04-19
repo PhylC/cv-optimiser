@@ -553,6 +553,15 @@
     .hero-headline {
       max-width: none;
     }
+
+    .account-chip {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .hero-copy {
+      max-width: 100%;
+    }
   }
 
   .account-menu-wrap {
@@ -1002,8 +1011,8 @@
     gap: 10px;
     padding: 14px 16px;
     border-radius: 14px;
-    margin-top: 8px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 14px;
     border: 1px solid rgba(80, 103, 146, 0.35);
     background: rgba(12, 23, 43, 0.78);
     color: #DCE6FB;
@@ -1053,6 +1062,115 @@
     content: "!";
     background: rgba(255, 116, 116, 0.18);
     color: #FFC0C0;
+  }
+
+  .safety-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(10, 20, 39, 0.74);
+    border: 1px solid rgba(80, 103, 146, 0.28);
+  }
+
+  .safety-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(91, 120, 255, 0.16);
+    color: #DCE6FF;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .safety-copy strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #F1F5FF;
+    font-size: 14px;
+  }
+
+  .safety-copy p {
+    color: #AAB7D4;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .status-line {
+    margin-top: 14px;
+    min-height: 22px;
+  }
+
+  .status-line.is-success {
+    color: #B7F7C4;
+  }
+
+  .status-line.is-error {
+    color: #FFC0C0;
+  }
+
+  .footer-shell {
+    margin-top: 28px;
+    padding: 18px 0 6px;
+    border-top: 1px solid rgba(80, 103, 146, 0.24);
+  }
+
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    max-width: 58ch;
+  }
+
+  .footer-title {
+    color: #E9EEFC;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .footer-copy p {
+    font-size: 13px;
+    color: #9FB0D4;
+    line-height: 1.6;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a,
+  .footer-links button {
+    color: #C9D7F6;
+    font-size: 13px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    text-decoration: none;
+  }
+
+  .footer-links a:hover,
+  .footer-links button:hover {
+    color: #FFFFFF;
+    transform: none;
+    text-decoration: underline;
   }
 
   @media (max-width: 900px) {
@@ -1115,6 +1233,14 @@
   </div>
 
   <div id="checkoutStatus" class="status-banner info hidden"></div>
+
+  <div class="safety-banner">
+    <div class="safety-badge">AI</div>
+    <div class="safety-copy">
+      <strong>Use this as guidance, not as a guarantee.</strong>
+      <p>CV Optimiser helps you spot gaps, improve wording, and strengthen applications, but you should always review the output for accuracy and make sure the final CV reflects your real experience.</p>
+    </div>
+  </div>
 
   <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
     <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Sign in to use the tool</h2>
@@ -1342,7 +1468,9 @@
           </div>
 
           <div class="result-section" style="padding:14px 16px;">
-            <p class="small">Tip: use these suggestions as a stronger draft, then refine them so they remain fully accurate to your real experience.</p>
+            <p class="small">
+              Always review and edit suggestions to make sure they remain fully accurate to your real experience, responsibilities, and results.
+            </p>
           </div>
         </div>
       </div>
@@ -1375,6 +1503,13 @@
       </div>
     </div>
   </div>
+
+  <footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:14px; flex-wrap:wrap;">
+    <a href="/privacy" class="support-link">Privacy</a>
+    <a href="/terms" class="support-link">Terms</a>
+    <a href="/billing" class="support-link">Billing & cancellation</a>
+    <button id="footerSupportBtn" type="button" class="secondary-btn" style="padding:6px 10px; font-size:13px; margin:0;">Support</button>
+  </footer>
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
@@ -1427,6 +1562,7 @@
     const menuManageSubBtn = document.getElementById("menuManageSubBtn");
     const menuSupportBtn = document.getElementById("menuSupportBtn");
     const menuLogoutBtn = document.getElementById("menuLogoutBtn");
+    const footerSupportBtn = document.getElementById("footerSupportBtn");
     const supportModal = document.getElementById("supportModal");
     const closeSupportModalBtn = document.getElementById("closeSupportModalBtn");
     const supportForm = document.getElementById("supportForm");
@@ -1461,6 +1597,30 @@
       supportModal.classList.remove("hidden");
       if (supportSubjectInput) {
         supportSubjectInput.focus();
+      }
+    }
+
+    async function trackEvent(eventName, metadata = {}) {
+      try {
+        const token = await getSessionToken();
+        const headers = {
+          "Content-Type": "application/json"
+        };
+
+        if (token) {
+          headers.Authorization = "Bearer " + token;
+        }
+
+        await fetch("/api/track", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            event_name: eventName,
+            metadata
+          })
+        });
+      } catch (err) {
+        console.error("trackEvent error:", err);
       }
     }
 
@@ -1511,7 +1671,7 @@
       checkoutStatus.classList.remove("hidden");
       checkoutStatus.classList.remove("success", "error");
       checkoutStatus.classList.add("info");
-      checkoutStatus.textContent = "Payment received. Activating your Pro plan now...";
+      checkoutStatus.textContent = "Payment received. Activating your Pro plan now.";
 
       try {
         const token = await getSessionToken();
@@ -1575,7 +1735,7 @@
 
         checkoutStatus.classList.remove("info");
         checkoutStatus.classList.add("error");
-        checkoutStatus.textContent = "Payment succeeded, but your account still shows Free. Please wait a few seconds and refresh once.";
+        checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Please wait a few seconds and refresh once.";
       } catch (error) {
         console.error("handleCheckoutReturn error:", error);
         checkoutStatus.classList.remove("info");
@@ -1821,6 +1981,9 @@ const result = await sbClient.auth.signInWithOtp({
         sessionStorage.setItem(MAGIC_LINK_PASSWORD_SETUP_KEY, email);
       }
       authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
+      if (!result.error) {
+        trackEvent("magic_link_sent");
+      }
     });
 
     async function handleSignOut() {
@@ -1905,6 +2068,7 @@ const result = await sbClient.auth.signInWithOtp({
     });
 
     menuSupportBtn.addEventListener("click", function() {
+      trackEvent("support_opened");
       closeAccountMenu();
       supportStatus.textContent = "";
       supportStatus.classList.remove("support-success");
@@ -1916,8 +2080,14 @@ const result = await sbClient.auth.signInWithOtp({
       if (accountEmail.textContent && accountEmail.textContent.startsWith("Logged in as ")) {
         supportEmailInput.value = accountEmail.textContent.replace("Logged in as ", "").trim();
       }
-
       supportModal.classList.remove("hidden");
+    });
+
+    footerSupportBtn.addEventListener("click", function() {
+      supportStatus.textContent = "";
+      supportStatus.classList.remove("support-success");
+      trackEvent("support_opened", { source: "footer" });
+      openSupportModal();
     });
 
     closeSupportModalBtn.addEventListener("click", function() {
@@ -1953,6 +2123,7 @@ const result = await sbClient.auth.signInWithOtp({
         }
 
         supportStatus.textContent = "Message sent. I will get back to you soon.";
+        trackEvent("support_sent");
         supportStatus.classList.add("support-success");
         supportForm.reset();
 
@@ -2003,6 +2174,7 @@ const result = await sbClient.auth.signInWithOtp({
   passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
   passwordInput.value = "";
   passwordCard.classList.add("hidden");
+  trackEvent("password_set");
   await refreshAuthUi();
 });
 
@@ -2038,6 +2210,7 @@ passwordLoginBtn.addEventListener("click", async function() {
   sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
   authStatus.textContent = "Signed in successfully.";
   passwordCard.classList.add("hidden");
+  trackEvent("password_login_succeeded");
   await refreshAuthUi();
 });
 
@@ -2051,6 +2224,7 @@ passwordLoginBtn.addEventListener("click", async function() {
   console.log("upgrade clicked");
 
   try {
+    trackEvent("checkout_started");
     const token = await getSessionToken();
     console.log("token exists:", !!token);
 
@@ -2139,6 +2313,8 @@ passwordLoginBtn.addEventListener("click", async function() {
       }
 
       status.textContent = "Analysing...";
+      status.classList.remove("is-success", "is-error");
+      trackEvent("optimise_started", { has_file: !!selectedFile });
 
       try {
         const formData = new FormData();
@@ -2228,6 +2404,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
+        status.classList.add("is-success");
 
         if (data.plan) {
           setPlanUi(data.plan);
@@ -2239,6 +2416,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       } catch (err) {
         console.error(err);
         status.textContent = "Something went wrong. Check terminal or browser console for details.";
+        status.classList.add("is-error");
       } finally {
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
@@ -2255,6 +2433,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     }
 
     window.addEventListener("load", async function() {
+      trackEvent("page_view");
       await refreshAuthUi();
       await handleCheckoutReturn();
     });

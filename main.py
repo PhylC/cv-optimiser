@@ -10,7 +10,7 @@ from typing import Any, Optional
 from docx import Document
 from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pypdf import PdfReader
@@ -211,6 +211,12 @@ def upsert_profile(user_id: str, email: Optional[str]) -> None:
         "email": email,
         "updated_at": current_utc().isoformat(),
     }).execute()
+    track_event(
+        event_name="profile_upserted",
+        user_id=user_id,
+        email=email,
+        metadata={}
+    )
 
 
 def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
@@ -297,6 +303,25 @@ def save_analysis_history(user_id: str, job_description: str, payload: dict[str,
         "score": payload.get("score", 0),
         "result_json": payload,
     }).execute()
+
+
+def track_event(
+    event_name: str,
+    user_id: Optional[str] = None,
+    email: Optional[str] = None,
+    metadata: Optional[dict[str, Any]] = None,
+) -> None:
+    try:
+        require_supabase().table("analytics_events").insert(
+            {
+                "user_id": user_id,
+                "email": email,
+                "event_name": event_name,
+                "metadata": metadata or {},
+            }
+        ).execute()
+    except Exception as e:
+        print("TRACK EVENT ERROR:", repr(e))
 
 
 def parse_openai_json_output(raw: str) -> dict[str, Any]:
@@ -465,6 +490,76 @@ def cancel() -> FileResponse:
     return FileResponse("static/cancel.html")
 
 
+@app.get("/privacy", response_class=HTMLResponse)
+def privacy_page() -> str:
+    return """
+    <html>
+      <head>
+        <title>Privacy | CV Optimiser</title>
+        <style>
+          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
+          h1,h2 { color: #FFFFFF; }
+          a { color: #9AB0FF; }
+          p, li { color: #C7D3EE; }
+        </style>
+      </head>
+      <body>
+        <h1>Privacy Policy</h1>
+        <p>CV Optimiser processes the information you provide, including CV text, job descriptions, account details, and support messages, to deliver the service.</p>
+        <p>Payments are handled by Stripe. Support forms are handled by Formspree. We do not display your email address publicly.</p>
+        <p>You are responsible for reviewing and editing generated suggestions before using them.</p>
+        <p><a href="/">Back to CV Optimiser</a></p>
+      </body>
+    </html>
+    """
+
+
+@app.get("/terms", response_class=HTMLResponse)
+def terms_page() -> str:
+    return """
+    <html>
+      <head>
+        <title>Terms | CV Optimiser</title>
+        <style>
+          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
+          h1,h2 { color: #FFFFFF; }
+          a { color: #9AB0FF; }
+          p, li { color: #C7D3EE; }
+        </style>
+      </head>
+      <body>
+        <h1>Terms of Use</h1>
+        <p>CV Optimiser provides CV improvement suggestions and analysis for informational purposes. You remain responsible for checking that all final content is truthful and appropriate.</p>
+        <p>Subscriptions renew according to your Stripe billing settings until cancelled.</p>
+        <p><a href="/">Back to CV Optimiser</a></p>
+      </body>
+    </html>
+    """
+
+
+@app.get("/billing", response_class=HTMLResponse)
+def billing_page() -> str:
+    return """
+    <html>
+      <head>
+        <title>Billing & Cancellation | CV Optimiser</title>
+        <style>
+          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
+          h1,h2 { color: #FFFFFF; }
+          a { color: #9AB0FF; }
+          p, li { color: #C7D3EE; }
+        </style>
+      </head>
+      <body>
+        <h1>Billing & Cancellation</h1>
+        <p>Pro subscriptions are billed through Stripe. You can manage or cancel your subscription from the account menu inside the app.</p>
+        <p>If you need billing help, please use the support form.</p>
+        <p><a href="/">Back to CV Optimiser</a></p>
+      </body>
+    </html>
+    """
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {
@@ -473,6 +568,79 @@ def health() -> dict[str, str]:
         "supabase_configured": "yes" if (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY) else "no",
         "stripe_configured": "yes" if STRIPE_SECRET_KEY else "no",
     }
+
+
+@app.post("/api/track")
+async def api_track(request: Request) -> dict[str, Any]:
+    try:
+        body = await request.json()
+        event_name = (body.get("event_name") or "").strip()
+        metadata = body.get("metadata") or {}
+
+        if not event_name:
+            return {"error": "Missing event_name"}
+
+        user_id = None
+        email = None
+
+        auth_header = request.headers.get("Authorization")
+        if auth_header:
+            try:
+                user = get_user_from_token(auth_header)
+                user_id = user["id"]
+                email = user["email"]
+            except Exception:
+                pass
+
+        track_event(
+            event_name=event_name,
+            user_id=user_id,
+            email=email,
+            metadata=metadata,
+        )
+        return {"ok": True}
+    except Exception as e:
+        print("API TRACK ERROR:", repr(e))
+        return {"error": str(e)}
+
+
+@app.get("/api/admin/analytics")
+def admin_analytics(limit: int = 100) -> dict[str, Any]:
+    try:
+        result = (
+            require_supabase()
+            .table("analytics_events")
+            .select("created_at,event_name,email,metadata")
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return {"items": result.data or []}
+    except Exception as e:
+        print("ADMIN ANALYTICS ERROR:", repr(e))
+        return {"error": str(e)}
+
+
+@app.get("/admin-analytics", response_class=HTMLResponse)
+def admin_analytics_page() -> str:
+    return """
+    <html>
+      <head>
+        <title>Analytics | CV Optimiser</title>
+        <style>
+          body { font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }
+          h1 { margin-bottom: 18px; }
+          iframe { width: 100%; height: 80vh; border: 1px solid rgba(80,103,146,0.35); border-radius: 16px; background: white; }
+          p, a { color: #C7D3EE; }
+        </style>
+      </head>
+      <body>
+        <h1>Analytics</h1>
+        <p>Open the raw analytics endpoint here:</p>
+        <p><a href="/api/admin/analytics" target="_blank">/api/admin/analytics</a></p>
+      </body>
+    </html>
+    """
 
 
 @app.get("/api/me")
@@ -510,6 +678,12 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     user = get_user_from_token(authorization)
     upsert_profile(user["id"], user["email"])
+    track_event(
+        event_name="upgrade_clicked",
+        user_id=user["id"],
+        email=user["email"],
+        metadata={}
+    )
     active_subscription = get_active_subscription(user["id"])
     if active_subscription:
         return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
@@ -621,6 +795,15 @@ def confirm_checkout_session(
         if not fresh:
             return {"error": "Subscription row was not saved correctly."}
 
+        track_event(
+            event_name="pro_activated",
+            user_id=user["id"],
+            email=user["email"],
+            metadata={
+                "stripe_subscription_id": fresh.get("stripe_subscription_id"),
+                "subscription_status": fresh.get("status"),
+            }
+        )
         return {
             "ok": True,
             "plan": "pro",
@@ -719,6 +902,12 @@ async def optimise(
         user = get_user_from_token(authorization)
         upsert_profile(user["id"], user["email"])
         plan = get_plan_state(user["id"])
+        track_event(
+            event_name="optimise_started",
+            user_id=user["id"],
+            email=user["email"],
+            metadata={"is_pro": bool(plan["is_pro"])}
+        )
 
         if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
             return {
@@ -790,11 +979,24 @@ async def optimise(
         save_usage_event(user["id"])
         save_analysis_history(user["id"], job_description, payload)
         payload["plan"] = get_plan_state(user["id"])
+        track_event(
+            event_name="optimise_succeeded",
+            user_id=user["id"],
+            email=user["email"],
+            metadata={
+                "is_pro": bool(plan["is_pro"]),
+                "score": payload.get("score", 0),
+            }
+        )
         return payload
     except HTTPException:
         raise
     except Exception as e:
         print("OPTIMISE ERROR:", repr(e))
+        track_event(
+            event_name="optimise_failed",
+            metadata={"error": str(e)}
+        )
         return JSONResponse(
             status_code=500,
             content={"error": str(e)}
