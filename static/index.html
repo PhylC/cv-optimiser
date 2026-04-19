@@ -6,168 +6,284 @@
   <title>CV Optimiser Pro</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 1080px;
-      margin: 40px auto;
-      padding: 0 20px 60px;
-      background: #0f172a;
-      color: #e2e8f0;
+      font-family: Inter, Arial, sans-serif;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+      background:
+        radial-gradient(circle at top left, rgba(88, 80, 236, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(0, 212, 255, 0.12), transparent 24%),
+        #07142d;
+      color: #e8eefc;
     }
+
     h1, h2, h3 {
-      margin-bottom: 10px;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
     }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+    }
+
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 750;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
     p {
-      color: #94a3b8;
-      line-height: 1.5;
+      color: #aab7d4;
+      line-height: 1.6;
+      margin: 0;
     }
+
+    label {
+      color: #c9d5ef;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
     textarea {
       width: 100%;
       min-height: 180px;
       margin: 10px 0 20px;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      background: #1e293b;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid #2e4067;
+      background: #17253f;
       color: white;
       font-size: 14px;
       box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    input[type="email"] {
+
+    textarea:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #5b78ff;
+      box-shadow: 0 0 0 3px rgba(91, 120, 255, 0.18);
+    }
+
+    input[type="email"],
+    input[type="password"] {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      background: #1e293b;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid #2e4067;
+      background: #17253f;
       color: white;
       box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
+
     button {
-      background: #3b82f6;
+      background: linear-gradient(135deg, #5b78ff, #6b4cff);
       color: white;
       border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
+      padding: 13px 18px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 15px;
+      font-weight: 650;
       margin-right: 8px;
       margin-bottom: 8px;
+      transition: transform 0.12s ease, opacity 0.12s ease, box-shadow 0.12s ease;
+      box-shadow: 0 8px 20px rgba(62, 94, 255, 0.2);
     }
+
     button:hover {
-      background: #2563eb;
+      transform: translateY(-1px);
     }
+
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+      transform: none;
     }
+
     .secondary-btn {
-      background: #334155;
+      background: #253654;
+      box-shadow: none;
     }
+
     .secondary-btn:hover {
-      background: #475569;
+      background: #30466e;
     }
+
     .card {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 10px;
-      background: #1e293b;
-      border: 1px solid #334155;
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(25, 39, 66, 0.92);
+      border: 1px solid rgba(80, 103, 146, 0.45);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(8px);
     }
+
     .grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 24px;
+      gap: 22px;
+      align-items: start;
     }
+
     @media (max-width: 900px) {
       .grid {
         grid-template-columns: 1fr;
       }
+
+      body {
+        padding: 28px 16px 48px;
+      }
+
+      h1 {
+        font-size: 1.85rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
     }
+
     .hidden {
-      display: none;
+      display: none !important;
     }
+
     ul {
       padding-left: 20px;
     }
+
     li {
-      line-height: 1.5;
+      line-height: 1.6;
       margin-bottom: 8px;
+      color: #d9e3fa;
     }
+
     .small {
-      color: #94a3b8;
+      color: #9fb0d4;
       font-size: 14px;
     }
+
     .dropzone {
       margin: 12px 0 20px;
-      padding: 24px;
-      border: 2px dashed #475569;
-      border-radius: 12px;
-      background: #111827;
+      padding: 34px 24px;
+      border: 1.5px dashed #4f6597;
+      border-radius: 18px;
+      background: rgba(11, 20, 38, 0.45);
       text-align: center;
       transition: border-color 0.2s ease, background 0.2s ease;
     }
+
     .dropzone.dragover {
-      border-color: #60a5fa;
-      background: #172033;
+      border-color: #7f92ff;
+      background: rgba(20, 32, 61, 0.9);
     }
+
     .dropzone input {
       display: none;
     }
+
     .file-note {
       margin-top: 10px;
-      color: #cbd5e1;
+      color: #cbd7f0;
       font-size: 14px;
     }
+
     .linkish {
-      color: #93c5fd;
+      color: #98b0ff;
       text-decoration: underline;
       cursor: pointer;
     }
+
     .pill {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       margin-top: 8px;
       margin-right: 8px;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 999px;
       font-size: 12px;
-      background: #0b1220;
-      border: 1px solid #334155;
-      color: #cbd5e1;
+      background: rgba(9, 18, 36, 0.75);
+      border: 1px solid #30466e;
+      color: #d9e2f9;
     }
+
     .section-title {
       margin-top: 26px;
       margin-bottom: 10px;
     }
+
     .topbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
+
     .history-item {
-      border-top: 1px solid #334155;
+      border-top: 1px solid rgba(80, 103, 146, 0.35);
       padding-top: 12px;
       margin-top: 12px;
     }
+
     .price-box {
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 16px;
+      background: rgba(10, 19, 38, 0.55);
+      border: 1px solid #30466e;
+      border-radius: 16px;
+      padding: 18px;
       margin-top: 12px;
     }
+
     .muted {
-      color: #94a3b8;
+      color: #9fb0d4;
+    }
+
+    .hero-copy {
+      max-width: 700px;
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .helper-box {
+      padding: 12px 14px;
+      border: 1px solid #30466e;
+      border-radius: 14px;
+      background: rgba(14, 27, 52, 0.85);
+      margin-bottom: 12px;
+    }
+
+    .auth-stack > div {
+      margin-bottom: 14px;
+    }
+
+    .status-line {
+      min-height: 22px;
+      margin-top: 10px;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="topbar">
-    <div>
+    <div class="hero-copy">
       <h1>CV Optimiser Pro</h1>
-      <p>AI-powered CV tailoring with upload support, saved history, and a paid Pro tier.</p>
+      <p>Tailor your CV to a job description in seconds with targeted rewrites, clearer gaps, and stronger positioning.</p>
     </div>
     <div>
       <span id="planBadge" class="pill">Plan: signed out</span>
@@ -175,35 +291,37 @@
     </div>
   </div>
 
-  <div id="authCard" class="card" style="margin-bottom: 20px;">
+  <div id="authCard" class="card" style="margin-bottom: 18px;">
     <h2 style="margin-bottom:8px;">Sign in to use the tool</h2>
     <p class="small" style="margin-bottom:18px;">
-      Paste a job description, upload your CV, and get tailored improvements instantly.
+      Upload your CV, paste the job description, and get tailored improvements instantly.
     </p>
 
-    <div style="margin-bottom:14px;">
-      <label for="emailInput" class="small" style="display:block; margin-bottom:8px;">Email address</label>
-      <input id="emailInput" type="email" placeholder="you@example.com">
+    <div class="auth-stack">
+      <div>
+        <label for="emailInput" class="small" style="display:block; margin-bottom:8px;">Email address</label>
+        <input id="emailInput" type="email" placeholder="you@example.com">
+      </div>
+
+      <div id="loginPasswordWrap">
+        <label for="loginPasswordInput" class="small" style="display:block; margin-bottom:8px;">Password</label>
+        <input id="loginPasswordInput" type="password" placeholder="Enter your password">
+      </div>
     </div>
 
-    <div id="loginPasswordWrap" style="margin-bottom:14px;">
-      <label for="loginPasswordInput" class="small" style="display:block; margin-bottom:8px;">Password</label>
-      <input id="loginPasswordInput" type="password" placeholder="Enter your password">
-    </div>
-
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+    <div class="auth-actions">
       <button id="sendMagicLinkBtn">Send magic link</button>
       <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
       <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
     </div>
 
-    <div id="magicLinkHelp" style="padding:12px 14px; border:1px solid #334155; border-radius:10px; background:#162033; margin-bottom:12px;">
+    <div id="magicLinkHelp" class="helper-box">
       <p class="small" style="margin:0;">
         First time here? Enter your email and we will send you a magic link to sign in.
       </p>
     </div>
 
-    <p id="authStatus" class="small">Not signed in.</p>
+    <p id="authStatus" class="small status-line">Not signed in.</p>
   </div>
 
   <div id="passwordCard" class="card hidden" style="margin-top: 0; margin-bottom: 22px;">
@@ -218,12 +336,14 @@
       <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
     </div>
 
-    <p id="passwordStatus" class="small" style="margin-top:12px;"></p>
-  </div>
+  <p id="passwordStatus" class="small status-line"></p>
+</div>
 
   <div class="grid">
     <div>
       <div class="card">
+        <h3 style="margin-bottom:14px;">Start your CV check</h3>
+
         <label for="jobDescription">Job description</label>
         <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
 
@@ -238,8 +358,10 @@
           <div id="fileName" class="file-note">No file selected</div>
         </div>
 
-        <div>
-          <button id="optimiseBtn">Optimise My CV</button>
+        <div style="margin-top:8px;">
+          <button id="optimiseBtn" style="width:100%;">Optimise My CV</button>
+        </div>
+        <div style="margin-top:10px;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
         </div>
@@ -269,7 +391,7 @@
         <h3 class="section-title">Next step</h3>
         <p id="nextStep"></p>
 
-        <p class="small">Tip: copy these bullets into your CV and edit them to keep them fully truthful and specific to your real experience.</p>
+        <p class="small">Tip: copy these suggestions into your CV and refine them so they stay fully accurate to your real experience.</p>
       </div>
     </div>
 
@@ -280,15 +402,17 @@
           <p><strong>Free</strong></p>
           <p class="muted">3 analyses per day.</p>
         </div>
-        <div class="price-box">
-          <p><strong>Pro</strong></p>
-          <p class="muted">Unlimited analyses, saved history, and future premium features.</p>
-        </div>
+      <div class="price-box">
+        <p><strong>Pro</strong></p>
+        <p class="muted">Unlimited analyses, saved history, and premium features.</p>
+      </div>
       </div>
 
       <div class="card">
         <h3>Recent history</h3>
-        <div id="historyList" class="small">Sign in to view saved analyses.</div>
+        <div id="historyList" class="small muted">
+          No analyses yet. Run your first CV optimisation to see results here.
+        </div>
       </div>
     </div>
   </div>
@@ -305,8 +429,10 @@
     let accessToken = null;
     let selectedFile = null;
     let authRefreshInProgress = false;
+    let lastPlanJson = "";
+    let historyLoadedForUserId = null;
 
-    const btn = document.getElementById("optimiseBtn");
+    const optimiseBtn = document.getElementById("optimiseBtn");
     const clearFileBtn = document.getElementById("clearFileBtn");
     const upgradeBtn = document.getElementById("upgradeBtn");
     const status = document.getElementById("status");
@@ -417,6 +543,8 @@
           magicLinkHelp.classList.remove("hidden");
           passwordCard.classList.add("hidden");
           passwordStatus.textContent = "";
+          lastPlanJson = "";
+          historyLoadedForUserId = null;
           setPlanUi(null);
           renderHistory([]);
           return;
@@ -449,7 +577,16 @@
           return;
         }
 
-        setPlanUi(me.plan);
+        const nextPlanJson = JSON.stringify(me.plan || {});
+        if (nextPlanJson !== lastPlanJson) {
+          setPlanUi(me.plan);
+          lastPlanJson = nextPlanJson;
+        }
+
+        const currentUserId = me.user && me.user.id ? me.user.id : null;
+        if (currentUserId && historyLoadedForUserId === currentUserId) {
+          return;
+        }
 
         const historyRes = await fetch("/api/history", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -462,6 +599,7 @@
         }
 
         renderHistory(historyData.items || []);
+        historyLoadedForUserId = currentUserId;
       } catch (err) {
         console.error("refreshAuthUi error:", err);
         authStatus.textContent = "Auth refresh failed. Check browser console.";
@@ -495,7 +633,10 @@ const result = await sbClient.auth.signInWithOtp({
       await sbClient.auth.signOut();
       passwordStatus.textContent = "";
       passwordInput.value = "";
-      location.reload();
+      loginPasswordInput.value = "";
+      historyLoadedForUserId = null;
+      lastPlanJson = "";
+      await refreshAuthUi();
     });
 
     setPasswordBtn.addEventListener("click", async function() {
@@ -639,7 +780,10 @@ passwordLoginBtn.addEventListener("click", async function() {
       if (file) setSelectedFile(file);
     });
 
-    btn.addEventListener("click", async function() {
+    optimiseBtn.addEventListener("click", async function() {
+      optimiseBtn.disabled = true;
+      const originalText = optimiseBtn.textContent;
+      optimiseBtn.textContent = "Optimising...";
       console.log("optimise clicked");
 
       const token = await getSessionToken();
@@ -651,8 +795,10 @@ passwordLoginBtn.addEventListener("click", async function() {
       const jobDescription = document.getElementById("jobDescription").value.trim();
       const cvText = document.getElementById("cvText").value.trim();
 
-      if (!jobDescription) {
-        status.textContent = "Paste the job description first.";
+      if (!jobDescription && !cvText) {
+        alert("Please add a job description or CV before running optimisation.");
+        optimiseBtn.disabled = false;
+        optimiseBtn.textContent = originalText;
         return;
       }
 
@@ -662,7 +808,6 @@ passwordLoginBtn.addEventListener("click", async function() {
       }
 
       status.textContent = "Analysing...";
-      btn.disabled = true;
 
       try {
         const formData = new FormData();
@@ -687,20 +832,23 @@ passwordLoginBtn.addEventListener("click", async function() {
           data = JSON.parse(raw);
         } catch (e) {
           status.textContent = "Server returned invalid response. Check terminal and browser console.";
-          btn.disabled = false;
+          optimiseBtn.disabled = false;
+          optimiseBtn.textContent = originalText;
           return;
         }
 
         if (data.code === "PAYWALL") {
           status.textContent = data.error;
           setPlanUi(data.plan);
-          btn.disabled = false;
+          optimiseBtn.disabled = false;
+          optimiseBtn.textContent = originalText;
           return;
         }
 
         if (data.error) {
           status.textContent = data.error;
-          btn.disabled = false;
+          optimiseBtn.disabled = false;
+          optimiseBtn.textContent = originalText;
           return;
         }
 
@@ -735,18 +883,24 @@ passwordLoginBtn.addEventListener("click", async function() {
           setPlanUi(data.plan);
         }
 
+        lastPlanJson = "";
+        historyLoadedForUserId = null;
         await refreshAuthUi();
       } catch (err) {
         console.error(err);
         status.textContent = "Something went wrong. Check terminal or browser console for details.";
       } finally {
-        btn.disabled = false;
+        optimiseBtn.disabled = false;
+        optimiseBtn.textContent = originalText;
       }
     });
 
     if (sbClient) {
-      sbClient.auth.onAuthStateChange(function() {
-        refreshAuthUi();
+      sbClient.auth.onAuthStateChange(function(event) {
+        if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") {
+          historyLoadedForUserId = null;
+          refreshAuthUi();
+        }
       });
     }
 

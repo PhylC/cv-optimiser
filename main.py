@@ -26,14 +26,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
-APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
-FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3"))
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
+APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
+FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
 STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "").strip()
@@ -245,7 +245,12 @@ def cancel() -> FileResponse:
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "openai_configured": "yes" if OPENAI_API_KEY else "no",
+        "supabase_configured": "yes" if (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY) else "no",
+        "stripe_configured": "yes" if STRIPE_SECRET_KEY else "no",
+    }
 
 
 @app.get("/api/me")
@@ -266,7 +271,7 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         result = (
             require_supabase()
             .table("analysis_history")
-            .select("id, job_title, score, result_json, created_at")
+            .select("id, job_title, score, created_at")
             .eq("user_id", user["id"])
             .order("created_at", desc=True)
             .limit(20)
@@ -393,6 +398,7 @@ async def optimise(
     raw = require_openai().responses.create(
         model=OPENAI_MODEL,
         input=build_prompt(job_description, cv_text),
+        max_output_tokens=700,
     ).output_text.strip()
 
     data = json.loads(raw)
