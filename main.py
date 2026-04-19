@@ -120,21 +120,28 @@ def extract_cv_text(filename: str, file_bytes: bytes) -> str:
     raise ValueError("Unsupported file type. Please upload a PDF, DOCX, or TXT file.")
 
 
-def build_prompt(job_description: str, cv_text: str) -> str:
-    return f"""
-You are an expert UK CV and job application coach.
-
-Your task:
-1. Identify the 3 most important requirements in the job description.
-2. Assess how well the CV proves each one.
-3. Identify where the CV is underselling relevant experience.
-4. Identify important missing evidence or missing skills.
-5. Rewrite CV bullet points so they fit the target role better, using only information that already exists in the CV.
-6. Do not invent experience, tools, employers, metrics, or achievements.
-
-Return valid JSON only in this exact structure:
-
-{{
+def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> str:
+    if is_pro:
+        output_schema = """
+{
+  "score": 0,
+  "matchedKeywords": [],
+  "missingKeywords": [],
+  "strongPoints": [],
+  "weakPoints": [],
+  "bulletPoints": [],
+  "nextStep": "",
+  "professionalSummary": "",
+  "priorityFixes": [],
+  "skillsSection": [],
+  "atsTips": [],
+  "interviewRisks": [],
+  "strongerBullets": []
+}
+""".strip()
+    else:
+        output_schema = """
+{
   "score": 0,
   "matchedKeywords": [],
   "missingKeywords": [],
@@ -142,20 +149,54 @@ Return valid JSON only in this exact structure:
   "weakPoints": [],
   "bulletPoints": [],
   "nextStep": ""
-}}
+}
+""".strip()
+
+    pro_instructions = """
+Additional Pro rules:
+- professionalSummary must be a polished 3-4 line CV profile tailored to the job.
+- priorityFixes must be the 5 highest-impact CV improvements in priority order.
+- skillsSection must be a suggested skills section tailored to the role, using only skills already evidenced or clearly implied by the CV and job match.
+- atsTips must contain practical ATS-focused keyword and phrasing improvements.
+- interviewRisks must identify places where the CV may raise recruiter doubts or invite follow-up questions.
+- strongerBullets must be stronger, more commercially compelling rewritten bullets that remain truthful and do not invent experience.
+""".strip() if is_pro else ""
+
+    return f"""
+You are an expert UK CV writer, recruiter, and hiring manager.
+
+Your task is to assess how well the CV matches the job description and produce output that is practical enough for the candidate to use immediately.
+
+Important principles:
+- Be commercially useful, not generic.
+- Think like a recruiter reviewing this CV for interview shortlist quality.
+- Prioritise measurable impact, outcomes, ownership, and relevance.
+- Prefer evidence over buzzwords.
+- If the CV undersells relevant experience, say so clearly.
+- Do not invent employers, tools, responsibilities, metrics, achievements, qualifications, or experience.
+- You may improve wording, structure, emphasis, and clarity, but must stay truthful.
+- If the CV lacks hard evidence, acknowledge that directly.
+- Keep the tone sharp, professional, and realistic.
+
+Return valid JSON only in this exact structure:
+
+{output_schema}
 
 Rules:
-- Score should be realistic, not inflated.
-- matchedKeywords should be short phrases clearly reflected in the CV.
-- missingKeywords should be short phrases that matter for the job but are absent or weak.
-- strongPoints should be specific observations about what the CV already does well for this role.
-- weakPoints should be specific observations about what is missing, vague, or undersold.
-- bulletPoints must be rewritten CV bullets, not advice bullets.
-- Rewritten bullets must sound professional and tailored to the role.
-- nextStep should be a short, practical paragraph explaining the highest-impact change to make next.
-- Keep the output concise but useful.
+- score should be realistic, not inflated.
+- matchedKeywords should be short phrases clearly supported by the CV.
+- missingKeywords should be high-value missing or weak terms from the job description.
+- strongPoints should explain what already helps this CV for this role.
+- weakPoints should identify what is vague, missing, weak, or likely to hold the candidate back.
+- bulletPoints must be improved CV bullet points, not advice bullets.
+- bulletPoints must sound specific, credible, and stronger than the original CV.
+- Rewrite bullets using stronger action verbs and clearer commercial or operational impact where justified by the CV.
+- Prefer quantified impact when the CV already supports it; do not invent numbers.
+- nextStep should be a short paragraph explaining the single highest-value improvement to make next.
 - No markdown.
 - No text outside the JSON.
+
+{pro_instructions}
 
 JOB DESCRIPTION:
 {job_description}
@@ -397,7 +438,7 @@ async def optimise(
 
     raw = require_openai().responses.create(
         model=OPENAI_MODEL,
-        input=build_prompt(job_description, cv_text),
+        input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
         max_output_tokens=700,
     ).output_text.strip()
 
@@ -411,6 +452,12 @@ async def optimise(
         "weakPoints": data.get("weakPoints", []),
         "bulletPoints": data.get("bulletPoints", []),
         "nextStep": data.get("nextStep", ""),
+        "professionalSummary": data.get("professionalSummary", ""),
+        "priorityFixes": data.get("priorityFixes", []),
+        "skillsSection": data.get("skillsSection", []),
+        "atsTips": data.get("atsTips", []),
+        "interviewRisks": data.get("interviewRisks", []),
+        "strongerBullets": data.get("strongerBullets", []),
         "source": "openai",
     }
 

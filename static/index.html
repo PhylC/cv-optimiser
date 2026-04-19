@@ -3,288 +3,352 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CV Optimiser Pro</title>
+  <title>CV Optimiser</title>
   <style>
-    body {
-      font-family: Inter, Arial, sans-serif;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 40px 24px 64px;
-      background:
-        radial-gradient(circle at top left, rgba(88, 80, 236, 0.18), transparent 28%),
-        radial-gradient(circle at top right, rgba(0, 212, 255, 0.12), transparent 24%),
-        #07142d;
-      color: #e8eefc;
-    }
+  body {
+    font-family: Inter, Arial, sans-serif;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 24px 64px;
+    background:
+      radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+      radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+      #07142D;
+    color: #E8EEFC;
+  }
 
-    h1, h2, h3 {
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
+  h1, h2, h3 {
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+  }
+
+  h2 {
+    font-size: 1.65rem;
+    font-weight: 760;
+  }
+
+  h3 {
+    font-size: 1.12rem;
+    font-weight: 700;
+  }
+
+  p {
+    color: #AAB7D4;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  label {
+    color: #D7E2FA;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  textarea,
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid #30466E;
+    background: #17253F;
+    color: #FFFFFF;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+  }
+
+  textarea {
+    min-height: 180px;
+    margin: 10px 0 20px;
+    resize: vertical;
+  }
+
+  textarea:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #5B78FF;
+    box-shadow: 0 0 0 3px rgba(91, 120, 255, 0.18);
+  }
+
+  button {
+    background: linear-gradient(135deg, #5B78FF, #4568F2);
+    color: white;
+    border: none;
+    padding: 13px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 650;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    transition: transform 0.12s ease, opacity 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.24);
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+  }
+
+  button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .secondary-btn {
+    background: #243754;
+    box-shadow: none;
+  }
+
+  .secondary-btn:hover {
+    background: #2C4265;
+  }
+
+  .card {
+    margin-top: 20px;
+    padding: 24px;
+    border-radius: 20px;
+    background: rgba(25, 39, 66, 0.94);
+    border: 1px solid rgba(80, 103, 146, 0.42);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(8px);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: #D9E3FA;
+  }
+
+  .small {
+    color: #AAB7D4;
+    font-size: 14px;
+  }
+
+  .dropzone {
+    margin: 12px 0 20px;
+    padding: 34px 24px;
+    border: 1.5px dashed #4F6597;
+    border-radius: 18px;
+    background: rgba(11, 20, 38, 0.42);
+    text-align: center;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .dropzone.dragover {
+    border-color: #7F92FF;
+    background: rgba(20, 32, 61, 0.92);
+  }
+
+  .dropzone input {
+    display: none;
+  }
+
+  .file-note {
+    margin-top: 10px;
+    color: #CBD7F0;
+    font-size: 14px;
+  }
+
+  .linkish {
+    color: #9AB0FF;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    margin-right: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: rgba(9, 18, 36, 0.78);
+    border: 1px solid #30466E;
+    color: #D9E2F9;
+  }
+
+  .section-title {
+    margin-top: 26px;
+    margin-bottom: 10px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .hero-copy {
+    max-width: 680px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  .auth-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .helper-box {
+    padding: 12px 14px;
+    border: 1px solid #30466E;
+    border-radius: 14px;
+    background: rgba(14, 27, 52, 0.85);
+    margin-bottom: 12px;
+  }
+
+  .auth-stack > div {
+    margin-bottom: 14px;
+  }
+
+  .status-line {
+    min-height: 22px;
+    margin-top: 10px;
+  }
+
+  .history-item {
+    border-top: 1px solid rgba(80, 103, 146, 0.35);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  .price-box {
+    background: rgba(10, 19, 38, 0.55);
+    border: 1px solid #30466E;
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 12px;
+  }
+
+  .muted {
+    color: #9FB0D4;
+  }
+
+  .logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .logo-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.28);
+    flex-shrink: 0;
+  }
+
+  .logo-mark span {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .logo-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .logo-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #E8EEFC;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .logo-tag {
+    font-size: 13px;
+    color: #9FB0D4;
+    line-height: 1.2;
+  }
+
+  .subtle-divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid rgba(48, 70, 110, 0.45);
+  }
+
+  .pro-box {
+    border: 1px solid #5B78FF;
+    background: rgba(20, 30, 60, 0.62);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 900px) {
+    body {
+      padding: 28px 16px 48px;
     }
 
     h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
+      font-size: 1.9rem;
     }
 
     h2 {
-      font-size: 1.9rem;
-      font-weight: 750;
+      font-size: 1.45rem;
     }
 
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
+    .logo-title {
+      font-size: 24px;
     }
-
-    p {
-      color: #aab7d4;
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    label {
-      color: #c9d5ef;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 180px;
-      margin: 10px 0 20px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid #2e4067;
-      background: #17253f;
-      color: white;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    textarea:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #5b78ff;
-      box-shadow: 0 0 0 3px rgba(91, 120, 255, 0.18);
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid #2e4067;
-      background: #17253f;
-      color: white;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    button {
-      background: linear-gradient(135deg, #5b78ff, #6b4cff);
-      color: white;
-      border: none;
-      padding: 13px 18px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 650;
-      margin-right: 8px;
-      margin-bottom: 8px;
-      transition: transform 0.12s ease, opacity 0.12s ease, box-shadow 0.12s ease;
-      box-shadow: 0 8px 20px rgba(62, 94, 255, 0.2);
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .secondary-btn {
-      background: #253654;
-      box-shadow: none;
-    }
-
-    .secondary-btn:hover {
-      background: #30466e;
-    }
-
-    .card {
-      margin-top: 20px;
-      padding: 24px;
-      border-radius: 20px;
-      background: rgba(25, 39, 66, 0.92);
-      border: 1px solid rgba(80, 103, 146, 0.45);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
-      backdrop-filter: blur(8px);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      body {
-        padding: 28px 16px 48px;
-      }
-
-      h1 {
-        font-size: 1.85rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    li {
-      line-height: 1.6;
-      margin-bottom: 8px;
-      color: #d9e3fa;
-    }
-
-    .small {
-      color: #9fb0d4;
-      font-size: 14px;
-    }
-
-    .dropzone {
-      margin: 12px 0 20px;
-      padding: 34px 24px;
-      border: 1.5px dashed #4f6597;
-      border-radius: 18px;
-      background: rgba(11, 20, 38, 0.45);
-      text-align: center;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .dropzone.dragover {
-      border-color: #7f92ff;
-      background: rgba(20, 32, 61, 0.9);
-    }
-
-    .dropzone input {
-      display: none;
-    }
-
-    .file-note {
-      margin-top: 10px;
-      color: #cbd7f0;
-      font-size: 14px;
-    }
-
-    .linkish {
-      color: #98b0ff;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      margin-right: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: rgba(9, 18, 36, 0.75);
-      border: 1px solid #30466e;
-      color: #d9e2f9;
-    }
-
-    .section-title {
-      margin-top: 26px;
-      margin-bottom: 10px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .history-item {
-      border-top: 1px solid rgba(80, 103, 146, 0.35);
-      padding-top: 12px;
-      margin-top: 12px;
-    }
-
-    .price-box {
-      background: rgba(10, 19, 38, 0.55);
-      border: 1px solid #30466e;
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 12px;
-    }
-
-    .muted {
-      color: #9fb0d4;
-    }
-
-    .hero-copy {
-      max-width: 700px;
-    }
-
-    .auth-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .helper-box {
-      padding: 12px 14px;
-      border: 1px solid #30466e;
-      border-radius: 14px;
-      background: rgba(14, 27, 52, 0.85);
-      margin-bottom: 12px;
-    }
-
-    .auth-stack > div {
-      margin-bottom: 14px;
-    }
-
-    .status-line {
-      min-height: 22px;
-      margin-top: 10px;
-    }
-  </style>
+  }
+</style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="topbar">
     <div class="hero-copy">
-      <h1>CV Optimiser Pro</h1>
-      <p>Tailor your CV to a job description in seconds with targeted rewrites, clearer gaps, and stronger positioning.</p>
+      <div class="logo-wrap">
+        <div class="logo-mark">
+          <span>CV</span>
+        </div>
+        <div class="logo-wordmark">
+          <div class="logo-title">CV Optimiser</div>
+          <div class="logo-tag">Tailor your CV to the role you actually want</div>
+        </div>
+      </div>
+
+      <h1>Sharper CVs. Better job alignment. Faster applications.</h1>
+      <p class="hero-subtitle">
+        Upload your CV, paste the job description, and get targeted improvements that are easier to use and more likely to move you closer to interview.
+      </p>
     </div>
+
     <div>
       <span id="planBadge" class="pill">Plan: signed out</span>
       <span id="usageBadge" class="pill hidden"></span>
@@ -292,9 +356,9 @@
   </div>
 
   <div id="authCard" class="card" style="margin-bottom: 18px;">
-    <h2 style="margin-bottom:8px;">Sign in to use the tool</h2>
-    <p class="small" style="margin-bottom:18px;">
-      Upload your CV, paste the job description, and get tailored improvements instantly.
+    <h2 id="authTitle" style="margin-bottom:8px;">Sign in to use the tool</h2>
+    <p id="authSubtitle" class="small" style="margin-bottom:18px;">
+      Use a magic link the first time, then create a password for faster access later.
     </p>
 
     <div class="auth-stack">
@@ -321,6 +385,10 @@
       </p>
     </div>
 
+    <div id="accountPanel" class="helper-box hidden">
+      <p class="small" style="margin:0;">Signed in as <span id="accountEmail"></span></p>
+    </div>
+
     <p id="authStatus" class="small status-line">Not signed in.</p>
   </div>
 
@@ -339,7 +407,6 @@
   <p id="passwordStatus" class="small status-line"></p>
 </div>
 
-  <div class="grid">
     <div>
       <div class="card">
         <h3 style="margin-bottom:14px;">Start your CV check</h3>
@@ -361,7 +428,7 @@
         <div style="margin-top:8px;">
           <button id="optimiseBtn" style="width:100%;">Optimise My CV</button>
         </div>
-        <div style="margin-top:10px;">
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
         </div>
@@ -369,10 +436,27 @@
         <p id="status" class="small">Ready.</p>
       </div>
 
-      <div id="results" class="card hidden">
-        <h2>Match score: <span id="score"></span>%</h2>
+      <div id="results" class="card hidden" style="margin-top:28px;">
+        <h2 style="margin-bottom:6px;">Match score</h2>
+        <p style="font-size:52px; font-weight:800; margin-bottom:14px; color:#FFFFFF;" id="score"></p>
         <div class="pill">Source: <span id="source"></span></div>
+        <hr class="subtle-divider">
 
+        <div id="proSummaryWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            Professional summary <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <p id="professionalSummary"></p>
+        </div>
+
+        <div id="proPriorityWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            Top priority fixes <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <ul id="priorityFixes"></ul>
+        </div>
+
+        <hr style="margin:20px 0; border-color:#2e4067; opacity:0.4;">
         <h3 class="section-title">Matched keywords</h3>
         <ul id="matchedKeywords"></ul>
 
@@ -385,38 +469,64 @@
         <h3 class="section-title">Weak points</h3>
         <ul id="weakPoints"></ul>
 
-        <h3 class="section-title">Rewritten CV bullets</h3>
+        <h3 class="section-title">Rewritten CV bullets (ready to use)</h3>
         <ul id="bullets"></ul>
+
+        <div id="proStrongerBulletsWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            Stronger bullet versions <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <ul id="strongerBullets"></ul>
+        </div>
+
+        <div id="proSkillsWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            Suggested skills section <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <ul id="skillsSection"></ul>
+        </div>
+
+        <div id="proAtsWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            ATS boost suggestions <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <ul id="atsTips"></ul>
+        </div>
+
+        <div id="proRisksWrap" class="hidden pro-box">
+          <h3 class="section-title">
+            Interview risks <span class="pill" style="margin-left:8px;">Pro</span>
+          </h3>
+          <ul id="interviewRisks"></ul>
+        </div>
 
         <h3 class="section-title">Next step</h3>
         <p id="nextStep"></p>
 
-        <p class="small">Tip: copy these suggestions into your CV and refine them so they stay fully accurate to your real experience.</p>
+        <p class="small">Tip: use these suggestions as a stronger draft, then refine them so they remain fully accurate to your real experience.</p>
       </div>
     </div>
 
     <div>
-      <div class="card">
+      <div class="card" style="margin-top:20px;">
         <h3>Your plan</h3>
         <div class="price-box">
           <p><strong>Free</strong></p>
-          <p class="muted">3 analyses per day.</p>
+          <p class="muted">3 analyses per day, core match feedback, and rewritten bullets.</p>
         </div>
       <div class="price-box">
         <p><strong>Pro</strong></p>
-        <p class="muted">Unlimited analyses, saved history, and premium features.</p>
+        <p class="muted">Unlimited analyses, professional summary, priority fixes, ATS tips, stronger bullets, and interview-risk feedback.</p>
       </div>
       </div>
 
-      <div class="card">
+      <div class="card" style="opacity:0.9;">
         <h3>Recent history</h3>
         <div id="historyList" class="small muted">
           No analyses yet. Run your first CV optimisation to see results here.
         </div>
       </div>
     </div>
-  </div>
-
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
@@ -447,13 +557,25 @@
     const passwordCard = document.getElementById("passwordCard");
     const passwordInput = document.getElementById("passwordInput");
     const passwordStatus = document.getElementById("passwordStatus");
+    const authTitle = document.getElementById("authTitle");
+    const authSubtitle = document.getElementById("authSubtitle");
+    const accountPanel = document.getElementById("accountPanel");
+    const accountEmail = document.getElementById("accountEmail");
     const emailInput = document.getElementById("emailInput");
     const authStatus = document.getElementById("authStatus");
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const historyList = document.getElementById("historyList");
+    const proSummaryWrap = document.getElementById("proSummaryWrap");
+    const professionalSummaryEl = document.getElementById("professionalSummary");
+    const proPriorityWrap = document.getElementById("proPriorityWrap");
+    const proStrongerBulletsWrap = document.getElementById("proStrongerBulletsWrap");
+    const proSkillsWrap = document.getElementById("proSkillsWrap");
+    const proAtsWrap = document.getElementById("proAtsWrap");
+    const proRisksWrap = document.getElementById("proRisksWrap");
     const loginPasswordInput = document.getElementById("loginPasswordInput");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
+    const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
 
     function resetSelectedFile() {
       selectedFile = null;
@@ -480,7 +602,7 @@
     planBadge.textContent = "Plan: signed out";
     usageBadge.classList.add("hidden");
     upgradeBtn.classList.remove("hidden");
-    upgradeBtn.textContent = "Upgrade to Pro";
+    upgradeBtn.textContent = "Unlock Pro rewrites";
     return;
   }
 
@@ -493,7 +615,7 @@
   } else {
     usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
     upgradeBtn.classList.remove("hidden");
-    upgradeBtn.textContent = "Upgrade to Pro";
+    upgradeBtn.textContent = "Unlock Pro rewrites";
   }
 }
 
@@ -535,14 +657,20 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
+          authTitle.textContent = "Sign in to use the tool";
+          authSubtitle.textContent = "Upload your CV, paste the job description, and get tailored improvements instantly.";
           authStatus.textContent = "Not signed in.";
+
           sendMagicLinkBtn.classList.remove("hidden");
           passwordLoginBtn.classList.remove("hidden");
           signOutBtn.classList.add("hidden");
           loginPasswordWrap.classList.remove("hidden");
           magicLinkHelp.classList.remove("hidden");
+
           passwordCard.classList.add("hidden");
           passwordStatus.textContent = "";
+          passwordInput.value = "";
+
           lastPlanJson = "";
           historyLoadedForUserId = null;
           setPlanUi(null);
@@ -553,18 +681,23 @@
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
         const passwordAlreadySet = !!userMeta.password_set;
 
+        authTitle.textContent = "Your account";
+        authSubtitle.textContent = "You are signed in and ready to use the tool.";
         authStatus.textContent = "Signed in as " + session.user.email;
+
         sendMagicLinkBtn.classList.add("hidden");
         passwordLoginBtn.classList.add("hidden");
         signOutBtn.classList.remove("hidden");
         loginPasswordWrap.classList.add("hidden");
         magicLinkHelp.classList.add("hidden");
-        passwordStatus.textContent = "";
 
         if (passwordAlreadySet) {
           passwordCard.classList.add("hidden");
+          passwordStatus.textContent = "";
+          passwordInput.value = "";
         } else {
           passwordCard.classList.remove("hidden");
+          passwordStatus.textContent = "";
         }
 
         const meRes = await fetch("/api/me", {
@@ -625,6 +758,9 @@ const result = await sbClient.auth.signInWithOtp({
   options: { emailRedirectTo: "https://cv-optimiser-nq8r.onrender.com" }
 });
 
+      if (!result.error) {
+        sessionStorage.setItem(MAGIC_LINK_PASSWORD_SETUP_KEY, email);
+      }
       authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
     });
 
@@ -634,6 +770,7 @@ const result = await sbClient.auth.signInWithOtp({
       passwordStatus.textContent = "";
       passwordInput.value = "";
       loginPasswordInput.value = "";
+      sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
       historyLoadedForUserId = null;
       lastPlanJson = "";
       await refreshAuthUi();
@@ -705,9 +842,10 @@ passwordLoginBtn.addEventListener("click", async function() {
     return;
   }
 
+  sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
   authStatus.textContent = "Signed in successfully.";
-  await refreshAuthUi();
   passwordCard.classList.add("hidden");
+  await refreshAuthUi();
 });
 
 
@@ -861,7 +999,12 @@ passwordLoginBtn.addEventListener("click", async function() {
           ["keywords", data.missingKeywords || []],
           ["strongPoints", data.strongPoints || []],
           ["weakPoints", data.weakPoints || []],
-          ["bullets", data.bulletPoints || []]
+          ["bullets", data.bulletPoints || []],
+          ["priorityFixes", data.priorityFixes || []],
+          ["strongerBullets", data.strongerBullets || []],
+          ["skillsSection", data.skillsSection || []],
+          ["atsTips", data.atsTips || []],
+          ["interviewRisks", data.interviewRisks || []]
         ];
 
         sections.forEach(function(pair) {
@@ -876,6 +1019,15 @@ passwordLoginBtn.addEventListener("click", async function() {
           });
         });
 
+        const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
+        professionalSummaryEl.textContent = data.professionalSummary || "";
+        proSummaryWrap.classList.toggle("hidden", !hasProfessionalSummary);
+
+        proPriorityWrap.classList.toggle("hidden", !(data.priorityFixes && data.priorityFixes.length));
+        proStrongerBulletsWrap.classList.toggle("hidden", !(data.strongerBullets && data.strongerBullets.length));
+        proSkillsWrap.classList.toggle("hidden", !(data.skillsSection && data.skillsSection.length));
+        proAtsWrap.classList.toggle("hidden", !(data.atsTips && data.atsTips.length));
+        proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
 
