@@ -137,6 +137,32 @@
     font-size: 14px;
   }
 
+  #checkoutStatus {
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.34);
+    background: rgba(14, 25, 46, 0.84);
+    color: #D7E3FF;
+  }
+
+  #checkoutStatus.checkout-status-pending {
+    border-color: rgba(91, 120, 255, 0.34);
+    background: linear-gradient(180deg, rgba(21, 34, 66, 0.9), rgba(14, 25, 46, 0.92));
+    color: #E7EEFF;
+  }
+
+  #checkoutStatus.checkout-status-success {
+    border-color: rgba(102, 201, 145, 0.34);
+    background: linear-gradient(180deg, rgba(20, 45, 38, 0.9), rgba(13, 30, 29, 0.94));
+    color: #DDF9E8;
+  }
+
+  #checkoutStatus.checkout-status-warning {
+    border-color: rgba(214, 177, 101, 0.34);
+    background: linear-gradient(180deg, rgba(50, 39, 21, 0.9), rgba(34, 27, 16, 0.94));
+    color: #F9E9C9;
+  }
+
   .dropzone {
     margin: 16px 0 22px;
     padding: 38px 24px;
@@ -446,16 +472,16 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 7px 11px;
     border-radius: 999px;
     background: rgba(12, 23, 43, 0.82);
     border: 1px solid rgba(80, 103, 146, 0.35);
     color: #C9D7F6;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .hero-eyebrow::before {
@@ -468,12 +494,12 @@
   }
 
   .hero-headline {
-    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
-    line-height: 1.04;
-    letter-spacing: -0.045em;
-    font-weight: 820;
-    margin: 0 0 14px;
-    max-width: 15ch;
+    font-size: clamp(1.6rem, 3.4vw, 2.35rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: 810;
+    margin: 0 0 12px;
+    max-width: 18ch;
     color: #F4F7FF;
   }
 
@@ -970,6 +996,65 @@
     gap: 18px;
   }
 
+  .status-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(80, 103, 146, 0.35);
+    background: rgba(12, 23, 43, 0.78);
+    color: #DCE6FB;
+  }
+
+  .status-banner::before {
+    content: "i";
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .status-banner.info {
+    border-color: rgba(91, 120, 255, 0.35);
+    background: rgba(19, 33, 64, 0.88);
+  }
+
+  .status-banner.info::before {
+    background: rgba(91, 120, 255, 0.18);
+    color: #BFD0FF;
+  }
+
+  .status-banner.success {
+    border-color: rgba(64, 197, 129, 0.35);
+    background: rgba(17, 43, 33, 0.9);
+  }
+
+  .status-banner.success::before {
+    content: "✓";
+    background: rgba(64, 197, 129, 0.18);
+    color: #B7F7C4;
+  }
+
+  .status-banner.error {
+    border-color: rgba(255, 116, 116, 0.35);
+    background: rgba(52, 23, 23, 0.88);
+  }
+
+  .status-banner.error::before {
+    content: "!";
+    background: rgba(255, 116, 116, 0.18);
+    color: #FFC0C0;
+  }
+
   @media (max-width: 900px) {
     .result-grid-two {
       grid-template-columns: 1fr;
@@ -998,7 +1083,7 @@
       </h1>
 
       <p class="hero-subtitle">
-        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use immediately.
+        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
       </p>
     </div>
 
@@ -1029,7 +1114,7 @@
     </div>
   </div>
 
-  <p id="checkoutStatus" class="small hidden" style="margin-top:6px; margin-bottom:8px;"></p>
+  <div id="checkoutStatus" class="status-banner info hidden"></div>
 
   <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
     <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Sign in to use the tool</h2>
@@ -1425,6 +1510,46 @@
       window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
     }
 
+    function setCheckoutStatusMessage(message, tone) {
+      checkoutStatus.classList.remove("hidden", "checkout-status-pending", "checkout-status-success", "checkout-status-warning");
+      checkoutStatus.textContent = message;
+
+      if (tone) {
+        checkoutStatus.classList.add("checkout-status-" + tone);
+      }
+    }
+
+    function clearCheckoutStatusMessage() {
+      checkoutStatus.classList.add("hidden");
+      checkoutStatus.classList.remove("checkout-status-pending", "checkout-status-success", "checkout-status-warning");
+      checkoutStatus.textContent = "";
+    }
+
+    async function confirmCheckoutSession(sessionId) {
+      const token = await getSessionToken();
+      if (!token) {
+        return { error: "Sign in again if needed and your Pro plan should appear shortly." };
+      }
+
+      const res = await fetch("/api/confirm-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({ session_id: sessionId })
+      });
+
+      const raw = await res.text();
+
+      try {
+        return JSON.parse(raw);
+      } catch (error) {
+        console.error("confirm checkout session parse error:", error, raw);
+        return { error: "Could not verify payment status yet." };
+      }
+    }
+
     async function handleCheckoutReturn() {
       const url = new URL(window.location.href);
       const checkout = url.searchParams.get("checkout");
@@ -1435,29 +1560,73 @@
       }
 
       checkoutStatus.classList.remove("hidden");
-      checkoutStatus.textContent = "Payment completed. Updating your plan...";
+      checkoutStatus.classList.remove("success", "error");
+      checkoutStatus.classList.add("info");
+      checkoutStatus.textContent = "Payment received. Activating your Pro plan now...";
 
-      for (let i = 0; i < 10; i += 1) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
+      try {
+        const token = await getSessionToken();
+
+        if (!token) {
+          checkoutStatus.classList.remove("info");
+          checkoutStatus.classList.add("error");
+          checkoutStatus.textContent = "Payment succeeded, but you are not signed in. Please sign in and refresh.";
+          return;
+        }
+
+        const confirmRes = await fetch("/api/confirm-checkout-session?session_id=" + encodeURIComponent(sessionId), {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
+
+        const confirmRaw = await confirmRes.text();
+        console.log("confirm checkout raw response:", confirmRaw);
+
+        let confirmData;
+        try {
+          confirmData = JSON.parse(confirmRaw);
+        } catch (e) {
+          checkoutStatus.classList.remove("info");
+          checkoutStatus.classList.add("error");
+          checkoutStatus.textContent = "Payment succeeded, but plan activation could not be confirmed yet. Please refresh in a few seconds.";
+          return;
+        }
+
+        if (confirmData.error) {
+          checkoutStatus.classList.remove("info");
+          checkoutStatus.classList.add("error");
+          checkoutStatus.textContent = "Payment succeeded, but activation is still processing. Please refresh in a few seconds.";
+          return;
+        }
+
         lastPlanJson = "";
         historyLoadedForUserId = null;
         await refreshAuthUi();
 
         if (accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro") {
+          checkoutStatus.classList.remove("info", "error");
+          checkoutStatus.classList.add("success");
           checkoutStatus.textContent = "Your Pro plan is now active.";
           setTimeout(function() {
             checkoutStatus.classList.add("hidden");
+            checkoutStatus.classList.remove("success", "error", "info");
             checkoutStatus.textContent = "";
             clearCheckoutParamsFromUrl();
           }, 2500);
           return;
         }
-      }
 
-      checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Refresh in a few seconds if needed.";
-      setTimeout(function() {
-        clearCheckoutParamsFromUrl();
-      }, 2500);
+        checkoutStatus.classList.remove("info");
+        checkoutStatus.classList.add("error");
+        checkoutStatus.textContent = "Payment succeeded, but the plan is still updating. Please refresh in a few seconds.";
+      } catch (error) {
+        console.error("handleCheckoutReturn error:", error);
+        checkoutStatus.classList.remove("info");
+        checkoutStatus.classList.add("error");
+        checkoutStatus.textContent = "Payment succeeded, but activation could not be confirmed yet. Please refresh in a few seconds.";
+      }
     }
 
     function consumeCheckoutSuccessFlag() {

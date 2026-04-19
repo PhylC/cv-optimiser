@@ -398,6 +398,52 @@ def create_portal_session(authorization: Optional[str] = Header(None)) -> dict[s
         return {"error": str(e)}
 
 
+@app.post("/api/confirm-checkout-session")
+def confirm_checkout_session(
+    session_id: str,
+    authorization: Optional[str] = Header(None)
+) -> dict[str, Any]:
+    try:
+        user = get_user_from_token(authorization)
+        upsert_profile(user["id"], user["email"])
+
+        if not STRIPE_SECRET_KEY:
+            return {"error": "Stripe secret key not configured."}
+
+        if not session_id:
+            return {"error": "Missing session ID."}
+
+        checkout_session = require_stripe().checkout.Session.retrieve(session_id)
+
+        if not checkout_session:
+            return {"error": "Checkout session not found."}
+
+        if checkout_session.get("payment_status") not in ["paid", "no_payment_required"]:
+            return {"error": "Checkout session is not paid yet."}
+
+        customer_id = checkout_session.get("customer")
+        subscription_id = checkout_session.get("subscription")
+
+        if not subscription_id:
+            return {"error": "No subscription found on this checkout session."}
+
+        require_supabase().table("subscriptions").upsert(
+            {
+                "user_id": user["id"],
+                "stripe_customer_id": customer_id,
+                "stripe_subscription_id": subscription_id,
+                "status": "active",
+            },
+            on_conflict="user_id"
+        ).execute()
+
+        return {"ok": True, "plan": "pro"}
+
+    except Exception as e:
+        print("CONFIRM CHECKOUT ERROR:", repr(e))
+        return {"error": str(e)}
+
+
 @app.post("/api/stripe-webhook")
 async def stripe_webhook(request: Request) -> JSONResponse:
     if not STRIPE_WEBHOOK_SECRET:
@@ -421,12 +467,14 @@ async def stripe_webhook(request: Request) -> JSONResponse:
         metadata = getattr(session, "metadata", None) or {}
         user_id = metadata.get("user_id") if isinstance(metadata, dict) else getattr(session, "client_reference_id", None)
         subscription_id = getattr(session, "subscription", None)
+        customer_id = getattr(session, "customer", None)
         customer_email = getattr(session, "customer_email", None)
 
         if user_id:
             sb.table("subscriptions").upsert({
                 "user_id": user_id,
                 "stripe_subscription_id": subscription_id,
+                "stripe_customer_id": str(customer_id) if customer_id else None,
                 "status": "active",
                 "email": customer_email,
                 "updated_at": current_utc().isoformat(),
