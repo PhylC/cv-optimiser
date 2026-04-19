@@ -7,7 +7,7 @@
   <style>
   body {
     font-family: Inter, Arial, sans-serif;
-    max-width: 920px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 40px 24px 64px;
     background:
@@ -49,19 +49,15 @@
     font-weight: 600;
   }
 
-  textarea,
-  input[type="email"],
-  input[type="password"] {
+  input, textarea {
     width: 100%;
-    padding: 14px 16px;
-    border-radius: 14px;
-    border: 1px solid #30466E;
-    background: #17253F;
-    color: #FFFFFF;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(80, 103, 146, 0.35);
+    background: rgba(8, 18, 34, 0.85);
+    color: #E8EEFC;
     font-size: 14px;
-    box-sizing: border-box;
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+    transition: border 0.12s ease, box-shadow 0.12s ease;
   }
 
   textarea {
@@ -70,26 +66,25 @@
     resize: vertical;
   }
 
-  textarea:focus,
-  input[type="email"]:focus,
-  input[type="password"]:focus {
+  input:focus, textarea:focus {
+    outline: none;
     border-color: #5B78FF;
-    box-shadow: 0 0 0 3px rgba(91, 120, 255, 0.18);
+    box-shadow: 0 0 0 3px rgba(91, 120, 255, 0.15);
   }
 
   button {
-    background: linear-gradient(135deg, #5B78FF, #4568F2);
-    color: white;
+    background: linear-gradient(135deg, #5B78FF, #3E5EFF);
     border: none;
-    padding: 13px 18px;
     border-radius: 12px;
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: 650;
     margin-right: 8px;
     margin-bottom: 8px;
-    transition: transform 0.12s ease, opacity 0.12s ease, box-shadow 0.12s ease;
-    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.24);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.25);
   }
 
   button:hover {
@@ -103,22 +98,24 @@
   }
 
   .secondary-btn {
-    background: #243754;
+    background: rgba(20, 35, 60, 0.8);
     box-shadow: none;
-  }
-
-  .secondary-btn:hover {
-    background: #2C4265;
+    border: 1px solid rgba(80, 103, 146, 0.35);
+    color: #E8EEFC;
   }
 
   .card {
-    margin-top: 20px;
-    padding: 24px;
+    background: rgba(15, 28, 50, 0.82);
+    border: 1px solid rgba(80, 103, 146, 0.32);
     border-radius: 20px;
-    background: rgba(25, 39, 66, 0.94);
-    border: 1px solid rgba(80, 103, 146, 0.42);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    padding: 22px 22px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
     backdrop-filter: blur(8px);
+    transition: border 0.15s ease, transform 0.15s ease;
+  }
+
+  .card:hover {
+    border-color: rgba(91, 120, 255, 0.4);
   }
 
   .hidden {
@@ -141,11 +138,11 @@
   }
 
   .dropzone {
-    margin: 12px 0 20px;
-    padding: 34px 24px;
-    border: 1.5px dashed #4F6597;
-    border-radius: 18px;
-    background: rgba(11, 20, 38, 0.42);
+    margin: 16px 0 22px;
+    padding: 38px 24px;
+    border: 1.5px dashed rgba(111, 133, 186, 0.72);
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(13, 23, 42, 0.74), rgba(10, 19, 35, 0.62));
     text-align: center;
     transition: border-color 0.2s ease, background 0.2s ease;
   }
@@ -188,6 +185,130 @@
   .section-title {
     margin-top: 26px;
     margin-bottom: 10px;
+    font-size: 1rem;
+    letter-spacing: -0.015em;
+  }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.8fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .card-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(10, 19, 37, 0.78);
+    border: 1px solid rgba(85, 108, 154, 0.34);
+    color: #C9D7F6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .card-intro {
+    max-width: 58ch;
+    margin-bottom: 18px;
+    color: #AFC0E4;
+  }
+
+  .workflow-card,
+  .results-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .workflow-card::before,
+  .results-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 60%);
+    pointer-events: none;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .results-header-copy p {
+    margin-top: 4px;
+    color: #AFC0E4;
+  }
+
+  .results-score {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    border-radius: 20px;
+    background: rgba(10, 19, 37, 0.64);
+    border: 1px solid rgba(91, 120, 255, 0.22);
+  }
+
+  .results-score p {
+    margin: 0;
+  }
+
+  .results-hero {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .results-hero-copy {
+    flex: 1 1 320px;
+  }
+
+  .results-lead {
+    font-size: 15px;
+    color: #AAB7D4;
+    line-height: 1.65;
+  }
+
+  .results-score-hero {
+    min-width: 210px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(19, 34, 64, 0.96), rgba(13, 25, 49, 0.96));
+    border: 1px solid rgba(91, 120, 255, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 38px rgba(25, 40, 104, 0.16);
+  }
+
+  .results-score-label {
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9FB0D4;
+  }
+
+  .results-source {
+    margin-bottom: 22px;
+  }
+
+  .sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .topbar {
@@ -258,17 +379,17 @@
   }
 
   .history-item {
-    border-top: 1px solid rgba(80, 103, 146, 0.35);
-    padding-top: 12px;
-    margin-top: 12px;
+    border-top: 1px solid rgba(80, 103, 146, 0.28);
+    padding-top: 14px;
+    margin-top: 14px;
   }
 
   .price-box {
-    background: rgba(10, 19, 38, 0.55);
-    border: 1px solid #30466E;
-    border-radius: 16px;
-    padding: 18px;
-    margin-top: 12px;
+    background: linear-gradient(180deg, rgba(10, 19, 38, 0.72), rgba(8, 16, 31, 0.66));
+    border: 1px solid rgba(77, 100, 146, 0.38);
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 14px;
   }
 
   .muted {
@@ -367,11 +488,12 @@
   }
 
   .pro-box {
-    border: 1px solid #5B78FF;
-    background: rgba(20, 30, 60, 0.62);
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 18px;
+    border: 1px solid rgba(122, 144, 255, 0.54);
+    background: linear-gradient(180deg, rgba(29, 42, 84, 0.82), rgba(18, 28, 56, 0.86));
+    border-radius: 20px;
+    padding: 18px;
+    margin-top: 20px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 36px rgba(38, 62, 163, 0.14);
   }
 
   @media (max-width: 900px) {
@@ -556,6 +678,40 @@
     margin-top: 10px;
   }
 
+  .upload-box {
+    border: 1px dashed rgba(91, 120, 255, 0.45);
+    background: rgba(12, 23, 43, 0.6);
+    padding: 22px;
+    border-radius: 16px;
+    text-align: center;
+    transition: border 0.12s ease, background 0.12s ease;
+  }
+
+  .upload-box:hover {
+    border-color: #5B78FF;
+    background: rgba(12, 23, 43, 0.8);
+  }
+
+  .result-card {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(10, 20, 40, 0.85);
+    border: 1px solid rgba(80, 103, 146, 0.28);
+  }
+
+  .next-step-card {
+    background: linear-gradient(180deg, rgba(15, 31, 58, 0.92), rgba(11, 24, 45, 0.92));
+    border-color: rgba(108, 129, 190, 0.34);
+  }
+
+  @media (max-width: 900px) {
+    .results-score-hero {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
   .topbar-right {
     display: flex;
     align-items: flex-start;
@@ -664,6 +820,159 @@
     .account-chip {
       width: 100%;
       min-width: 0;
+    }
+
+    .main-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  h2, h3 {
+    letter-spacing: -0.02em;
+  }
+
+  .section {
+    margin-top: 28px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .section-subtitle {
+    font-size: 14px;
+    color: #9FB0D4;
+    margin-bottom: 16px;
+  }
+
+  .card + .card {
+  margin-top: 18px;
+}
+
+  .results-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .score-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(91,120,255,0.18), rgba(18,31,58,0.92));
+    border: 1px solid rgba(91,120,255,0.35);
+  }
+
+  .score-hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .score-kicker {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #AFC0FF;
+    font-weight: 700;
+  }
+
+  .score-value {
+    font-size: clamp(42px, 7vw, 64px);
+    line-height: 1;
+    font-weight: 850;
+    color: #FFFFFF;
+  }
+
+  .score-subtext {
+    font-size: 14px;
+    color: #B7C6E6;
+    max-width: 44ch;
+  }
+
+  .score-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .result-section {
+    padding: 18px 18px 16px;
+    border-radius: 18px;
+    background: rgba(10, 20, 40, 0.82);
+    border: 1px solid rgba(80, 103, 146, 0.28);
+  }
+
+  .result-section-title {
+    font-size: 17px;
+    font-weight: 760;
+    color: #F2F6FF;
+    margin-bottom: 6px;
+  }
+
+  .result-section-subtitle {
+    font-size: 13px;
+    color: #9FB0D4;
+    margin-bottom: 14px;
+  }
+
+  .result-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .result-list li {
+    margin-bottom: 8px;
+  }
+
+  .result-paragraph {
+    color: #DCE5FB;
+    line-height: 1.7;
+  }
+
+  .pro-premium {
+    border: 1px solid rgba(91,120,255,0.42);
+    background: linear-gradient(180deg, rgba(20,30,60,0.82), rgba(11,21,41,0.92));
+    box-shadow: inset 0 1px 0 rgba(150,170,255,0.06);
+  }
+
+  .pro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #DDE6FF;
+    background: rgba(91,120,255,0.14);
+    border: 1px solid rgba(91,120,255,0.35);
+  }
+
+  .result-grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .result-grid-two {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -774,10 +1083,10 @@
 
   <div id="supportModal" class="modal-backdrop hidden">
     <div class="modal-card">
-      <h3 style="margin-bottom:8px;">Contact support</h3>
-      <p class="small" style="margin-bottom:16px;">
-        Need help with billing, login, CV output, or a bug? Send a message here and I will get back to you.
-      </p>
+      <div class="section-title">Need help?</div>
+      <div class="section-subtitle">
+        Get help with billing, login, or CV results.
+      </div>
 
       <form id="supportForm" action="https://formspree.io/f/mgoryrwy" method="POST">
         <div style="margin-bottom:12px;">
@@ -808,9 +1117,13 @@
     </div>
   </div>
 
+  <div class="main-grid">
     <div>
-      <div class="card">
-        <h3 style="margin-bottom:14px;">Start your CV check</h3>
+      <div class="card section">
+        <div class="section-title">Start your CV check</div>
+        <div class="section-subtitle">
+          Paste a job description and your CV, or upload a file to get tailored improvements.
+        </div>
 
         <label for="jobDescription">Job description</label>
         <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
@@ -838,96 +1151,152 @@
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
-        <h2 style="margin-bottom:6px;">Match score</h2>
-        <p style="font-size:52px; font-weight:800; margin-bottom:14px; color:#FFFFFF;" id="score"></p>
-        <div class="pill">Source: <span id="source"></span></div>
-        <hr class="subtle-divider">
+        <div class="results-shell">
 
-        <div id="proSummaryWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            Professional summary <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <p id="professionalSummary"></p>
+          <div class="score-hero">
+            <div class="score-hero-left">
+              <div class="score-kicker">CV match result</div>
+              <div id="score" class="score-value"></div>
+              <div class="score-subtext">
+                A recruiter-style view of how well your CV currently aligns with the role and where the biggest gains are.
+              </div>
+            </div>
+
+            <div class="score-meta">
+              <div class="pill">Source: <span id="source"></span></div>
+            </div>
+          </div>
+
+          <div id="proSummaryWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Professional summary</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">A stronger CV profile tailored to this role.</div>
+            <p id="professionalSummary" class="result-paragraph"></p>
+          </div>
+
+          <div id="proPriorityWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Top priority fixes</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">The highest-impact changes to make first.</div>
+            <ul id="priorityFixes" class="result-list"></ul>
+          </div>
+
+          <div class="result-grid-two">
+            <div class="result-section">
+              <div class="result-section-title">Matched keywords</div>
+              <div class="result-section-subtitle">What your CV already supports well for this role.</div>
+              <ul id="matchedKeywords" class="result-list"></ul>
+            </div>
+
+            <div class="result-section">
+              <div class="result-section-title">Missing keywords</div>
+              <div class="result-section-subtitle">Important gaps or weak signals in the current CV.</div>
+              <ul id="keywords" class="result-list"></ul>
+            </div>
+          </div>
+
+          <div class="result-grid-two">
+            <div class="result-section">
+              <div class="result-section-title">What works</div>
+              <div class="result-section-subtitle">Strengths that support interview potential.</div>
+              <ul id="strongPoints" class="result-list"></ul>
+            </div>
+
+            <div class="result-section">
+              <div class="result-section-title">What will hold you back</div>
+              <div class="result-section-subtitle">Weaknesses, ambiguity, or missing evidence hurting fit.</div>
+              <ul id="weakPoints" class="result-list"></ul>
+            </div>
+          </div>
+
+          <div class="result-section">
+            <div class="result-section-title">Rewritten CV bullets</div>
+            <div class="result-section-subtitle">Stronger bullet points you can adapt directly into your CV.</div>
+            <ul id="bullets" class="result-list"></ul>
+          </div>
+
+          <div id="proStrongerBulletsWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Stronger bullet versions</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">More commercially compelling rewrite options.</div>
+            <ul id="strongerBullets" class="result-list"></ul>
+          </div>
+
+          <div id="proSkillsWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Suggested skills section</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">A cleaner role-aligned skills section based on your CV and the role.</div>
+            <ul id="skillsSection" class="result-list"></ul>
+          </div>
+
+          <div class="result-grid-two">
+            <div id="proAtsWrap" class="result-section pro-premium hidden">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div class="result-section-title">ATS boost suggestions</div>
+                <span class="pro-badge">Pro</span>
+              </div>
+              <div class="result-section-subtitle">Keyword and phrasing upgrades to improve machine screening.</div>
+              <ul id="atsTips" class="result-list"></ul>
+            </div>
+
+            <div id="proRisksWrap" class="result-section pro-premium hidden">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div class="result-section-title">Interview risks</div>
+                <span class="pro-badge">Pro</span>
+              </div>
+              <div class="result-section-subtitle">Areas likely to raise recruiter doubts or follow-up questions.</div>
+              <ul id="interviewRisks" class="result-list"></ul>
+            </div>
+          </div>
+
+          <div class="result-section">
+            <div class="result-section-title">Best next step</div>
+            <div class="result-section-subtitle">The single highest-value improvement to make next.</div>
+            <p id="nextStep" class="result-paragraph"></p>
+          </div>
+
+          <div class="result-section" style="padding:14px 16px;">
+            <p class="small">Tip: use these suggestions as a stronger draft, then refine them so they remain fully accurate to your real experience.</p>
+          </div>
         </div>
-
-        <div id="proPriorityWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            Top priority fixes <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <ul id="priorityFixes"></ul>
-        </div>
-
-        <hr style="margin:20px 0; border-color:#2e4067; opacity:0.4;">
-        <h3 class="section-title">Matched keywords</h3>
-        <ul id="matchedKeywords"></ul>
-
-        <h3 class="section-title">Missing keywords</h3>
-        <ul id="keywords"></ul>
-
-        <h3 class="section-title">Strong points</h3>
-        <ul id="strongPoints"></ul>
-
-        <h3 class="section-title">Weak points</h3>
-        <ul id="weakPoints"></ul>
-
-        <h3 class="section-title">Rewritten CV bullets (ready to use)</h3>
-        <ul id="bullets"></ul>
-
-        <div id="proStrongerBulletsWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            Stronger bullet versions <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <ul id="strongerBullets"></ul>
-        </div>
-
-        <div id="proSkillsWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            Suggested skills section <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <ul id="skillsSection"></ul>
-        </div>
-
-        <div id="proAtsWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            ATS boost suggestions <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <ul id="atsTips"></ul>
-        </div>
-
-        <div id="proRisksWrap" class="hidden pro-box">
-          <h3 class="section-title">
-            Interview risks <span class="pill" style="margin-left:8px;">Pro</span>
-          </h3>
-          <ul id="interviewRisks"></ul>
-        </div>
-
-        <h3 class="section-title">Next step</h3>
-        <p id="nextStep"></p>
-
-        <p class="small">Tip: use these suggestions as a stronger draft, then refine them so they remain fully accurate to your real experience.</p>
       </div>
     </div>
 
     <div>
+      <div class="sidebar-stack">
       <div class="card" style="margin-top:20px;">
+        <div class="card-kicker">Plans</div>
         <h3>Your plan</h3>
         <div class="price-box">
           <p><strong>Free</strong></p>
-          <p class="muted">3 analyses per day, core match feedback, and rewritten bullets.</p>
+          <p class="muted">3 analyses per day with core match feedback, strengths, gaps, and rewritten bullet suggestions.</p>
         </div>
       <div class="price-box">
         <p><strong>Pro</strong></p>
-        <p class="muted">Unlimited analyses, professional summary, priority fixes, ATS tips, stronger bullets, and interview-risk feedback.</p>
+        <p class="muted">Unlimited analyses plus professional summary, priority fixes, stronger bullets, ATS improvements, and interview-risk feedback.</p>
       </div>
       </div>
 
-      <div class="card" style="opacity:0.9;">
-        <h3>Recent history</h3>
+      <div class="card section" style="opacity:0.9;">
+        <div class="section-title">Recent history</div>
+        <div class="section-subtitle">
+          Your previous CV analyses
+        </div>
         <div id="historyList" class="small muted">
           No analyses yet. Run your first CV optimisation to see results here.
         </div>
       </div>
+      </div>
     </div>
+  </div>
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
