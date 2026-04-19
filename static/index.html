@@ -51,6 +51,9 @@
 
   input, textarea {
     width: 100%;
+    max-width: 100%;
+    display: block;
+    box-sizing: border-box;
     padding: 12px 14px;
     border-radius: 12px;
     border: 1px solid rgba(80, 103, 146, 0.35);
@@ -61,6 +64,9 @@
   }
 
   textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     min-height: 180px;
     margin: 10px 0 20px;
     resize: vertical;
@@ -1203,10 +1209,19 @@
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.2;
   }
 
   .footer-link:hover {
     color: #D7E2FF;
+    transform: none;
   }
 
   .results-upgrade-cta {
@@ -1389,7 +1404,7 @@
 
   <div class="main-grid">
     <div>
-      <div class="card section">
+      <div class="card section" style="overflow: hidden;">
         <div class="section-title">Start your CV check</div>
         <div class="section-subtitle">
           Paste a job description and your CV, or upload a file to get tailored improvements.
@@ -1573,7 +1588,7 @@
     <a href="/privacy" class="footer-link">Privacy</a>
     <a href="/terms" class="footer-link">Terms</a>
     <a href="/billing" class="footer-link">Billing & cancellation</a>
-    <button id="footerSupportBtn" type="button" class="secondary-btn" style="padding:6px 10px; font-size:13px; margin:0;">Support</button>
+    <button id="footerSupportBtn" type="button" class="footer-link">Support</button>
   </footer>
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
