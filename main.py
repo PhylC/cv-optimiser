@@ -624,6 +624,19 @@ async def optimise(
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
     try:
+        job_description = jobDescription.strip()
+        cv_text = cvText.strip()
+
+        if not job_description and not cv_text:
+            try:
+                body = await request.json()
+            except Exception:
+                body = {}
+
+            if isinstance(body, dict):
+                job_description = str(body.get("jobDescription", "") or "").strip()
+                cv_text = str(body.get("cvText", "") or "").strip()
+
         user = get_user_from_token(authorization)
         upsert_profile(user["id"], user["email"])
         plan = get_plan_state(user["id"])
@@ -635,9 +648,6 @@ async def optimise(
                 "source": "error",
                 "plan": plan,
             }
-
-        job_description = jobDescription.strip()
-        cv_text = cvText.strip()
 
         if not job_description or len(job_description) < 20:
             return {"error": "Please paste a fuller job description.", "source": "error"}
@@ -657,11 +667,11 @@ async def optimise(
         if not cv_text or len(cv_text) < 20:
             return {"error": "Please paste your CV text or upload a readable PDF, DOCX, or TXT file.", "source": "error"}
 
-    raw = require_openai().responses.create(
-        model=OPENAI_MODEL,
-        input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
-        max_output_tokens=900,
-    ).output_text.strip()
+        raw = require_openai().responses.create(
+            model=OPENAI_MODEL,
+            input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
+            max_output_tokens=900,
+        ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
         print(raw)
