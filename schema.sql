@@ -13,6 +13,9 @@ create table if not exists subscriptions (
   updated_at timestamptz default now()
 );
 
+alter table subscriptions add column if not exists stripe_customer_id text;
+alter table subscriptions add column if not exists updated_at timestamptz default now();
+
 create index if not exists subscriptions_user_id_idx on subscriptions(user_id);
 
 create table if not exists usage_events (

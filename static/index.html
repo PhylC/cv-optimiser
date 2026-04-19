@@ -1457,7 +1457,6 @@
     const passwordCardTitle = document.getElementById("passwordCardTitle");
     const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
-    const CHECKOUT_SUCCESS_PARAM = "checkout";
 
     function closeAccountMenu() {
       accountMenuDropdown.classList.add("hidden");
@@ -1510,46 +1509,6 @@
       window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
     }
 
-    function setCheckoutStatusMessage(message, tone) {
-      checkoutStatus.classList.remove("hidden", "checkout-status-pending", "checkout-status-success", "checkout-status-warning");
-      checkoutStatus.textContent = message;
-
-      if (tone) {
-        checkoutStatus.classList.add("checkout-status-" + tone);
-      }
-    }
-
-    function clearCheckoutStatusMessage() {
-      checkoutStatus.classList.add("hidden");
-      checkoutStatus.classList.remove("checkout-status-pending", "checkout-status-success", "checkout-status-warning");
-      checkoutStatus.textContent = "";
-    }
-
-    async function confirmCheckoutSession(sessionId) {
-      const token = await getSessionToken();
-      if (!token) {
-        return { error: "Sign in again if needed and your Pro plan should appear shortly." };
-      }
-
-      const res = await fetch("/api/confirm-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({ session_id: sessionId })
-      });
-
-      const raw = await res.text();
-
-      try {
-        return JSON.parse(raw);
-      } catch (error) {
-        console.error("confirm checkout session parse error:", error, raw);
-        return { error: "Could not verify payment status yet." };
-      }
-    }
-
     async function handleCheckoutReturn() {
       const url = new URL(window.location.href);
       const checkout = url.searchParams.get("checkout");
@@ -1582,12 +1541,17 @@
         });
 
         const confirmRaw = await confirmRes.text();
-        console.log("confirm checkout raw response:", confirmRaw);
+        console.log("confirm checkout response:", {
+          status: confirmRes.status,
+          ok: confirmRes.ok,
+          body: confirmRaw
+        });
 
         let confirmData;
         try {
           confirmData = JSON.parse(confirmRaw);
         } catch (e) {
+          console.error("confirm checkout JSON parse error:", e);
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
           checkoutStatus.textContent = "Payment succeeded, but plan activation could not be confirmed yet. Please refresh in a few seconds.";
@@ -1595,9 +1559,10 @@
         }
 
         if (confirmData.error) {
+          console.error("confirm checkout returned error:", confirmData);
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
-          checkoutStatus.textContent = "Payment succeeded, but activation is still processing. Please refresh in a few seconds.";
+          checkoutStatus.textContent = "Payment succeeded, but activation failed: " + confirmData.error;
           return;
         }
 
@@ -1620,62 +1585,13 @@
 
         checkoutStatus.classList.remove("info");
         checkoutStatus.classList.add("error");
-        checkoutStatus.textContent = "Payment succeeded, but the plan is still updating. Please refresh in a few seconds.";
+        checkoutStatus.textContent = "Payment succeeded, but your account still shows Free. Please wait a few seconds and refresh once.";
       } catch (error) {
         console.error("handleCheckoutReturn error:", error);
         checkoutStatus.classList.remove("info");
         checkoutStatus.classList.add("error");
         checkoutStatus.textContent = "Payment succeeded, but activation could not be confirmed yet. Please refresh in a few seconds.";
       }
-    }
-
-    function consumeCheckoutSuccessFlag() {
-      const params = new URLSearchParams(window.location.search);
-      const isCheckoutSuccess = params.get(CHECKOUT_SUCCESS_PARAM) === "success";
-
-      if (!isCheckoutSuccess) {
-        return false;
-      }
-
-      params.delete(CHECKOUT_SUCCESS_PARAM);
-      params.delete("session_id");
-
-      const nextQuery = params.toString();
-      const nextUrl = window.location.pathname + (nextQuery ? "?" + nextQuery : "") + window.location.hash;
-      window.history.replaceState({}, document.title, nextUrl);
-      return true;
-    }
-
-    async function pollForProActivationAfterCheckout() {
-      status.textContent = "Checkout complete. Finalising your Pro access...";
-
-      const token = await getSessionToken();
-      if (!token) {
-        status.textContent = "Checkout complete. Sign in again if needed and your Pro plan should appear shortly.";
-        return;
-      }
-
-      for (let attempt = 0; attempt < 6; attempt += 1) {
-        try {
-          const meRes = await fetch("/api/me", {
-            headers: { Authorization: "Bearer " + token }
-          });
-          const me = await meRes.json();
-
-          if (me && me.plan && me.plan.is_pro) {
-            await refreshAuthUi();
-            status.textContent = "Pro is now active.";
-            return;
-          }
-        } catch (error) {
-          console.error("post-checkout poll error:", error);
-        }
-
-        await sleep(1500);
-      }
-
-      await refreshAuthUi();
-      status.textContent = "Checkout complete. Your Pro access should appear shortly as billing finishes syncing.";
     }
 
     function setSelectedFile(file) {

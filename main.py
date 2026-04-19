@@ -225,11 +225,43 @@ def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
         .table("subscriptions")
         .select("*")
         .eq("user_id", user_id)
-        .eq("status", "active")
+        .in_("status", ["active", "trialing"])
+        .order("updated_at", desc=True)
         .limit(1)
         .execute()
     )
-    return result.data[0] if result.data else None
+    rows = result.data or []
+    return rows[0] if rows else None
+
+
+def save_subscription_for_user(
+    user_id: str,
+    stripe_customer_id: Optional[str],
+    stripe_subscription_id: str,
+    status: str,
+) -> None:
+    existing = (
+        require_supabase()
+        .table("subscriptions")
+        .select("id")
+        .eq("user_id", user_id)
+        .limit(1)
+        .execute()
+    )
+    existing_rows = existing.data or []
+
+    payload = {
+        "user_id": user_id,
+        "stripe_customer_id": stripe_customer_id,
+        "stripe_subscription_id": stripe_subscription_id,
+        "status": status,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    if existing_rows:
+        require_supabase().table("subscriptions").update(payload).eq("user_id", user_id).execute()
+    else:
+        require_supabase().table("subscriptions").insert(payload).execute()
 
 
 def get_stripe_customer_id_for_user(user_id: str) -> Optional[str]:
@@ -413,31 +445,52 @@ def confirm_checkout_session(
         if not session_id:
             return {"error": "Missing session ID."}
 
-        checkout_session = require_stripe().checkout.Session.retrieve(session_id)
+        checkout_session = require_stripe().checkout.Session.retrieve(
+            session_id,
+            expand=["subscription", "customer"]
+        )
 
         if not checkout_session:
             return {"error": "Checkout session not found."}
 
-        if checkout_session.get("payment_status") not in ["paid", "no_payment_required"]:
-            return {"error": "Checkout session is not paid yet."}
+        payment_status = checkout_session.get("payment_status")
+        if payment_status not in ["paid", "no_payment_required"]:
+            return {"error": f"Checkout session not paid yet (status: {payment_status})."}
 
-        customer_id = checkout_session.get("customer")
-        subscription_id = checkout_session.get("subscription")
+        session_email = checkout_session.get("customer_details", {}).get("email") or checkout_session.get("customer_email")
+        if session_email and user["email"] and session_email.lower() != user["email"].lower():
+            return {"error": f"Checkout email mismatch: {session_email} vs {user['email']}"}
 
-        if not subscription_id:
+        customer = checkout_session.get("customer")
+        subscription = checkout_session.get("subscription")
+
+        stripe_customer_id = customer.get("id") if isinstance(customer, dict) else customer
+        stripe_subscription_id = subscription.get("id") if isinstance(subscription, dict) else subscription
+        stripe_subscription_status = subscription.get("status") if isinstance(subscription, dict) else "active"
+
+        if not stripe_subscription_id:
             return {"error": "No subscription found on this checkout session."}
 
-        require_supabase().table("subscriptions").upsert(
-            {
-                "user_id": user["id"],
-                "stripe_customer_id": customer_id,
-                "stripe_subscription_id": subscription_id,
-                "status": "active",
-            },
-            on_conflict="user_id"
-        ).execute()
+        if stripe_subscription_status not in ["active", "trialing"]:
+            return {"error": f"Subscription is not active yet (status: {stripe_subscription_status})."}
 
-        return {"ok": True, "plan": "pro"}
+        save_subscription_for_user(
+            user_id=user["id"],
+            stripe_customer_id=stripe_customer_id,
+            stripe_subscription_id=stripe_subscription_id,
+            status=stripe_subscription_status,
+        )
+
+        fresh = get_active_subscription(user["id"])
+        if not fresh:
+            return {"error": "Subscription row was not saved correctly."}
+
+        return {
+            "ok": True,
+            "plan": "pro",
+            "subscription_status": fresh.get("status"),
+            "stripe_subscription_id": fresh.get("stripe_subscription_id"),
+        }
 
     except Exception as e:
         print("CONFIRM CHECKOUT ERROR:", repr(e))
@@ -466,30 +519,41 @@ async def stripe_webhook(request: Request) -> JSONResponse:
         session = event.data.object
         metadata = getattr(session, "metadata", None) or {}
         user_id = metadata.get("user_id") if isinstance(metadata, dict) else getattr(session, "client_reference_id", None)
-        subscription_id = getattr(session, "subscription", None)
-        customer_id = getattr(session, "customer", None)
-        customer_email = getattr(session, "customer_email", None)
+        stripe_subscription_id = getattr(session, "subscription", None)
+        stripe_customer_id = str(getattr(session, "customer", None)) if getattr(session, "customer", None) else None
 
-        if user_id:
-            sb.table("subscriptions").upsert({
-                "user_id": user_id,
-                "stripe_subscription_id": subscription_id,
-                "stripe_customer_id": str(customer_id) if customer_id else None,
-                "status": "active",
-                "email": customer_email,
-                "updated_at": current_utc().isoformat(),
-            }).execute()
+        if user_id and stripe_subscription_id:
+            save_subscription_for_user(
+                user_id=user_id,
+                stripe_customer_id=stripe_customer_id,
+                stripe_subscription_id=stripe_subscription_id,
+                status="active",
+            )
 
     elif event.type in {"customer.subscription.deleted", "customer.subscription.updated"}:
         subscription = event.data.object
-        subscription_id = getattr(subscription, "id", None)
-        status = getattr(subscription, "status", "canceled")
+        stripe_subscription_id = getattr(subscription, "id", None)
+        stripe_subscription_status = getattr(subscription, "status", "canceled")
+        stripe_customer_id = str(getattr(subscription, "customer", None)) if getattr(subscription, "customer", None) else None
 
-        if subscription_id:
-            sb.table("subscriptions").update({
-                "status": "active" if status == "active" else "inactive",
-                "updated_at": current_utc().isoformat(),
-            }).eq("stripe_subscription_id", subscription_id).execute()
+        if stripe_subscription_id:
+            existing = (
+                sb.table("subscriptions")
+                .select("user_id")
+                .eq("stripe_subscription_id", stripe_subscription_id)
+                .limit(1)
+                .execute()
+            )
+            existing_rows = existing.data or []
+            user_id = existing_rows[0].get("user_id") if existing_rows else None
+
+            if user_id:
+                save_subscription_for_user(
+                    user_id=user_id,
+                    stripe_customer_id=stripe_customer_id,
+                    stripe_subscription_id=stripe_subscription_id,
+                    status=stripe_subscription_status,
+                )
 
     return JSONResponse({"received": True})
 
