@@ -2008,6 +2008,7 @@
           accountEmail.textContent = "Logged out";
           accountPlanText.textContent = "Plan: Free";
 
+          shouldPromptPasswordSetup = false;
           lastPlanJson = "";
           historyLoadedForUserId = null;
           setPlanUi(null);
@@ -2302,10 +2303,12 @@ const result = await sbClient.auth.signInWithOtp({
   }
 
   sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
+  trackEvent("password_set");
   passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
   passwordInput.value = "";
   passwordCard.classList.add("hidden");
-  trackEvent("password_set");
+  shouldPromptPasswordSetup = false;
+  status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });
 
@@ -2339,9 +2342,11 @@ passwordLoginBtn.addEventListener("click", async function() {
   }
 
   sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
+  trackEvent("password_login_succeeded");
   authStatus.textContent = "Signed in successfully.";
   passwordCard.classList.add("hidden");
-  trackEvent("password_login_succeeded");
+  shouldPromptPasswordSetup = false;
+  status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });
 
@@ -2377,6 +2382,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     // Only block upgrade if user just came from magic link
     if (shouldPromptPasswordSetup) {
       status.textContent = "Please create your password before upgrading to Pro.";
+      passwordCard.classList.remove("hidden");
       openPasswordCardForUser(false);
       return;
     }
