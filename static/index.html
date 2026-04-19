@@ -2172,7 +2172,14 @@ passwordLoginBtn.addEventListener("click", async function() {
         try {
           data = JSON.parse(raw);
         } catch (e) {
-          status.textContent = "Server returned invalid response. Check terminal and browser console.";
+          status.textContent = "Server returned invalid response. Check Render logs.";
+          optimiseBtn.disabled = false;
+          optimiseBtn.textContent = originalText;
+          return;
+        }
+
+        if (!res.ok) {
+          status.textContent = data.error || data.detail || "Something went wrong.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
           return;

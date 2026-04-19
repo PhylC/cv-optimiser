@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -195,6 +196,9 @@ Rules:
 - nextStep should be a short paragraph explaining the single highest-value improvement to make next.
 - No markdown.
 - No text outside the JSON.
+- Do not wrap the JSON in markdown fences.
+- Do not add explanations before or after the JSON.
+- Output exactly one valid JSON object only.
 
 {pro_instructions}
 
@@ -303,6 +307,59 @@ def save_analysis_history(user_id: str, job_description: str, payload: dict[str,
         "score": payload.get("score", 0),
         "result_json": payload,
     }).execute()
+
+
+def parse_openai_json_output(raw: str) -> dict[str, Any]:
+    text = (raw or "").strip()
+    if not text:
+        raise ValueError("OpenAI returned empty output.")
+
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        fenced_match = re.search(r"```(?:json)?\s*(\{.*\})\s*```", text, re.DOTALL)
+        if fenced_match:
+            try:
+                parsed = json.loads(fenced_match.group(1))
+            except json.JSONDecodeError:
+                parsed = None
+        else:
+            parsed = None
+
+        if parsed is None:
+            start = text.find("{")
+            end = text.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                candidate = text[start:end + 1]
+                parsed = json.loads(candidate)
+            else:
+                raise ValueError("OpenAI output did not contain valid JSON.")
+
+    if not isinstance(parsed, dict):
+        raise ValueError("OpenAI output was valid JSON but not an object.")
+
+    return parsed
+
+
+def extract_json_object(raw_text: str) -> dict[str, Any]:
+    text = (raw_text or "").strip()
+
+    # First try direct JSON parse
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+
+    # Try to extract the first {...} block
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if match:
+        candidate = match.group(0)
+        try:
+            return json.loads(candidate)
+        except Exception:
+            pass
+
+    raise ValueError("Model did not return valid JSON.")
 
 
 def get_plan_state(user_id: str) -> dict[str, Any]:
@@ -566,68 +623,85 @@ async def optimise(
     cvFile: Optional[UploadFile] = File(None),
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
-    user = get_user_from_token(authorization)
-    upsert_profile(user["id"], user["email"])
-    plan = get_plan_state(user["id"])
+    try:
+        user = get_user_from_token(authorization)
+        upsert_profile(user["id"], user["email"])
+        plan = get_plan_state(user["id"])
 
-    if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
-        return {
-            "error": "You’ve used your free analyses for today. Upgrade to Pro for unlimited CV checks.",
-            "code": "PAYWALL",
-            "source": "error",
-            "plan": plan,
-        }
+        if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
+            return {
+                "error": "You’ve used your free analyses for today. Upgrade to Pro for unlimited CV checks.",
+                "code": "PAYWALL",
+                "source": "error",
+                "plan": plan,
+            }
 
-    job_description = jobDescription.strip()
-    cv_text = cvText.strip()
+        job_description = jobDescription.strip()
+        cv_text = cvText.strip()
 
-    if not job_description or len(job_description) < 20:
-        return {"error": "Please paste a fuller job description.", "source": "error"}
+        if not job_description or len(job_description) < 20:
+            return {"error": "Please paste a fuller job description.", "source": "error"}
 
-    if cvFile is not None and cvFile.filename:
-        try:
-            file_bytes = await cvFile.read()
-            extracted_text = extract_cv_text(cvFile.filename, file_bytes)
-        except ValueError as exc:
-            return {"error": str(exc), "source": "error"}
-        except Exception:
-            return {"error": "Could not read that file. Try a different PDF, DOCX, or TXT file.", "source": "error"}
+        if cvFile is not None and cvFile.filename:
+            try:
+                file_bytes = await cvFile.read()
+                extracted_text = extract_cv_text(cvFile.filename, file_bytes)
+            except ValueError as exc:
+                return {"error": str(exc), "source": "error"}
+            except Exception:
+                return {"error": "Could not read that file. Try a different PDF, DOCX, or TXT file.", "source": "error"}
 
-        if extracted_text:
-            cv_text = extracted_text
+            if extracted_text:
+                cv_text = extracted_text
 
-    if not cv_text or len(cv_text) < 20:
-        return {"error": "Please paste your CV text or upload a readable PDF, DOCX, or TXT file.", "source": "error"}
+        if not cv_text or len(cv_text) < 20:
+            return {"error": "Please paste your CV text or upload a readable PDF, DOCX, or TXT file.", "source": "error"}
 
     raw = require_openai().responses.create(
         model=OPENAI_MODEL,
         input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
-        max_output_tokens=700,
+        max_output_tokens=900,
     ).output_text.strip()
 
-    data = json.loads(raw)
+        print("OPENAI RAW OUTPUT START")
+        print(raw)
+        print("OPENAI RAW OUTPUT END")
 
-    payload = {
-        "score": data.get("score", 0),
-        "matchedKeywords": data.get("matchedKeywords", []),
-        "missingKeywords": data.get("missingKeywords", []),
-        "strongPoints": data.get("strongPoints", []),
-        "weakPoints": data.get("weakPoints", []),
-        "bulletPoints": data.get("bulletPoints", []),
-        "nextStep": data.get("nextStep", ""),
-        "professionalSummary": data.get("professionalSummary", ""),
-        "priorityFixes": data.get("priorityFixes", []),
-        "skillsSection": data.get("skillsSection", []),
-        "atsTips": data.get("atsTips", []),
-        "interviewRisks": data.get("interviewRisks", []),
-        "strongerBullets": data.get("strongerBullets", []),
-        "source": "openai",
-    }
+        try:
+            data = extract_json_object(raw)
+        except Exception as e:
+            print("JSON PARSE ERROR:", repr(e))
+            raise HTTPException(status_code=500, detail="Model returned invalid JSON.")
 
-    save_usage_event(user["id"])
-    save_analysis_history(user["id"], job_description, payload)
-    payload["plan"] = get_plan_state(user["id"])
-    return payload
+        payload = {
+            "score": data.get("score", 0),
+            "matchedKeywords": data.get("matchedKeywords", []),
+            "missingKeywords": data.get("missingKeywords", []),
+            "strongPoints": data.get("strongPoints", []),
+            "weakPoints": data.get("weakPoints", []),
+            "bulletPoints": data.get("bulletPoints", []),
+            "nextStep": data.get("nextStep", ""),
+            "professionalSummary": data.get("professionalSummary", ""),
+            "priorityFixes": data.get("priorityFixes", []),
+            "skillsSection": data.get("skillsSection", []),
+            "atsTips": data.get("atsTips", []),
+            "interviewRisks": data.get("interviewRisks", []),
+            "strongerBullets": data.get("strongerBullets", []),
+            "source": "openai",
+        }
+
+        save_usage_event(user["id"])
+        save_analysis_history(user["id"], job_description, payload)
+        payload["plan"] = get_plan_state(user["id"])
+        return payload
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("OPTIMISE ERROR:", repr(e))
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
