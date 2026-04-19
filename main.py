@@ -350,7 +350,7 @@ def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict
 
     session = require_stripe().checkout.Session.create(
     mode="subscription",
-    success_url=f"{APP_BASE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
+    success_url=f"{APP_BASE_URL}/?checkout=success&session_id={{CHECKOUT_SESSION_ID}}",
     cancel_url=f"{APP_BASE_URL}/cancel",
     line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
     customer_email=user["email"],

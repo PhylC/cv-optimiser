@@ -321,7 +321,7 @@
   }
 
   .hero-copy {
-    max-width: 720px;
+    max-width: 660px;
   }
 
   .account-menu {
@@ -468,12 +468,12 @@
   }
 
   .hero-headline {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    line-height: 1.02;
-    letter-spacing: -0.05em;
+    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
     font-weight: 820;
     margin: 0 0 14px;
-    max-width: 12ch;
+    max-width: 15ch;
     color: #F4F7FF;
   }
 
@@ -998,7 +998,7 @@
       </h1>
 
       <p class="hero-subtitle">
-        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements that are easier to use immediately.
+        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use immediately.
       </p>
     </div>
 
@@ -1028,6 +1028,8 @@
       </div>
     </div>
   </div>
+
+  <p id="checkoutStatus" class="small hidden" style="margin-top:6px; margin-bottom:8px;"></p>
 
   <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
     <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Sign in to use the tool</h2>
@@ -1334,6 +1336,7 @@
     const accountPanelEmail = document.getElementById("accountPanelEmail");
     const emailInput = document.getElementById("emailInput");
     const authStatus = document.getElementById("authStatus");
+    const checkoutStatus = document.getElementById("checkoutStatus");
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const topStatusRow = document.getElementById("topStatusRow");
@@ -1369,6 +1372,7 @@
     const passwordCardTitle = document.getElementById("passwordCardTitle");
     const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
+    const CHECKOUT_SUCCESS_PARAM = "checkout";
 
     function closeAccountMenu() {
       accountMenuDropdown.classList.add("hidden");
@@ -1406,6 +1410,103 @@
       selectedFile = null;
       fileInput.value = "";
       fileName.textContent = "No file selected";
+    }
+
+    function sleep(ms) {
+      return new Promise(function(resolve) {
+        window.setTimeout(resolve, ms);
+      });
+    }
+
+    function clearCheckoutParamsFromUrl() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("checkout");
+      url.searchParams.delete("session_id");
+      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+    }
+
+    async function handleCheckoutReturn() {
+      const url = new URL(window.location.href);
+      const checkout = url.searchParams.get("checkout");
+      const sessionId = url.searchParams.get("session_id");
+
+      if (checkout !== "success" || !sessionId) {
+        return;
+      }
+
+      checkoutStatus.classList.remove("hidden");
+      checkoutStatus.textContent = "Payment completed. Updating your plan...";
+
+      for (let i = 0; i < 10; i += 1) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        lastPlanJson = "";
+        historyLoadedForUserId = null;
+        await refreshAuthUi();
+
+        if (accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro") {
+          checkoutStatus.textContent = "Your Pro plan is now active.";
+          setTimeout(function() {
+            checkoutStatus.classList.add("hidden");
+            checkoutStatus.textContent = "";
+            clearCheckoutParamsFromUrl();
+          }, 2500);
+          return;
+        }
+      }
+
+      checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Refresh in a few seconds if needed.";
+      setTimeout(function() {
+        clearCheckoutParamsFromUrl();
+      }, 2500);
+    }
+
+    function consumeCheckoutSuccessFlag() {
+      const params = new URLSearchParams(window.location.search);
+      const isCheckoutSuccess = params.get(CHECKOUT_SUCCESS_PARAM) === "success";
+
+      if (!isCheckoutSuccess) {
+        return false;
+      }
+
+      params.delete(CHECKOUT_SUCCESS_PARAM);
+      params.delete("session_id");
+
+      const nextQuery = params.toString();
+      const nextUrl = window.location.pathname + (nextQuery ? "?" + nextQuery : "") + window.location.hash;
+      window.history.replaceState({}, document.title, nextUrl);
+      return true;
+    }
+
+    async function pollForProActivationAfterCheckout() {
+      status.textContent = "Checkout complete. Finalising your Pro access...";
+
+      const token = await getSessionToken();
+      if (!token) {
+        status.textContent = "Checkout complete. Sign in again if needed and your Pro plan should appear shortly.";
+        return;
+      }
+
+      for (let attempt = 0; attempt < 6; attempt += 1) {
+        try {
+          const meRes = await fetch("/api/me", {
+            headers: { Authorization: "Bearer " + token }
+          });
+          const me = await meRes.json();
+
+          if (me && me.plan && me.plan.is_pro) {
+            await refreshAuthUi();
+            status.textContent = "Pro is now active.";
+            return;
+          }
+        } catch (error) {
+          console.error("post-checkout poll error:", error);
+        }
+
+        await sleep(1500);
+      }
+
+      await refreshAuthUi();
+      status.textContent = "Checkout complete. Your Pro access should appear shortly as billing finishes syncing.";
     }
 
     function setSelectedFile(file) {
@@ -2073,8 +2174,9 @@ passwordLoginBtn.addEventListener("click", async function() {
       });
     }
 
-    window.addEventListener("load", function() {
-      refreshAuthUi();
+    window.addEventListener("load", async function() {
+      await refreshAuthUi();
+      await handleCheckoutReturn();
     });
   </script>
 </body>
