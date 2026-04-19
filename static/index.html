@@ -536,7 +536,7 @@
 
         <div id="accountMenuDropdown" class="account-menu-dropdown hidden">
           <div id="accountMenuLabel" class="account-menu-label">Signed in</div>
-          <button id="menuPasswordBtn" class="secondary-btn" type="button">Change password</button>
+          <button id="menuPasswordBtn" class="secondary-btn" type="button">Password settings</button>
           <button id="menuSupportBtn" class="secondary-btn" type="button">Support</button>
           <button id="menuUpgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
           <button id="menuManageSubBtn" class="secondary-btn" type="button">Manage subscription</button>
@@ -1027,6 +1027,7 @@
         accountEmail.textContent = "Logged in as " + (session.user.email || "");
         closeAccountMenu();
 
+        passwordCard.classList.add("hidden");
         passwordStatus.textContent = "";
         passwordInput.value = "";
 
@@ -1055,12 +1056,6 @@
         } else {
           menuUpgradeBtn.classList.remove("hidden");
           menuManageSubBtn.classList.add("hidden");
-        }
-
-        if (passwordAlreadySet) {
-          passwordCard.classList.add("hidden");
-        } else {
-          openPasswordCardForUser(false);
         }
 
         const currentUserId = me.user && me.user.id ? me.user.id : null;
