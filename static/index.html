@@ -2060,6 +2060,7 @@ if (shouldPromptPasswordSetup) {
   openPasswordCardForUser(false);
 } else {
   passwordCard.classList.add("hidden");
+  status.textContent = "Ready when you are.";
 }
         shouldPromptPasswordSetup = false;
 
@@ -2362,61 +2363,60 @@ passwordLoginBtn.addEventListener("click", async function() {
     });
 
     upgradeBtn.addEventListener("click", async function() {
-  console.log("upgrade clicked");
+      console.log("upgrade clicked");
 
-  try {
-    if (!sbClient) {
-      status.textContent = "Auth is not configured.";
-      return;
-    }
+      try {
+        if (!sbClient) {
+          status.textContent = "Auth is not configured.";
+          return;
+        }
 
-    const sessionResult = await sbClient.auth.getSession();
-    const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-    const token = await getSessionToken();
+        const sessionResult = await sbClient.auth.getSession();
+        const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+        const token = await getSessionToken();
 
-    if (!token || !session) {
-      status.textContent = "Sign in first before upgrading.";
-      return;
-    }
+        if (!token || !session) {
+          status.textContent = "Sign in first before upgrading.";
+          return;
+        }
 
-    // Only block upgrade if user just came from magic link
-    if (shouldPromptPasswordSetup) {
-      status.textContent = "Please create your password before upgrading to Pro.";
-      passwordCard.classList.remove("hidden");
-      openPasswordCardForUser(false);
-      return;
-    }
+        // ONLY block upgrade if the password card is actually visible
+        if (passwordCard && !passwordCard.classList.contains("hidden")) {
+          status.textContent = "Please create your password before upgrading to Pro.";
+          openPasswordCardForUser(false);
+          return;
+        }
 
-    status.textContent = "Starting checkout...";
+        status.textContent = "Starting checkout...";
 
-    const res = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token }
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + token }
+        });
+
+        const raw = await res.text();
+        console.log("checkout raw response:", raw);
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          status.textContent = "Checkout failed. Check Render logs.";
+          return;
+        }
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else if (data.code === "ALREADY_PRO") {
+          status.textContent = "You already have an active Pro subscription.";
+        } else {
+          status.textContent = data.detail || data.error || "Could not start checkout.";
+        }
+      } catch (err) {
+        console.error("upgrade error:", err);
+        status.textContent = "Upgrade failed. Check browser console.";
+      }
     });
-
-    const raw = await res.text();
-    console.log("checkout raw response:", raw);
-
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch (e) {
-      status.textContent = "Checkout failed. Check Render logs.";
-      return;
-    }
-
-    if (data.url) {
-      window.location.href = data.url;
-    } else if (data.code === "ALREADY_PRO") {
-      status.textContent = "You already have an active Pro subscription.";
-    } else {
-      status.textContent = data.detail || data.error || "Could not start checkout.";
-    }
-  } catch (err) {
-    console.error("upgrade error:", err);
-    status.textContent = "Upgrade failed. Check browser console.";
-  }
-});
 
     dropzone.addEventListener("dragover", function(e) {
       e.preventDefault();
