@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import io
+import errno
 import json
 import os
 import re
+import time
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -73,6 +75,28 @@ def parse_bearer_token(authorization: Optional[str]) -> str:
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token.")
     return authorization.split(" ", 1)[1].strip()
+
+
+def retry_transient(fn, attempts: int = 4, delay_seconds: float = 1.0):
+    last_error = None
+    for attempt in range(attempts):
+        try:
+            return fn()
+        except OSError as e:
+            last_error = e
+            if getattr(e, "errno", None) == errno.EAGAIN:
+                if attempt < attempts - 1:
+                    time.sleep(delay_seconds)
+                    continue
+            raise
+        except Exception as e:
+            last_error = e
+            if attempt < attempts - 1:
+                time.sleep(delay_seconds)
+                continue
+            raise
+    if last_error:
+        raise last_error
 
 
 def get_user_from_token(authorization: Optional[str]) -> dict[str, Any]:
@@ -812,65 +836,69 @@ def confirm_checkout_session(
         if not session_id:
             return {"error": "Missing session ID."}
 
-        checkout_session = require_stripe().checkout.Session.retrieve(
-            session_id,
-            expand=["subscription", "customer"]
-        )
+        def load_and_save():
+            checkout_session = require_stripe().checkout.Session.retrieve(
+                session_id,
+                expand=["subscription", "customer"]
+            )
 
-        if not checkout_session:
-            return {"error": "Checkout session not found."}
+            if not checkout_session:
+                raise ValueError("Checkout session not found.")
 
-        payment_status = checkout_session.get("payment_status")
-        if payment_status not in ["paid", "no_payment_required"]:
-            return {"error": f"Checkout session not paid yet (status: {payment_status})."}
+            payment_status = checkout_session.get("payment_status")
+            if payment_status not in ["paid", "no_payment_required"]:
+                raise ValueError(f"Checkout session not paid yet (status: {payment_status}).")
 
-        session_email = checkout_session.get("customer_details", {}).get("email") or checkout_session.get("customer_email")
-        if session_email and user["email"] and session_email.lower() != user["email"].lower():
-            return {"error": f"Checkout email mismatch: {session_email} vs {user['email']}"}
+            session_email = checkout_session.get("customer_details", {}).get("email") or checkout_session.get("customer_email")
+            if session_email and user["email"] and session_email.lower() != user["email"].lower():
+                raise ValueError(f"Checkout email mismatch: {session_email} vs {user['email']}")
 
-        customer = checkout_session.get("customer")
-        subscription = checkout_session.get("subscription")
+            customer = checkout_session.get("customer")
+            subscription = checkout_session.get("subscription")
 
-        stripe_customer_id = customer.get("id") if isinstance(customer, dict) else customer
-        stripe_subscription_id = subscription.get("id") if isinstance(subscription, dict) else subscription
-        stripe_subscription_status = subscription.get("status") if isinstance(subscription, dict) else "active"
+            stripe_customer_id = customer.get("id") if isinstance(customer, dict) else customer
+            stripe_subscription_id = subscription.get("id") if isinstance(subscription, dict) else subscription
+            stripe_subscription_status = subscription.get("status") if isinstance(subscription, dict) else "active"
 
-        if not stripe_subscription_id:
-            return {"error": "No subscription found on this checkout session."}
+            if not stripe_subscription_id:
+                raise ValueError("No subscription found on this checkout session.")
 
-        if stripe_subscription_status not in ["active", "trialing"]:
-            return {"error": f"Subscription is not active yet (status: {stripe_subscription_status})."}
+            if stripe_subscription_status not in ["active", "trialing"]:
+                raise ValueError(f"Subscription is not active yet (status: {stripe_subscription_status}).")
 
-        save_subscription_for_user(
-            user_id=user["id"],
-            stripe_customer_id=stripe_customer_id,
-            stripe_subscription_id=stripe_subscription_id,
-            status=stripe_subscription_status,
-        )
+            save_subscription_for_user(
+                user_id=user["id"],
+                stripe_customer_id=stripe_customer_id,
+                stripe_subscription_id=stripe_subscription_id,
+                status=stripe_subscription_status,
+            )
 
-        fresh = get_active_subscription(user["id"])
-        if not fresh:
-            return {"error": "Subscription row was not saved correctly."}
+            fresh = get_active_subscription(user["id"])
+            if not fresh:
+                raise ValueError("Subscription row was not saved correctly.")
 
-        track_event(
-            event_name="pro_activated",
-            user_id=user["id"],
-            email=user["email"],
-            metadata={
-                "stripe_subscription_id": fresh.get("stripe_subscription_id"),
+            track_event(
+                event_name="pro_activated",
+                user_id=user["id"],
+                email=user["email"],
+                metadata={
+                    "stripe_subscription_id": fresh.get("stripe_subscription_id"),
+                    "subscription_status": fresh.get("status"),
+                }
+            )
+
+            return {
+                "ok": True,
+                "plan": "pro",
                 "subscription_status": fresh.get("status"),
+                "stripe_subscription_id": fresh.get("stripe_subscription_id"),
             }
-        )
-        return {
-            "ok": True,
-            "plan": "pro",
-            "subscription_status": fresh.get("status"),
-            "stripe_subscription_id": fresh.get("stripe_subscription_id"),
-        }
+
+        return retry_transient(load_and_save, attempts=4, delay_seconds=1.2)
 
     except Exception as e:
         print("CONFIRM CHECKOUT ERROR:", repr(e))
-        return {"error": str(e)}
+        return {"error": "Activation is still processing. Please wait a few seconds and refresh once."}
 
 
 @app.post("/api/stripe-webhook")

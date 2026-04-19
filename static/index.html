@@ -1791,7 +1791,7 @@
       checkoutStatus.classList.remove("hidden");
       checkoutStatus.classList.remove("success", "error");
       checkoutStatus.classList.add("info");
-      checkoutStatus.textContent = "Payment received. Your Pro plan is being activated now.";
+      checkoutStatus.textContent = "Payment received. Activating your Pro plan now.";
 
       try {
         const token = await getSessionToken();
@@ -1811,28 +1811,22 @@
         });
 
         const confirmRaw = await confirmRes.text();
-        console.log("confirm checkout response:", {
-          status: confirmRes.status,
-          ok: confirmRes.ok,
-          body: confirmRaw
-        });
+        console.log("confirm checkout raw response:", confirmRaw);
 
         let confirmData;
         try {
           confirmData = JSON.parse(confirmRaw);
         } catch (e) {
-          console.error("confirm checkout JSON parse error:", e);
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
-          checkoutStatus.textContent = "Payment succeeded, but plan activation could not be confirmed yet. Please refresh in a few seconds.";
+          checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Please refresh in a few seconds.";
           return;
         }
 
         if (confirmData.error) {
-          console.error("confirm checkout returned error:", confirmData);
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
-          checkoutStatus.textContent = "Payment succeeded, but there was a problem activating Pro automatically: " + confirmData.error;
+          checkoutStatus.textContent = confirmData.error;
           return;
         }
 
@@ -1860,7 +1854,7 @@
         console.error("handleCheckoutReturn error:", error);
         checkoutStatus.classList.remove("info");
         checkoutStatus.classList.add("error");
-        checkoutStatus.textContent = "Payment succeeded, but activation could not be confirmed yet. Please refresh in a few seconds.";
+        checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Please refresh in a few seconds.";
       }
     }
 
