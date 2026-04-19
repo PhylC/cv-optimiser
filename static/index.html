@@ -1173,6 +1173,63 @@
     text-decoration: underline;
   }
 
+  .support-link {
+    color: #C9D7F6;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .support-link:hover {
+    color: #FFFFFF;
+  }
+
+  .upgrade-cta-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border: 1px solid rgba(91, 120, 255, 0.26);
+    background: linear-gradient(180deg, rgba(18, 31, 58, 0.92), rgba(12, 23, 43, 0.92));
+  }
+
+  .upgrade-cta-copy {
+    max-width: 46ch;
+  }
+
+  .footer-link {
+    color: #AFC0FF;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+  }
+
+  .footer-link:hover {
+    color: #D7E2FF;
+  }
+
+  .results-upgrade-cta {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(91, 120, 255, 0.35);
+    background: rgba(19, 33, 64, 0.82);
+  }
+
+  .results-upgrade-cta-title {
+    font-size: 16px;
+    font-weight: 750;
+    color: #F3F7FF;
+    margin-bottom: 6px;
+  }
+
+  .results-upgrade-cta-copy {
+    font-size: 14px;
+    color: #B7C6E6;
+    margin-bottom: 12px;
+  }
+
   @media (max-width: 900px) {
     .result-grid-two {
       grid-template-columns: 1fr;
@@ -1472,6 +1529,14 @@
               Always review and edit suggestions to make sure they remain fully accurate to your real experience, responsibilities, and results.
             </p>
           </div>
+
+          <div id="resultsUpgradeCta" class="results-upgrade-cta hidden">
+            <div class="results-upgrade-cta-title">Upgrade to Pro for more</div>
+            <div class="results-upgrade-cta-copy">
+              Get a tailored professional summary, priority fixes, ATS suggestions, interview-risk feedback, and richer rewrite support.
+            </div>
+            <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1487,7 +1552,7 @@
         </div>
       <div class="price-box">
         <p><strong>Pro</strong></p>
-        <p class="muted">Unlimited analyses plus professional summary, priority fixes, stronger bullets, ATS improvements, and interview-risk feedback.</p>
+        <p class="muted">Unlimited analyses plus professional summary, priority fixes, ATS improvements, and interview-risk feedback.</p>
       </div>
       </div>
 
@@ -1505,9 +1570,9 @@
   </div>
 
   <footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:14px; flex-wrap:wrap;">
-    <a href="/privacy" class="support-link">Privacy</a>
-    <a href="/terms" class="support-link">Terms</a>
-    <a href="/billing" class="support-link">Billing & cancellation</a>
+    <a href="/privacy" class="footer-link">Privacy</a>
+    <a href="/terms" class="footer-link">Terms</a>
+    <a href="/billing" class="footer-link">Billing & cancellation</a>
     <button id="footerSupportBtn" type="button" class="secondary-btn" style="padding:6px 10px; font-size:13px; margin:0;">Support</button>
   </footer>
   <script>
@@ -1526,6 +1591,8 @@
     let historyLoadedForUserId = null;
 
     const optimiseBtn = document.getElementById("optimiseBtn");
+    const resultsUpgradeBtn = document.getElementById("resultsUpgradeBtn");
+    const resultsUpgradeCta = document.getElementById("resultsUpgradeCta");
     const clearFileBtn = document.getElementById("clearFileBtn");
     const upgradeBtn = document.getElementById("upgradeBtn");
     const status = document.getElementById("status");
@@ -1640,6 +1707,30 @@
       }
     }
 
+    function updateUpgradeAccess(passwordAlreadySet) {
+      const canUpgrade = !!passwordAlreadySet;
+
+      upgradeBtn.disabled = !canUpgrade;
+      menuUpgradeBtn.disabled = !canUpgrade;
+      if (resultsUpgradeBtn) {
+        resultsUpgradeBtn.disabled = false;
+      }
+
+      if (canUpgrade) {
+        upgradeBtn.textContent = "Upgrade to Pro";
+        menuUpgradeBtn.textContent = "Upgrade to Pro";
+        if (resultsUpgradeBtn) {
+          resultsUpgradeBtn.textContent = "Upgrade to Pro";
+        }
+      } else {
+        upgradeBtn.textContent = "Set a password to upgrade";
+        menuUpgradeBtn.textContent = "Set a password to upgrade";
+        if (resultsUpgradeBtn) {
+          resultsUpgradeBtn.textContent = "Set a password to unlock Pro";
+        }
+      }
+    }
+
     function resetSelectedFile() {
       selectedFile = null;
       fileInput.value = "";
@@ -1671,7 +1762,7 @@
       checkoutStatus.classList.remove("hidden");
       checkoutStatus.classList.remove("success", "error");
       checkoutStatus.classList.add("info");
-      checkoutStatus.textContent = "Payment received. Activating your Pro plan now.";
+      checkoutStatus.textContent = "Payment received. Your Pro plan is being activated now.";
 
       try {
         const token = await getSessionToken();
@@ -1712,7 +1803,7 @@
           console.error("confirm checkout returned error:", confirmData);
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
-          checkoutStatus.textContent = "Payment succeeded, but activation failed: " + confirmData.error;
+          checkoutStatus.textContent = "Payment succeeded, but there was a problem activating Pro automatically: " + confirmData.error;
           return;
         }
 
@@ -1735,7 +1826,7 @@
 
         checkoutStatus.classList.remove("info");
         checkoutStatus.classList.add("error");
-        checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Please wait a few seconds and refresh once.";
+        checkoutStatus.textContent = "Payment succeeded, but your plan is still updating. Please wait a few seconds, then refresh once.";
       } catch (error) {
         console.error("handleCheckoutReturn error:", error);
         checkoutStatus.classList.remove("info");
@@ -1901,10 +1992,9 @@
         authCard.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
         accountMenuLabel.textContent = session.user.email || "Signed in";
-        accountEmail.textContent = session.user.email || "Signed in";
+        accountEmail.textContent = "Logged in as " + (session.user.email || "");
         closeAccountMenu();
 
-        passwordCard.classList.add("hidden");
         passwordStatus.textContent = "";
         passwordInput.value = "";
 
@@ -1914,7 +2004,7 @@
         const me = await meRes.json();
 
         if (me.error) {
-          authStatus.textContent = "Signed in, but backend is waking up. Refresh in a few seconds.";
+          authStatus.textContent = "Signed in, but the account is still loading. Please refresh in a few seconds.";
           return;
         }
 
@@ -1933,6 +2023,14 @@
         } else {
           menuUpgradeBtn.classList.remove("hidden");
           menuManageSubBtn.classList.add("hidden");
+        }
+
+        // IMPORTANT:
+        // First-time magic-link users with no password must be pushed into password creation
+        if (!passwordAlreadySet) {
+          openPasswordCardForUser(false);
+        } else {
+          passwordCard.classList.add("hidden");
         }
 
         const currentUserId = me.user && me.user.id ? me.user.id : null;
@@ -2032,6 +2130,11 @@ const result = await sbClient.auth.signInWithOtp({
 
     menuUpgradeBtn.addEventListener("click", async function() {
       closeAccountMenu();
+      if (menuUpgradeBtn.disabled) {
+        authStatus.textContent = "Set a password first, then you can upgrade to Pro.";
+        openPasswordCardForUser(false);
+        return;
+      }
       upgradeBtn.click();
     });
 
@@ -2220,16 +2323,35 @@ passwordLoginBtn.addEventListener("click", async function() {
       status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
     });
 
+    resultsUpgradeBtn.addEventListener("click", function() {
+      trackEvent("results_upgrade_clicked");
+      upgradeBtn.click();
+    });
+
     upgradeBtn.addEventListener("click", async function() {
   console.log("upgrade clicked");
 
   try {
-    trackEvent("checkout_started");
-    const token = await getSessionToken();
-    console.log("token exists:", !!token);
+    if (!sbClient) {
+      status.textContent = "Auth is not configured.";
+      return;
+    }
 
-    if (!token) {
+    const sessionResult = await sbClient.auth.getSession();
+    const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+    const token = await getSessionToken();
+
+    if (!token || !session) {
       status.textContent = "Sign in first before upgrading.";
+      return;
+    }
+
+    const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
+    const passwordAlreadySet = !!userMeta.password_set;
+
+    if (!passwordAlreadySet) {
+      status.textContent = "Please create your password before upgrading to Pro.";
+      openPasswordCardForUser(false);
       return;
     }
 
@@ -2247,17 +2369,17 @@ passwordLoginBtn.addEventListener("click", async function() {
     try {
       data = JSON.parse(raw);
     } catch (e) {
-      status.textContent = "Checkout returned invalid response.";
+      status.textContent = "Checkout failed. Check Render logs.";
       return;
     }
 
     if (data.url) {
-  window.location.href = data.url;
-} else if (data.code === "ALREADY_PRO") {
-  status.textContent = "You already have an active Pro subscription.";
-} else {
-  status.textContent = data.detail || data.error || "Could not start checkout.";
-}
+      window.location.href = data.url;
+    } else if (data.code === "ALREADY_PRO") {
+      status.textContent = "You already have an active Pro subscription.";
+    } else {
+      status.textContent = data.detail || data.error || "Could not start checkout.";
+    }
   } catch (err) {
     console.error("upgrade error:", err);
     status.textContent = "Upgrade failed. Check browser console.";
@@ -2402,6 +2524,8 @@ passwordLoginBtn.addEventListener("click", async function() {
         proSkillsWrap.classList.toggle("hidden", !(data.skillsSection && data.skillsSection.length));
         proAtsWrap.classList.toggle("hidden", !(data.atsTips && data.atsTips.length));
         proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
+        const isCurrentlyPro = accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro";
+        resultsUpgradeCta.classList.toggle("hidden", isCurrentlyPro);
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
         status.classList.add("is-success");

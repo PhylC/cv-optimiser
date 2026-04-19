@@ -81,7 +81,12 @@ def get_user_from_token(authorization: Optional[str]) -> dict[str, Any]:
     user = getattr(user_result, "user", None)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid session.")
-    return {"id": user.id, "email": getattr(user, "email", None)}
+    metadata = getattr(user, "user_metadata", None) or {}
+    return {
+        "id": user.id,
+        "email": getattr(user, "email", None),
+        "password_set": bool(metadata.get("password_set")),
+    }
 
 
 def current_utc() -> datetime:
@@ -211,12 +216,6 @@ def upsert_profile(user_id: str, email: Optional[str]) -> None:
         "email": email,
         "updated_at": current_utc().isoformat(),
     }).execute()
-    track_event(
-        event_name="profile_upserted",
-        user_id=user_id,
-        email=email,
-        metadata={}
-    )
 
 
 def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
@@ -678,6 +677,8 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     user = get_user_from_token(authorization)
     upsert_profile(user["id"], user["email"])
+    if not user.get("password_set"):
+        return {"error": "Set a password before upgrading to Pro.", "code": "PASSWORD_REQUIRED"}
     track_event(
         event_name="upgrade_clicked",
         user_id=user["id"],
