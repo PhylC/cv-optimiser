@@ -2016,7 +2016,6 @@
         }
 
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
-        const passwordAlreadySet = !!userMeta.password_set;
 
         authCard.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
@@ -2056,7 +2055,7 @@
 
         // IMPORTANT:
         // First-time magic-link users with no password must be pushed into password creation
-if (!passwordAlreadySet && shouldPromptPasswordSetup) {
+if (shouldPromptPasswordSetup) {
   openPasswordCardForUser(false);
 } else {
   passwordCard.classList.add("hidden");
@@ -2152,9 +2151,8 @@ const result = await sbClient.auth.signInWithOtp({
       const result = await sbClient.auth.getSession();
       const session = result && result.data ? result.data.session : null;
       const userMeta = session && session.user && session.user.user_metadata ? session.user.user_metadata : {};
-      const passwordAlreadySet = !!userMeta.password_set;
 
-      openPasswordCardForUser(passwordAlreadySet);
+      openPasswordCardForUser(!!userMeta.password_set);
       closeAccountMenu();
     });
 
@@ -2376,10 +2374,8 @@ passwordLoginBtn.addEventListener("click", async function() {
       return;
     }
 
-    const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
-    const passwordAlreadySet = !!userMeta.password_set;
-
-    if (!passwordAlreadySet) {
+    // Only block upgrade if user just came from magic link
+    if (shouldPromptPasswordSetup) {
       status.textContent = "Please create your password before upgrading to Pro.";
       openPasswordCardForUser(false);
       return;
@@ -2594,23 +2590,21 @@ passwordLoginBtn.addEventListener("click", async function() {
 
           shouldPromptPasswordSetup = cameFromMagicLink;
 
-          historyLoadedForUserId = null;
           refreshAuthUi();
           return;
         }
 
         if (event === "SIGNED_OUT") {
           shouldPromptPasswordSetup = false;
-          historyLoadedForUserId = null;
           refreshAuthUi();
           return;
         }
 
         if (event === "USER_UPDATED") {
-          historyLoadedForUserId = null;
           refreshAuthUi();
           return;
         }
+
       });
     }
 
