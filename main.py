@@ -158,12 +158,33 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
 """.strip()
 
     pro_instructions = """
-Additional Pro rules:
-- professionalSummary must be a polished 3-4 line CV profile tailored to the job.
-- priorityFixes must contain exactly 5 short, high-impact CV improvements in priority order.
-- skillsSection must contain 6-10 concise skills or capability phrases aligned to the role.
-- atsTips must contain 3-5 practical ATS-focused keyword or phrasing improvements.
-- interviewRisks must contain 3-5 realistic recruiter concerns or likely follow-up questions.
+Additional Pro rules (this must feel like a senior recruiter review, not generic AI output):
+
+- professionalSummary:
+  Write a tight, high-quality CV summary tailored to this specific job.
+  It should position the candidate strongly for THIS role, not generic roles.
+
+- priorityFixes:
+  Exactly 3 (not more) high-impact improvements.
+  These must be the most important changes that would increase interview chances.
+  Each should be specific, practical, and immediately actionable.
+
+- skillsSection:
+  6–10 role-aligned skills phrased the way recruiters expect to see them.
+
+- atsTips:
+  3–5 concrete keyword or phrasing improvements based on the job description.
+
+- interviewRisks:
+  3–5 realistic concerns a hiring manager or recruiter would have.
+  These should feel honest and insightful, not generic.
+
+CRITICAL QUALITY RULES:
+- Be specific to THIS job, not generic advice
+- Do not repeat content across sections
+- Avoid generic phrases like "results-driven" unless clearly supported
+- Make the output feel like it was written by an experienced recruiter
+- Prioritise clarity and usefulness over length
 """.strip() if is_pro else ""
 
     return f"""

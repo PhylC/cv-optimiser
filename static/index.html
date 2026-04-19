@@ -379,10 +379,10 @@
   }
 
   .hero-subtitle {
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.7;
     color: #AAB7D4;
-    max-width: 62ch;
+    max-width: 58ch;
     margin: 0;
   }
 
@@ -500,12 +500,12 @@
   }
 
   .hero-headline {
-    font-size: clamp(1.6rem, 3.4vw, 2.35rem);
+    font-size: clamp(1.75rem, 3.6vw, 2.55rem);
     line-height: 1.08;
-    letter-spacing: -0.04em;
-    font-weight: 810;
+    letter-spacing: -0.045em;
+    font-weight: 820;
     margin: 0 0 12px;
-    max-width: 18ch;
+    max-width: 15ch;
     color: #F4F7FF;
   }
 
@@ -1224,26 +1224,28 @@
     transform: none;
   }
 
-  .results-upgrade-cta {
-    margin-top: 18px;
-    padding: 16px 18px;
-    border-radius: 16px;
-    border: 1px solid rgba(91, 120, 255, 0.35);
-    background: rgba(19, 33, 64, 0.82);
-  }
+.results-upgrade-cta {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(91, 120, 255, 0.38);
+  background: linear-gradient(180deg, rgba(19, 33, 64, 0.92), rgba(12, 23, 43, 0.96));
+  box-shadow: inset 0 1px 0 rgba(160, 180, 255, 0.06);
+}
 
-  .results-upgrade-cta-title {
-    font-size: 16px;
-    font-weight: 750;
-    color: #F3F7FF;
-    margin-bottom: 6px;
-  }
+.results-upgrade-cta-title {
+  font-size: 16px;
+  font-weight: 780;
+  color: #F3F7FF;
+  margin-bottom: 6px;
+}
 
-  .results-upgrade-cta-copy {
-    font-size: 14px;
-    color: #B7C6E6;
-    margin-bottom: 12px;
-  }
+.results-upgrade-cta-copy {
+  font-size: 14px;
+  color: #B7C6E6;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
 
   @media (max-width: 900px) {
     .result-grid-two {
@@ -1266,15 +1268,15 @@
         </div>
       </div>
 
-      <div class="hero-eyebrow">AI-powered CV tailoring</div>
+<div class="hero-eyebrow">AI-powered CV tailoring</div>
 
-      <h1 class="hero-headline">
-        Sharper CVs. <span class="accent">Better alignment.</span> Faster applications.
-      </h1>
+<h1 class="hero-headline">
+  Tailor your CV for the role you actually want.
+</h1>
 
-      <p class="hero-subtitle">
-        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
-      </p>
+<p class="hero-subtitle">
+  Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
+</p>
     </div>
 
     <div class="topbar-right">
@@ -1404,11 +1406,11 @@
 
   <div class="main-grid">
     <div>
-      <div class="card section" style="overflow: hidden;">
-        <div class="section-title">Start your CV check</div>
-        <div class="section-subtitle">
-          Paste a job description and your CV, or upload a file to get tailored improvements.
-        </div>
+      <div class="card section" style="overflow:hidden;">
+<div class="section-title">Start your CV check</div>
+<div class="section-subtitle">
+  Paste the role, add your CV, and get practical feedback you can use immediately.
+</div>
 
         <label for="jobDescription">Job description</label>
         <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
@@ -1425,14 +1427,14 @@
         </div>
 
         <div style="margin-top:8px;">
-          <button id="optimiseBtn" style="width:100%;">Optimise My CV</button>
+<button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
         </div>
         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
         </div>
 
-        <p id="status" class="small">Ready.</p>
+        <p id="status" class="small">Ready when you are.</p>
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
@@ -1443,7 +1445,7 @@
               <div class="score-kicker">CV match result</div>
               <div id="score" class="score-value"></div>
               <div class="score-subtext">
-                A recruiter-style view of how well your CV currently aligns with the role and where the biggest gains are.
+                A recruiter-style assessment of how well your CV aligns with this role and where it can improve most.
               </div>
             </div>
 
@@ -1545,13 +1547,23 @@
             </p>
           </div>
 
-          <div id="resultsUpgradeCta" class="results-upgrade-cta hidden">
-            <div class="results-upgrade-cta-title">Upgrade to Pro for more</div>
-            <div class="results-upgrade-cta-copy">
-              Get a tailored professional summary, priority fixes, ATS suggestions, interview-risk feedback, and richer rewrite support.
-            </div>
-            <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
-          </div>
+<div id="lockedInsights" class="results-upgrade-cta hidden" style="opacity:0.85;">
+  <div class="results-upgrade-cta-title">You're missing key improvements</div>
+  <div class="results-upgrade-cta-copy">
+    Pro analysis identifies your highest-impact fixes, recruiter concerns, and stronger positioning for this role.
+  </div>
+</div>
+
+<div id="resultsUpgradeCta" class="results-upgrade-cta hidden">
+  <div class="results-upgrade-cta-title">Get a stronger, interview-ready CV</div>
+  <div style="font-size:13px; color:#F0C674; margin-bottom:6px;">
+    Some high-impact improvements are hidden in Pro
+  </div>
+  <div class="results-upgrade-cta-copy">
+    See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
+  </div>
+  <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
+</div>
         </div>
       </div>
     </div>
@@ -1559,32 +1571,32 @@
     <div>
       <div class="sidebar-stack">
       <div class="card" style="margin-top:20px;">
-        <div class="card-kicker">Plans</div>
-        <h3>Your plan</h3>
+        <div class="section-title">Plans</div>
+        <div class="section-subtitle">Choose the level of support you need.</div>
+
         <div class="price-box">
-          <p><strong>Free</strong></p>
+          <p style="font-weight:780; color:#F3F7FF; margin-bottom:6px;">Free</p>
           <p class="muted">3 analyses per day with core match feedback, strengths, gaps, and rewritten bullet suggestions.</p>
         </div>
-      <div class="price-box">
-        <p><strong>Pro</strong></p>
-        <p class="muted">Unlimited analyses plus professional summary, priority fixes, ATS improvements, and interview-risk feedback.</p>
-      </div>
+
+        <div class="price-box">
+          <p style="font-weight:780; color:#F3F7FF; margin-bottom:6px;">Pro</p>
+          <p class="muted">Unlimited analyses plus professional summary, priority fixes, ATS improvements, interview-risk feedback, and richer job-ready output.</p>
+        </div>
       </div>
 
       <div class="card section" style="opacity:0.9;">
         <div class="section-title">Recent history</div>
-        <div class="section-subtitle">
-          Your previous CV analyses
-        </div>
+        <div class="section-subtitle">Your previous CV analyses.</div>
         <div id="historyList" class="small muted">
-          No analyses yet. Run your first CV optimisation to see results here.
+          No analyses yet. Your recent CV checks will appear here.
         </div>
       </div>
       </div>
     </div>
   </div>
 
-  <footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:14px; flex-wrap:wrap;">
+<footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
     <a href="/privacy" class="footer-link">Privacy</a>
     <a href="/terms" class="footer-link">Terms</a>
     <a href="/billing" class="footer-link">Billing & cancellation</a>
@@ -2007,7 +2019,7 @@
         authCard.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
         accountMenuLabel.textContent = session.user.email || "Signed in";
-        accountEmail.textContent = "Logged in as " + (session.user.email || "");
+        accountEmail.textContent = session.user.email || "Signed in";
         closeAccountMenu();
 
         passwordStatus.textContent = "";
@@ -2195,8 +2207,8 @@ const result = await sbClient.auth.signInWithOtp({
       supportSubjectInput.value = "";
       supportMessageInput.value = "";
 
-      if (accountEmail.textContent && accountEmail.textContent.startsWith("Logged in as ")) {
-        supportEmailInput.value = accountEmail.textContent.replace("Logged in as ", "").trim();
+      if (accountEmail.textContent && accountEmail.textContent !== "Logged out" && accountEmail.textContent !== "Signed in") {
+        supportEmailInput.value = accountEmail.textContent.trim();
       }
       supportModal.classList.remove("hidden");
     });
@@ -2540,6 +2552,10 @@ passwordLoginBtn.addEventListener("click", async function() {
         proAtsWrap.classList.toggle("hidden", !(data.atsTips && data.atsTips.length));
         proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
         const isCurrentlyPro = accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro";
+        const lockedInsights = document.getElementById("lockedInsights");
+        if (lockedInsights) {
+          lockedInsights.classList.toggle("hidden", isCurrentlyPro);
+        }
         resultsUpgradeCta.classList.toggle("hidden", isCurrentlyPro);
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
