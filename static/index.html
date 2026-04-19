@@ -197,7 +197,7 @@
       <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
     </div>
 
-    <div style="padding:12px 14px; border:1px solid #334155; border-radius:10px; background:#162033; margin-bottom:12px;">
+    <div id="magicLinkHelp" style="padding:12px 14px; border:1px solid #334155; border-radius:10px; background:#162033; margin-bottom:12px;">
       <p class="small" style="margin:0;">
         First time here? Enter your email and we will send you a magic link to sign in.
       </p>
@@ -314,19 +314,20 @@
     const fileInput = document.getElementById("cvFileInput");
     const fileName = document.getElementById("fileName");
     const sendMagicLinkBtn = document.getElementById("sendMagicLinkBtn");
+    const passwordLoginBtn = document.getElementById("passwordLoginBtn");
     const signOutBtn = document.getElementById("signOutBtn");
+    const magicLinkHelp = document.getElementById("magicLinkHelp");
+    const loginPasswordWrap = document.getElementById("loginPasswordWrap");
+    const passwordCard = document.getElementById("passwordCard");
+    const passwordInput = document.getElementById("passwordInput");
+    const passwordStatus = document.getElementById("passwordStatus");
     const emailInput = document.getElementById("emailInput");
     const authStatus = document.getElementById("authStatus");
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const historyList = document.getElementById("historyList");
-    const loginPasswordWrap = document.getElementById("loginPasswordWrap");
     const loginPasswordInput = document.getElementById("loginPasswordInput");
-    const passwordInput = document.getElementById("passwordInput");
-    const passwordLoginBtn = document.getElementById("passwordLoginBtn");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
-    const passwordStatus = document.getElementById("passwordStatus");
-    const passwordCard = document.getElementById("passwordCard");
 
     function resetSelectedFile() {
       selectedFile = null;
@@ -408,11 +409,12 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
-          authStatus.textContent = "Use a magic link or password to sign in.";
+          authStatus.textContent = "Not signed in.";
           sendMagicLinkBtn.classList.remove("hidden");
           passwordLoginBtn.classList.remove("hidden");
           signOutBtn.classList.add("hidden");
           loginPasswordWrap.classList.remove("hidden");
+          magicLinkHelp.classList.remove("hidden");
           passwordCard.classList.add("hidden");
           passwordStatus.textContent = "";
           setPlanUi(null);
@@ -420,13 +422,22 @@
           return;
         }
 
+        const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
+        const passwordAlreadySet = !!userMeta.password_set;
+
         authStatus.textContent = "Signed in as " + session.user.email;
         sendMagicLinkBtn.classList.add("hidden");
         passwordLoginBtn.classList.add("hidden");
         signOutBtn.classList.remove("hidden");
         loginPasswordWrap.classList.add("hidden");
-        passwordCard.classList.remove("hidden");
+        magicLinkHelp.classList.add("hidden");
         passwordStatus.textContent = "";
+
+        if (passwordAlreadySet) {
+          passwordCard.classList.add("hidden");
+        } else {
+          passwordCard.classList.remove("hidden");
+        }
 
         const meRes = await fetch("/api/me", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -434,7 +445,7 @@
         const me = await meRes.json();
 
         if (me.error) {
-          authStatus.textContent = "Signed in, but backend error: " + me.error;
+          authStatus.textContent = "Signed in, but backend is waking up. Refresh in a few seconds.";
           return;
         }
 
@@ -453,7 +464,7 @@
         renderHistory(historyData.items || []);
       } catch (err) {
         console.error("refreshAuthUi error:", err);
-        authStatus.textContent = "Signed in. Loading your account...";
+        authStatus.textContent = "Auth refresh failed. Check browser console.";
       } finally {
         authRefreshInProgress = false;
       }
@@ -482,6 +493,8 @@ const result = await sbClient.auth.signInWithOtp({
     signOutBtn.addEventListener("click", async function() {
       if (!sbClient) return;
       await sbClient.auth.signOut();
+      passwordStatus.textContent = "";
+      passwordInput.value = "";
       location.reload();
     });
 
@@ -507,7 +520,8 @@ const result = await sbClient.auth.signInWithOtp({
   }
 
   const result = await sbClient.auth.updateUser({
-    password: newPassword
+    password: newPassword,
+    data: { password_set: true }
   });
 
   if (result.error) {
@@ -517,6 +531,8 @@ const result = await sbClient.auth.signInWithOtp({
 
   passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
   passwordInput.value = "";
+  passwordCard.classList.add("hidden");
+  await refreshAuthUi();
 });
 
 passwordLoginBtn.addEventListener("click", async function() {
