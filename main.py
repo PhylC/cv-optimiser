@@ -136,8 +136,7 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
   "priorityFixes": [],
   "skillsSection": [],
   "atsTips": [],
-  "interviewRisks": [],
-  "strongerBullets": []
+  "interviewRisks": []
 }
 """.strip()
     else:
@@ -156,49 +155,40 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
     pro_instructions = """
 Additional Pro rules:
 - professionalSummary must be a polished 3-4 line CV profile tailored to the job.
-- priorityFixes must be the 5 highest-impact CV improvements in priority order.
-- skillsSection must be a suggested skills section tailored to the role, using only skills already evidenced or clearly implied by the CV and job match.
-- atsTips must contain practical ATS-focused keyword and phrasing improvements.
-- interviewRisks must identify places where the CV may raise recruiter doubts or invite follow-up questions.
-- strongerBullets must be stronger, more commercially compelling rewritten bullets that remain truthful and do not invent experience.
+- priorityFixes must contain exactly 5 short, high-impact CV improvements in priority order.
+- skillsSection must contain 6-10 concise skills or capability phrases aligned to the role.
+- atsTips must contain 3-5 practical ATS-focused keyword or phrasing improvements.
+- interviewRisks must contain 3-5 realistic recruiter concerns or likely follow-up questions.
 """.strip() if is_pro else ""
 
     return f"""
-You are an expert UK CV writer, recruiter, and hiring manager.
+You are an expert UK CV writer and recruiter.
 
-Your task is to assess how well the CV matches the job description and produce output that is practical enough for the candidate to use immediately.
+Return exactly one valid JSON object.
+Do not include markdown.
+Do not include code fences.
+Do not include explanations before or after the JSON.
+Do not include trailing commas.
+Do not include comments.
+Do not omit required keys.
+Every key in the schema must be present.
+Use empty arrays or empty strings if needed.
 
-Important principles:
-- Be commercially useful, not generic.
-- Think like a recruiter reviewing this CV for interview shortlist quality.
-- Prioritise measurable impact, outcomes, ownership, and relevance.
-- Prefer evidence over buzzwords.
-- If the CV undersells relevant experience, say so clearly.
-- Do not invent employers, tools, responsibilities, metrics, achievements, qualifications, or experience.
-- You may improve wording, structure, emphasis, and clarity, but must stay truthful.
-- If the CV lacks hard evidence, acknowledge that directly.
-- Keep the tone sharp, professional, and realistic.
-
-Return valid JSON only in this exact structure:
+Use this exact JSON structure:
 
 {output_schema}
 
-Rules:
-- score should be realistic, not inflated.
-- matchedKeywords should be short phrases clearly supported by the CV.
-- missingKeywords should be high-value missing or weak terms from the job description.
-- strongPoints should explain what already helps this CV for this role.
-- weakPoints should identify what is vague, missing, weak, or likely to hold the candidate back.
-- bulletPoints must be improved CV bullet points, not advice bullets.
-- bulletPoints must sound specific, credible, and stronger than the original CV.
-- Rewrite bullets using stronger action verbs and clearer commercial or operational impact where justified by the CV.
-- Prefer quantified impact when the CV already supports it; do not invent numbers.
-- nextStep should be a short paragraph explaining the single highest-value improvement to make next.
-- No markdown.
-- No text outside the JSON.
-- Do not wrap the JSON in markdown fences.
-- Do not add explanations before or after the JSON.
-- Output exactly one valid JSON object only.
+Quality rules:
+- score must be realistic, not inflated
+- matchedKeywords must be short phrases clearly supported by the CV
+- missingKeywords must be genuinely important role terms missing or weak in the CV
+- strongPoints must explain what already helps this CV for this role
+- weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
+- bulletPoints must be improved CV bullet points, not advice bullets
+- bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
+- prefer quantified impact only if supported by the CV
+- never invent responsibilities, tools, employers, achievements, or metrics
+- nextStep must be a short paragraph describing the single highest-value improvement to make next
 
 {pro_instructions}
 
@@ -360,6 +350,95 @@ def extract_json_object(raw_text: str) -> dict[str, Any]:
             pass
 
     raise ValueError("Model did not return valid JSON.")
+
+
+def repair_json_with_model(raw_text: str) -> dict[str, Any]:
+    repair_prompt = f"""
+You will be given malformed output that was intended to be a JSON object.
+
+Your task:
+- return exactly one valid JSON object
+- do not include markdown
+- do not include explanations
+- do not change the meaning of the content
+- if a field is missing, add it with an empty string or empty array as appropriate
+
+Malformed output:
+{raw_text}
+""".strip()
+
+    repaired = require_openai().responses.create(
+        model=OPENAI_MODEL,
+        input=repair_prompt,
+        max_output_tokens=900,
+    ).output_text.strip()
+
+    print("OPENAI REPAIRED OUTPUT START")
+    print(repaired)
+    print("OPENAI REPAIRED OUTPUT END")
+
+    return extract_json_object(repaired)
+
+
+def coerce_string(value: Any, fallback: str = "") -> str:
+    if value is None:
+        return fallback
+    if isinstance(value, str):
+        return value.strip()
+    return str(value).strip()
+
+
+def coerce_string_list(value: Any, max_items: int = 5) -> list[str]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[str] = []
+    for item in value:
+        text = coerce_string(item)
+        if text:
+            items.append(text)
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any]:
+    try:
+        score = int(data.get("score", 0))
+    except Exception:
+        score = 0
+    score = max(0, min(100, score))
+
+    normalized = {
+        "score": score,
+        "matchedKeywords": coerce_string_list(data.get("matchedKeywords")),
+        "missingKeywords": coerce_string_list(data.get("missingKeywords")),
+        "strongPoints": coerce_string_list(data.get("strongPoints")),
+        "weakPoints": coerce_string_list(data.get("weakPoints")),
+        "bulletPoints": coerce_string_list(data.get("bulletPoints")),
+        "nextStep": coerce_string(data.get("nextStep")),
+    }
+
+    if is_pro:
+        normalized.update({
+            "professionalSummary": coerce_string(data.get("professionalSummary")),
+            "priorityFixes": coerce_string_list(data.get("priorityFixes")),
+            "skillsSection": coerce_string_list(data.get("skillsSection")),
+            "atsTips": coerce_string_list(data.get("atsTips")),
+            "interviewRisks": coerce_string_list(data.get("interviewRisks")),
+            "strongerBullets": coerce_string_list(data.get("strongerBullets")),
+        })
+    else:
+        normalized.update({
+            "professionalSummary": "",
+            "priorityFixes": [],
+            "skillsSection": [],
+            "atsTips": [],
+            "interviewRisks": [],
+            "strongerBullets": [],
+        })
+
+    return normalized
 
 
 def get_plan_state(user_id: str) -> dict[str, Any]:
@@ -670,7 +749,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
-            max_output_tokens=900,
+            max_output_tokens=1100,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -681,7 +760,16 @@ async def optimise(
             data = extract_json_object(raw)
         except Exception as e:
             print("JSON PARSE ERROR:", repr(e))
-            raise HTTPException(status_code=500, detail="Model returned invalid JSON.")
+            try:
+                data = repair_json_with_model(raw)
+            except Exception as repair_error:
+                print("JSON REPAIR ERROR:", repr(repair_error))
+                return JSONResponse(
+                    status_code=500,
+                    content={"error": "Model returned invalid JSON"}
+                )
+
+        data = normalize_analysis_data(data, is_pro=plan["is_pro"])
 
         payload = {
             "score": data.get("score", 0),
@@ -696,7 +784,6 @@ async def optimise(
             "skillsSection": data.get("skillsSection", []),
             "atsTips": data.get("atsTips", []),
             "interviewRisks": data.get("interviewRisks", []),
-            "strongerBullets": data.get("strongerBullets", []),
             "source": "openai",
         }
 

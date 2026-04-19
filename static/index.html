@@ -1306,15 +1306,6 @@
             <ul id="bullets" class="result-list"></ul>
           </div>
 
-          <div id="proStrongerBulletsWrap" class="result-section pro-premium hidden">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-              <div class="result-section-title">Stronger bullet versions</div>
-              <span class="pro-badge">Pro</span>
-            </div>
-            <div class="result-section-subtitle">More commercially compelling rewrite options.</div>
-            <ul id="strongerBullets" class="result-list"></ul>
-          </div>
-
           <div id="proSkillsWrap" class="result-section pro-premium hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div class="result-section-title">Suggested skills section</div>
@@ -1448,7 +1439,6 @@
     const proSummaryWrap = document.getElementById("proSummaryWrap");
     const professionalSummaryEl = document.getElementById("professionalSummary");
     const proPriorityWrap = document.getElementById("proPriorityWrap");
-    const proStrongerBulletsWrap = document.getElementById("proStrongerBulletsWrap");
     const proSkillsWrap = document.getElementById("proSkillsWrap");
     const proAtsWrap = document.getElementById("proAtsWrap");
     const proRisksWrap = document.getElementById("proRisksWrap");
@@ -2211,7 +2201,6 @@ passwordLoginBtn.addEventListener("click", async function() {
           ["weakPoints", data.weakPoints || []],
           ["bullets", data.bulletPoints || []],
           ["priorityFixes", data.priorityFixes || []],
-          ["strongerBullets", data.strongerBullets || []],
           ["skillsSection", data.skillsSection || []],
           ["atsTips", data.atsTips || []],
           ["interviewRisks", data.interviewRisks || []]
@@ -2234,7 +2223,6 @@ passwordLoginBtn.addEventListener("click", async function() {
         proSummaryWrap.classList.toggle("hidden", !hasProfessionalSummary);
 
         proPriorityWrap.classList.toggle("hidden", !(data.priorityFixes && data.priorityFixes.length));
-        proStrongerBulletsWrap.classList.toggle("hidden", !(data.strongerBullets && data.strongerBullets.length));
         proSkillsWrap.classList.toggle("hidden", !(data.skillsSection && data.skillsSection.length));
         proAtsWrap.classList.toggle("hidden", !(data.atsTips && data.atsTips.length));
         proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
