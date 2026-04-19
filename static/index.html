@@ -194,13 +194,13 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 16px;
+    gap: 28px;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 28px;
   }
 
   .hero-copy {
-    max-width: 680px;
+    max-width: 720px;
   }
 
   .account-menu {
@@ -226,8 +226,11 @@
   }
 
   .hero-subtitle {
-    font-size: 16px;
-    margin-top: 8px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #AAB7D4;
+    max-width: 62ch;
+    margin: 0;
   }
 
   .auth-actions {
@@ -275,47 +278,86 @@
   .logo-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 10px;
+    gap: 16px;
+    margin-bottom: 18px;
   }
 
   .logo-mark {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     background: linear-gradient(135deg, #5B78FF, #3E5EFF);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.28);
+    box-shadow: 0 12px 28px rgba(91, 120, 255, 0.28);
     flex-shrink: 0;
   }
 
   .logo-mark span {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
   }
 
   .logo-wordmark {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
   .logo-title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 800;
     color: #E8EEFC;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     line-height: 1;
   }
 
   .logo-tag {
     font-size: 13px;
     color: #9FB0D4;
-    line-height: 1.2;
+    line-height: 1.25;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(12, 23, 43, 0.82);
+    border: 1px solid rgba(80, 103, 146, 0.35);
+    color: #C9D7F6;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #5B78FF;
+    box-shadow: 0 0 0 6px rgba(91, 120, 255, 0.14);
+  }
+
+  .hero-headline {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+    font-weight: 820;
+    margin: 0 0 14px;
+    max-width: 12ch;
+    color: #F4F7FF;
+  }
+
+  .hero-headline .accent {
+    color: #AFC0FF;
   }
 
   .subtle-divider {
@@ -345,8 +387,23 @@
       font-size: 1.45rem;
     }
 
+    .topbar {
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .logo-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+    }
+
     .logo-title {
-      font-size: 24px;
+      font-size: 25px;
+    }
+
+    .hero-headline {
+      max-width: none;
     }
   }
 
@@ -499,26 +556,18 @@
     margin-top: 10px;
   }
 
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 18px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-
   .topbar-right {
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
+    min-width: 240px;
   }
 
   .account-chip {
     display: inline-flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 11px 15px;
     border-radius: 18px;
     background: rgba(12, 23, 43, 0.86);
     border: 1px solid rgba(80, 103, 146, 0.42);
@@ -542,10 +591,14 @@
   }
 
   .account-chip-email {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
-    color: #E8EEFC;
+    color: #F3F7FF;
     line-height: 1.2;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .account-chip-plan {
@@ -625,13 +678,18 @@
         </div>
         <div class="logo-wordmark">
           <div class="logo-title">CV Optimiser</div>
-          <div class="logo-tag">Tailor your CV to the role you actually want</div>
+          <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
         </div>
       </div>
 
-      <h1>Sharper CVs. Better job alignment. Faster applications.</h1>
+      <div class="hero-eyebrow">AI-powered CV tailoring</div>
+
+      <h1 class="hero-headline">
+        Sharper CVs. <span class="accent">Better alignment.</span> Faster applications.
+      </h1>
+
       <p class="hero-subtitle">
-        Upload your CV, paste the job description, and get targeted improvements that are easier to use and more likely to move you closer to interview.
+        Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements that are easier to use immediately.
       </p>
     </div>
 
@@ -662,8 +720,8 @@
     </div>
   </div>
 
-  <div id="authCard" class="card" style="margin-bottom: 18px;">
-    <h2 id="authTitle" style="margin-bottom:8px;">Sign in to use the tool</h2>
+  <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
+    <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Sign in to use the tool</h2>
     <p id="authSubtitle" class="small" style="margin-bottom:18px;">
       Use a magic link the first time, then create a password for faster access later.
     </p>
@@ -1104,7 +1162,7 @@
 
         if (!session) {
           authTitle.textContent = "Sign in to use the tool";
-          authSubtitle.textContent = "Use a magic link the first time, then create a password for faster access later.";
+          authSubtitle.textContent = "Use a magic link the first time, then set a password for quicker sign-in next time.";
           authStatus.textContent = "Not signed in.";
 
           authCard.classList.remove("hidden");
