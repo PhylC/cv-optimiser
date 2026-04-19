@@ -203,6 +203,28 @@
     max-width: 680px;
   }
 
+  .account-menu {
+    min-width: 220px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(14, 27, 52, 0.88);
+    border: 1px solid rgba(80, 103, 146, 0.42);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+  }
+
+  .account-menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .account-menu-actions button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
   .hero-subtitle {
     font-size: 16px;
     margin-top: 8px;
@@ -327,6 +349,49 @@
       font-size: 24px;
     }
   }
+
+  .account-menu-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .account-menu-btn {
+    background: #243754;
+    box-shadow: none;
+  }
+
+  .account-menu-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 240px;
+    background: rgba(25, 39, 66, 0.98);
+    border: 1px solid rgba(80, 103, 146, 0.42);
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    z-index: 50;
+  }
+
+  .account-menu-dropdown button {
+    width: 100%;
+    text-align: left;
+    margin-right: 0;
+    margin-bottom: 8px;
+    box-shadow: none;
+  }
+
+  .account-menu-dropdown button:last-child {
+    margin-bottom: 0;
+  }
+
+  .account-menu-label {
+    font-size: 12px;
+    color: #9FB0D4;
+    margin-bottom: 8px;
+    padding: 4px 6px 8px;
+    border-bottom: 1px solid rgba(48, 70, 110, 0.45);
+  }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -352,6 +417,18 @@
     <div>
       <span id="planBadge" class="pill">Plan: signed out</span>
       <span id="usageBadge" class="pill hidden"></span>
+
+      <div id="accountMenuWrap" class="account-menu-wrap hidden" style="margin-top:10px;">
+        <button id="accountMenuBtn" class="account-menu-btn secondary-btn" type="button">Account</button>
+
+        <div id="accountMenuDropdown" class="account-menu-dropdown hidden">
+          <div id="accountMenuLabel" class="account-menu-label">Signed in</div>
+          <button id="menuPasswordBtn" class="secondary-btn" type="button">Change password</button>
+          <button id="menuUpgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
+          <button id="menuManageSubBtn" class="secondary-btn" type="button">Manage subscription</button>
+          <button id="menuLogoutBtn" class="secondary-btn" type="button">Log out</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -393,9 +470,9 @@
   </div>
 
   <div id="passwordCard" class="card hidden" style="margin-top: 0; margin-bottom: 22px;">
-    <h3 style="margin-bottom:8px;">Create a password</h3>
-    <p class="small" style="margin-bottom:16px;">
-      Set a password once so you can sign in faster next time without using a magic link.
+    <h3 id="passwordCardTitle" style="margin-bottom:8px;">Change password</h3>
+    <p id="passwordCardSubtitle" class="small" style="margin-bottom:16px;">
+      Set or update your password for faster sign-in next time.
     </p>
 
     <input id="passwordInput" type="password" placeholder="Create a password">
@@ -553,6 +630,7 @@
     const passwordLoginBtn = document.getElementById("passwordLoginBtn");
     const signOutBtn = document.getElementById("signOutBtn");
     const magicLinkHelp = document.getElementById("magicLinkHelp");
+    const authCard = document.getElementById("authCard");
     const loginPasswordWrap = document.getElementById("loginPasswordWrap");
     const passwordCard = document.getElementById("passwordCard");
     const passwordInput = document.getElementById("passwordInput");
@@ -565,6 +643,14 @@
     const authStatus = document.getElementById("authStatus");
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
+    const accountMenuWrap = document.getElementById("accountMenuWrap");
+    const accountMenuBtn = document.getElementById("accountMenuBtn");
+    const accountMenuDropdown = document.getElementById("accountMenuDropdown");
+    const accountMenuLabel = document.getElementById("accountMenuLabel");
+    const menuPasswordBtn = document.getElementById("menuPasswordBtn");
+    const menuUpgradeBtn = document.getElementById("menuUpgradeBtn");
+    const menuManageSubBtn = document.getElementById("menuManageSubBtn");
+    const menuLogoutBtn = document.getElementById("menuLogoutBtn");
     const historyList = document.getElementById("historyList");
     const proSummaryWrap = document.getElementById("proSummaryWrap");
     const professionalSummaryEl = document.getElementById("professionalSummary");
@@ -575,7 +661,29 @@
     const proRisksWrap = document.getElementById("proRisksWrap");
     const loginPasswordInput = document.getElementById("loginPasswordInput");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
+    const passwordCardTitle = document.getElementById("passwordCardTitle");
+    const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
+
+    function closeAccountMenu() {
+      accountMenuDropdown.classList.add("hidden");
+    }
+
+    function openPasswordCardForUser(hasPassword) {
+      passwordCard.classList.remove("hidden");
+      passwordStatus.textContent = "";
+      passwordInput.value = "";
+
+      if (hasPassword) {
+        passwordCardTitle.textContent = "Change password";
+        passwordCardSubtitle.textContent = "Update your password for future sign-ins.";
+        passwordInput.placeholder = "Enter a new password";
+      } else {
+        passwordCardTitle.textContent = "Create a password";
+        passwordCardSubtitle.textContent = "Set a password once so you can sign in faster next time without using a magic link.";
+        passwordInput.placeholder = "Create a password";
+      }
+    }
 
     function resetSelectedFile() {
       selectedFile = null;
@@ -642,6 +750,51 @@
       return accessToken;
     }
 
+    async function openManageSubscription() {
+      try {
+        const token = await getSessionToken();
+        if (!token) {
+          status.textContent = "Sign in first before managing your subscription.";
+          return;
+        }
+
+        status.textContent = "Opening subscription settings...";
+        const res = await fetch("/api/create-portal-session", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + token }
+        });
+        const data = await res.json();
+
+        if (!res.ok || data.error || data.detail) {
+          status.textContent = data.detail || data.error || "Could not open subscription settings.";
+          return;
+        }
+
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        status.textContent = "Could not open subscription settings.";
+      } catch (err) {
+        console.error("manage subscription error:", err);
+        status.textContent = "Could not open subscription settings.";
+      }
+    }
+
+    async function signOutUser() {
+      if (!sbClient) return;
+      await sbClient.auth.signOut();
+      passwordStatus.textContent = "";
+      passwordInput.value = "";
+      loginPasswordInput.value = "";
+      sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
+      historyLoadedForUserId = null;
+      lastPlanJson = "";
+      closeAccountMenu();
+      await refreshAuthUi();
+    }
+
     async function refreshAuthUi() {
       if (authRefreshInProgress) return;
       authRefreshInProgress = true;
@@ -658,8 +811,12 @@
 
         if (!session) {
           authTitle.textContent = "Sign in to use the tool";
-          authSubtitle.textContent = "Upload your CV, paste the job description, and get tailored improvements instantly.";
+          authSubtitle.textContent = "Use a magic link the first time, then create a password for faster access later.";
           authStatus.textContent = "Not signed in.";
+
+          authCard.classList.remove("hidden");
+          accountMenuWrap.classList.add("hidden");
+          closeAccountMenu();
 
           sendMagicLinkBtn.classList.remove("hidden");
           passwordLoginBtn.classList.remove("hidden");
@@ -670,6 +827,7 @@
           passwordCard.classList.add("hidden");
           passwordStatus.textContent = "";
           passwordInput.value = "";
+          loginPasswordInput.value = "";
 
           lastPlanJson = "";
           historyLoadedForUserId = null;
@@ -681,24 +839,14 @@
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
         const passwordAlreadySet = !!userMeta.password_set;
 
-        authTitle.textContent = "Your account";
-        authSubtitle.textContent = "You are signed in and ready to use the tool.";
-        authStatus.textContent = "Signed in as " + session.user.email;
+        authCard.classList.add("hidden");
+        accountMenuWrap.classList.remove("hidden");
+        accountMenuLabel.textContent = session.user.email || "Signed in";
+        closeAccountMenu();
 
-        sendMagicLinkBtn.classList.add("hidden");
-        passwordLoginBtn.classList.add("hidden");
-        signOutBtn.classList.remove("hidden");
-        loginPasswordWrap.classList.add("hidden");
-        magicLinkHelp.classList.add("hidden");
-
-        if (passwordAlreadySet) {
-          passwordCard.classList.add("hidden");
-          passwordStatus.textContent = "";
-          passwordInput.value = "";
-        } else {
-          passwordCard.classList.remove("hidden");
-          passwordStatus.textContent = "";
-        }
+        passwordCard.classList.add("hidden");
+        passwordStatus.textContent = "";
+        passwordInput.value = "";
 
         const meRes = await fetch("/api/me", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -714,6 +862,20 @@
         if (nextPlanJson !== lastPlanJson) {
           setPlanUi(me.plan);
           lastPlanJson = nextPlanJson;
+        }
+
+        const isPro = !!(me.plan && me.plan.is_pro);
+
+        if (isPro) {
+          menuUpgradeBtn.classList.add("hidden");
+          menuManageSubBtn.classList.remove("hidden");
+        } else {
+          menuUpgradeBtn.classList.remove("hidden");
+          menuManageSubBtn.classList.add("hidden");
+        }
+
+        if (!passwordAlreadySet) {
+          openPasswordCardForUser(false);
         }
 
         const currentUserId = me.user && me.user.id ? me.user.id : null;
@@ -764,16 +926,78 @@ const result = await sbClient.auth.signInWithOtp({
       authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
     });
 
-    signOutBtn.addEventListener("click", async function() {
+    async function handleSignOut() {
       if (!sbClient) return;
       await sbClient.auth.signOut();
       passwordStatus.textContent = "";
       passwordInput.value = "";
       loginPasswordInput.value = "";
-      sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
       historyLoadedForUserId = null;
       lastPlanJson = "";
+      closeAccountMenu();
       await refreshAuthUi();
+    }
+
+    signOutBtn.addEventListener("click", handleSignOut);
+    menuLogoutBtn.addEventListener("click", handleSignOut);
+
+    accountMenuBtn.addEventListener("click", function() {
+      accountMenuDropdown.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", function(event) {
+      if (!accountMenuWrap.contains(event.target)) {
+        closeAccountMenu();
+      }
+    });
+
+    menuPasswordBtn.addEventListener("click", async function() {
+      if (!sbClient) return;
+
+      const result = await sbClient.auth.getSession();
+      const session = result && result.data ? result.data.session : null;
+      const userMeta = session && session.user && session.user.user_metadata ? session.user.user_metadata : {};
+      const passwordAlreadySet = !!userMeta.password_set;
+
+      openPasswordCardForUser(passwordAlreadySet);
+      closeAccountMenu();
+    });
+
+    menuUpgradeBtn.addEventListener("click", async function() {
+      closeAccountMenu();
+      upgradeBtn.click();
+    });
+
+    menuManageSubBtn.addEventListener("click", async function() {
+      closeAccountMenu();
+
+      const token = await getSessionToken();
+      if (!token) {
+        authStatus.textContent = "Sign in first.";
+        return;
+      }
+
+      const res = await fetch("/api/create-portal-session", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token }
+      });
+
+      const raw = await res.text();
+      console.log("portal raw response:", raw);
+
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (e) {
+        authStatus.textContent = "Subscription management is temporarily unavailable.";
+        return;
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        authStatus.textContent = data.error || "Could not open subscription management.";
+      }
     });
 
     setPasswordBtn.addEventListener("click", async function() {
@@ -807,6 +1031,7 @@ const result = await sbClient.auth.signInWithOtp({
     return;
   }
 
+  sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
   passwordStatus.textContent = "Password saved. You can now sign in with email and password.";
   passwordInput.value = "";
   passwordCard.classList.add("hidden");

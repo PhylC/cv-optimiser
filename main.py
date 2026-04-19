@@ -232,6 +232,19 @@ def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
     return result.data[0] if result.data else None
 
 
+def get_stripe_customer_id_for_user(user_id: str) -> Optional[str]:
+    active_subscription = get_active_subscription(user_id)
+    subscription_id = active_subscription.get("stripe_subscription_id") if active_subscription else None
+    if not subscription_id:
+        return None
+
+    subscription = require_stripe().Subscription.retrieve(subscription_id)
+    customer = getattr(subscription, "customer", None)
+    if not customer:
+        return None
+    return str(customer)
+
+
 def count_usage_today(user_id: str) -> int:
     result = (
         require_supabase()
@@ -345,6 +358,44 @@ def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict
     metadata={"user_id": user["id"]},
 )
     return {"url": session.url}
+
+
+@app.post("/api/create-portal-session")
+def create_portal_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+    try:
+        user = get_user_from_token(authorization)
+        upsert_profile(user["id"], user["email"])
+
+        if not STRIPE_SECRET_KEY:
+            return {"error": "Stripe secret key not configured."}
+
+        if not APP_BASE_URL:
+            return {"error": "App base URL not configured."}
+
+        customer_id = None
+
+        active_subscription = get_active_subscription(user["id"])
+        if active_subscription:
+            customer_id = active_subscription.get("stripe_customer_id")
+
+        if not customer_id:
+            customers = require_stripe().Customer.list(email=user["email"], limit=1)
+            if customers and getattr(customers, "data", None):
+                customer_id = customers.data[0].id
+
+        if not customer_id:
+            return {"error": "No Stripe customer found for this account."}
+
+        session = require_stripe().billing_portal.Session.create(
+            customer=customer_id,
+            return_url=f"{APP_BASE_URL}/"
+        )
+
+        return {"url": session.url}
+
+    except Exception as e:
+        print("STRIPE PORTAL ERROR:", repr(e))
+        return {"error": str(e)}
 
 
 @app.post("/api/stripe-webhook")
