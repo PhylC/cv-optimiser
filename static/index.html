@@ -67,7 +67,7 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    min-height: 164px;
+    min-height: 136px;
     margin: 8px 0 0;
     resize: vertical;
   }
@@ -502,16 +502,17 @@
   }
 
   .primary-tool-card button#optimiseBtn {
-    min-height: 54px;
-    font-size: 15px;
+    min-height: 58px;
+    font-size: 16px;
     font-weight: 800;
+    box-shadow: 0 14px 30px rgba(91, 120, 255, 0.28);
   }
 
   .tool-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 18px;
+    gap: 14px;
+    margin-top: 16px;
   }
 
   .field-group {
@@ -525,8 +526,29 @@
     color: #C3D1EE;
   }
 
+  .example-preview {
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(92, 112, 150, 0.2);
+    background: rgba(10, 19, 35, 0.42);
+  }
+
+  .example-preview strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #EAF0FF;
+    font-size: 14px;
+  }
+
+  .example-preview p {
+    color: #CCD7EF;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
   .sidebar-card {
-    padding: 22px;
+    padding: 18px;
+    background: rgba(15, 28, 50, 0.62);
   }
 
   .sidebar-card .section-title {
@@ -1410,19 +1432,19 @@
   <div class="main-grid">
     <div class="main-column">
       <div class="card section primary-tool-card" style="overflow:hidden;">
-        <div class="section-title">Start your CV check</div>
+        <div class="section-title">If you're not getting interviews, your CV is the problem.</div>
         <div class="section-subtitle">
-          Paste the role, add your CV, and get practical feedback you can use immediately.
+          Get instant, recruiter-style feedback in under 60 seconds.
         </div>
 
         <div class="tool-form">
           <div class="field-group">
-            <label for="jobDescription">Job description</label>
+            <label for="jobDescription">Paste job description (required)</label>
             <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
           </div>
 
           <div class="field-group">
-            <label for="cvText">Your CV text (optional if uploading a file)</label>
+            <label for="cvText">Upload your CV (recommended)</label>
             <textarea id="cvText" placeholder="Paste your CV here, or leave blank if uploading a file..."></textarea>
           </div>
 
@@ -1437,7 +1459,13 @@
           <div>
             <button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
           </div>
-          <p class="small tool-trust-copy">Takes under 60 seconds • No sign-up required to try</p>
+          <p class="small tool-trust-copy">No sign-up required • Your CV isn’t stored</p>
+          <div class="example-preview">
+            <strong>Example result:</strong>
+            <p>Score: 55/100</p>
+            <p>• Missing key skills recruiters search for</p>
+            <p>• Weak professional summary</p>
+          </div>
         </div>
 
         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
