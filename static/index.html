@@ -1317,9 +1317,9 @@
   </div>
 
   <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
-    <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Sign in to use the tool</h2>
+    <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Create a free account to save your results</h2>
     <p id="authSubtitle" class="small" style="margin-bottom:18px;">
-      Use a magic link the first time, then create a password for faster access later.
+      You can try the CV Optimiser first, then sign up to save results and unlock the full report.
     </p>
 
     <div class="auth-stack">
@@ -1449,9 +1449,27 @@
               </div>
             </div>
 
-            <div class="score-meta">
-              <div class="pill">Source: <span id="source"></span></div>
-            </div>
+          <div class="score-meta">
+            <div class="pill">Source: <span id="source"></span></div>
+          </div>
+        </div>
+
+          <div id="anonymousSummaryWrap" class="result-section hidden">
+            <div class="result-section-title">Quick summary</div>
+            <div class="result-section-subtitle">A short read on your current fit for this role.</div>
+            <p id="anonymousSummary" class="result-paragraph"></p>
+          </div>
+
+          <div id="anonymousPriorityWrap" class="result-section hidden">
+            <div class="result-section-title">Top priority fixes</div>
+            <div class="result-section-subtitle">The first changes most likely to improve this CV.</div>
+            <ul id="anonymousPriorityFixes" class="result-list"></ul>
+          </div>
+
+          <div id="anonymousKeywordGapWrap" class="result-section hidden">
+            <div class="result-section-title">Keyword gap insight</div>
+            <div class="result-section-subtitle">One missing signal worth checking and strengthening.</div>
+            <p id="anonymousKeywordGap" class="result-paragraph"></p>
           </div>
 
           <div id="proSummaryWrap" class="result-section pro-premium hidden">
@@ -1564,6 +1582,14 @@
   </div>
   <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
 </div>
+
+<div id="anonymousSignupPrompt" class="results-upgrade-cta hidden">
+  <div class="results-upgrade-cta-title">Create a free account to keep going</div>
+  <div id="anonymousSignupPromptCopy" class="results-upgrade-cta-copy">
+    Create a free account to save this result and unlock the full report.
+  </div>
+  <button id="anonymousSignupBtn" type="button">Create free account</button>
+</div>
         </div>
       </div>
     </div>
@@ -1668,6 +1694,15 @@
     const supportSubmitBtn = document.getElementById("supportSubmitBtn");
     const supportStatus = document.getElementById("supportStatus");
     const historyList = document.getElementById("historyList");
+    const anonymousSummaryWrap = document.getElementById("anonymousSummaryWrap");
+    const anonymousSummary = document.getElementById("anonymousSummary");
+    const anonymousPriorityWrap = document.getElementById("anonymousPriorityWrap");
+    const anonymousPriorityFixes = document.getElementById("anonymousPriorityFixes");
+    const anonymousKeywordGapWrap = document.getElementById("anonymousKeywordGapWrap");
+    const anonymousKeywordGap = document.getElementById("anonymousKeywordGap");
+    const anonymousSignupPrompt = document.getElementById("anonymousSignupPrompt");
+    const anonymousSignupPromptCopy = document.getElementById("anonymousSignupPromptCopy");
+    const anonymousSignupBtn = document.getElementById("anonymousSignupBtn");
     const proSummaryWrap = document.getElementById("proSummaryWrap");
     const professionalSummaryEl = document.getElementById("professionalSummary");
     const proPriorityWrap = document.getElementById("proPriorityWrap");
@@ -1980,9 +2015,9 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
-          authTitle.textContent = "Sign in to use the tool";
-          authSubtitle.textContent = "Use a magic link the first time, then set a password for quicker sign-in next time.";
-          authStatus.textContent = "Not signed in.";
+          authTitle.textContent = "Create a free account to save your results";
+          authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
+          authStatus.textContent = "Not signed in. You can still run a free CV check.";
 
           authCard.classList.remove("hidden");
           accountMenuWrap.classList.add("hidden");
@@ -2374,6 +2409,11 @@ passwordLoginBtn.addEventListener("click", async function() {
       upgradeBtn.click();
     });
 
+    anonymousSignupBtn.addEventListener("click", function() {
+      authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      emailInput.focus();
+    });
+
     upgradeBtn.addEventListener("click", async function() {
       console.log("upgrade clicked");
 
@@ -2458,10 +2498,6 @@ passwordLoginBtn.addEventListener("click", async function() {
       console.log("optimise clicked");
 
       const token = await getSessionToken();
-      if (!token) {
-        status.textContent = "Sign in first to use the tool.";
-        return;
-      }
 
       const jobDescription = document.getElementById("jobDescription").value.trim();
       const cvText = document.getElementById("cvText").value.trim();
@@ -2475,6 +2511,8 @@ passwordLoginBtn.addEventListener("click", async function() {
 
       if (!cvText && !selectedFile) {
         status.textContent = "Paste your CV text or upload a CV file.";
+        optimiseBtn.disabled = false;
+        optimiseBtn.textContent = originalText;
         return;
       }
 
@@ -2493,7 +2531,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         const res = await fetch("/api/optimise", {
           method: "POST",
-          headers: { Authorization: "Bearer " + token },
+          headers: token ? { Authorization: "Bearer " + token } : {},
           body: formData
         });
 
@@ -2560,6 +2598,20 @@ passwordLoginBtn.addEventListener("click", async function() {
           });
         });
 
+        anonymousSummary.textContent = data.shortSummary || "";
+        anonymousSummaryWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.shortSummary));
+
+        anonymousPriorityFixes.innerHTML = "";
+        (data.previewPriorityFixes || []).forEach(function(item) {
+          const li = document.createElement("li");
+          li.textContent = item;
+          anonymousPriorityFixes.appendChild(li);
+        });
+        anonymousPriorityWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.previewPriorityFixes && data.previewPriorityFixes.length));
+
+        anonymousKeywordGap.textContent = data.keywordGapInsight || "";
+        anonymousKeywordGapWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.keywordGapInsight));
+
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
         professionalSummaryEl.textContent = data.professionalSummary || "";
         proSummaryWrap.classList.toggle("hidden", !hasProfessionalSummary);
@@ -2571,12 +2623,18 @@ passwordLoginBtn.addEventListener("click", async function() {
         const isCurrentlyPro = accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro";
         const lockedInsights = document.getElementById("lockedInsights");
         if (lockedInsights) {
-          lockedInsights.classList.toggle("hidden", isCurrentlyPro);
+          lockedInsights.classList.toggle("hidden", isCurrentlyPro || !!data.isAnonymousResult);
         }
-        resultsUpgradeCta.classList.toggle("hidden", isCurrentlyPro);
+        resultsUpgradeCta.classList.toggle("hidden", isCurrentlyPro || !!data.isAnonymousResult);
+        anonymousSignupPromptCopy.textContent = data.signupPrompt || "Create a free account to save this result and unlock the full report.";
+        anonymousSignupPrompt.classList.toggle("hidden", !data.isAnonymousResult);
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
         status.classList.add("is-success");
+
+        if (data.isAnonymousResult) {
+          trackEvent("signup_prompt_shown_after_result");
+        }
 
         if (data.plan) {
           setPlanUi(data.plan);

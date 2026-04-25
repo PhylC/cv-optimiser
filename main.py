@@ -551,6 +551,51 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
     return normalized
 
 
+def build_anonymous_result_preview(data: dict[str, Any]) -> dict[str, Any]:
+    priority_fixes: list[str] = []
+
+    for item in data.get("weakPoints", []):
+        text = coerce_string(item)
+        if text and text not in priority_fixes:
+            priority_fixes.append(text)
+        if len(priority_fixes) >= 2:
+            break
+
+    next_step = coerce_string(data.get("nextStep"))
+    if next_step and next_step not in priority_fixes and len(priority_fixes) < 3:
+        priority_fixes.append(next_step)
+
+    short_summary = (
+        "Your CV shows some relevant alignment, but the biggest gains will come from "
+        "tightening role-specific evidence and closing the most obvious fit gaps."
+    )
+
+    if data.get("score", 0) >= 75:
+        short_summary = (
+            "Your CV looks broadly aligned for this role, with a few targeted changes likely "
+            "to improve clarity and interview potential."
+        )
+    elif data.get("score", 0) <= 45:
+        short_summary = (
+            "Your CV is not yet strongly aligned to this role, so clearer keyword coverage "
+            "and stronger evidence of fit should be the first priorities."
+        )
+
+    missing_keywords = data.get("missingKeywords", [])
+    keyword_gap_insight = ""
+    if missing_keywords:
+        keyword_gap_insight = (
+            f"One obvious gap is '{missing_keywords[0]}'. Add it only if it genuinely matches "
+            "your experience, and support it with a concrete example."
+        )
+
+    return {
+        "shortSummary": short_summary,
+        "previewPriorityFixes": priority_fixes[:3],
+        "keywordGapInsight": keyword_gap_insight,
+    }
+
+
 def get_plan_state(user_id: str) -> dict[str, Any]:
     active_subscription = get_active_subscription(user_id)
     if active_subscription:
@@ -664,6 +709,9 @@ async def api_track(request: Request) -> dict[str, Any]:
 
         if not event_name:
             return {"error": "Missing event_name"}
+
+        if event_name == "signup_prompt_shown_after_result":
+            print("CONVERSION_EVENT: signup_prompt_shown_after_result")
 
         user_id = None
         email = None
@@ -1035,23 +1083,36 @@ async def optimise(
                 job_description = str(body.get("jobDescription", "") or "").strip()
                 cv_text = str(body.get("cvText", "") or "").strip()
 
-        user = get_user_from_token(authorization)
-        upsert_profile(user["id"], user["email"])
-        plan = get_plan_state(user["id"])
-        track_event(
-            event_name="optimise_started",
-            user_id=user["id"],
-            email=user["email"],
-            metadata={"is_pro": bool(plan["is_pro"])}
-        )
+        user = None
+        plan = None
+        is_anonymous = True
 
-        if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
-            return {
-                "error": "You’ve used your free analyses for today. Upgrade to Pro for unlimited CV checks.",
-                "code": "PAYWALL",
-                "source": "error",
-                "plan": plan,
-            }
+        if authorization:
+            try:
+                user = get_user_from_token(authorization)
+                is_anonymous = False
+            except Exception as auth_error:
+                print("OPTIMISE AUTH FALLBACK:", repr(auth_error))
+                user = None
+                is_anonymous = True
+
+        if user:
+            upsert_profile(user["id"], user["email"])
+            plan = get_plan_state(user["id"])
+            track_event(
+                event_name="optimise_started",
+                user_id=user["id"],
+                email=user["email"],
+                metadata={"is_pro": bool(plan["is_pro"])}
+            )
+
+            if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
+                return {
+                    "error": "You’ve used your free analyses for today. Upgrade to Pro for unlimited CV checks.",
+                    "code": "PAYWALL",
+                    "source": "error",
+                    "plan": plan,
+                }
 
         if not job_description or len(job_description) < 20:
             return {"error": "Please paste a fuller job description.", "source": "error"}
@@ -1073,7 +1134,7 @@ async def optimise(
 
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
-            input=build_prompt(job_description, cv_text, is_pro=plan["is_pro"]),
+            input=build_prompt(job_description, cv_text, is_pro=bool(plan and plan["is_pro"])),
             max_output_tokens=1100,
         ).output_text.strip()
 
@@ -1094,7 +1155,7 @@ async def optimise(
                     content={"error": "Model returned invalid JSON"}
                 )
 
-        data = normalize_analysis_data(data, is_pro=plan["is_pro"])
+        data = normalize_analysis_data(data, is_pro=bool(plan and plan["is_pro"]))
 
         payload = {
             "score": data.get("score", 0),
@@ -1112,18 +1173,25 @@ async def optimise(
             "source": "openai",
         }
 
-        save_usage_event(user["id"])
-        save_analysis_history(user["id"], job_description, payload)
-        payload["plan"] = get_plan_state(user["id"])
-        track_event(
-            event_name="optimise_succeeded",
-            user_id=user["id"],
-            email=user["email"],
-            metadata={
-                "is_pro": bool(plan["is_pro"]),
-                "score": payload.get("score", 0),
-            }
-        )
+        if user:
+            save_usage_event(user["id"])
+            save_analysis_history(user["id"], job_description, payload)
+            payload["plan"] = get_plan_state(user["id"])
+            track_event(
+                event_name="optimise_succeeded",
+                user_id=user["id"],
+                email=user["email"],
+                metadata={
+                    "is_pro": bool(plan["is_pro"]),
+                    "score": payload.get("score", 0),
+                }
+            )
+        else:
+            payload.update(build_anonymous_result_preview(data))
+            payload["isAnonymousResult"] = True
+            payload["signupPrompt"] = "Create a free account to save this result and unlock the full report."
+            print("CONVERSION_EVENT: anonymous_result_generated")
+
         return payload
     except HTTPException:
         raise
