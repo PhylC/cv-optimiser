@@ -7,9 +7,9 @@
   <style>
   body {
     font-family: Inter, Arial, sans-serif;
-    max-width: 1080px;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 40px 24px 64px;
+    padding: 28px 24px 56px;
     background:
       radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
       radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
@@ -55,9 +55,9 @@
     display: block;
     box-sizing: border-box;
     padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(80, 103, 146, 0.35);
-    background: rgba(8, 18, 34, 0.85);
+    border-radius: 14px;
+    border: 1px solid rgba(92, 112, 150, 0.26);
+    background: rgba(9, 18, 35, 0.76);
     color: #E8EEFC;
     font-size: 14px;
     transition: border 0.12s ease, box-shadow 0.12s ease;
@@ -67,8 +67,8 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    min-height: 180px;
-    margin: 10px 0 20px;
+    min-height: 164px;
+    margin: 8px 0 0;
     resize: vertical;
   }
 
@@ -81,8 +81,8 @@
   button {
     background: linear-gradient(135deg, #5B78FF, #3E5EFF);
     border: none;
-    border-radius: 12px;
-    padding: 11px 16px;
+    border-radius: 14px;
+    padding: 12px 16px;
     font-size: 14px;
     font-weight: 700;
     color: white;
@@ -104,24 +104,24 @@
   }
 
   .secondary-btn {
-    background: rgba(20, 35, 60, 0.8);
+    background: rgba(20, 35, 60, 0.72);
     box-shadow: none;
-    border: 1px solid rgba(80, 103, 146, 0.35);
+    border: 1px solid rgba(92, 112, 150, 0.26);
     color: #E8EEFC;
   }
 
   .card {
-    background: rgba(15, 28, 50, 0.82);
-    border: 1px solid rgba(80, 103, 146, 0.32);
-    border-radius: 20px;
-    padding: 22px 22px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+    background: rgba(15, 28, 50, 0.78);
+    border: 1px solid rgba(92, 112, 150, 0.24);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
     backdrop-filter: blur(8px);
-    transition: border 0.15s ease, transform 0.15s ease;
+    transition: border 0.15s ease;
   }
 
   .card:hover {
-    border-color: rgba(91, 120, 255, 0.4);
+    border-color: rgba(108, 128, 173, 0.28);
   }
 
   .hidden {
@@ -170,11 +170,11 @@
   }
 
   .dropzone {
-    margin: 16px 0 22px;
-    padding: 38px 24px;
-    border: 1.5px dashed rgba(111, 133, 186, 0.72);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(13, 23, 42, 0.74), rgba(10, 19, 35, 0.62));
+    margin: 0;
+    padding: 28px 22px;
+    border: 1px dashed rgba(111, 133, 186, 0.46);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(13, 23, 42, 0.56), rgba(10, 19, 35, 0.5));
     text-align: center;
     transition: border-color 0.2s ease, background 0.2s ease;
   }
@@ -215,16 +215,16 @@
   }
 
   .section-title {
-    margin-top: 26px;
-    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 8px;
     font-size: 1rem;
     letter-spacing: -0.015em;
   }
 
   .main-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.8fr);
-    gap: 24px;
+    grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
+    gap: 28px;
     align-items: start;
   }
 
@@ -346,7 +346,7 @@
   .sidebar-stack {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
   .topbar {
@@ -354,7 +354,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .account-menu {
@@ -391,19 +391,19 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .helper-box {
-    padding: 12px 14px;
-    border: 1px solid #30466E;
-    border-radius: 14px;
-    background: rgba(14, 27, 52, 0.85);
-    margin-bottom: 12px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    margin-bottom: 10px;
   }
 
   .auth-stack > div {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .status-line {
@@ -418,11 +418,11 @@
   }
 
   .price-box {
-    background: linear-gradient(180deg, rgba(10, 19, 38, 0.72), rgba(8, 16, 31, 0.66));
-    border: 1px solid rgba(77, 100, 146, 0.38);
-    border-radius: 18px;
-    padding: 20px;
-    margin-top: 14px;
+    background: rgba(11, 21, 40, 0.52);
+    border: 1px solid rgba(92, 112, 150, 0.22);
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 12px;
   }
 
   .muted {
@@ -492,13 +492,13 @@
   }
 
   .hero-supporting-copy {
-    margin-top: 4px;
+    margin-top: 10px;
   }
 
   .primary-tool-card {
-    padding: 24px;
-    border-color: rgba(105, 128, 196, 0.42);
-    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
+    padding: 28px;
+    border-color: rgba(104, 124, 168, 0.28);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
   }
 
   .primary-tool-card button#optimiseBtn {
@@ -507,13 +507,26 @@
     font-weight: 800;
   }
 
+  .tool-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .tool-trust-copy {
-    margin-top: 8px;
+    margin-top: 2px;
     color: #C3D1EE;
   }
 
   .sidebar-card {
-    padding: 20px;
+    padding: 22px;
   }
 
   .sidebar-card .section-title {
@@ -521,7 +534,25 @@
   }
 
   .sidebar-intro {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
+  }
+
+  .sidebar-note {
+    color: #AFC0E4;
+    font-size: 13px;
+  }
+
+  .sidebar-secondary {
+    background: rgba(15, 28, 50, 0.64);
+  }
+
+  .sidebar-secondary .section-subtitle,
+  .sidebar-secondary .muted {
+    color: #9db0d6;
+  }
+
+  .plan-copy {
+    margin-bottom: 2px;
   }
 
   .hero-eyebrow::before {
@@ -564,7 +595,7 @@
 
   @media (max-width: 900px) {
     body {
-      padding: 28px 16px 48px;
+      padding: 22px 16px 44px;
     }
 
     h1 {
@@ -602,6 +633,7 @@
 
     .main-grid {
       grid-template-columns: 1fr;
+      gap: 18px;
     }
 
     .main-column {
@@ -1267,12 +1299,12 @@
     transform: none;
   }
 
-.results-upgrade-cta {
+  .results-upgrade-cta {
   margin-top: 18px;
   padding: 18px 20px;
   border-radius: 18px;
-  border: 1px solid rgba(91, 120, 255, 0.38);
-  background: linear-gradient(180deg, rgba(19, 33, 64, 0.92), rgba(12, 23, 43, 0.96));
+  border: 1px solid rgba(92, 112, 150, 0.24);
+  background: linear-gradient(180deg, rgba(19, 33, 64, 0.84), rgba(12, 23, 43, 0.88));
   box-shadow: inset 0 1px 0 rgba(160, 180, 255, 0.06);
 }
 
@@ -1378,29 +1410,36 @@
   <div class="main-grid">
     <div class="main-column">
       <div class="card section primary-tool-card" style="overflow:hidden;">
-<div class="section-title">Start your CV check</div>
-<div class="section-subtitle">
-  Paste the role, add your CV, and get practical feedback you can use immediately.
-</div>
-
-        <label for="jobDescription">Job description</label>
-        <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
-
-        <label for="cvText">Your CV text (optional if uploading a file)</label>
-        <textarea id="cvText" placeholder="Paste your CV here, or leave blank if uploading a file..."></textarea>
-
-        <div id="dropzone" class="dropzone">
-          <p><strong>Drag and drop your CV here</strong></p>
-          <p class="small">Supports PDF, DOCX, and TXT</p>
-          <p><label for="cvFileInput" class="linkish">Or click to choose a file</label></p>
-          <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
-          <div id="fileName" class="file-note">No file selected</div>
+        <div class="section-title">Start your CV check</div>
+        <div class="section-subtitle">
+          Paste the role, add your CV, and get practical feedback you can use immediately.
         </div>
 
-        <div style="margin-top:8px;">
-<button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
+        <div class="tool-form">
+          <div class="field-group">
+            <label for="jobDescription">Job description</label>
+            <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="cvText">Your CV text (optional if uploading a file)</label>
+            <textarea id="cvText" placeholder="Paste your CV here, or leave blank if uploading a file..."></textarea>
+          </div>
+
+          <div id="dropzone" class="dropzone">
+            <p><strong>Drag and drop your CV here</strong></p>
+            <p class="small">Supports PDF, DOCX, and TXT</p>
+            <p><label for="cvFileInput" class="linkish">Or click to choose a file</label></p>
+            <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+            <div id="fileName" class="file-note">No file selected</div>
+          </div>
+
+          <div>
+            <button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
+          </div>
+          <p class="small tool-trust-copy">Takes under 60 seconds • No sign-up required to try</p>
         </div>
-        <p class="small tool-trust-copy">Takes under 60 seconds • No sign-up required to try</p>
+
         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
@@ -1603,10 +1642,8 @@
           <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
         </div>
 
-        <div id="magicLinkHelp" class="helper-box">
-          <p class="small" style="margin:0;">
-            First time here? Enter your email and we will send you a magic link to sign in.
-          </p>
+        <div id="magicLinkHelp" class="helper-box small sidebar-note">
+          First time here? We’ll email you a magic link, but you can still run a free check without signing in.
         </div>
 
         <div id="accountPanel" class="helper-box hidden">
@@ -1632,9 +1669,9 @@
         <p id="passwordStatus" class="small status-line"></p>
       </div>
 
-      <div class="card">
+      <div class="card sidebar-secondary">
         <div class="section-title">Plans</div>
-        <div class="section-subtitle">Choose the level of support you need.</div>
+        <div class="section-subtitle plan-copy">Choose the level of support you need.</div>
 
         <div class="price-box">
           <p style="font-weight:780; color:#F3F7FF; margin-bottom:6px;">Free</p>
@@ -1647,7 +1684,7 @@
         </div>
       </div>
 
-      <div class="card section" style="opacity:0.9;">
+      <div class="card section sidebar-secondary" style="opacity:0.9;">
         <div class="section-title">Recent history</div>
         <div class="section-subtitle">Your previous CV analyses.</div>
         <div id="historyList" class="small muted">
