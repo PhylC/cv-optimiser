@@ -228,6 +228,12 @@
     align-items: start;
   }
 
+  .main-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
   .card-kicker {
     display: inline-flex;
     align-items: center;
@@ -346,14 +352,9 @@
   .topbar {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 28px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-
-  .hero-copy {
-    max-width: 660px;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
   }
 
   .account-menu {
@@ -432,7 +433,7 @@
     display: inline-flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 18px;
+    margin-bottom: 0;
   }
 
   .logo-mark {
@@ -490,6 +491,39 @@
     margin-bottom: 12px;
   }
 
+  .hero-supporting-copy {
+    margin-top: 4px;
+  }
+
+  .primary-tool-card {
+    padding: 24px;
+    border-color: rgba(105, 128, 196, 0.42);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
+  }
+
+  .primary-tool-card button#optimiseBtn {
+    min-height: 54px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .tool-trust-copy {
+    margin-top: 8px;
+    color: #C3D1EE;
+  }
+
+  .sidebar-card {
+    padding: 20px;
+  }
+
+  .sidebar-card .section-title {
+    margin-top: 0;
+  }
+
+  .sidebar-intro {
+    margin-bottom: 16px;
+  }
+
   .hero-eyebrow::before {
     content: "";
     width: 8px;
@@ -542,8 +576,9 @@
     }
 
     .topbar {
-      gap: 18px;
-      margin-bottom: 22px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
     .logo-mark {
@@ -565,8 +600,16 @@
       min-width: 0;
     }
 
-    .hero-copy {
-      max-width: 100%;
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .main-column {
+      order: 1;
+    }
+
+    .sidebar-stack {
+      order: 2;
     }
   }
 
@@ -1257,26 +1300,14 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="hero-copy">
-      <div class="logo-wrap">
-        <div class="logo-mark">
-          <span>CV</span>
-        </div>
-        <div class="logo-wordmark">
-          <div class="logo-title">CV Optimiser</div>
-          <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
-        </div>
+    <div class="logo-wrap">
+      <div class="logo-mark">
+        <span>CV</span>
       </div>
-
-<div class="hero-eyebrow">AI-powered CV tailoring</div>
-
-<h1 class="hero-headline">
-  Tailor your CV for the role you actually want.
-</h1>
-
-<p class="hero-subtitle">
-  Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
-</p>
+      <div class="logo-wordmark">
+        <div class="logo-title">CV Optimiser</div>
+        <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
+      </div>
     </div>
 
     <div class="topbar-right">
@@ -1307,66 +1338,6 @@
   </div>
 
   <div id="checkoutStatus" class="status-banner info hidden"></div>
-
-  <div class="safety-banner">
-    <div class="safety-badge">AI</div>
-    <div class="safety-copy">
-      <strong>Use this as guidance, not as a guarantee.</strong>
-      <p>CV Optimiser helps you spot gaps, improve wording, and strengthen applications, but you should always review the output for accuracy and make sure the final CV reflects your real experience.</p>
-    </div>
-  </div>
-
-  <div id="authCard" class="card" style="margin-bottom: 18px; padding-top: 22px;">
-    <h2 id="authTitle" style="margin-bottom:8px; font-size:1.45rem;">Create a free account to save your results</h2>
-    <p id="authSubtitle" class="small" style="margin-bottom:18px;">
-      You can try the CV Optimiser first, then sign up to save results and unlock the full report.
-    </p>
-
-    <div class="auth-stack">
-      <div>
-        <label for="emailInput" class="small" style="display:block; margin-bottom:8px;">Email address</label>
-        <input id="emailInput" type="email" placeholder="you@example.com">
-      </div>
-
-      <div id="loginPasswordWrap">
-        <label for="loginPasswordInput" class="small" style="display:block; margin-bottom:8px;">Password</label>
-        <input id="loginPasswordInput" type="password" placeholder="Enter your password">
-      </div>
-    </div>
-
-    <div class="auth-actions">
-      <button id="sendMagicLinkBtn">Send magic link</button>
-      <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
-      <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
-    </div>
-
-    <div id="magicLinkHelp" class="helper-box">
-      <p class="small" style="margin:0;">
-        First time here? Enter your email and we will send you a magic link to sign in.
-      </p>
-    </div>
-
-    <div id="accountPanel" class="helper-box hidden">
-      <p class="small" style="margin:0;">Signed in as <span id="accountPanelEmail"></span></p>
-    </div>
-
-    <p id="authStatus" class="small status-line">Not signed in.</p>
-  </div>
-
-  <div id="passwordCard" class="card hidden" style="margin-top: 0; margin-bottom: 22px;">
-    <h3 id="passwordCardTitle" style="margin-bottom:8px;">Change password</h3>
-    <p id="passwordCardSubtitle" class="small" style="margin-bottom:16px;">
-      Set or update your password for faster sign-in next time.
-    </p>
-
-    <input id="passwordInput" type="password" placeholder="Create a password">
-
-    <div style="margin-top:12px;">
-      <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
-    </div>
-
-  <p id="passwordStatus" class="small status-line"></p>
-</div>
 
   <div id="supportModal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1405,8 +1376,8 @@
   </div>
 
   <div class="main-grid">
-    <div>
-      <div class="card section" style="overflow:hidden;">
+    <div class="main-column">
+      <div class="card section primary-tool-card" style="overflow:hidden;">
 <div class="section-title">Start your CV check</div>
 <div class="section-subtitle">
   Paste the role, add your CV, and get practical feedback you can use immediately.
@@ -1429,12 +1400,24 @@
         <div style="margin-top:8px;">
 <button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
         </div>
+        <p class="small tool-trust-copy">Takes under 60 seconds • No sign-up required to try</p>
         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
+      </div>
+
+      <div class="card">
+        <div class="hero-eyebrow">AI-powered CV tailoring</div>
+        <h1 class="hero-headline">Tailor your CV for the role you actually want.</h1>
+        <p class="hero-subtitle">
+          Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
+        </p>
+        <p class="small hero-supporting-copy">
+          Use this as guidance, not as a guarantee. Always review suggestions so your final CV stays accurate to your real experience.
+        </p>
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
@@ -1596,7 +1579,60 @@
 
     <div>
       <div class="sidebar-stack">
-      <div class="card" style="margin-top:20px;">
+      <div id="authCard" class="card sidebar-card">
+        <div class="section-title">Account</div>
+        <p id="authSubtitle" class="small sidebar-intro">
+          Create a free account to save results and unlock the full report.
+        </p>
+
+        <div class="auth-stack">
+          <div>
+            <label for="emailInput" class="small" style="display:block; margin-bottom:8px;">Email address</label>
+            <input id="emailInput" type="email" placeholder="you@example.com">
+          </div>
+
+          <div id="loginPasswordWrap">
+            <label for="loginPasswordInput" class="small" style="display:block; margin-bottom:8px;">Password</label>
+            <input id="loginPasswordInput" type="password" placeholder="Enter your password">
+          </div>
+        </div>
+
+        <div class="auth-actions">
+          <button id="sendMagicLinkBtn">Send magic link</button>
+          <button id="passwordLoginBtn" class="secondary-btn" type="button">Sign in with password</button>
+          <button id="signOutBtn" class="secondary-btn hidden" type="button">Sign out</button>
+        </div>
+
+        <div id="magicLinkHelp" class="helper-box">
+          <p class="small" style="margin:0;">
+            First time here? Enter your email and we will send you a magic link to sign in.
+          </p>
+        </div>
+
+        <div id="accountPanel" class="helper-box hidden">
+          <p class="small" style="margin:0;">Signed in as <span id="accountPanelEmail"></span></p>
+        </div>
+
+        <p id="authTitle" class="small" style="display:none;">Create a free account to save your results</p>
+        <p id="authStatus" class="small status-line">Not signed in.</p>
+      </div>
+
+      <div id="passwordCard" class="card sidebar-card hidden">
+        <div class="section-title" id="passwordCardTitle">Change password</div>
+        <p id="passwordCardSubtitle" class="small sidebar-intro">
+          Set or update your password for faster sign-in next time.
+        </p>
+
+        <input id="passwordInput" type="password" placeholder="Create a password">
+
+        <div style="margin-top:12px;">
+          <button id="setPasswordBtn" class="secondary-btn" type="button">Save password</button>
+        </div>
+
+        <p id="passwordStatus" class="small status-line"></p>
+      </div>
+
+      <div class="card">
         <div class="section-title">Plans</div>
         <div class="section-subtitle">Choose the level of support you need.</div>
 
