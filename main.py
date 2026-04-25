@@ -29,6 +29,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        print(
+            f"REQUEST_LOG: {request.method} {request.url.path} "
+            f"status=500 duration_ms={duration_ms}"
+        )
+        raise
+
+    duration_ms = int((time.perf_counter() - start_time) * 1000)
+    print(
+        f"REQUEST_LOG: {request.method} {request.url.path} "
+        f"status={response.status_code} duration_ms={duration_ms}"
+    )
+    return response
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
@@ -971,6 +992,36 @@ async def optimise(
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
     try:
+        job_description_preview = jobDescription.strip()
+        cv_text_preview = cvText.strip()
+        has_cv_file = bool(cvFile is not None and cvFile.filename)
+        has_job_description = bool(job_description_preview)
+        has_cv_text = bool(cv_text_preview)
+
+        if not has_job_description and not has_cv_text:
+            try:
+                body = await request.json()
+            except Exception:
+                body = {}
+
+            if isinstance(body, dict):
+                has_job_description = bool(str(body.get("jobDescription", "") or "").strip())
+                has_cv_text = bool(str(body.get("cvText", "") or "").strip())
+
+        print("CONVERSION_EVENT: optimise_endpoint_hit")
+        print(
+            "OPTIMISE_DEBUG:",
+            json.dumps(
+                {
+                    "timestamp": current_utc().isoformat(),
+                    "path": request.url.path,
+                    "method": request.method,
+                    "cv_or_file_submitted": has_cv_file or has_cv_text,
+                    "job_description_submitted": has_job_description,
+                }
+            ),
+        )
+
         job_description = jobDescription.strip()
         cv_text = cvText.strip()
 
