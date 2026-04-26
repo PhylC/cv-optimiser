@@ -13,6 +13,16 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
   <meta name="twitter:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get("embed_tool") === "1") {
+          document.documentElement.classList.add("embed-tool-mode");
+        }
+      } catch (error) {}
+    })();
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -246,6 +256,43 @@
     grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
     gap: 28px;
     align-items: start;
+  }
+
+  html.embed-tool-mode body {
+    max-width: none;
+    padding: 0;
+    background:
+      radial-gradient(circle at top left, rgba(91, 120, 255, 0.16), transparent 28%),
+      #07142D;
+  }
+
+  html.embed-tool-mode .topbar,
+  html.embed-tool-mode .helper-column,
+  html.embed-tool-mode .site-footer,
+  html.embed-tool-mode #supportModal {
+    display: none !important;
+  }
+
+  html.embed-tool-mode .main-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  html.embed-tool-mode .main-column {
+    gap: 16px;
+  }
+
+  html.embed-tool-mode #mainToolCard,
+  html.embed-tool-mode #results {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  html.embed-tool-mode #mainToolCard {
+    border-top: 0;
+    margin-top: 0;
   }
 
   .main-column {
@@ -1513,6 +1560,13 @@
     margin-bottom: 8px;
   }
 
+  #resultPriorityPreview li,
+  #anonymousPriorityFixes li {
+    color: #EEF3FF;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
   .result-paragraph {
     color: #DCE5FB;
     line-height: 1.7;
@@ -2048,7 +2102,7 @@
 
           <div class="score-hero">
             <div class="score-hero-left">
-              <div class="score-kicker">CV match result</div>
+              <div class="score-kicker">Your CV score</div>
               <div id="score" class="score-value"></div>
               <div id="resultStatusHeadline" class="score-headline">Unlikely to pass ATS filters</div>
               <div id="resultStatusCopy" class="score-subtext">You’re missing key keywords and your CV isn’t aligned with this role yet.</div>
@@ -2076,8 +2130,8 @@
           </div>
 
           <div class="result-section">
-            <div class="result-section-title">Top 3 things to fix first</div>
-            <div class="result-section-subtitle">Here’s what’s holding your CV back right now.</div>
+            <div class="result-section-title">Top 3 fixes to improve your CV</div>
+            <div class="result-section-subtitle">Focus on these first to improve your chances.</div>
             <ul id="resultPriorityPreview" class="result-list"></ul>
           </div>
 
@@ -2247,15 +2301,17 @@
 </div>
 
 <div id="proUnlockPrompt" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Unlock the full CV improvement plan</div>
+  <div class="results-upgrade-cta-title">Want the full CV rewrite and detailed improvements?</div>
   <div class="results-upgrade-cta-copy">
-    <p>• Full rewritten professional summary</p>
-    <p>• Bullet point improvements tailored to the role</p>
-    <p>• Complete keyword optimisation</p>
-    <p>• ATS-ready CV structure</p>
-    <p>• Stronger, results-focused phrasing</p>
+    <p>Get a full breakdown of your CV including:</p>
+    <p>• Improved professional summary</p>
+    <p>• Stronger bullet points</p>
+    <p>• Role-specific keyword optimisation</p>
+    <p>• ATS optimisation suggestions</p>
+    <p>Upgrade to unlock the full report.</p>
   </div>
   <button id="proUnlockBtn" type="button">Unlock full report</button>
+  <p class="small" style="margin-top:10px;">Most users improve their CV score by 20–40% after applying these changes.</p>
 </div>
 
 <div id="lockedPreviewCard" class="results-upgrade-cta locked-preview hidden">
@@ -2532,6 +2588,8 @@
       }
     }
 
+    const logEvent = trackEvent;
+
     function openPasswordCardForUser(hasPassword) {
       passwordCard.classList.remove("hidden");
       passwordStatus.textContent = "";
@@ -2625,24 +2683,20 @@
     }
 
     function buildResultNarrative(scoreNumber, data) {
-      let headline = "Unlikely to pass ATS filters";
+      let headline = "This CV is likely to be skipped. Focus on the fixes below to improve your chances.";
       let copy = "You’re missing key keywords and your CV isn’t aligned with this role yet.";
       let potential = "You could reach ~80+ with a few targeted improvements.";
 
-      if (scoreNumber >= 75) {
-        headline = "Promising, but still leaving interviews on the table";
-        copy = "Your CV is reasonably aligned, but a few gaps are still making it less convincing than it could be.";
-        potential = "You could reach ~90+ with sharper evidence and tighter keyword alignment.";
+      if (scoreNumber > 80) {
+        headline = "This CV is strong, but small improvements could make it stand out further.";
+        copy = "Your CV is already in a good place, but a few targeted improvements could make it more convincing to both ATS systems and recruiters.";
+        potential = "You could push this closer to a standout application with sharper evidence and tighter role alignment.";
       } else if (scoreNumber >= 60) {
-        headline = "Borderline match for this role";
+        headline = "This CV has potential but could be improved to increase interview chances.";
         copy = "Your CV shows some fit, but recruiters may still skip past it because the alignment is not strong enough yet.";
         potential = "You could reach ~80+ with a few targeted improvements.";
-      } else if (scoreNumber >= 45) {
-        headline = "Unlikely to pass ATS filters";
-        copy = "You’re missing key keywords and your CV isn’t aligned with this role yet.";
-        potential = "You could reach ~80+ with a few targeted improvements.";
       } else {
-        headline = "Your CV is easy to skip right now";
+        headline = "This CV is likely to be skipped. Focus on the fixes below to improve your chances.";
         copy = "This version is missing too many role signals, so it’s unlikely to survive ATS screening or recruiter review.";
         potential = "You could reach ~70+ by fixing the biggest gaps first.";
       }
@@ -3277,11 +3331,13 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     resultsUpgradeBtn.addEventListener("click", function() {
       trackEvent("results_upgrade_clicked");
+      logEvent("upgrade_clicked");
       upgradeBtn.click();
     });
 
     proUnlockBtn.addEventListener("click", function() {
       trackEvent("pro_unlock_clicked");
+      logEvent("upgrade_clicked");
       upgradeBtn.click();
     });
 
@@ -3333,6 +3389,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     upgradeBtn.addEventListener("click", async function() {
       console.log("upgrade clicked");
+      logEvent("upgrade_clicked");
 
       try {
         if (!sbClient) {
@@ -3662,6 +3719,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         loadingSteps.classList.add("hidden");
         stopLoadingStages();
         trackEvent("result_shown", { anonymous_result: !!data.isAnonymousResult });
+        logEvent("cv_result_generated", { anonymous_result: !!data.isAnonymousResult });
 
         if (data.isAnonymousResult) {
           resultEmailInput.value = emailInput.value || "";

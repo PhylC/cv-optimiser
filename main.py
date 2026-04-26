@@ -864,6 +864,587 @@ def build_site_footer() -> str:
     """
 
 
+def render_cv_checker_page() -> str:
+    page_url = f"{SITE_URL}/cv-checker"
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Free CV Checker | Compare Your CV to Any Job Description</title>
+        <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="Free CV Checker | Compare Your CV to Any Job Description">
+        <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Free CV Checker | Compare Your CV to Any Job Description">
+        <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{ font-weight: 800; }}
+          .logo-title span {{ font-weight: 400; }}
+          .header-link, .text-link, .site-footer a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+          }}
+          .hero {{
+            display: grid;
+            gap: 18px;
+            margin-bottom: 24px;
+          }}
+          .hero h1 {{
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          .hero p {{
+            margin: 0;
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 16px;
+            max-width: 760px;
+          }}
+          .layout {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          h2 {{
+            margin: 0 0 10px;
+            font-size: 22px;
+            color: #EEF3FF;
+          }}
+          p, li {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          ul {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+          }}
+          li {{
+            margin-bottom: 8px;
+          }}
+          .section-stack {{
+            display: grid;
+            gap: 20px;
+            margin-top: 24px;
+          }}
+          .tool-frame {{
+            width: 100%;
+            min-height: 1400px;
+            border: 0;
+            border-radius: 18px;
+            background: transparent;
+          }}
+          .example-mini {{
+            display: grid;
+            gap: 12px;
+          }}
+          .example-mini strong {{
+            color: #EEF3FF;
+            font-size: 15px;
+          }}
+          .cta-block {{
+            text-align: center;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+          .helper-note {{
+            margin-top: 10px;
+            color: #9FB0D4;
+            font-size: 13px;
+          }}
+          .site-footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
+          }}
+          @media (max-width: 900px) {{
+            .layout, .site-footer-grid {{
+              grid-template-columns: 1fr;
+            }}
+            .tool-frame {{
+              min-height: 1650px;
+            }}
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#mainToolCard" class="header-link">Homepage tool</a>
+          </div>
+
+          <div class="hero">
+            <h1>Free CV Checker</h1>
+            <p>See how well your CV matches a job description and what to fix.</p>
+          </div>
+
+          <div class="layout">
+            <div>
+              <div class="card">
+                <h2>Check my CV</h2>
+                <p>Most CVs get rejected in seconds — not because of experience, but because they don’t match the job.</p>
+                <p style="margin-top:12px;">Paste your CV and a job description below to get your match score and improvement suggestions.</p>
+                <iframe class="tool-frame" src="/?embed_tool=1" title="CV checker tool"></iframe>
+              </div>
+
+              <div class="section-stack">
+                <div class="card">
+                  <h2>What this CV checker does</h2>
+                  <p>This CV checker compares your CV against a job description to show:</p>
+                  <ul>
+                    <li>Your CV match score</li>
+                    <li>Missing keywords for the role</li>
+                    <li>What recruiters may miss</li>
+                    <li>The most important improvements to make</li>
+                  </ul>
+                  <p style="margin-top:12px;">It’s designed to reflect how your CV is likely to perform in real job applications.</p>
+                </div>
+
+                <div class="card">
+                  <h2>Why most CVs get rejected</h2>
+                  <p>Many CVs are rejected before a recruiter reads them properly.</p>
+                  <p style="margin-top:12px;">This usually happens because:</p>
+                  <ul>
+                    <li>Important keywords from the job description are missing</li>
+                    <li>Experience isn’t clearly aligned to the role</li>
+                    <li>Achievements are vague or not measurable</li>
+                    <li>The CV doesn’t quickly show relevance</li>
+                  </ul>
+                  <p style="margin-top:12px;">Fixing these issues can significantly improve your chances of getting interviews.</p>
+                </div>
+
+                <div class="card">
+                  <h2>How the CV check works</h2>
+                  <ul>
+                    <li>1. Upload your CV or paste the text</li>
+                    <li>2. Paste the job description</li>
+                    <li>3. Get your CV score and improvement suggestions</li>
+                  </ul>
+                  <a href="/how-it-works" class="text-link">Learn more about how it works →</a>
+                </div>
+
+                <div class="card">
+                  <h2>What you get from your CV check</h2>
+                  <ul>
+                    <li>CV match score</li>
+                    <li>Missing keywords</li>
+                    <li>Top priority fixes</li>
+                    <li>Feedback on clarity and relevance</li>
+                  </ul>
+                  <p style="margin-top:12px;">The full report includes deeper improvements and rewrite suggestions.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-stack">
+              <div class="card">
+                <h2>Example CV diagnosis</h2>
+                <div class="example-mini">
+                  <strong>Score: 58/100 — likely to be skipped</strong>
+                  <div>
+                    <strong>Missing keywords</strong>
+                    <ul>
+                      <li>stakeholder management</li>
+                      <li>forecasting</li>
+                      <li>commercial planning</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>Top fixes</strong>
+                    <ul>
+                      <li>Add measurable results</li>
+                      <li>Strengthen your summary</li>
+                      <li>Match role keywords</li>
+                    </ul>
+                  </div>
+                </div>
+                <a href="/example-cv-report" class="text-link">View full example report →</a>
+              </div>
+
+              <div class="card cta-block">
+                <h2>Check your CV now</h2>
+                <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
+                <a href="/#mainToolCard" class="cta">Get my CV score</a>
+                <div class="helper-note">Prefer the homepage flow? The same tool is available there too.</div>
+              </div>
+            </div>
+          </div>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
+def render_ats_cv_checker_page() -> str:
+    page_url = f"{SITE_URL}/ats-cv-checker"
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>ATS CV Checker | Improve Your CV for Applicant Tracking Systems</title>
+        <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
+        <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
+        <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{ font-weight: 800; }}
+          .logo-title span {{ font-weight: 400; }}
+          .header-link, .text-link, .site-footer a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+          }}
+          .hero {{
+            display: grid;
+            gap: 18px;
+            margin-bottom: 24px;
+          }}
+          .hero h1 {{
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          .hero p {{
+            margin: 0;
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 16px;
+            max-width: 760px;
+          }}
+          .layout {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          h2 {{
+            margin: 0 0 10px;
+            font-size: 22px;
+            color: #EEF3FF;
+          }}
+          p, li {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          ul {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+          }}
+          li {{
+            margin-bottom: 8px;
+          }}
+          .section-stack {{
+            display: grid;
+            gap: 20px;
+            margin-top: 24px;
+          }}
+          .tool-frame {{
+            width: 100%;
+            min-height: 1400px;
+            border: 0;
+            border-radius: 18px;
+            background: transparent;
+          }}
+          .cta-block {{
+            text-align: left;
+          }}
+          .site-footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
+          }}
+          @media (max-width: 900px) {{
+            .layout, .site-footer-grid {{
+              grid-template-columns: 1fr;
+            }}
+            .tool-frame {{
+              min-height: 1650px;
+            }}
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#mainToolCard" class="header-link">Homepage tool</a>
+          </div>
+
+          <div class="hero">
+            <h1>ATS CV Checker</h1>
+            <p>See how your CV performs in applicant tracking systems (ATS).</p>
+          </div>
+
+          <div class="layout">
+            <div>
+              <div class="card">
+                <h2>Check your CV against ATS filters</h2>
+                <p>Most companies use ATS software to filter CVs before a human sees them.</p>
+                <p style="margin-top:12px;">If your CV doesn’t match the job description, it may never be reviewed.</p>
+                <p style="margin-top:12px;">Use the tool below to check your CV against a job description and identify what’s missing.</p>
+                <iframe class="tool-frame" src="/?embed_tool=1" title="ATS CV checker tool"></iframe>
+              </div>
+
+              <div class="section-stack">
+                <div class="card">
+                  <h2>What is an ATS CV check?</h2>
+                  <p>An Applicant Tracking System (ATS) scans your CV for keywords, experience and relevance to the job description.</p>
+                  <p style="margin-top:12px;">If your CV doesn’t match closely enough, it may be filtered out automatically.</p>
+                </div>
+
+                <div class="card">
+                  <h2>Why ATS matters</h2>
+                  <ul>
+                    <li>Filters candidates before recruiters review them</li>
+                    <li>Looks for keywords from the job description</li>
+                    <li>Prioritises relevant experience</li>
+                    <li>Rewards clear, structured CVs</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h2>What you get</h2>
+                  <ul>
+                    <li>ATS match score</li>
+                    <li>Missing keywords</li>
+                    <li>CV improvement suggestions</li>
+                    <li>Priority fixes</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-stack">
+              <div class="card cta-block">
+                <h2>See a full example CV report</h2>
+                <p>Want to see the type of diagnosis and rewrite guidance before you run your own check?</p>
+                <a href="/example-cv-report" class="text-link">See a full example CV report →</a>
+              </div>
+            </div>
+          </div>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
 def render_example_report_page() -> str:
     page_url = f"{SITE_URL}/example-cv-report"
     return f"""
@@ -2016,12 +2597,12 @@ def home() -> FileResponse:
 
 @app.get("/cv-checker", response_class=HTMLResponse)
 def cv_checker_page() -> str:
-    return render_seo_page("cv-checker", SEO_PAGES["cv-checker"])
+    return render_cv_checker_page()
 
 
 @app.get("/ats-cv-checker", response_class=HTMLResponse)
 def ats_cv_checker_page() -> str:
-    return render_seo_page("ats-cv-checker", SEO_PAGES["ats-cv-checker"])
+    return render_ats_cv_checker_page()
 
 
 @app.get("/cv-keyword-optimiser", response_class=HTMLResponse)
