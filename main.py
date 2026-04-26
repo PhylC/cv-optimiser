@@ -2044,6 +2044,32 @@ def google_verification() -> PlainTextResponse:
     return PlainTextResponse("google-site-verification: google4cffcb1da00a66a5.html")
 
 
+@app.get("/sitemap.xml")
+def sitemap() -> Response:
+    xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://www.cv-optimiser.com/</loc>
+  </url>
+
+  <url>
+    <loc>https://www.cv-optimiser.com/how-it-works</loc>
+  </url>
+
+  <url>
+    <loc>https://www.cv-optimiser.com/example-cv-report</loc>
+  </url>
+
+  <url>
+    <loc>https://www.cv-optimiser.com/cv-checker</loc>
+  </url>
+
+</urlset>
+"""
+    return Response(content=xml_content, media_type="application/xml")
+
+
 @app.get("/faq", response_class=HTMLResponse)
 def faq_page() -> str:
     return render_faq_page()
