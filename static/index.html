@@ -445,41 +445,73 @@
   .logo-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     margin-bottom: 0;
   }
 
   .logo-mark {
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 12px 28px rgba(91, 120, 255, 0.28);
     flex-shrink: 0;
   }
 
+  .logo-mark::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+
+  .logo-mark::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    right: 9px;
+    bottom: 8px;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    pointer-events: none;
+  }
+
   .logo-mark span {
+    position: relative;
+    z-index: 1;
     color: #FFFFFF;
-    font-size: 19px;
+    font-size: 15px;
     font-weight: 800;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
+    transform: translateY(-2px);
   }
 
   .logo-wordmark {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
   }
 
   .logo-title {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 24px;
     color: #E8EEFC;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.035em;
     line-height: 1;
+  }
+
+  .logo-title-strong {
+    font-weight: 800;
+  }
+
+  .logo-title-light {
+    font-weight: 400;
   }
 
   .logo-tag {
@@ -901,13 +933,24 @@
     }
 
     .logo-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+    }
+
+    .logo-mark::before {
+      inset: 4px;
+      border-radius: 8px;
+    }
+
+    .logo-mark::after {
+      left: 8px;
+      right: 8px;
+      bottom: 7px;
     }
 
     .logo-title {
-      font-size: 25px;
+      font-size: 22px;
     }
 
     .hero-headline {
@@ -1642,7 +1685,7 @@
         <span>CV</span>
       </div>
       <div class="logo-wordmark">
-        <div class="logo-title">CV Optimiser</div>
+        <div class="logo-title"><span class="logo-title-strong">CV</span> <span class="logo-title-light">Optimiser</span></div>
         <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
       </div>
     </div>
