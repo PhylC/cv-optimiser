@@ -266,45 +266,6 @@
     align-items: start;
   }
 
-  .hero-panel {
-    margin-bottom: 24px;
-    padding: 28px;
-  }
-
-  .hero-panel-inner {
-    display: grid;
-    gap: 14px;
-    max-width: 760px;
-  }
-
-  .hero-cta-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-
-  .hero-secondary-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 52px;
-    padding: 12px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(92, 112, 150, 0.26);
-    background: rgba(10, 19, 35, 0.34);
-    color: #DCE6FF;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .hero-secondary-cta:hover {
-    color: #FFFFFF;
-    border-color: rgba(120, 140, 188, 0.36);
-  }
-
   html.embed-tool-mode body {
     max-width: none;
     padding: 0;
@@ -945,109 +906,21 @@
   }
 
   .hero-trust-line {
-    margin-top: 2px;
+    margin-top: 8px;
     color: #B7C6E6;
     font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
   }
 
-  .homepage-section {
-    margin-top: 22px;
-  }
-
-  .section-cta-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 16px;
-  }
-
-  .section-cta-link {
-    color: #AFC0FF;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .section-cta-link:hover {
-    color: #FFFFFF;
-  }
-
-  .failure-list,
-  .preview-list {
+  .how-it-works-list {
     margin: 0;
     padding-left: 20px;
   }
 
-  .failure-list li,
-  .preview-list li {
+  .how-it-works-list li {
     margin-bottom: 8px;
     color: #DCE6FF;
-  }
-
-  .section-closing-copy {
-    margin-top: 14px;
-    color: #E8EEFC;
-    font-weight: 700;
-  }
-
-  .results-preview-card {
-    display: grid;
-    gap: 16px;
-  }
-
-  .results-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .results-preview-block {
-    padding: 16px;
-    border-radius: 16px;
-    border: 1px solid rgba(92, 112, 150, 0.18);
-    background: rgba(10, 19, 35, 0.34);
-  }
-
-  .results-preview-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #AFC0FF;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .results-preview-score {
-    color: #F4F7FF;
-    font-size: 30px;
-    font-weight: 820;
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-
-  .results-preview-note {
-    color: #B7C6E6;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .results-preview-example {
-    color: #DCE6FF;
-    font-size: 15px;
-    line-height: 1.65;
-  }
-
-  .results-preview-example strong {
-    color: #F4F7FF;
-  }
-
-  .differentiator-copy {
-    max-width: 54ch;
   }
 
   .loading-steps {
@@ -1236,26 +1109,6 @@
     .main-grid {
       grid-template-columns: 1fr;
       gap: 18px;
-    }
-
-    .hero-panel {
-      padding: 24px 20px;
-      margin-bottom: 18px;
-    }
-
-    .hero-cta-row,
-    .section-cta-row {
-      align-items: stretch;
-    }
-
-    .hero-cta-row .site-header-cta,
-    .hero-cta-row .hero-secondary-cta {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .results-preview-grid {
-      grid-template-columns: 1fr;
     }
 
     .main-column {
@@ -2244,24 +2097,12 @@
     </div>
   </div>
 
-  <section class="card hero-panel">
-    <div class="hero-panel-inner">
-      <h1 class="homepage-hero-title">Check your CV against any job description</h1>
-      <p class="homepage-hero-subtitle">Find out why your CV isn’t getting interviews — and fix it in minutes</p>
-      <div class="hero-cta-row">
-        <a href="/#mainToolCard" class="site-header-cta">Check my CV</a>
-        <a href="/example-cv-report" class="hero-secondary-cta">See example report</a>
-      </div>
-      <p class="hero-trust-line">Built for real job applications</p>
-    </div>
-  </section>
-
   <div class="main-grid">
     <div class="main-column">
       <div id="mainToolCard" class="card section primary-tool-card" style="overflow:hidden;">
-        <div class="section-title">Check your CV</div>
-        <p class="section-subtitle">Upload your CV, paste a job description, and get your score in under a minute.</p>
-        <p class="hero-trust-line">Free check • No signup required • Your CV isn’t stored</p>
+        <h1 class="homepage-hero-title">Check your CV against any job description</h1>
+        <p class="homepage-hero-subtitle">Find out why your CV isn’t getting interviews — and fix it in minutes</p>
+        <p class="hero-trust-line">Built for real job applications</p>
 
         <div class="tool-form">
           <div class="tool-step">
@@ -2313,81 +2154,15 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
-        <p class="small" style="margin-top:10px;">
-          <a href="/how-it-works" class="example-preview-link">How it works →</a>
-        </p>
       </div>
 
-      <div class="card homepage-section">
-        <div class="section-title">Why most CVs fail</div>
-        <ul class="failure-list">
-          <li>Not tailored to the job description</li>
-          <li>Missing key keywords</li>
-          <li>Hard to scan quickly</li>
+      <div class="card">
+        <div class="section-title">How it works</div>
+        <ul class="how-it-works-list">
+          <li>Paste your CV</li>
+          <li>Paste the job description</li>
+          <li>Get instant feedback</li>
         </ul>
-        <p class="section-closing-copy">This tool shows exactly what to fix.</p>
-        <div class="section-cta-row">
-          <a href="/#mainToolCard" class="section-cta-link">Check your CV</a>
-        </div>
-      </div>
-
-      <div class="card homepage-section">
-        <div class="section-title">Result preview</div>
-        <div class="results-preview-card">
-          <div class="results-preview-grid">
-            <div class="results-preview-block">
-              <span class="results-preview-label">CV match score</span>
-              <div class="results-preview-score">58/100</div>
-              <p class="results-preview-note">Likely to be skipped unless improved.</p>
-            </div>
-            <div class="results-preview-block">
-              <span class="results-preview-label">Missing keywords</span>
-              <ul class="preview-list">
-                <li>stakeholder management</li>
-                <li>forecasting</li>
-                <li>commercial planning</li>
-              </ul>
-            </div>
-            <div class="results-preview-block">
-              <span class="results-preview-label">Example improvement</span>
-              <p class="results-preview-example"><strong>After:</strong> Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
-            </div>
-          </div>
-          <div class="section-cta-row">
-            <a href="/#mainToolCard" class="section-cta-link">Check your CV</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card homepage-section">
-        <div class="section-title">Why this is different</div>
-        <p class="differentiator-copy">Unlike most tools, this compares your CV to a real job description — not generic templates.</p>
-        <div class="section-cta-row">
-          <a href="/#mainToolCard" class="section-cta-link">Check your CV</a>
-        </div>
-      </div>
-
-      <div class="card sidebar-secondary mobile-only">
-        <div class="section-title">Example CV diagnosis</div>
-        <div class="example-preview">
-          <strong>Example CV diagnosis</strong>
-          <div class="example-preview-score">Score: 58/100 — likely to be skipped</div>
-          <div class="example-preview-grid">
-            <div class="example-preview-block">
-              <strong>Missing keywords</strong>
-              <ul>
-                <li>stakeholder management</li>
-                <li>forecasting</li>
-                <li>commercial planning</li>
-              </ul>
-            </div>
-            <div class="example-preview-block">
-              <strong>Example improvement</strong>
-              <p class="example-preview-note">Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
-            </div>
-          </div>
-          <a href="/example-cv-report" class="example-preview-link">View full example report →</a>
-        </div>
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
@@ -2640,29 +2415,6 @@
     </div>
 
     <div class="helper-column">
-      <div class="card sidebar-secondary desktop-only">
-        <div class="section-title example-card-title">Example CV diagnosis</div>
-        <div class="example-preview">
-          <strong>Example CV diagnosis</strong>
-          <div class="example-preview-score">Score: 58/100 — likely to be skipped</div>
-          <div class="example-preview-grid">
-            <div class="example-preview-block">
-              <strong>Missing keywords</strong>
-              <ul>
-                <li>stakeholder management</li>
-                <li>forecasting</li>
-                <li>commercial planning</li>
-              </ul>
-            </div>
-            <div class="example-preview-block">
-              <strong>Example improvement</strong>
-              <p class="example-preview-note">Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
-            </div>
-          </div>
-          <a href="/example-cv-report" class="example-preview-link">View full example report →</a>
-        </div>
-      </div>
-
       <div id="authCard" class="card sidebar-card">
         <div class="section-title">Want to save your result?</div>
         <p id="authSubtitle" class="small sidebar-intro">
