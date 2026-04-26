@@ -1240,6 +1240,10 @@ def build_software_json_ld(url: str) -> str:
     )
 
 
+def log_seo_page_hit(path: str) -> None:
+    print(f"SEO_PAGE_HIT: {path}")
+
+
 def build_site_footer() -> str:
     return """
     <footer class="site-footer">
@@ -3526,37 +3530,51 @@ def home() -> FileResponse:
 
 
 @app.get("/cv-checker", response_class=HTMLResponse)
-def cv_checker_page() -> str:
+@app.get("/cv-checker/", response_class=HTMLResponse, include_in_schema=False)
+def cv_checker_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("cv-checker", TOOL_LANDING_PAGES["cv-checker"])
 
 
 @app.get("/cv-score-checker", response_class=HTMLResponse)
-def cv_score_checker_page() -> str:
+@app.get("/cv-score-checker/", response_class=HTMLResponse, include_in_schema=False)
+def cv_score_checker_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("cv-score-checker", TOOL_LANDING_PAGES["cv-score-checker"])
 
 
 @app.get("/job-description-cv-match", response_class=HTMLResponse)
-def job_description_cv_match_page() -> str:
+@app.get("/job-description-cv-match/", response_class=HTMLResponse, include_in_schema=False)
+def job_description_cv_match_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("job-description-cv-match", TOOL_LANDING_PAGES["job-description-cv-match"])
 
 
 @app.get("/ats-cv-checker", response_class=HTMLResponse)
-def ats_cv_checker_page() -> str:
+@app.get("/ats-cv-checker/", response_class=HTMLResponse, include_in_schema=False)
+def ats_cv_checker_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("ats-cv-checker", TOOL_LANDING_PAGES["ats-cv-checker"])
 
 
 @app.get("/cv-keyword-optimiser", response_class=HTMLResponse)
-def cv_keyword_optimiser_page() -> str:
+@app.get("/cv-keyword-optimiser/", response_class=HTMLResponse, include_in_schema=False)
+def cv_keyword_optimiser_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("cv-keyword-optimiser", TOOL_LANDING_PAGES["cv-keyword-optimiser"])
 
 
 @app.get("/cv-improvement-tool", response_class=HTMLResponse)
-def cv_improvement_tool_page() -> str:
+@app.get("/cv-improvement-tool/", response_class=HTMLResponse, include_in_schema=False)
+def cv_improvement_tool_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_tool_landing_page("cv-improvement-tool", TOOL_LANDING_PAGES["cv-improvement-tool"])
 
 
 @app.get("/example-cv-report", response_class=HTMLResponse)
-def example_cv_report_page() -> str:
+@app.get("/example-cv-report/", response_class=HTMLResponse, include_in_schema=False)
+def example_cv_report_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_example_report_page()
 
 
@@ -3587,32 +3605,44 @@ def faq_page() -> str:
 
 
 @app.get("/how-it-works", response_class=HTMLResponse)
-def how_it_works_page() -> str:
+@app.get("/how-it-works/", response_class=HTMLResponse, include_in_schema=False)
+def how_it_works_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_support_page("how-it-works", SUPPORT_PAGES["how-it-works"])
 
 
 @app.get("/why-is-my-cv-not-getting-interviews", response_class=HTMLResponse)
-def why_cv_not_getting_interviews_page() -> str:
+@app.get("/why-is-my-cv-not-getting-interviews/", response_class=HTMLResponse, include_in_schema=False)
+def why_cv_not_getting_interviews_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_article_page("why-is-my-cv-not-getting-interviews", BLOG_ARTICLES["why-is-my-cv-not-getting-interviews"])
 
 
 @app.get("/how-to-tailor-cv-to-job-description", response_class=HTMLResponse)
-def tailor_cv_to_job_description_page() -> str:
+@app.get("/how-to-tailor-cv-to-job-description/", response_class=HTMLResponse, include_in_schema=False)
+def tailor_cv_to_job_description_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_article_page("how-to-tailor-cv-to-job-description", BLOG_ARTICLES["how-to-tailor-cv-to-job-description"])
 
 
 @app.get("/ats-cv-keywords", response_class=HTMLResponse)
-def ats_cv_keywords_page() -> str:
+@app.get("/ats-cv-keywords/", response_class=HTMLResponse, include_in_schema=False)
+def ats_cv_keywords_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_article_page("ats-cv-keywords", BLOG_ARTICLES["ats-cv-keywords"])
 
 
 @app.get("/cv-mistakes-that-cost-interviews", response_class=HTMLResponse)
-def cv_mistakes_that_cost_interviews_page() -> str:
+@app.get("/cv-mistakes-that-cost-interviews/", response_class=HTMLResponse, include_in_schema=False)
+def cv_mistakes_that_cost_interviews_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_article_page("cv-mistakes-that-cost-interviews", BLOG_ARTICLES["cv-mistakes-that-cost-interviews"])
 
 
 @app.get("/how-to-improve-cv-score", response_class=HTMLResponse)
-def how_to_improve_cv_score_page() -> str:
+@app.get("/how-to-improve-cv-score/", response_class=HTMLResponse, include_in_schema=False)
+def how_to_improve_cv_score_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
     return render_article_page("how-to-improve-cv-score", BLOG_ARTICLES["how-to-improve-cv-score"])
 
 
