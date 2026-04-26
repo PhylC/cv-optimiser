@@ -1450,6 +1450,49 @@ def build_site_header_css() -> str:
     """
 
 
+def build_typography_css() -> str:
+    return """
+          h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2.35rem, 4.8vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+            font-weight: 820;
+          }
+          h2 {
+            margin: 0 0 10px;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            line-height: 1.12;
+            color: #EEF3FF;
+            font-weight: 780;
+          }
+          h3 {
+            margin: 0 0 8px;
+            font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+            line-height: 1.2;
+            color: #EEF3FF;
+            font-weight: 760;
+          }
+          p, li {
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 16px;
+          }
+          @media (max-width: 900px) {
+            h1 {
+              font-size: clamp(2rem, 8vw, 2.55rem);
+            }
+            h2 {
+              font-size: clamp(1.4rem, 6vw, 1.8rem);
+            }
+            h3 {
+              font-size: clamp(1.1rem, 4.8vw, 1.3rem);
+            }
+          }
+    """
+
+
 def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#mainToolCard") -> str:
     nav_items = [
         ("cv-checker", "/cv-checker", "CV Checker"),
@@ -1571,6 +1614,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             padding: 28px 20px 60px;
           }}
 {build_site_header_css()}
+{build_typography_css()}
           .text-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -1581,18 +1625,6 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             gap: 16px;
             margin-bottom: 24px;
           }}
-          .hero h1 {{
-            margin: 0;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          .hero p, .card p, .card li {{
-            color: #B7C6E6;
-            line-height: 1.7;
-            font-size: 15px;
-          }}
           .tool-card, .card {{
             background: rgba(15, 28, 50, 0.72);
             border: 1px solid rgba(92, 112, 150, 0.22);
@@ -1601,8 +1633,6 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .tool-card h2, .card h2 {{
             margin: 0 0 10px;
-            font-size: 22px;
-            color: #EEF3FF;
           }}
           .tool-frame {{
             width: 100%;
@@ -1853,6 +1883,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             padding: 28px 20px 60px;
           }}
 {build_site_header_css()}
+{build_typography_css()}
           .text-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -1876,23 +1907,6 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             color: #EEF3FF;
             margin-bottom: 10px;
             font-size: 15px;
-          }}
-          h1 {{
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          h2 {{
-            margin: 0 0 10px;
-            font-size: 22px;
-            color: #EEF3FF;
-          }}
-          p, li {{
-            color: #B7C6E6;
-            line-height: 1.75;
-            font-size: 16px;
           }}
           .section-list {{
             margin: 12px 0 0;
@@ -2344,6 +2358,7 @@ def render_ats_cv_checker_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_typography_css()}
           .topbar {{
             display: flex;
             justify-content: space-between;
@@ -2599,6 +2614,7 @@ def render_example_report_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_typography_css()}
           .topbar {{
             display: flex;
             justify-content: space-between;
@@ -2646,23 +2662,6 @@ def render_example_report_page() -> str:
           }}
           .hero-card {{
             margin-bottom: 24px;
-          }}
-          h1 {{
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          h2 {{
-            margin: 0 0 10px;
-            font-size: 20px;
-            color: #EEF3FF;
-          }}
-          p, li {{
-            color: #B7C6E6;
-            line-height: 1.7;
-            font-size: 15px;
           }}
           .report-grid {{
             display: grid;
@@ -3053,6 +3052,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_typography_css()}
           .topbar {{
             display: flex;
             justify-content: space-between;
@@ -3107,23 +3107,6 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             border: 1px solid rgba(92, 112, 150, 0.22);
             border-radius: 18px;
             padding: 24px;
-          }}
-          h1 {{
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3.1rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          h2 {{
-            margin: 0 0 12px;
-            font-size: 20px;
-            color: #EEF3FF;
-          }}
-          p, li {{
-            color: #B7C6E6;
-            line-height: 1.7;
-            font-size: 15px;
           }}
           .trust {{
             margin: 14px 0 18px;
@@ -3311,6 +3294,7 @@ def render_faq_page() -> str:
             padding: 28px 20px 60px;
           }}
 {build_site_header_css()}
+{build_typography_css()}
           .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -3322,18 +3306,6 @@ def render_faq_page() -> str:
             border: 1px solid rgba(92, 112, 150, 0.22);
             border-radius: 18px;
             padding: 24px;
-          }}
-          h1 {{
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          p {{
-            color: #B7C6E6;
-            line-height: 1.7;
-            font-size: 15px;
           }}
           .faq-list {{
             display: grid;
@@ -3554,6 +3526,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             padding: 28px 20px 60px;
           }}
 {build_site_header_css()}
+{build_typography_css()}
           .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -3565,23 +3538,6 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             border: 1px solid rgba(92, 112, 150, 0.22);
             border-radius: 18px;
             padding: 24px;
-          }}
-          h1 {{
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            color: #F4F7FF;
-          }}
-          h2 {{
-            margin: 0 0 10px;
-            font-size: 20px;
-            color: #EEF3FF;
-          }}
-          p {{
-            color: #B7C6E6;
-            line-height: 1.7;
-            font-size: 15px;
           }}
           .section-list {{
             margin: 12px 0 0;
