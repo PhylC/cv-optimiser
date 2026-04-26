@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import errno
+import html
 import json
 import os
 import re
@@ -12,7 +13,7 @@ from typing import Any, Optional
 from docx import Document
 from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pypdf import PdfReader
@@ -53,6 +54,7 @@ async def log_requests(request: Request, call_next):
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
+SITE_URL = "https://www.cv-optimiser.com"
 FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
@@ -71,6 +73,70 @@ supabase_admin: Optional[Client] = None
 
 if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
     supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+FAQ_ENTRIES: list[tuple[str, str]] = [
+    ("Do I need to create an account?", "No. You can run a free CV check without signing up."),
+    ("Is my CV stored?", "No. Your CV is only used to generate your result and is not stored."),
+    (
+        "How does the CV score work?",
+        "The score is based on keyword relevance, structure, role alignment and recruiter-style best practices.",
+    ),
+    (
+        "What do I get with the full report?",
+        "The full report gives you a detailed improvement plan, keyword optimisation and stronger CV wording.",
+    ),
+    (
+        "Can I use this for any job?",
+        "Yes. Paste the job description for the role you want and the tool will compare your CV against it.",
+    ),
+]
+
+SEO_PAGES: dict[str, dict[str, Any]] = {
+    "cv-checker": {
+        "title": "Free CV Checker – Get Your CV Score in 30 Seconds",
+        "meta_description": "Check your CV against a job description and get your score, missing keywords and top fixes instantly.",
+        "h1": "Free CV Checker",
+        "intro": "Use CV Optimiser to check how well your CV matches a role before you apply. Upload your CV, paste the job description, and get a practical score with keyword gaps and clear next fixes.",
+        "bullets": [
+            "See how relevant your CV looks for a specific job",
+            "Spot missing keywords before recruiters do",
+            "Get the top fixes that will improve your next application",
+        ],
+    },
+    "ats-cv-checker": {
+        "title": "Free ATS CV Checker – Find Missing Keywords Before You Apply",
+        "meta_description": "Paste a job description and check whether your CV includes the keywords, structure and relevance recruiters expect.",
+        "h1": "ATS CV Checker",
+        "intro": "Check whether your CV is likely to survive ATS screening before a recruiter sees it. CV Optimiser compares your CV against a job description and highlights the missing signals that can hold you back.",
+        "bullets": [
+            "Find missing ATS keywords and phrases",
+            "Understand whether your CV structure is helping or hurting",
+            "Improve role alignment before you send your application",
+        ],
+    },
+    "cv-keyword-optimiser": {
+        "title": "CV Keyword Optimiser – Match Your CV to Any Job Description",
+        "meta_description": "Find missing role-specific keywords and improve your CV before applying.",
+        "h1": "CV Keyword Optimiser",
+        "intro": "Match your CV to any job description with clearer keyword coverage and role-specific language. This page is designed for job seekers who want to improve relevance without stuffing their CV.",
+        "bullets": [
+            "Highlight the exact keywords your CV is missing",
+            "Improve how closely your CV matches the role",
+            "Get practical suggestions you can actually use",
+        ],
+    },
+    "cv-improvement-tool": {
+        "title": "CV Improvement Tool – Get Practical Fixes for Your CV",
+        "meta_description": "Get practical feedback on your CV including structure, summary, keyword gaps and priority improvements.",
+        "h1": "CV Improvement Tool",
+        "intro": "Get a recruiter-style diagnosis of what is holding your CV back. CV Optimiser gives you a clear score, identifies weak areas, and shows the most important improvements to make first.",
+        "bullets": [
+            "See the top changes that will improve interview chances",
+            "Understand structure, wording, and keyword gaps",
+            "Use the free check before deciding whether to unlock the full report",
+        ],
+    },
+}
 
 
 def require_openai() -> OpenAI:
@@ -605,9 +671,462 @@ def get_plan_state(user_id: str) -> dict[str, Any]:
     return {"plan": "free", "is_pro": False, "remaining_free_analyses_today": remaining}
 
 
+def build_faq_json_ld() -> str:
+    return json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": question,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": answer,
+                    },
+                }
+                for question, answer in FAQ_ENTRIES
+            ],
+        }
+    )
+
+
+def build_software_json_ld(url: str) -> str:
+    return json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "CV Optimiser",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": (
+                "Free CV checker that compares your CV against a job description "
+                "and highlights score, missing keywords and top fixes."
+            ),
+            "url": url,
+        }
+    )
+
+
+def render_seo_page(slug: str, page: dict[str, Any]) -> str:
+    page_url = f"{SITE_URL}/{slug}"
+    faq_html = "".join(
+        f"""
+        <div class="faq-item">
+          <strong>{html.escape(question)}</strong>
+          <p>{html.escape(answer)}</p>
+        </div>
+        """
+        for question, answer in FAQ_ENTRIES
+    )
+    bullet_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in page["bullets"]
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(page["title"])} | CV Optimiser</title>
+        <meta name="description" content="{html.escape(page["meta_description"])}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(page["title"])} | CV Optimiser">
+        <meta property="og:description" content="{html.escape(page["meta_description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(page["title"])} | CV Optimiser">
+        <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
+        <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        <script type="application/ld+json">{build_faq_json_ld()}</script>
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{
+            font-weight: 800;
+          }}
+          .logo-title span {{
+            font-weight: 400;
+          }}
+          .header-link {{
+            color: #DCE5FF;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+          }}
+          .layout {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+            gap: 24px;
+          }}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          h1 {{
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          h2 {{
+            margin: 0 0 12px;
+            font-size: 20px;
+            color: #EEF3FF;
+          }}
+          p, li {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          .trust {{
+            margin: 14px 0 18px;
+            color: #DCE6FF;
+            font-weight: 600;
+            font-size: 14px;
+          }}
+          ul {{
+            margin: 0;
+            padding-left: 20px;
+          }}
+          li {{
+            margin-bottom: 8px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+          .helper {{
+            margin-top: 10px;
+            color: #9FB0D4;
+            font-size: 13px;
+          }}
+          .faq-list {{
+            display: grid;
+            gap: 14px;
+          }}
+          .faq-item strong {{
+            display: block;
+            margin-bottom: 6px;
+            color: #EEF3FF;
+            font-size: 14px;
+          }}
+          .nav-links, .footer-links {{
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+          }}
+          .nav-links a, .footer-links a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 13px;
+          }}
+          footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          @media (max-width: 900px) {{
+            .layout {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#authCard" class="header-link">Sign in</a>
+          </div>
+
+          <div class="layout">
+            <div class="card">
+              <h1>{html.escape(page["h1"])}</h1>
+              <p>{html.escape(page["intro"])}</p>
+              <p class="trust">Free check • No signup required • Your CV isn’t stored</p>
+              <h2>What this page helps you do</h2>
+              <ul>{bullet_html}</ul>
+              <a href="/#mainToolCard" class="cta">Try the free CV checker</a>
+              <p class="helper">Use the main tool to upload your CV, paste a job description, and get your result instantly.</p>
+            </div>
+
+            <div class="card">
+              <h2>What you get</h2>
+              <ul>
+                <li>CV match score</li>
+                <li>Missing keywords</li>
+                <li>Top priority fixes</li>
+                <li>Improvement suggestions</li>
+              </ul>
+              <p class="helper">Built for job seekers who want fast, practical CV feedback.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:24px;">
+            <h2>Frequently asked questions</h2>
+            <div class="faq-list">{faq_html}</div>
+          </div>
+
+          <footer>
+            <div class="footer-links">
+              <a href="/cv-checker">CV Checker</a>
+              <a href="/ats-cv-checker">ATS CV Checker</a>
+              <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+              <a href="/cv-improvement-tool">CV Improvement Tool</a>
+              <a href="/faq">FAQ</a>
+              <a href="/privacy">Privacy</a>
+              <a href="/terms">Terms</a>
+              <a href="/billing">Billing &amp; cancellation</a>
+            </div>
+          </footer>
+        </div>
+      </body>
+    </html>
+    """
+
+
+def render_faq_page() -> str:
+    faq_html = "".join(
+        f"""
+        <div class="faq-item">
+          <strong>{html.escape(question)}</strong>
+          <p>{html.escape(answer)}</p>
+        </div>
+        """
+        for question, answer in FAQ_ENTRIES
+    )
+    page_url = f"{SITE_URL}/faq"
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>FAQ | CV Optimiser</title>
+        <meta name="description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="FAQ | CV Optimiser">
+        <meta property="og:description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="FAQ | CV Optimiser">
+        <meta name="twitter:description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <script type="application/ld+json">{build_faq_json_ld()}</script>
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{ font-weight: 800; }}
+          .logo-title span {{ font-weight: 400; }}
+          .header-link, .footer-links a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 13px;
+          }}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          h1 {{
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          p {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          .faq-list {{
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+          }}
+          .faq-item strong {{
+            display: block;
+            margin-bottom: 6px;
+            color: #EEF3FF;
+            font-size: 15px;
+          }}
+          footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          .footer-links {{
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#authCard" class="header-link">Sign in</a>
+          </div>
+          <div class="card">
+            <h1>Frequently asked questions</h1>
+            <p>Answers about free usage, privacy, CV scoring and what you get with the full report.</p>
+            <div class="faq-list">{faq_html}</div>
+          </div>
+          <footer>
+            <div class="footer-links">
+              <a href="/cv-checker">CV Checker</a>
+              <a href="/ats-cv-checker">ATS CV Checker</a>
+              <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+              <a href="/cv-improvement-tool">CV Improvement Tool</a>
+              <a href="/faq">FAQ</a>
+            </div>
+          </footer>
+        </div>
+      </body>
+    </html>
+    """
+
+
 @app.get("/")
 def home() -> FileResponse:
     return FileResponse("static/index.html")
+
+
+@app.get("/cv-checker", response_class=HTMLResponse)
+def cv_checker_page() -> str:
+    return render_seo_page("cv-checker", SEO_PAGES["cv-checker"])
+
+
+@app.get("/ats-cv-checker", response_class=HTMLResponse)
+def ats_cv_checker_page() -> str:
+    return render_seo_page("ats-cv-checker", SEO_PAGES["ats-cv-checker"])
+
+
+@app.get("/cv-keyword-optimiser", response_class=HTMLResponse)
+def cv_keyword_optimiser_page() -> str:
+    return render_seo_page("cv-keyword-optimiser", SEO_PAGES["cv-keyword-optimiser"])
+
+
+@app.get("/cv-improvement-tool", response_class=HTMLResponse)
+def cv_improvement_tool_page() -> str:
+    return render_seo_page("cv-improvement-tool", SEO_PAGES["cv-improvement-tool"])
+
+
+@app.get("/faq", response_class=HTMLResponse)
+def faq_page() -> str:
+    return render_faq_page()
 
 
 @app.get("/success")

@@ -3,7 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CV Optimiser</title>
+  <title>Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser</title>
+  <meta name="description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <link rel="canonical" href="https://www.cv-optimiser.com/">
+  <meta property="og:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
+  <meta property="og:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <meta property="og:url" content="https://www.cv-optimiser.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
+  <meta name="twitter:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CV Optimiser",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Free CV checker that compares your CV against a job description and highlights score, missing keywords and top fixes.",
+    "url": "https://www.cv-optimiser.com/"
+  }
+  </script>
   <style>
   body {
     font-family: Inter, Arial, sans-serif;
@@ -641,6 +661,14 @@
     letter-spacing: -0.04em;
   }
 
+  .example-preview-verdict {
+    margin-bottom: 14px;
+    color: #FFD3C8;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
   .example-preview-grid {
     display: grid;
     gap: 14px;
@@ -661,6 +689,13 @@
 
   .example-preview-block li {
     margin-bottom: 6px;
+  }
+
+  .example-preview-note {
+    margin-top: 14px;
+    color: #B7C6E6;
+    font-size: 13px;
+    line-height: 1.6;
   }
 
   .sidebar-card {
@@ -734,6 +769,24 @@
     color: #d7e2fa;
     font-size: 14px;
     font-weight: 600;
+  }
+
+  .trust-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .trust-pill {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(10, 19, 35, 0.24);
+    border: 1px solid rgba(92, 112, 150, 0.14);
+    color: #D7E2FA;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
   }
 
   .tool-loading-note {
@@ -1231,7 +1284,8 @@
     .result-summary-grid,
     .result-grid-two,
     .before-after,
-    .mini-steps-inline {
+    .mini-steps-inline,
+    .trust-row {
       grid-template-columns: 1fr;
     }
 
@@ -1965,7 +2019,7 @@
 
   <div class="main-grid">
     <div class="main-column">
-      <div class="card section primary-tool-card" style="overflow:hidden;">
+      <div id="mainToolCard" class="card section primary-tool-card" style="overflow:hidden;">
         <div class="section-title">Check how well your CV matches a job in 30 seconds</div>
         <div class="section-subtitle">
           Upload your CV, paste a job description, and get your score, missing keywords and top fixes instantly.
@@ -2035,6 +2089,12 @@
         </div>
       </div>
 
+      <div class="trust-row">
+        <div class="trust-pill">No signup needed</div>
+        <div class="trust-pill">Your CV isn’t stored</div>
+        <div class="trust-pill">Works with any job description</div>
+      </div>
+
       <div class="card sidebar-secondary">
         <div class="section-title">What you’ll get</div>
         <ul class="simple-list">
@@ -2048,28 +2108,38 @@
       </div>
 
       <div class="card sidebar-secondary mobile-only">
-        <div class="section-title">Example result</div>
+        <div class="section-title">Example CV diagnosis</div>
         <div class="example-preview">
-          <strong>Example result</strong>
+          <strong>Example CV diagnosis</strong>
           <div class="example-preview-score">Match Score: 58/100</div>
+          <div class="example-preview-verdict">Likely to be skipped unless improved</div>
           <div class="example-preview-grid">
             <div class="example-preview-block">
               <strong>Missing keywords</strong>
               <ul>
                 <li>stakeholder management</li>
                 <li>forecasting</li>
-                <li>P&amp;L</li>
+                <li>commercial planning</li>
               </ul>
             </div>
             <div class="example-preview-block">
-              <strong>Top fixes</strong>
+              <strong>What recruiters may miss</strong>
               <ul>
-                <li>Add commercial metrics</li>
-                <li>Strengthen your summary</li>
-                <li>Match role keywords</li>
+                <li>Commercial impact is not clear enough</li>
+                <li>Summary does not match the role closely</li>
+                <li>Achievements need stronger numbers</li>
+              </ul>
+            </div>
+            <div class="example-preview-block">
+              <strong>Priority fixes</strong>
+              <ul>
+                <li>Add measurable results</li>
+                <li>Rewrite the summary around the target role</li>
+                <li>Mirror key phrases from the job description</li>
               </ul>
             </div>
           </div>
+          <p class="example-preview-note">Your real report will be tailored to your CV and the job you paste in.</p>
         </div>
       </div>
 
@@ -2304,28 +2374,6 @@
       </div>
 
       <div class="card sidebar-secondary">
-        <div class="section-title">Frequently asked questions</div>
-        <div class="faq-list">
-          <div class="faq-item">
-            <strong>Do I need to create an account?</strong>
-            <p>No. You can run a free CV check without signing up.</p>
-          </div>
-          <div class="faq-item">
-            <strong>Is my CV stored?</strong>
-            <p>No. Your CV is only used to generate your result and is not stored.</p>
-          </div>
-          <div class="faq-item">
-            <strong>How accurate is the CV score?</strong>
-            <p>It’s based on keyword matching, structure and recruiter best practices.</p>
-          </div>
-          <div class="faq-item">
-            <strong>What do I get with the full report?</strong>
-            <p>A detailed improvement plan, keyword optimisation and stronger CV wording.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card sidebar-secondary">
         <div class="section-title">Example improvement</div>
         <div class="before-after">
           <div class="before-after-card">
@@ -2342,28 +2390,38 @@
 
     <div class="helper-column">
       <div class="card sidebar-secondary desktop-only">
-        <div class="section-title example-card-title">Example result</div>
+        <div class="section-title example-card-title">Example CV diagnosis</div>
         <div class="example-preview">
-          <strong>Example result</strong>
+          <strong>Example CV diagnosis</strong>
           <div class="example-preview-score">Match Score: 58/100</div>
+          <div class="example-preview-verdict">Likely to be skipped unless improved</div>
           <div class="example-preview-grid">
             <div class="example-preview-block">
               <strong>Missing keywords</strong>
               <ul>
                 <li>stakeholder management</li>
                 <li>forecasting</li>
-                <li>P&amp;L</li>
+                <li>commercial planning</li>
               </ul>
             </div>
             <div class="example-preview-block">
-              <strong>Top fixes</strong>
+              <strong>What recruiters may miss</strong>
               <ul>
-                <li>Add commercial metrics</li>
-                <li>Strengthen your summary</li>
-                <li>Match role keywords</li>
+                <li>Commercial impact is not clear enough</li>
+                <li>Summary does not match the role closely</li>
+                <li>Achievements need stronger numbers</li>
+              </ul>
+            </div>
+            <div class="example-preview-block">
+              <strong>Priority fixes</strong>
+              <ul>
+                <li>Add measurable results</li>
+                <li>Rewrite the summary around the target role</li>
+                <li>Mirror key phrases from the job description</li>
               </ul>
             </div>
           </div>
+          <p class="example-preview-note">Your real report will be tailored to your CV and the job you paste in.</p>
         </div>
       </div>
 
@@ -2448,6 +2506,11 @@
   </div>
 
 <footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+    <a href="/cv-checker" class="footer-link">CV Checker</a>
+    <a href="/ats-cv-checker" class="footer-link">ATS CV Checker</a>
+    <a href="/cv-keyword-optimiser" class="footer-link">CV Keyword Optimiser</a>
+    <a href="/cv-improvement-tool" class="footer-link">CV Improvement Tool</a>
+    <a href="/faq" class="footer-link">FAQ</a>
     <a href="/privacy" class="footer-link">Privacy</a>
     <a href="/terms" class="footer-link">Terms</a>
     <a href="/billing" class="footer-link">Billing & cancellation</a>
