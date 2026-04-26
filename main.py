@@ -1437,6 +1437,110 @@ def build_site_header_css() -> str:
             box-shadow: 0 10px 24px rgba(91, 120, 255, 0.22);
             white-space: nowrap;
           }
+          .header-signin-link {
+            display: inline-flex;
+            align-items: center;
+            color: #C7D4F1;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color 0.12s ease;
+          }
+          .header-signin-link:hover {
+            color: #FFFFFF;
+          }
+          .header-account-wrap {
+            position: relative;
+          }
+          .header-account-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 46px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(92, 112, 150, 0.26);
+            background: rgba(10, 19, 35, 0.6);
+            color: #E8EEFC;
+            cursor: pointer;
+            text-align: left;
+            box-shadow: none;
+            transition: border-color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+          }
+          .header-account-chip:hover {
+            border-color: rgba(120, 140, 194, 0.34);
+            background: rgba(14, 25, 46, 0.8);
+            transform: translateY(-1px);
+          }
+          .header-account-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+          }
+          .header-account-email {
+            max-width: 220px;
+            color: #F4F7FF;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .header-account-plan {
+            color: #9FB0D4;
+            font-size: 12px;
+            line-height: 1.2;
+          }
+          .header-account-caret {
+            color: #9FB0D4;
+            font-size: 12px;
+            flex-shrink: 0;
+          }
+          .header-account-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 10px);
+            width: 240px;
+            padding: 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(80, 103, 146, 0.42);
+            background: rgba(18, 29, 52, 0.98);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+            z-index: 50;
+          }
+          .header-account-menu a,
+          .header-account-menu button,
+          .header-account-menu div {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 0;
+            background: transparent;
+            color: #DCE6FF;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: left;
+            box-shadow: none;
+            margin: 0 0 4px;
+          }
+          .header-account-menu a:hover,
+          .header-account-menu button:hover {
+            background: rgba(31, 50, 84, 0.82);
+          }
+          .header-account-menu button:last-child,
+          .header-account-menu div:last-child,
+          .header-account-menu a:last-child {
+            margin-bottom: 0;
+          }
+          .header-account-menu-note {
+            color: #9FB0D4;
+            cursor: default;
+          }
           @media (max-width: 900px) {
             .site-header-inner {
               gap: 12px;
@@ -1446,6 +1550,18 @@ def build_site_header_css() -> str:
             }
             .site-logo-title {
               font-size: 22px;
+            }
+            .header-signin-link {
+              display: none;
+            }
+            .header-account-chip {
+              padding: 10px 12px;
+            }
+            .header-account-email {
+              max-width: 96px;
+            }
+            .header-account-plan {
+              display: none;
             }
             .site-header-cta {
               margin-left: auto;
@@ -1531,7 +1647,6 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         ("how-it-works", "/how-it-works", "How it works"),
         ("example-report", "/example-cv-report", "Example Report"),
         ("upgrade", "/upgrade", "Upgrade"),
-        ("sign-in", "/#authCard", "Sign in"),
     ]
     nav_html = "".join(
         f'<a href="{href}" class="site-nav-link{" is-active" if active_key == key else ""}">{label}</a>'
@@ -1548,6 +1663,22 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           <nav class="site-nav" aria-label="Primary">
             {nav_html}
           </nav>
+          <a href="/#authCard" id="headerSignInLink" class="header-signin-link">Sign in</a>
+          <div id="headerAccountWrap" class="header-account-wrap hidden">
+            <button id="headerAccountChip" class="header-account-chip" type="button" aria-expanded="false">
+              <span class="header-account-copy">
+                <span id="headerAccountEmail" class="header-account-email">Signed in</span>
+                <span id="headerAccountPlan" class="header-account-plan">Plan: Free</span>
+              </span>
+              <span class="header-account-caret">▾</span>
+            </button>
+            <div id="headerAccountMenu" class="header-account-menu hidden">
+              <a href="/" id="headerAccountLink">Account</a>
+              <button id="headerBillingBtn" type="button">Manage subscription</button>
+              <div id="headerBillingNote" class="header-account-menu-note hidden">Billing coming soon</div>
+              <button id="headerSignOutBtn" type="button">Sign out</button>
+            </div>
+          </div>
           <a href="{html.escape(cta_href)}" class="site-header-cta">Check my CV</a>
         </div>
       </div>
@@ -3414,6 +3545,18 @@ def render_upgrade_page() -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
+          .hidden {{
+            display: none !important;
+          }}
+          .upgrade-inline-error {{
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(192, 102, 112, 0.34);
+            background: rgba(58, 18, 29, 0.9);
+            color: #FFD8DD;
+            font-size: 14px;
+          }}
           @media (max-width: 900px) {{
             .upgrade-grid {{
               grid-template-columns: 1fr;
@@ -3455,6 +3598,7 @@ def render_upgrade_page() -> str:
               </ul>
               <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
               <p class="upgrade-helper">Sign in required for monthly Pro access.</p>
+              <div id="upgradeInlineError" class="upgrade-inline-error hidden">Please sign in to start Pro monthly.</div>
             </div>
           </div>
 
@@ -3468,6 +3612,35 @@ def render_upgrade_page() -> str:
             sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
           }}
 
+          const headerSignInLink = document.getElementById("headerSignInLink");
+          const headerAccountWrap = document.getElementById("headerAccountWrap");
+          const headerAccountChip = document.getElementById("headerAccountChip");
+          const headerAccountMenu = document.getElementById("headerAccountMenu");
+          const headerAccountEmail = document.getElementById("headerAccountEmail");
+          const headerAccountPlan = document.getElementById("headerAccountPlan");
+          const headerBillingBtn = document.getElementById("headerBillingBtn");
+          const headerBillingNote = document.getElementById("headerBillingNote");
+          const headerSignOutBtn = document.getElementById("headerSignOutBtn");
+          const upgradeInlineError = document.getElementById("upgradeInlineError");
+
+          function showUpgradeInlineError(message) {{
+            if (!upgradeInlineError) return;
+            upgradeInlineError.textContent = message || "Please sign in to start Pro monthly.";
+            upgradeInlineError.classList.remove("hidden");
+          }}
+
+          function hideUpgradeInlineError() {{
+            if (!upgradeInlineError) return;
+            upgradeInlineError.classList.add("hidden");
+            upgradeInlineError.textContent = "Please sign in to start Pro monthly.";
+          }}
+
+          function closeHeaderAccountMenu() {{
+            if (!headerAccountMenu || !headerAccountChip) return;
+            headerAccountMenu.classList.add("hidden");
+            headerAccountChip.setAttribute("aria-expanded", "false");
+          }}
+
           async function getUpgradeSessionToken() {{
             if (!sbClient) return null;
             const result = await sbClient.auth.getSession();
@@ -3475,18 +3648,68 @@ def render_upgrade_page() -> str:
             return session && session.access_token ? session.access_token : null;
           }}
 
+          async function refreshUpgradeAuthUi() {{
+            if (!sbClient) {{
+              console.log("Upgrade auth state:", "signed_out");
+              return {{ signedIn: false, token: null, email: "", isPro: false }};
+            }}
+
+            const sessionResult = await sbClient.auth.getSession();
+            const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+            const signedIn = !!(session && session.access_token);
+            console.log("Upgrade auth state:", signedIn ? "signed_in" : "signed_out");
+
+            if (!signedIn) {{
+              if (headerSignInLink) headerSignInLink.classList.remove("hidden");
+              if (headerAccountWrap) headerAccountWrap.classList.add("hidden");
+              closeHeaderAccountMenu();
+              return {{ signedIn: false, token: null, email: "", isPro: false }};
+            }}
+
+            const token = session.access_token;
+            let email = session.user && session.user.email ? session.user.email : "Signed in";
+            let isPro = false;
+
+            try {{
+              const meResponse = await fetch("/api/me", {{
+                headers: {{
+                  Authorization: "Bearer " + token
+                }}
+              }});
+              const meData = await meResponse.json();
+              if (!meData.error) {{
+                isPro = !!(meData.plan && meData.plan.is_pro);
+              }}
+            }} catch (error) {{
+              console.error("Upgrade auth refresh error:", error);
+            }}
+
+            if (headerSignInLink) headerSignInLink.classList.add("hidden");
+            if (headerAccountWrap) headerAccountWrap.classList.remove("hidden");
+            if (headerAccountEmail) headerAccountEmail.textContent = email;
+            if (headerAccountPlan) headerAccountPlan.textContent = "Plan: " + (isPro ? "Pro" : "Free");
+            if (headerBillingBtn) headerBillingBtn.classList.toggle("hidden", !isPro);
+            if (headerBillingNote) headerBillingNote.classList.toggle("hidden", isPro);
+
+            return {{ signedIn: true, token, email, isPro }};
+          }}
+
           async function startCheckout(plan, button) {{
             const originalText = button.textContent;
+            let shouldResetButton = true;
             console.log("Checkout clicked:", plan);
+            hideUpgradeInlineError();
 
             try {{
               button.disabled = true;
               button.textContent = "Opening checkout…";
 
               const requiresSignIn = plan === "pro_monthly";
-              const token = await getUpgradeSessionToken();
-              if (requiresSignIn && !token) {{
-                throw new Error("Sign in to start Pro monthly.");
+              const authState = await refreshUpgradeAuthUi();
+              const token = authState.token;
+              if (requiresSignIn && !authState.signedIn) {{
+                showUpgradeInlineError("Please sign in to start Pro monthly.");
+                return;
               }}
 
               const response = await fetch("/api/create-checkout-session", {{
@@ -3503,17 +3726,72 @@ def render_upgrade_page() -> str:
               const data = await response.json();
 
               if (!response.ok || !data.url) {{
+                if (requiresSignIn && response.status === 401) {{
+                  showUpgradeInlineError(data.detail || "Please sign in to start Pro monthly.");
+                  return;
+                }}
                 throw new Error(data.detail || data.error || "Checkout could not be opened");
               }}
 
               window.location.href = data.url;
+              shouldResetButton = false;
             }} catch (error) {{
               console.error("Checkout error:", error);
-              button.disabled = false;
-              button.textContent = originalText;
-              alert(error.message || "Could not open checkout. Please try again.");
+              showUpgradeInlineError(error.message || "Could not open checkout. Please try again.");
+              return;
+            }} finally {{
+              if (shouldResetButton) {{
+                button.disabled = false;
+                button.textContent = originalText;
+              }}
             }}
           }}
+
+          if (headerAccountChip) {{
+            headerAccountChip.addEventListener("click", function() {{
+              if (!headerAccountMenu) return;
+              const shouldOpen = headerAccountMenu.classList.contains("hidden");
+              headerAccountMenu.classList.toggle("hidden");
+              headerAccountChip.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+            }});
+          }}
+
+          if (headerBillingBtn) {{
+            headerBillingBtn.addEventListener("click", async function() {{
+              hideUpgradeInlineError();
+              const authState = await refreshUpgradeAuthUi();
+              if (!authState.signedIn || !authState.token) {{
+                showUpgradeInlineError("Please sign in to manage your subscription.");
+                return;
+              }}
+
+              const response = await fetch("/api/create-portal-session", {{
+                method: "POST",
+                headers: {{
+                  Authorization: "Bearer " + authState.token
+                }}
+              }});
+              const data = await response.json();
+              if (data.url) {{
+                window.location.href = data.url;
+                return;
+              }}
+              showUpgradeInlineError(data.detail || data.error || "Could not open billing right now.");
+            }});
+          }}
+
+          if (headerSignOutBtn && sbClient) {{
+            headerSignOutBtn.addEventListener("click", async function() {{
+              await sbClient.auth.signOut();
+              closeHeaderAccountMenu();
+              await refreshUpgradeAuthUi();
+            }});
+          }}
+
+          document.addEventListener("click", function(event) {{
+            if (!headerAccountWrap || !headerAccountMenu || headerAccountWrap.contains(event.target)) return;
+            closeHeaderAccountMenu();
+          }});
 
           document.addEventListener("click", function(event) {{
             const button = event.target.closest("[data-checkout-plan]");
@@ -3522,6 +3800,14 @@ def render_upgrade_page() -> str:
             const plan = button.getAttribute("data-checkout-plan");
             startCheckout(plan, button);
           }});
+
+          if (sbClient) {{
+            sbClient.auth.onAuthStateChange(function() {{
+              refreshUpgradeAuthUi();
+            }});
+          }}
+
+          refreshUpgradeAuthUi();
         </script>
       </body>
     </html>
@@ -3922,15 +4208,12 @@ def create_checkout_session(
         except HTTPException:
             user = None
 
+    print("CHECKOUT_AUTH:", "signed_in" if user else "signed_out")
+
     if checkout_plan == "pro_monthly":
         if not user:
-            raise HTTPException(status_code=401, detail="Sign in to start Pro monthly.")
+            raise HTTPException(status_code=401, detail="Please sign in to start Pro monthly.")
         upsert_profile(user["id"], user["email"])
-        if not get_profile_password_ready(user["id"]):
-            return {
-                "error": "Please create a password before upgrading to Pro.",
-                "code": "PASSWORD_SETUP_REQUIRED"
-            }
         active_subscription = get_active_subscription(user["id"])
         if active_subscription:
             return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}

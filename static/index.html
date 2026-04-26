@@ -2811,14 +2811,6 @@
           return;
         }
 
-        if (requiresSignIn && passwordCard && !passwordCard.classList.contains("hidden")) {
-          status.textContent = "Please create your password before upgrading.";
-          showCheckoutError("Please create your password before opening checkout.");
-          openPasswordCardForUser(false);
-          passwordCard.scrollIntoView({ behavior: "smooth", block: "start" });
-          return;
-        }
-
         status.textContent = "Opening checkout…";
 
         const res = await fetch("/api/create-checkout-session", {
