@@ -2142,9 +2142,9 @@
           <p class="tool-free-copy">1 free CV check available — no card required</p>
           <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
           <div id="loadingSteps" class="loading-steps hidden">
-            <div class="loading-step">Checking structure…</div>
+            <div class="loading-step">Scanning CV…</div>
+            <div class="loading-step">Matching to job description…</div>
             <div class="loading-step">Finding missing keywords…</div>
-            <div class="loading-step">Building priority fixes…</div>
           </div>
         </div>
 
@@ -2226,11 +2226,11 @@
             </div>
           </div>
 
-          <div class="urgency-block">
+          <div class="urgency-block hidden">
             Most recruiters scan CVs in under 10 seconds — right now yours is easy to skip.
           </div>
 
-          <div class="result-section">
+          <div class="result-section hidden">
             <div class="recheck-block">
               <div class="recheck-copy">
                 <strong>Check again after changes</strong>
@@ -2728,9 +2728,9 @@
 
     function startLoadingStages() {
       const stages = [
-        "Checking structure…",
+        "Scanning CV…",
+        "Matching to job description…",
         "Finding missing keywords…",
-        "Building priority fixes…"
       ];
       let stageIndex = 0;
       toolLoadingNote.textContent = stages[stageIndex];
