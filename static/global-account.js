@@ -44,11 +44,15 @@
   }
 
   function closeHeaderAccountMenu() {
-    const chip = document.getElementById("headerAccountChip");
-    const menu = document.getElementById("headerAccountMenu");
-    if (!chip || !menu) return;
-    menu.classList.add("hidden");
-    chip.setAttribute("aria-expanded", "false");
+    const chip = document.getElementById("accountMenuButton");
+    const menu = document.getElementById("accountDropdown");
+    if (menu) {
+      menu.classList.add("hidden");
+      menu.setAttribute("aria-hidden", "true");
+    }
+    if (chip) {
+      chip.setAttribute("aria-expanded", "false");
+    }
   }
 
   function showHeaderBillingNote(message) {
@@ -66,10 +70,11 @@
 
   function applyHeaderAccountUi(account) {
     const signInLink = document.getElementById("headerSignInLink");
-    const accountWrap = document.getElementById("headerAccountWrap");
-    const accountEmail = document.getElementById("headerAccountEmail");
-    const accountPlan = document.getElementById("headerAccountPlan");
-    const billingBtn = document.getElementById("headerBillingBtn");
+    const accountWrap = document.getElementById("accountMenuWrap");
+    const accountEmail = document.getElementById("accountEmail");
+    const accountPlan = document.getElementById("accountPlanText");
+    const billingBtn = document.getElementById("menuManageSubBtn");
+    const dropdown = document.getElementById("accountDropdown");
 
     document.documentElement.dataset.accountPlan = account.plan;
     document.documentElement.dataset.signedIn = account.signedIn ? "true" : "false";
@@ -91,6 +96,14 @@
     accountWrap.classList.remove("hidden");
     accountEmail.textContent = account.email || "Signed in";
     accountPlan.textContent = "Plan: " + (account.plan === "pro" ? "Pro" : "Free");
+    if (dropdown) {
+      dropdown.classList.add("hidden");
+      dropdown.setAttribute("aria-hidden", "true");
+    }
+    const button = document.getElementById("accountMenuButton");
+    if (button) {
+      button.setAttribute("aria-expanded", "false");
+    }
     if (billingBtn) {
       billingBtn.classList.toggle("hidden", account.plan !== "pro");
     }
@@ -223,51 +236,80 @@
   }
 
   function installHeaderDropdownHandlers() {
-    if (window.__cvGlobalAccountDropdownInstalled) return;
-    window.__cvGlobalAccountDropdownInstalled = true;
+    if (window.__accountDropdownInstalled) return;
+    window.__accountDropdownInstalled = true;
+
+    function getEls() {
+      return {
+        button: document.getElementById("accountMenuButton"),
+        dropdown: document.getElementById("accountDropdown")
+      };
+    }
+
+    function openDropdown() {
+      const els = getEls();
+      if (!els.dropdown) return;
+      els.dropdown.classList.remove("hidden");
+      els.dropdown.setAttribute("aria-hidden", "false");
+      if (els.button) {
+        els.button.setAttribute("aria-expanded", "true");
+      }
+    }
+
+    function toggleDropdown(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const els = getEls();
+      if (!els.dropdown) return;
+      if (els.dropdown.classList.contains("hidden")) {
+        openDropdown();
+      } else {
+        closeHeaderAccountMenu();
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", closeHeaderAccountMenu);
+    window.addEventListener("load", closeHeaderAccountMenu);
+    window.addEventListener("pageshow", closeHeaderAccountMenu);
+    window.addEventListener("beforeunload", closeHeaderAccountMenu);
 
     document.addEventListener("click", function (event) {
-      const chip = event.target.closest("#headerAccountChip");
-      const wrap = document.getElementById("headerAccountWrap");
-      const menu = document.getElementById("headerAccountMenu");
-      if (chip && menu) {
-        const shouldOpen = menu.classList.contains("hidden");
-        menu.classList.toggle("hidden");
-        chip.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
-        if (shouldOpen) {
-          hideHeaderBillingNote();
-        }
+      const els = getEls();
+      if (!els.button || !els.dropdown) return;
+
+      if (event.target.closest("#accountMenuButton")) {
+        hideHeaderBillingNote();
+        toggleDropdown(event);
         return;
       }
 
-      const billingBtn = event.target.closest("#headerBillingBtn");
-      if (billingBtn) {
+      const action = event.target.closest("[data-account-action]");
+      if (action) {
         event.preventDefault();
-        handleHeaderBilling();
-        return;
-      }
-
-      const signOutBtn = event.target.closest("#headerSignOutBtn");
-      if (signOutBtn) {
-        event.preventDefault();
-        handleHeaderSignOut();
-        return;
-      }
-
-      const accountLink = event.target.closest("#headerAccountLink");
-      if (accountLink) {
         closeHeaderAccountMenu();
-        if (window.location.pathname === "/") {
-          const authCard = document.getElementById("authCard");
-          if (authCard) {
-            event.preventDefault();
-            authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        const actionType = action.getAttribute("data-account-action");
+        if (actionType === "account") {
+          if (window.location.pathname === "/") {
+            const authCard = document.getElementById("authCard");
+            if (authCard) {
+              authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+              return;
+            }
           }
+          window.location.href = "/#authCard";
+          return;
         }
-        return;
+        if (actionType === "billing") {
+          handleHeaderBilling();
+          return;
+        }
+        if (actionType === "signout") {
+          handleHeaderSignOut();
+          return;
+        }
       }
 
-      if (wrap && menu && !wrap.contains(event.target)) {
+      if (!event.target.closest("#accountDropdown")) {
         closeHeaderAccountMenu();
       }
     });
@@ -277,10 +319,18 @@
         closeHeaderAccountMenu();
       }
     });
+
+    document.addEventListener("click", function (event) {
+      const link = event.target.closest("a");
+      if (link) {
+        closeHeaderAccountMenu();
+      }
+    });
   }
 
   async function bootstrapAccountUi() {
     installHeaderDropdownHandlers();
+    closeHeaderAccountMenu();
     await refreshGlobalAccountUi();
     const client = getSupabaseClient();
     if (client && !window.__cvGlobalAccountAuthListenerInstalled) {
@@ -293,6 +343,7 @@
 
   window.getAccountState = getAccountState;
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
+  window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
   window.addEventListener("DOMContentLoaded", function () {
     bootstrapAccountUi();
   });

@@ -1456,10 +1456,13 @@ def build_site_header_css() -> str:
           .header-signin-link:hover {
             color: #FFFFFF;
           }
-          .header-account-wrap {
+          .hidden {
+            display: none !important;
+          }
+          .account-menu-wrap {
             position: relative;
           }
-          .header-account-chip {
+          .account-menu-button {
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -1474,18 +1477,18 @@ def build_site_header_css() -> str:
             box-shadow: none;
             transition: border-color 0.12s ease, background 0.12s ease, transform 0.12s ease;
           }
-          .header-account-chip:hover {
+          .account-menu-button:hover {
             border-color: rgba(120, 140, 194, 0.34);
             background: rgba(14, 25, 46, 0.8);
             transform: translateY(-1px);
           }
-          .header-account-copy {
+          .account-chip-text {
             display: flex;
             flex-direction: column;
             gap: 2px;
             min-width: 0;
           }
-          .header-account-email {
+          .account-email {
             max-width: 220px;
             color: #F4F7FF;
             font-size: 13px;
@@ -1495,17 +1498,17 @@ def build_site_header_css() -> str:
             overflow: hidden;
             text-overflow: ellipsis;
           }
-          .header-account-plan {
+          .account-plan {
             color: #9FB0D4;
             font-size: 12px;
             line-height: 1.2;
           }
-          .header-account-caret {
+          .account-caret {
             color: #9FB0D4;
             font-size: 12px;
             flex-shrink: 0;
           }
-          .header-account-menu {
+          .account-dropdown {
             position: absolute;
             right: 0;
             top: calc(100% + 10px);
@@ -1517,9 +1520,21 @@ def build_site_header_css() -> str:
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
             z-index: 50;
           }
-          .header-account-menu a,
-          .header-account-menu button,
-          .header-account-menu div {
+          .account-dropdown.hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+          }
+          .account-dropdown:not(.hidden) {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+          }
+          .account-dropdown a,
+          .account-dropdown button,
+          .account-dropdown div {
             display: flex;
             align-items: center;
             width: 100%;
@@ -1534,16 +1549,16 @@ def build_site_header_css() -> str:
             box-shadow: none;
             margin: 0 0 4px;
           }
-          .header-account-menu a:hover,
-          .header-account-menu button:hover {
+          .account-dropdown a:hover,
+          .account-dropdown button:hover {
             background: rgba(31, 50, 84, 0.82);
           }
-          .header-account-menu button:last-child,
-          .header-account-menu div:last-child,
-          .header-account-menu a:last-child {
+          .account-dropdown button:last-child,
+          .account-dropdown div:last-child,
+          .account-dropdown a:last-child {
             margin-bottom: 0;
           }
-          .header-account-menu-note {
+          .account-dropdown-note {
             color: #9FB0D4;
             cursor: default;
           }
@@ -1560,7 +1575,7 @@ def build_site_header_css() -> str:
             .header-signin-link {
               display: none;
             }
-            .header-account-chip {
+            .account-menu-button {
               padding: 10px 12px;
             }
             .header-account-email {
@@ -1671,19 +1686,19 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
             {nav_html}
           </nav>
           <a href="/#authCard" id="headerSignInLink" class="header-signin-link">Sign in</a>
-          <div id="headerAccountWrap" class="header-account-wrap hidden">
-            <button id="headerAccountChip" class="header-account-chip" type="button" aria-expanded="false">
-              <span class="header-account-copy">
-                <span id="headerAccountEmail" class="header-account-email">Signed in</span>
-                <span id="headerAccountPlan" class="header-account-plan">Plan: Free</span>
+          <div id="accountMenuWrap" class="account-menu-wrap hidden">
+            <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
+              <span class="account-chip-text">
+                <span id="accountEmail" class="account-email">Signed in</span>
+                <span id="accountPlanText" class="account-plan">Plan: Free</span>
               </span>
-              <span class="header-account-caret">▾</span>
+              <span class="account-caret">▾</span>
             </button>
-            <div id="headerAccountMenu" class="header-account-menu hidden">
-              <a href="/#authCard" id="headerAccountLink">Account</a>
-              <button id="headerBillingBtn" type="button">Manage subscription</button>
-              <div id="headerBillingNote" class="header-account-menu-note hidden">Billing coming soon</div>
-              <button id="headerSignOutBtn" type="button">Sign out</button>
+            <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">
+              <a href="/#authCard" id="headerAccountLink" data-account-action="account">Account</a>
+              <button id="menuManageSubBtn" type="button" data-account-action="billing">Manage subscription</button>
+              <div id="headerBillingNote" class="account-dropdown-note hidden">Billing management is not available yet.</div>
+              <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
             </div>
           </div>
           <a href="{html.escape(cta_href)}" class="site-header-cta">Check my CV</a>

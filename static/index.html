@@ -1441,7 +1441,17 @@
   }
 
   .account-dropdown.hidden {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .account-dropdown:not(.hidden) {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .account-dropdown button {
@@ -2141,7 +2151,7 @@
           <span class="account-caret">⌄</span>
         </button>
 
-        <div id="accountDropdown" class="account-dropdown hidden">
+        <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">
           <button type="button" data-account-action="account">Account</button>
           <button id="menuManageSubBtn" type="button" data-account-action="billing">Manage subscription</button>
           <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
@@ -2733,6 +2743,7 @@
     function closeAccountMenu() {
       if (!accountDropdown) return;
       accountDropdown.classList.add("hidden");
+      accountDropdown.setAttribute("aria-hidden", "true");
       if (accountMenuButton) {
         accountMenuButton.setAttribute("aria-expanded", "false");
       }
@@ -3534,7 +3545,6 @@ const result = await sbClient.auth.signInWithOtp({
     }
 
     signOutBtn.addEventListener("click", handleSignOut);
-    menuLogoutBtn.addEventListener("click", handleSignOut);
 
     headerSignInBtn.addEventListener("click", function() {
       authCard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3553,8 +3563,6 @@ const result = await sbClient.auth.signInWithOtp({
         window.location.href = "/upgrade";
       });
     }
-
-    menuManageSubBtn.addEventListener("click", openManageSubscription);
 
     if (footerSupportBtn) {
       footerSupportBtn.addEventListener("click", function() {
@@ -3710,67 +3718,6 @@ passwordLoginBtn.addEventListener("click", async function() {
   status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });
-
-    if (!window.__accountDropdownInstalled) {
-      window.__accountDropdownInstalled = true;
-
-      document.addEventListener("click", async function(event) {
-        const toggleButton = event.target.closest("#accountMenuButton");
-        if (toggleButton) {
-          event.preventDefault();
-          if (!accountDropdown) return;
-          const shouldOpen = accountDropdown.classList.contains("hidden");
-          closeAccountMenu();
-          if (shouldOpen) {
-            accountDropdown.classList.remove("hidden");
-            accountMenuButton.setAttribute("aria-expanded", "true");
-          }
-          return;
-        }
-
-        const actionButton = event.target.closest("[data-account-action]");
-        if (actionButton) {
-          event.preventDefault();
-          const action = actionButton.getAttribute("data-account-action");
-          closeAccountMenu();
-
-          if (action === "account") {
-            if (window.location.pathname !== "/") {
-              window.location.href = "/#authCard";
-              return;
-            }
-            if (authCard) {
-              authCard.classList.remove("hidden");
-              authCard.scrollIntoView({ behavior: "smooth", block: "start" });
-            } else {
-              window.location.href = "/#authCard";
-            }
-            return;
-          }
-
-          if (action === "billing") {
-            await openManageSubscription();
-            return;
-          }
-
-          if (action === "signout") {
-            await signOutUser();
-          }
-          return;
-        }
-
-        if (accountMenuWrap && !accountMenuWrap.contains(event.target)) {
-          closeAccountMenu();
-        }
-      });
-
-      document.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") {
-          closeAccountMenu();
-        }
-      });
-    }
-
 
     clearFileBtn.addEventListener("click", function() {
       resetSelectedFile();
