@@ -234,6 +234,12 @@
     gap: 24px;
   }
 
+  .helper-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
   .card-kicker {
     display: inline-flex;
     align-items: center;
@@ -515,6 +521,18 @@
     margin-top: 16px;
   }
 
+  .tool-step {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-helper {
+    color: #9fb4db;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
   .field-group {
     display: flex;
     flex-direction: column;
@@ -575,6 +593,53 @@
 
   .plan-copy {
     margin-bottom: 2px;
+  }
+
+  .paste-toggle {
+    border: 1px solid rgba(92, 112, 150, 0.22);
+    border-radius: 14px;
+    background: rgba(10, 19, 35, 0.34);
+    padding: 12px 14px;
+  }
+
+  .paste-toggle summary {
+    cursor: pointer;
+    color: #d7e2fa;
+    font-size: 14px;
+    font-weight: 600;
+    list-style: none;
+  }
+
+  .paste-toggle summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .paste-toggle[open] summary {
+    margin-bottom: 10px;
+  }
+
+  .mini-steps {
+    display: grid;
+    gap: 10px;
+  }
+
+  .mini-step {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(10, 19, 35, 0.34);
+    border: 1px solid rgba(92, 112, 150, 0.18);
+    color: #d7e2fa;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .tool-loading-note {
+    min-height: 20px;
+    color: #9fb4db;
+  }
+
+  .plans-section {
+    margin-top: 28px;
   }
 
   .hero-eyebrow::before {
@@ -662,8 +727,12 @@
       order: 1;
     }
 
-    .sidebar-stack {
+    .helper-column {
       order: 2;
+    }
+
+    .plans-section {
+      margin-top: 18px;
     }
   }
 
@@ -1432,40 +1501,42 @@
   <div class="main-grid">
     <div class="main-column">
       <div class="card section primary-tool-card" style="overflow:hidden;">
-        <div class="section-title">If you're not getting interviews, your CV is the problem.</div>
+        <div class="section-title">Most CVs get ignored in under 10 seconds.</div>
         <div class="section-subtitle">
-          Get instant, recruiter-style feedback in under 60 seconds.
+          Get your CV score and the top fixes in under 60 seconds.
         </div>
 
         <div class="tool-form">
-          <div class="field-group">
-            <label for="jobDescription">Paste job description (required)</label>
-            <textarea id="jobDescription" placeholder="Paste the full job description here..."></textarea>
+          <div class="tool-step">
+            <label for="cvFileInput">Upload your CV</label>
+            <div class="field-helper">PDF, DOCX or TXT</div>
+            <div id="dropzone" class="dropzone">
+              <p><strong>Step 1: Upload CV</strong></p>
+              <p class="small">PDF, DOCX or TXT</p>
+              <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
+              <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+              <div id="fileName" class="file-note">No file selected</div>
+            </div>
           </div>
 
-          <div class="field-group">
-            <label for="cvText">Upload your CV (recommended)</label>
-            <textarea id="cvText" placeholder="Paste your CV here, or leave blank if uploading a file..."></textarea>
-          </div>
+          <details class="paste-toggle">
+            <summary>Or paste CV text instead</summary>
+            <div class="field-group">
+              <textarea id="cvText" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
+            </div>
+          </details>
 
-          <div id="dropzone" class="dropzone">
-            <p><strong>Drag and drop your CV here</strong></p>
-            <p class="small">Supports PDF, DOCX, and TXT</p>
-            <p><label for="cvFileInput" class="linkish">Or click to choose a file</label></p>
-            <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
-            <div id="fileName" class="file-note">No file selected</div>
+          <div class="tool-step">
+            <label for="jobDescription">Paste the job description</label>
+            <div class="field-helper">Paste the job advert so we can compare your CV against the role.</div>
+            <textarea id="jobDescription" placeholder="Paste the job advert or role description here…"></textarea>
           </div>
 
           <div>
-            <button id="optimiseBtn" style="width:100%;">Analyse my CV</button>
+            <button id="optimiseBtn" style="width:100%;">Get my CV score</button>
           </div>
-          <p class="small tool-trust-copy">No sign-up required • Your CV isn’t stored</p>
-          <div class="example-preview">
-            <strong>Example result:</strong>
-            <p>Score: 55/100</p>
-            <p>• Missing key skills recruiters search for</p>
-            <p>• Weak professional summary</p>
-          </div>
+          <p class="small tool-trust-copy">Free check • No signup needed • Your CV isn’t stored</p>
+          <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
         </div>
 
         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -1474,17 +1545,6 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
-      </div>
-
-      <div class="card">
-        <div class="hero-eyebrow">AI-powered CV tailoring</div>
-        <h1 class="hero-headline">Tailor your CV for the role you actually want.</h1>
-        <p class="hero-subtitle">
-          Upload your CV, paste the job description, and get clearer gaps, stronger wording, and more targeted improvements you can use straight away.
-        </p>
-        <p class="small hero-supporting-copy">
-          Use this as guidance, not as a guarantee. Always review suggestions so your final CV stays accurate to your real experience.
-        </p>
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
@@ -1644,12 +1704,30 @@
       </div>
     </div>
 
-    <div>
-      <div class="sidebar-stack">
+    <div class="helper-column">
+      <div class="card sidebar-secondary">
+        <div class="section-title">Example result</div>
+        <div class="example-preview">
+          <strong>CV Score: 55/100</strong>
+          <p>• Missing key skills</p>
+          <p>• Weak professional summary</p>
+          <p>• Poor keyword match</p>
+        </div>
+      </div>
+
+      <div class="card sidebar-secondary">
+        <div class="section-title">How it works</div>
+        <div class="mini-steps">
+          <div class="mini-step">1. Upload CV</div>
+          <div class="mini-step">2. Paste job</div>
+          <div class="mini-step">3. Get fixes</div>
+        </div>
+      </div>
+
       <div id="authCard" class="card sidebar-card">
-        <div class="section-title">Account</div>
+        <div class="section-title">Want to save your result?</div>
         <p id="authSubtitle" class="small sidebar-intro">
-          Create a free account to save results and unlock the full report.
+          Create a free account after your check to save results and unlock the full report.
         </p>
 
         <div class="auth-stack">
@@ -1696,7 +1774,11 @@
 
         <p id="passwordStatus" class="small status-line"></p>
       </div>
+    </div>
+  </div>
 
+  <div class="plans-section">
+    <div class="sidebar-stack">
       <div class="card sidebar-secondary">
         <div class="section-title">Plans</div>
         <div class="section-subtitle plan-copy">Choose the level of support you need.</div>
@@ -1718,7 +1800,6 @@
         <div id="historyList" class="small muted">
           No analyses yet. Your recent CV checks will appear here.
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -1752,6 +1833,7 @@
     const clearFileBtn = document.getElementById("clearFileBtn");
     const upgradeBtn = document.getElementById("upgradeBtn");
     const status = document.getElementById("status");
+    const toolLoadingNote = document.getElementById("toolLoadingNote");
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("cvFileInput");
     const fileName = document.getElementById("fileName");
@@ -2006,6 +2088,7 @@
       selectedFile = file;
       fileName.textContent = "Selected file: " + file.name;
       status.textContent = "Ready.";
+      trackEvent("cv_file_selected");
     }
 
     function setPlanUi(plan) {
@@ -2595,8 +2678,10 @@ passwordLoginBtn.addEventListener("click", async function() {
     optimiseBtn.addEventListener("click", async function() {
       optimiseBtn.disabled = true;
       const originalText = optimiseBtn.textContent;
-      optimiseBtn.textContent = "Optimising...";
+      optimiseBtn.textContent = "Analysing your CV...";
       console.log("optimise clicked");
+      toolLoadingNote.textContent = "Checking match, keywords and priority fixes…";
+      trackEvent("analyse_clicked", { has_file: !!selectedFile });
 
       const token = await getSessionToken();
 
@@ -2607,6 +2692,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         alert("Please add a job description or CV before running optimisation.");
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
+        toolLoadingNote.textContent = "No signup needed for your first result";
         return;
       }
 
@@ -2614,6 +2700,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         status.textContent = "Paste your CV text or upload a CV file.";
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
+        toolLoadingNote.textContent = "No signup needed for your first result";
         return;
       }
 
@@ -2646,6 +2733,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = "Server returned invalid response. Check Render logs.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          toolLoadingNote.textContent = "No signup needed for your first result";
           return;
         }
 
@@ -2653,6 +2741,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = data.error || data.detail || "Something went wrong.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          toolLoadingNote.textContent = "No signup needed for your first result";
           return;
         }
 
@@ -2661,6 +2750,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           setPlanUi(data.plan);
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          toolLoadingNote.textContent = "No signup needed for your first result";
           return;
         }
 
@@ -2668,6 +2758,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = data.error;
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          toolLoadingNote.textContent = "No signup needed for your first result";
           return;
         }
 
@@ -2732,6 +2823,8 @@ passwordLoginBtn.addEventListener("click", async function() {
         document.getElementById("results").classList.remove("hidden");
         status.textContent = "Done.";
         status.classList.add("is-success");
+        toolLoadingNote.textContent = "No signup needed for your first result";
+        trackEvent("result_shown", { anonymous_result: !!data.isAnonymousResult });
 
         if (data.isAnonymousResult) {
           trackEvent("signup_prompt_shown_after_result");
@@ -2748,6 +2841,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         console.error(err);
         status.textContent = "Something went wrong. Check terminal or browser console for details.";
         status.classList.add("is-error");
+        toolLoadingNote.textContent = "No signup needed for your first result";
       } finally {
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
@@ -2787,6 +2881,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     window.addEventListener("load", async function() {
       trackEvent("page_view");
+      trackEvent("homepage_loaded");
       await refreshAuthUi();
       await handleCheckoutReturn();
     });
