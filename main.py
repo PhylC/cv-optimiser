@@ -3557,9 +3557,38 @@ def render_upgrade_page() -> str:
             color: #FFD8DD;
             font-size: 14px;
           }}
+          .upgrade-active-state {{
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid rgba(91, 120, 255, 0.26);
+            background: linear-gradient(180deg, rgba(17, 31, 58, 0.94), rgba(11, 23, 43, 0.96));
+            box-shadow: 0 14px 30px rgba(91, 120, 255, 0.1);
+          }}
+          .upgrade-active-actions {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+          }}
+          .upgrade-secondary-link {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            background: rgba(10, 19, 35, 0.34);
+            color: #EAF0FF;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+          }}
           @media (max-width: 900px) {{
             .upgrade-grid {{
               grid-template-columns: 1fr;
+            }}
+            .upgrade-active-actions {{
+              flex-direction: column;
             }}
           }}
         </style>
@@ -3573,8 +3602,8 @@ def render_upgrade_page() -> str:
             <p>Choose how you want to improve your CV.</p>
           </div>
 
-          <div class="upgrade-grid">
-            <div class="upgrade-card upgrade-card-primary">
+          <div id="upgradeGrid" class="upgrade-grid">
+            <div id="oneTimeCard" class="upgrade-card upgrade-card-primary">
               <h2>Unlock this report</h2>
               <div class="price">£7.99 one-time</div>
               <ul>
@@ -3587,7 +3616,7 @@ def render_upgrade_page() -> str:
               <p class="upgrade-helper">No account needed for one-time checkout.</p>
             </div>
 
-            <div class="upgrade-card">
+            <div id="proCard" class="upgrade-card">
               <h2>Go Pro</h2>
               <div class="price">£9.99/month</div>
               <ul>
@@ -3599,6 +3628,15 @@ def render_upgrade_page() -> str:
               <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
               <p class="upgrade-helper">Sign in required for monthly Pro access.</p>
               <div id="upgradeInlineError" class="upgrade-inline-error hidden">Please sign in to start Pro monthly.</div>
+            </div>
+          </div>
+
+          <div id="alreadyProState" class="upgrade-active-state hidden">
+            <h2>You're already on Pro</h2>
+            <p>Your Pro access is active. You can run unlimited CV checks and access full reports.</p>
+            <div class="upgrade-active-actions">
+              <a href="/#tool" class="checkout-btn">Go to CV checker</a>
+              <a href="/" class="upgrade-secondary-link">Manage account</a>
             </div>
           </div>
 
@@ -3622,6 +3660,10 @@ def render_upgrade_page() -> str:
           const headerBillingNote = document.getElementById("headerBillingNote");
           const headerSignOutBtn = document.getElementById("headerSignOutBtn");
           const upgradeInlineError = document.getElementById("upgradeInlineError");
+          const upgradeGrid = document.getElementById("upgradeGrid");
+          const oneTimeCard = document.getElementById("oneTimeCard");
+          const proCard = document.getElementById("proCard");
+          const alreadyProState = document.getElementById("alreadyProState");
 
           function showUpgradeInlineError(message) {{
             if (!upgradeInlineError) return;
@@ -3651,7 +3693,11 @@ def render_upgrade_page() -> str:
           async function refreshUpgradeAuthUi() {{
             if (!sbClient) {{
               console.log("Upgrade auth state:", "signed_out");
-              return {{ signedIn: false, token: null, email: "", isPro: false }};
+              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
+              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
+              if (proCard) proCard.classList.remove("hidden");
+              if (alreadyProState) alreadyProState.classList.add("hidden");
+              return {{ signedIn: false, token: null, email: "", plan: "signed_out", isPro: false }};
             }}
 
             const sessionResult = await sbClient.auth.getSession();
@@ -3662,8 +3708,13 @@ def render_upgrade_page() -> str:
             if (!signedIn) {{
               if (headerSignInLink) headerSignInLink.classList.remove("hidden");
               if (headerAccountWrap) headerAccountWrap.classList.add("hidden");
+              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
+              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
+              if (proCard) proCard.classList.remove("hidden");
+              if (alreadyProState) alreadyProState.classList.add("hidden");
               closeHeaderAccountMenu();
-              return {{ signedIn: false, token: null, email: "", isPro: false }};
+              console.log("Upgrade account state:", {{ signedIn: false, plan: "signed_out" }});
+              return {{ signedIn: false, token: null, email: "", plan: "signed_out", isPro: false }};
             }}
 
             const token = session.access_token;
@@ -3690,8 +3741,19 @@ def render_upgrade_page() -> str:
             if (headerAccountPlan) headerAccountPlan.textContent = "Plan: " + (isPro ? "Pro" : "Free");
             if (headerBillingBtn) headerBillingBtn.classList.toggle("hidden", !isPro);
             if (headerBillingNote) headerBillingNote.classList.toggle("hidden", isPro);
-
-            return {{ signedIn: true, token, email, isPro }};
+            if (isPro) {{
+              if (upgradeGrid) upgradeGrid.classList.add("hidden");
+              if (alreadyProState) alreadyProState.classList.remove("hidden");
+              if (oneTimeCard) oneTimeCard.classList.add("hidden");
+              if (proCard) proCard.classList.add("hidden");
+            }} else {{
+              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
+              if (alreadyProState) alreadyProState.classList.add("hidden");
+              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
+              if (proCard) proCard.classList.remove("hidden");
+            }}
+            console.log("Upgrade account state:", {{ signedIn: true, plan: isPro ? "signed_in_pro" : "signed_in_free" }});
+            return {{ signedIn: true, token, email, plan: isPro ? "signed_in_pro" : "signed_in_free", isPro }};
           }}
 
           async function startCheckout(plan, button) {{
@@ -3707,6 +3769,10 @@ def render_upgrade_page() -> str:
               const requiresSignIn = plan === "pro_monthly";
               const authState = await refreshUpgradeAuthUi();
               const token = authState.token;
+              if (authState.isPro) {{
+                showUpgradeInlineError(plan === "one_time" ? "You already have Pro access." : "You are already on Pro.");
+                return;
+              }}
               if (requiresSignIn && !authState.signedIn) {{
                 showUpgradeInlineError("Please sign in to start Pro monthly.");
                 return;
@@ -4209,16 +4275,23 @@ def create_checkout_session(
             user = None
 
     print("CHECKOUT_AUTH:", "signed_in" if user else "signed_out")
+    active_subscription = None
+    checkout_user_plan = "anonymous"
+    if user:
+        active_subscription = get_active_subscription(user["id"])
+        checkout_user_plan = "pro" if active_subscription else "free"
+    print("CHECKOUT_PLAN:", checkout_user_plan)
 
     if checkout_plan == "pro_monthly":
         if not user:
             raise HTTPException(status_code=401, detail="Please sign in to start Pro monthly.")
         upsert_profile(user["id"], user["email"])
-        active_subscription = get_active_subscription(user["id"])
         if active_subscription:
-            return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
+            raise HTTPException(status_code=400, detail="You are already on Pro.")
     elif user:
         upsert_profile(user["id"], user["email"])
+        if active_subscription:
+            raise HTTPException(status_code=400, detail="You already have Pro access.")
 
     track_event(
         event_name="upgrade_clicked",
