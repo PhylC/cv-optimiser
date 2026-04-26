@@ -360,7 +360,14 @@
     justify-content: space-between;
     align-items: center;
     gap: 18px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .account-menu {
@@ -438,7 +445,7 @@
   .logo-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     margin-bottom: 0;
   }
 
@@ -468,7 +475,7 @@
   }
 
   .logo-title {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 800;
     color: #E8EEFC;
     letter-spacing: -0.04em;
@@ -476,9 +483,25 @@
   }
 
   .logo-tag {
-    font-size: 13px;
-    color: #9FB0D4;
-    line-height: 1.25;
+    display: none;
+  }
+
+  .header-link {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    color: #dce5ff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .header-link:hover {
+    color: #ffffff;
+    transform: none;
   }
 
   .hero-eyebrow {
@@ -533,6 +556,14 @@
     line-height: 1.5;
   }
 
+  .action-line {
+    margin-top: 14px;
+    color: #e7eeff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
   .field-group {
     display: flex;
     flex-direction: column;
@@ -545,15 +576,15 @@
   }
 
   .example-preview {
-    padding: 14px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(92, 112, 150, 0.2);
-    background: rgba(10, 19, 35, 0.42);
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(92, 112, 150, 0.18);
+    background: linear-gradient(180deg, rgba(13, 24, 45, 0.62), rgba(10, 19, 35, 0.5));
   }
 
   .example-preview strong {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #EAF0FF;
     font-size: 14px;
   }
@@ -562,6 +593,36 @@
     color: #CCD7EF;
     font-size: 14px;
     line-height: 1.6;
+  }
+
+  .example-preview-score {
+    margin-bottom: 14px;
+    font-size: 28px;
+    font-weight: 800;
+    color: #f4f7ff;
+    letter-spacing: -0.04em;
+  }
+
+  .example-preview-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .example-preview-block strong {
+    margin-bottom: 6px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #a9bbe3;
+  }
+
+  .example-preview-block ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .example-preview-block li {
+    margin-bottom: 6px;
   }
 
   .sidebar-card {
@@ -638,9 +699,53 @@
     color: #9fb4db;
   }
 
+  .inline-example {
+    color: #cbd7ef;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .inline-example strong {
+    color: #eef3ff;
+  }
+
+  .tool-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .text-link-btn {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    color: #afc0ff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .text-link-btn:hover {
+    color: #dce5ff;
+    transform: none;
+  }
+
   .hero-proof-line {
     color: #b9c8e8;
     font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .hero-trust-line {
+    margin-top: 12px;
+    color: #dbe6ff;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.5;
   }
 
@@ -721,6 +826,18 @@
     margin-top: 28px;
   }
 
+  .example-card-title {
+    margin-bottom: 14px;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
   .hero-eyebrow::before {
     content: "";
     width: 8px;
@@ -778,6 +895,11 @@
       margin-bottom: 18px;
     }
 
+    .topbar-right {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
     .logo-mark {
       width: 46px;
       height: 46px;
@@ -817,6 +939,14 @@
     .result-summary-grid,
     .before-after {
       grid-template-columns: 1fr;
+    }
+
+    .desktop-only {
+      display: none;
+    }
+
+    .mobile-only {
+      display: block;
     }
   }
 
@@ -1518,6 +1648,7 @@
     </div>
 
     <div class="topbar-right">
+      <button id="headerSignInBtn" class="header-link" type="button">Sign in</button>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -1585,18 +1716,18 @@
   <div class="main-grid">
     <div class="main-column">
       <div class="card section primary-tool-card" style="overflow:hidden;">
-        <div class="section-title">Fix your CV in 60 seconds.</div>
+        <div class="section-title">Check how well your CV matches a job in 30 seconds</div>
         <div class="section-subtitle">
-          Get your CV score, see what recruiters skip, and learn exactly what to improve.
+          Paste a job description + your CV to get a score, keyword gaps and the top fixes instantly.
         </div>
-        <p class="small hero-proof-line">Built for job seekers who want practical, recruiter-style feedback — fast.</p>
+        <p class="hero-trust-line">Free check • No signup needed • Your CV isn’t stored</p>
 
         <div class="tool-form">
           <div class="tool-step">
             <label for="cvFileInput">Upload your CV</label>
             <div class="field-helper">PDF, DOCX or TXT</div>
             <div id="dropzone" class="dropzone">
-              <p><strong>Step 1: Upload CV</strong></p>
+              <p><strong>Upload your CV</strong></p>
               <p class="small">PDF, DOCX or TXT</p>
               <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
               <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
@@ -1611,6 +1742,10 @@
             </div>
           </details>
 
+          <div class="tool-actions-row">
+            <button id="tryExampleBtn" class="text-link-btn" type="button">Try with example CV</button>
+          </div>
+
           <div class="tool-step">
             <label for="jobDescription">Paste the job description</label>
             <div class="field-helper">Paste the job advert so we can compare your CV against the role.</div>
@@ -1618,10 +1753,11 @@
             <div class="field-helper">Don’t have a job description? You can still run a general CV check.</div>
           </div>
 
+          <p class="inline-example"><strong>Example result:</strong> Score 55 — missing key skills, weak summary, poor keyword match</p>
           <div>
             <button id="optimiseBtn" style="width:100%;">Get my CV score</button>
           </div>
-          <p class="small tool-trust-copy">Free check • No signup needed • Your CV isn’t stored</p>
+          <p class="small tool-trust-copy">No signup required. Takes 30 seconds.</p>
           <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
           <div id="loadingSteps" class="loading-steps hidden">
             <div class="loading-step">Checking CV structure…</div>
@@ -1638,13 +1774,29 @@
         <p id="status" class="small">Ready when you are.</p>
       </div>
 
-      <div class="card sidebar-secondary">
+      <div class="card sidebar-secondary mobile-only">
         <div class="section-title">Example result</div>
         <div class="example-preview">
-          <strong>CV Score: 55/100</strong>
-          <p>• Missing key skills</p>
-          <p>• Weak professional summary</p>
-          <p>• Poor keyword match</p>
+          <strong>Example result</strong>
+          <div class="example-preview-score">Match Score: 58/100</div>
+          <div class="example-preview-grid">
+            <div class="example-preview-block">
+              <strong>Missing keywords</strong>
+              <ul>
+                <li>stakeholder management</li>
+                <li>forecasting</li>
+                <li>P&amp;L</li>
+              </ul>
+            </div>
+            <div class="example-preview-block">
+              <strong>Top fixes</strong>
+              <ul>
+                <li>Add commercial metrics</li>
+                <li>Strengthen your summary</li>
+                <li>Match role keywords</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1849,7 +2001,33 @@
     </div>
 
     <div class="helper-column">
-      <div class="card sidebar-secondary">
+      <div class="card sidebar-secondary desktop-only">
+        <div class="section-title example-card-title">Example result</div>
+        <div class="example-preview">
+          <strong>Example result</strong>
+          <div class="example-preview-score">Match Score: 58/100</div>
+          <div class="example-preview-grid">
+            <div class="example-preview-block">
+              <strong>Missing keywords</strong>
+              <ul>
+                <li>stakeholder management</li>
+                <li>forecasting</li>
+                <li>P&amp;L</li>
+              </ul>
+            </div>
+            <div class="example-preview-block">
+              <strong>Top fixes</strong>
+              <ul>
+                <li>Add commercial metrics</li>
+                <li>Strengthen your summary</li>
+                <li>Match role keywords</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card sidebar-secondary desktop-only">
         <div class="section-title">How it works</div>
         <div class="mini-steps">
           <div class="mini-step">1. Upload CV</div>
@@ -1969,6 +2147,8 @@
     const status = document.getElementById("status");
     const toolLoadingNote = document.getElementById("toolLoadingNote");
     const loadingSteps = document.getElementById("loadingSteps");
+    const tryExampleBtn = document.getElementById("tryExampleBtn");
+    const pasteToggle = document.querySelector(".paste-toggle");
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("cvFileInput");
     const fileName = document.getElementById("fileName");
@@ -1991,6 +2171,7 @@
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const topStatusRow = document.getElementById("topStatusRow");
+    const headerSignInBtn = document.getElementById("headerSignInBtn");
     const accountChip = document.getElementById("accountChip");
     const accountEmail = document.getElementById("accountEmail");
     const accountPlanText = document.getElementById("accountPlanText");
@@ -2122,6 +2303,16 @@
       selectedFile = null;
       fileInput.value = "";
       fileName.textContent = "No file selected";
+    }
+
+    function fillExampleContent() {
+      resetSelectedFile();
+      if (pasteToggle) {
+        pasteToggle.open = true;
+      }
+      document.getElementById("cvText").value = "Customer Success Specialist with experience supporting client accounts, resolving issues, tracking renewals, and improving retention through clear communication and consistent follow-up.";
+      document.getElementById("jobDescription").value = "We are hiring a Customer Success Executive to manage client relationships, improve retention, support renewals, and work closely with sales and operations to deliver strong customer outcomes.";
+      status.textContent = "Example CV and job description added. Click Get my CV score when you're ready.";
     }
 
     function sleep(ms) {
@@ -2344,6 +2535,7 @@
           authStatus.textContent = "Not signed in. You can still run a free CV check.";
 
           authCard.classList.remove("hidden");
+          headerSignInBtn.classList.remove("hidden");
           accountMenuWrap.classList.add("hidden");
           closeAccountMenu();
 
@@ -2372,6 +2564,7 @@
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
 
         authCard.classList.add("hidden");
+        headerSignInBtn.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
         accountMenuLabel.textContent = session.user.email || "Signed in";
         accountEmail.textContent = session.user.email || "Signed in";
@@ -2492,6 +2685,11 @@ const result = await sbClient.auth.signInWithOtp({
         event.preventDefault();
         accountMenuDropdown.classList.toggle("hidden");
       }
+    });
+
+    headerSignInBtn.addEventListener("click", function() {
+      authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      emailInput.focus();
     });
 
     document.addEventListener("click", function(event) {
@@ -2818,6 +3016,19 @@ passwordLoginBtn.addEventListener("click", async function() {
     fileInput.addEventListener("change", function() {
       const file = fileInput.files[0];
       if (file) setSelectedFile(file);
+    });
+
+    if (pasteToggle) {
+      pasteToggle.addEventListener("toggle", function() {
+        if (pasteToggle.open) {
+          trackEvent("paste_cv_revealed");
+        }
+      });
+    }
+
+    tryExampleBtn.addEventListener("click", function() {
+      fillExampleContent();
+      trackEvent("sample_cv_clicked");
     });
 
     optimiseBtn.addEventListener("click", async function() {
