@@ -1722,6 +1722,28 @@
     overflow: hidden;
   }
 
+  .locked-preview-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .locked-preview-block {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(10, 19, 35, 0.34);
+    border: 1px solid rgba(92, 112, 150, 0.18);
+  }
+
+  .locked-preview-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #AFC0FF;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
   .locked-preview-copy {
     filter: blur(4px);
     opacity: 0.72;
@@ -2002,6 +2024,42 @@
   line-height: 1.6;
 }
 
+.checkout-option-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.checkout-option-secondary {
+  width: 100%;
+  justify-content: center;
+}
+
+.checkout-trust-line {
+  margin-top: 10px;
+}
+
+ .full-plan-ready {
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(91, 120, 255, 0.28);
+  background: linear-gradient(180deg, rgba(18, 31, 58, 0.92), rgba(12, 23, 43, 0.92));
+}
+
+.full-plan-ready-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #F4F7FF;
+  margin-bottom: 6px;
+}
+
+.full-plan-ready-copy {
+  color: #C7D4F1;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
   @media (max-width: 900px) {
     .result-grid-two {
       grid-template-columns: 1fr;
@@ -2253,9 +2311,14 @@
           </div>
 
           <div id="anonymousKeywordGapWrap" class="result-section hidden">
-            <div class="result-section-title">Keyword gap insight</div>
-            <div class="result-section-subtitle">One missing signal worth checking and strengthening.</div>
+            <div class="result-section-title">One more thing to fix</div>
+            <div class="result-section-subtitle">A high-impact issue worth fixing before you re-run your CV.</div>
             <p id="anonymousKeywordGap" class="result-paragraph"></p>
+          </div>
+
+          <div id="fullPlanReadyBanner" class="full-plan-ready hidden">
+            <div class="full-plan-ready-title">Your full CV improvement plan is ready</div>
+            <div class="full-plan-ready-copy">You can now see the deeper rewrite guidance, tailored bullet improvements, and detailed optimisation steps below.</div>
           </div>
 
           <div id="proSummaryWrap" class="result-section pro-premium hidden">
@@ -2366,20 +2429,26 @@
   <div class="results-upgrade-cta-copy">
     See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
   </div>
-  <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
+  <div class="checkout-option-stack">
+    <button id="resultsUpgradeBtn" type="button">Unlock full report — £7.99</button>
+    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary" type="button">Or get Pro — £9.99/month</button>
+  </div>
 </div>
 
-<div id="proUnlockPrompt" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Unlock the full CV improvement plan</div>
+  <div id="proUnlockPrompt" class="results-upgrade-cta hidden">
+  <div class="results-upgrade-cta-title">Unlock your full CV improvement plan</div>
   <div class="results-upgrade-cta-copy">
-    <p>Your free check shows what is holding your CV back. The full report shows exactly how to rewrite and improve it.</p>
-    <p>• Full professional summary rewrite</p>
-    <p>• Stronger bullet points tailored to the role</p>
-    <p>• Complete ATS keyword optimisation</p>
-    <p>• Detailed priority improvement plan</p>
-    <p>• Export-ready action checklist</p>
+    <p>Your CV has clear gaps. The full report shows exactly how to fix them.</p>
+    <p>• Full rewritten professional summary</p>
+    <p>• Stronger bullet points tailored to the job</p>
+    <p>• Complete keyword optimisation</p>
+    <p>• Step-by-step improvement plan</p>
   </div>
-  <button id="proUnlockBtn" type="button">Unlock full report</button>
+  <div class="checkout-option-stack">
+    <button id="proUnlockBtn" type="button">Unlock full report — £7.99</button>
+    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary" type="button">Or get Pro — £9.99/month</button>
+  </div>
+  <p class="small checkout-trust-line">No CV is stored. Takes less than a minute.</p>
 </div>
 
 <div id="lockedPreviewCard" class="results-upgrade-cta locked-preview hidden">
@@ -2387,8 +2456,19 @@
     <div class="results-upgrade-cta-title" style="margin-bottom:0;">Full CV rewrite (preview)</div>
     <span class="pro-badge">PRO</span>
   </div>
-  <div class="locked-preview-copy">
-    “Commercial account manager with experience building retail growth plans, improving forecasting visibility, and increasing revenue through better customer execution and stronger cross-functional alignment.”
+  <div class="locked-preview-grid">
+    <div class="locked-preview-block">
+      <span class="locked-preview-label">Professional summary</span>
+      <div class="locked-preview-copy">
+        “Commercial account manager with experience building retail growth plans, improving forecasting visibility, and increasing revenue through better customer execution and stronger cross-functional alignment.”
+      </div>
+    </div>
+    <div class="locked-preview-block">
+      <span class="locked-preview-label">Bullet improvements</span>
+      <div class="locked-preview-copy">
+        “Lifted forecast accuracy across retail accounts by turning account reviews into clearer actions, stronger commercial planning, and better revenue visibility.”
+      </div>
+    </div>
   </div>
   <div class="locked-preview-overlay">
     <span class="pro-badge">PRO</span>
@@ -2521,6 +2601,7 @@
 
     const optimiseBtn = document.getElementById("optimiseBtn");
     const resultsUpgradeBtn = document.getElementById("resultsUpgradeBtn");
+    const resultsUpgradeMonthlyBtn = document.getElementById("resultsUpgradeMonthlyBtn");
     const resultsUpgradeCta = document.getElementById("resultsUpgradeCta");
     const clearFileBtn = document.getElementById("clearFileBtn");
     const upgradeBtn = document.getElementById("upgradeBtn");
@@ -2589,6 +2670,8 @@
     const proUnlockPrompt = document.getElementById("proUnlockPrompt");
     const lockedPreviewCard = document.getElementById("lockedPreviewCard");
     const proUnlockBtn = document.getElementById("proUnlockBtn");
+    const proMonthlyBtn = document.getElementById("proMonthlyBtn");
+    const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
@@ -2690,14 +2773,97 @@
         upgradeBtn.textContent = "Upgrade to Pro";
         menuUpgradeBtn.textContent = "Upgrade to Pro";
         if (resultsUpgradeBtn) {
-          resultsUpgradeBtn.textContent = "Upgrade to Pro";
+          resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
         }
       } else {
         upgradeBtn.textContent = "Set a password to upgrade";
         menuUpgradeBtn.textContent = "Set a password to upgrade";
         if (resultsUpgradeBtn) {
-          resultsUpgradeBtn.textContent = "Set a password to unlock Pro";
+          resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
         }
+      }
+    }
+
+    function setCheckoutButtonState(button, isLoading, loadingText, defaultText) {
+      if (!button) return;
+
+      if (isLoading) {
+        if (!button.dataset.defaultText) {
+          button.dataset.defaultText = defaultText || button.textContent;
+        }
+        button.disabled = true;
+        button.textContent = loadingText || "Opening checkout…";
+        return;
+      }
+
+      button.disabled = false;
+      button.textContent = defaultText || button.dataset.defaultText || button.textContent;
+      delete button.dataset.defaultText;
+    }
+
+    async function openCheckout(plan, button) {
+      const defaultText = button ? button.textContent : "";
+      setCheckoutButtonState(button, true, "Opening checkout…", defaultText);
+
+      try {
+        if (!sbClient) {
+          status.textContent = "Auth is not configured.";
+          return;
+        }
+
+        const sessionResult = await sbClient.auth.getSession();
+        const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+        const token = await getSessionToken();
+
+        if (!token || !session) {
+          status.textContent = "Sign in first before upgrading.";
+          return;
+        }
+
+        if (passwordCard && !passwordCard.classList.contains("hidden")) {
+          status.textContent = "Please create your password before upgrading.";
+          openPasswordCardForUser(false);
+          return;
+        }
+
+        status.textContent = "Opening checkout…";
+
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ plan: plan })
+        });
+
+        const raw = await res.text();
+        console.log("checkout raw response:", raw);
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          status.textContent = "Checkout failed. Check Render logs.";
+          return;
+        }
+
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        if (data.code === "ALREADY_PRO") {
+          status.textContent = "You already have an active subscription.";
+          return;
+        }
+
+        status.textContent = data.detail || data.error || "Could not start checkout.";
+      } catch (err) {
+        console.error("upgrade error:", err);
+        status.textContent = "Upgrade failed. Check browser console.";
+      } finally {
+        setCheckoutButtonState(button, false, "Opening checkout…", defaultText);
       }
     }
 
@@ -3403,14 +3569,30 @@ passwordLoginBtn.addEventListener("click", async function() {
       trackEvent("results_upgrade_clicked");
       trackEvent("unlock_full_report_clicked");
       logEvent("upgrade_clicked");
-      upgradeBtn.click();
+      openCheckout("one_time", resultsUpgradeBtn);
+    });
+
+    if (resultsUpgradeMonthlyBtn) {
+      resultsUpgradeMonthlyBtn.addEventListener("click", function() {
+        trackEvent("results_upgrade_clicked");
+        logEvent("upgrade_clicked");
+        openCheckout("pro_monthly", resultsUpgradeMonthlyBtn);
+      });
     });
 
     proUnlockBtn.addEventListener("click", function() {
       trackEvent("pro_unlock_clicked");
       trackEvent("unlock_full_report_clicked");
       logEvent("upgrade_clicked");
-      upgradeBtn.click();
+      openCheckout("one_time", proUnlockBtn);
+    });
+
+    if (proMonthlyBtn) {
+      proMonthlyBtn.addEventListener("click", function() {
+        trackEvent("pro_unlock_clicked");
+        logEvent("upgrade_clicked");
+        openCheckout("pro_monthly", proMonthlyBtn);
+      });
     });
 
     recheckBtn.addEventListener("click", function() {
@@ -3463,58 +3645,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     upgradeBtn.addEventListener("click", async function() {
       console.log("upgrade clicked");
       logEvent("upgrade_clicked");
-
-      try {
-        if (!sbClient) {
-          status.textContent = "Auth is not configured.";
-          return;
-        }
-
-        const sessionResult = await sbClient.auth.getSession();
-        const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-        const token = await getSessionToken();
-
-        if (!token || !session) {
-          status.textContent = "Sign in first before upgrading.";
-          return;
-        }
-
-        // ONLY block upgrade if the password card is actually visible
-        if (passwordCard && !passwordCard.classList.contains("hidden")) {
-          status.textContent = "Please create your password before upgrading to Pro.";
-          openPasswordCardForUser(false);
-          return;
-        }
-
-        status.textContent = "Starting checkout...";
-
-        const res = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: { Authorization: "Bearer " + token }
-        });
-
-        const raw = await res.text();
-        console.log("checkout raw response:", raw);
-
-        let data;
-        try {
-          data = JSON.parse(raw);
-        } catch (e) {
-          status.textContent = "Checkout failed. Check Render logs.";
-          return;
-        }
-
-        if (data.url) {
-          window.location.href = data.url;
-        } else if (data.code === "ALREADY_PRO") {
-          status.textContent = "You already have an active Pro subscription.";
-        } else {
-          status.textContent = data.detail || data.error || "Could not start checkout.";
-        }
-      } catch (err) {
-        console.error("upgrade error:", err);
-        status.textContent = "Upgrade failed. Check browser console.";
-      }
+      openCheckout("pro_monthly", upgradeBtn);
     });
 
     dropzone.addEventListener("dragover", function(e) {
@@ -3697,8 +3828,8 @@ passwordLoginBtn.addEventListener("click", async function() {
         });
         anonymousPriorityWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.previewPriorityFixes && data.previewPriorityFixes.length));
 
-        anonymousKeywordGap.textContent = data.keywordGapInsight || "";
-        anonymousKeywordGapWrap.classList.add("hidden");
+        anonymousKeywordGap.textContent = data.keywordGapInsight || data.nextStep || "";
+        anonymousKeywordGapWrap.classList.toggle("hidden", !(data.isAnonymousResult && (data.keywordGapInsight || data.nextStep)));
 
         const priorityPreviewItems = (data.previewPriorityFixes && data.previewPriorityFixes.length)
           ? data.previewPriorityFixes.slice(0, 3)
@@ -3773,6 +3904,13 @@ passwordLoginBtn.addEventListener("click", async function() {
         setDiagnosisValue(resultImpactStatus, impactStatus);
 
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
+        const hasFullPlanContent = !!(
+          hasProfessionalSummary ||
+          (data.priorityFixes && data.priorityFixes.length) ||
+          (data.skillsSection && data.skillsSection.length) ||
+          (data.atsTips && data.atsTips.length) ||
+          (data.interviewRisks && data.interviewRisks.length)
+        );
         professionalSummaryEl.textContent = data.professionalSummary || "";
         proSummaryWrap.classList.toggle("hidden", !hasProfessionalSummary);
 
@@ -3795,6 +3933,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         bulletsWrap.classList.toggle("hidden", isAnonymousResult);
         bestNextStepWrap.classList.toggle("hidden", isAnonymousResult);
         resultDisclaimerWrap.classList.toggle("hidden", isAnonymousResult);
+        fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
         anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !data.isAnonymousResult);
         proUnlockPrompt.classList.toggle("hidden", !!isCurrentlyPro);

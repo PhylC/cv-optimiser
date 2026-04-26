@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from docx import Document
-from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
+from fastapi import Body, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -54,7 +54,7 @@ async def log_requests(request: Request, call_next):
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
-SITE_URL = "https://www.cv-optimiser.com"
+SITE_URL = os.getenv("SITE_URL", "https://www.cv-optimiser.com").strip().rstrip("/")
 FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
@@ -62,7 +62,8 @@ SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
-STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "").strip()
+STRIPE_PRICE_ONE_TIME = os.getenv("STRIPE_PRICE_ONE_TIME", "").strip()
+STRIPE_PRICE_PRO_MONTHLY = os.getenv("STRIPE_PRICE_PRO_MONTHLY", os.getenv("STRIPE_PRICE_ID", "")).strip()
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "").strip()
 
 if STRIPE_SECRET_KEY:
@@ -3955,7 +3956,10 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 
 
 @app.post("/api/create-checkout-session")
-def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+def create_checkout_session(
+    payload: Optional[dict[str, Any]] = Body(default=None),
+    authorization: Optional[str] = Header(None),
+) -> dict[str, Any]:
     user = get_user_from_token(authorization)
     upsert_profile(user["id"], user["email"])
     if not get_profile_password_ready(user["id"]):
@@ -3963,27 +3967,41 @@ def create_checkout_session(authorization: Optional[str] = Header(None)) -> dict
             "error": "Please create a password before upgrading to Pro.",
             "code": "PASSWORD_SETUP_REQUIRED"
         }
+    checkout_plan = (payload or {}).get("plan", "pro_monthly")
+    if checkout_plan not in {"one_time", "pro_monthly"}:
+        return {"error": "Invalid checkout plan.", "code": "INVALID_PLAN"}
     track_event(
         event_name="upgrade_clicked",
         user_id=user["id"],
         email=user["email"],
-        metadata={}
+        metadata={"checkout_plan": checkout_plan}
     )
     active_subscription = get_active_subscription(user["id"])
     if active_subscription:
         return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
-    if not STRIPE_PRICE_ID:
+
+    if checkout_plan == "one_time":
+        price_id = STRIPE_PRICE_ONE_TIME
+        mode = "payment"
+    else:
+        price_id = STRIPE_PRICE_PRO_MONTHLY
+        mode = "subscription"
+
+    if not price_id:
         raise HTTPException(status_code=500, detail="Stripe price ID not configured.")
 
     session = require_stripe().checkout.Session.create(
-    mode="subscription",
-    success_url=f"{APP_BASE_URL}/?checkout=success&session_id={{CHECKOUT_SESSION_ID}}",
-    cancel_url=f"{APP_BASE_URL}/cancel",
-    line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
-    customer_email=user["email"],
-    client_reference_id=user["id"],
-    metadata={"user_id": user["id"]},
-)
+        mode=mode,
+        success_url=f"{SITE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{SITE_URL}/cancel",
+        line_items=[{"price": price_id, "quantity": 1}],
+        customer_email=user["email"],
+        client_reference_id=user["id"],
+        metadata={
+            "user_id": user["id"],
+            "checkout_plan": checkout_plan,
+        },
+    )
     return {"url": session.url}
 
 
@@ -4138,6 +4156,20 @@ async def stripe_webhook(request: Request) -> JSONResponse:
     if event.type == "checkout.session.completed":
         session = event.data.object
         metadata = getattr(session, "metadata", None) or {}
+        checkout_mode = getattr(session, "mode", None)
+        session_id = getattr(session, "id", None)
+        customer_details = getattr(session, "customer_details", None)
+        customer_email = None
+        if customer_details is not None:
+            customer_email = getattr(customer_details, "email", None)
+            if customer_email is None and isinstance(customer_details, dict):
+                customer_email = customer_details.get("email")
+        if customer_email is None:
+            customer_email = getattr(session, "customer_email", None)
+        print(
+            f"PAYMENT_EVENT: checkout_completed mode={checkout_mode} "
+            f"customer_email={customer_email or ''} session_id={session_id or ''}"
+        )
         user_id = metadata.get("user_id") if isinstance(metadata, dict) else getattr(session, "client_reference_id", None)
         stripe_subscription_id = getattr(session, "subscription", None)
         stripe_customer_id = str(getattr(session, "customer", None)) if getattr(session, "customer", None) else None
