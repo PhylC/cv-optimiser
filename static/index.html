@@ -607,6 +607,12 @@
     color: #C3D1EE;
   }
 
+  .tool-free-copy {
+    margin-top: -2px;
+    color: #9FB0D4;
+    font-size: 13px;
+  }
+
   .example-preview {
     padding: 18px;
     border-radius: 16px;
@@ -714,6 +720,10 @@
   .mini-steps {
     display: grid;
     gap: 10px;
+  }
+
+  .mini-steps-inline {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .mini-step {
@@ -848,6 +858,48 @@
     margin-bottom: 8px;
     color: #eef3ff;
     font-size: 14px;
+  }
+
+  .simple-list {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .simple-list li {
+    margin-bottom: 8px;
+    color: #D7E2FA;
+  }
+
+  .trust-note {
+    margin-top: 14px;
+    color: #C9D7F6;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .proof-note {
+    margin-top: 10px;
+    color: #AFC0E4;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .faq-item strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #EEF3FF;
+    font-size: 14px;
+  }
+
+  .faq-item p {
+    color: #B7C6E6;
+    font-size: 14px;
+    line-height: 1.6;
   }
 
   .save-result-btn {
@@ -1178,7 +1230,8 @@
     .diagnosis-bar,
     .result-summary-grid,
     .result-grid-two,
-    .before-after {
+    .before-after,
+    .mini-steps-inline {
       grid-template-columns: 1fr;
     }
 
@@ -1915,9 +1968,9 @@
       <div class="card section primary-tool-card" style="overflow:hidden;">
         <div class="section-title">Check how well your CV matches a job in 30 seconds</div>
         <div class="section-subtitle">
-          Paste a job description + your CV to get a score, keyword gaps and the top fixes instantly.
+          Upload your CV, paste a job description, and get your score, missing keywords and top fixes instantly.
         </div>
-        <p class="hero-trust-line">Free check • No signup needed • Your CV isn’t stored</p>
+        <p class="hero-trust-line">Free check • No signup required • Your CV isn’t stored</p>
 
         <div class="tool-form">
           <div class="tool-step">
@@ -1955,6 +2008,7 @@
             <button id="optimiseBtn" style="width:100%;">Get my CV score</button>
           </div>
           <p class="small tool-trust-copy">No signup required. Takes 30 seconds.</p>
+          <p class="tool-free-copy">1 free CV check available — no card required</p>
           <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
           <div id="loadingSteps" class="loading-steps hidden">
             <div class="loading-step">Analyzing your CV...</div>
@@ -1970,6 +2024,27 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
+      </div>
+
+      <div class="card sidebar-secondary">
+        <div class="section-title">How it works</div>
+        <div class="mini-steps mini-steps-inline">
+          <div class="mini-step">1. Upload your CV</div>
+          <div class="mini-step">2. Paste the job description</div>
+          <div class="mini-step">3. Get your CV score and improvements</div>
+        </div>
+      </div>
+
+      <div class="card sidebar-secondary">
+        <div class="section-title">What you’ll get</div>
+        <ul class="simple-list">
+          <li>CV match score</li>
+          <li>Missing keywords</li>
+          <li>Top priority fixes</li>
+          <li>Improvement suggestions</li>
+        </ul>
+        <p class="trust-note">Your CV is not stored or shared. All analysis is secure and private.</p>
+        <p class="proof-note">Built for job seekers who want fast, practical CV feedback</p>
       </div>
 
       <div class="card sidebar-secondary mobile-only">
@@ -2229,6 +2304,28 @@
       </div>
 
       <div class="card sidebar-secondary">
+        <div class="section-title">Frequently asked questions</div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <strong>Do I need to create an account?</strong>
+            <p>No. You can run a free CV check without signing up.</p>
+          </div>
+          <div class="faq-item">
+            <strong>Is my CV stored?</strong>
+            <p>No. Your CV is only used to generate your result and is not stored.</p>
+          </div>
+          <div class="faq-item">
+            <strong>How accurate is the CV score?</strong>
+            <p>It’s based on keyword matching, structure and recruiter best practices.</p>
+          </div>
+          <div class="faq-item">
+            <strong>What do I get with the full report?</strong>
+            <p>A detailed improvement plan, keyword optimisation and stronger CV wording.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card sidebar-secondary">
         <div class="section-title">Example improvement</div>
         <div class="before-after">
           <div class="before-after-card">
@@ -2267,15 +2364,6 @@
               </ul>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="card sidebar-secondary desktop-only">
-        <div class="section-title">How it works</div>
-        <div class="mini-steps">
-          <div class="mini-step">1. Upload CV</div>
-          <div class="mini-step">2. Paste job</div>
-          <div class="mini-step">3. Get fixes</div>
         </div>
       </div>
 
