@@ -1031,6 +1031,12 @@ def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
     return rows[0] if rows else None
 
 
+def get_user_plan(user: Optional[dict[str, Any]]) -> str:
+    if not user:
+        return "free"
+    return "pro" if get_active_subscription(user["id"]) else "free"
+
+
 def save_subscription_for_user(
     user_id: str,
     stripe_customer_id: Optional[str],
@@ -3756,6 +3762,15 @@ def render_upgrade_page() -> str:
             return {{ signedIn: true, token, email, plan: isPro ? "signed_in_pro" : "signed_in_free", isPro }};
           }}
 
+          async function protectUpgradePage() {{
+            const authState = await refreshUpgradeAuthUi();
+            if (authState && authState.plan === "signed_in_pro") {{
+              window.location.href = "/cv-checker";
+              return true;
+            }}
+            return false;
+          }}
+
           async function startCheckout(plan, button) {{
             const originalText = button.textContent;
             let shouldResetButton = true;
@@ -3780,13 +3795,11 @@ def render_upgrade_page() -> str:
 
               const response = await fetch("/api/create-checkout-session", {{
                 method: "POST",
-                headers: token ? {{
+                headers: {{
                   "Content-Type": "application/json",
-                  "Authorization": "Bearer " + token
-                }} : {{
-                  "Content-Type": "application/json"
+                  "Authorization": "Bearer " + (token || "")
                 }},
-                body: JSON.stringify({{ plan }})
+                body: JSON.stringify({{ type: plan }})
               }});
 
               const data = await response.json();
@@ -3869,11 +3882,11 @@ def render_upgrade_page() -> str:
 
           if (sbClient) {{
             sbClient.auth.onAuthStateChange(function() {{
-              refreshUpgradeAuthUi();
+              protectUpgradePage();
             }});
           }}
 
-          refreshUpgradeAuthUi();
+          protectUpgradePage();
         </script>
       </body>
     </html>
@@ -4232,7 +4245,14 @@ def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     try:
         user = get_user_from_token(authorization)
         upsert_profile(user["id"], user["email"])
-        return {"user": user, "plan": get_plan_state(user["id"])}
+        plan_state = get_plan_state(user["id"])
+        plan_name = get_user_plan(user)
+        return {
+            "user": user,
+            "user_id": user["id"],
+            "plan": plan_state,
+            "plan_name": plan_name,
+        }
     except Exception as e:
         return {"error": str(e)}
 
@@ -4263,7 +4283,15 @@ def create_checkout_session(
     payload: Optional[dict[str, Any]] = Body(default=None),
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
-    checkout_plan = (payload or {}).get("plan", "pro_monthly")
+    raw_checkout_type = (payload or {}).get("plan") or (payload or {}).get("type") or "pro_monthly"
+    checkout_plan = {
+        "one_time": "one_time",
+        "one-time": "one_time",
+        "payment": "one_time",
+        "pro_monthly": "pro_monthly",
+        "pro": "pro_monthly",
+        "subscription": "pro_monthly",
+    }.get(str(raw_checkout_type).strip().lower())
     if checkout_plan not in {"one_time", "pro_monthly"}:
         return {"error": "Invalid checkout plan.", "code": "INVALID_PLAN"}
 
@@ -4275,11 +4303,8 @@ def create_checkout_session(
             user = None
 
     print("CHECKOUT_AUTH:", "signed_in" if user else "signed_out")
-    active_subscription = None
-    checkout_user_plan = "anonymous"
-    if user:
-        active_subscription = get_active_subscription(user["id"])
-        checkout_user_plan = "pro" if active_subscription else "free"
+    active_subscription = get_active_subscription(user["id"]) if user else None
+    checkout_user_plan = "anonymous" if not user else get_user_plan(user)
     print("CHECKOUT_PLAN:", checkout_user_plan)
 
     if checkout_plan == "pro_monthly":

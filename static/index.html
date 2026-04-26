@@ -1051,6 +1051,15 @@
     font-size: 14px;
   }
 
+  .rewrite-block .before-after-card:first-child {
+    border-color: rgba(92, 112, 150, 0.2);
+  }
+
+  .rewrite-block .before-after-card:last-child {
+    border-color: rgba(91, 120, 255, 0.28);
+    background: rgba(18, 31, 58, 0.52);
+  }
+
   .save-result-btn {
     width: 100%;
   }
@@ -1641,6 +1650,11 @@
     text-transform: uppercase;
   }
 
+  .tool-free-copy .plan-badge {
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
   .diagnosis-bar {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1702,6 +1716,37 @@
     font-size: 13px;
     color: #9FB0D4;
     margin-bottom: 14px;
+  }
+
+  .ranked-fixes {
+    counter-reset: ranked-fix;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .ranked-fixes li {
+    position: relative;
+    padding-left: 38px;
+    min-height: 28px;
+  }
+
+  .ranked-fixes li::before {
+    counter-increment: ranked-fix;
+    content: counter(ranked-fix);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(91, 120, 255, 0.18);
+    border: 1px solid rgba(91, 120, 255, 0.34);
+    color: #EAF0FF;
+    font-size: 12px;
+    font-weight: 800;
   }
 
   .result-list {
@@ -2028,6 +2073,11 @@
   line-height: 1.6;
 }
 
+.upgrade-gate {
+  border-color: rgba(91, 120, 255, 0.3);
+  background: linear-gradient(180deg, rgba(19, 33, 64, 0.9), rgba(12, 23, 43, 0.94));
+}
+
 .checkout-option-stack {
   display: flex;
   flex-direction: column;
@@ -2119,7 +2169,7 @@
           <div id="accountMenuLabel" class="account-menu-label">Signed in</div>
           <button id="menuPasswordBtn" class="secondary-btn" type="button">Password settings</button>
           <button id="menuSupportBtn" class="secondary-btn" type="button">Support</button>
-          <button id="menuUpgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
+          <button id="menuUpgradeBtn" class="secondary-btn" data-upgrade-link type="button">Upgrade to Pro</button>
           <button id="menuManageSubBtn" class="secondary-btn" type="button">Manage subscription</button>
           <button id="menuLogoutBtn" class="secondary-btn" type="button">Log out</button>
         </div>
@@ -2208,8 +2258,8 @@
           <div>
             <button id="optimiseBtn" style="width:100%;">Check my CV</button>
           </div>
-          <p class="small tool-trust-copy">No signup required. Takes 30 seconds.</p>
-          <p class="tool-free-copy">1 free CV check available — no card required</p>
+          <p id="toolTrustCopy" class="small tool-trust-copy">No signup required. Takes 30 seconds.</p>
+          <p id="toolFreeCopy" class="tool-free-copy" data-free-copy>1 free CV check available — no card required <span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
           <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
           <div id="loadingSteps" class="loading-steps hidden">
             <div class="loading-step">Scanning CV…</div>
@@ -2220,7 +2270,7 @@
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
-          <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
+          <button id="upgradeBtn" class="secondary-btn" data-upgrade-link type="button">Upgrade to Pro</button>
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
@@ -2286,8 +2336,8 @@
           </div>
 
           <div class="result-section">
-            <div class="result-section-title">Missing keywords</div>
-            <div class="result-section-subtitle">These missing terms make your CV look less aligned with the role.</div>
+            <div id="resultKeywordTitle" class="result-section-title">Missing keywords</div>
+            <div id="resultKeywordSubtitle" class="result-section-subtitle">These missing terms make your CV look less aligned with the role.</div>
             <ul id="resultKeywordPreview" class="result-list"></ul>
             <p id="resultKeywordTail" class="keyword-tail-note hidden">…and more in the full report</p>
           </div>
@@ -2295,7 +2345,7 @@
           <div class="result-section">
             <div class="result-section-title">Example improvement</div>
             <div class="result-section-subtitle">A stronger, more results-focused way to phrase the same experience.</div>
-            <div class="before-after">
+            <div class="before-after rewrite-block">
               <div class="before-after-card">
                 <strong>Before</strong>
                 <p id="resultExampleBefore">Responsible for managing customer accounts.</p>
@@ -2355,11 +2405,11 @@
 
           <div id="proPriorityWrap" class="result-section pro-premium hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-              <div class="result-section-title">Top priority fixes</div>
+              <div class="result-section-title">Fix these first to increase your score fastest</div>
               <span class="pro-badge">Pro</span>
             </div>
-            <div class="result-section-subtitle">The highest-impact changes to make first.</div>
-            <ul id="priorityFixes" class="result-list"></ul>
+            <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and interview chances.</div>
+            <ol id="priorityFixes" class="result-list ranked-fixes"></ol>
           </div>
 
           <div id="detailKeywordsWrap" class="result-grid-two">
@@ -2431,6 +2481,15 @@
             <p id="nextStep" class="result-paragraph"></p>
           </div>
 
+          <div id="proActionPlanWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Step-by-step improvement plan</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Work through these in order to improve your CV quickly and cleanly.</div>
+            <ol id="proActionPlan" class="result-list ranked-fixes"></ol>
+          </div>
+
           <div id="resultDisclaimerWrap" class="result-section" style="padding:14px 16px;">
             <p class="small">
               Always review and edit suggestions to make sure they remain fully accurate to your real experience, responsibilities, and results.
@@ -2459,14 +2518,10 @@
   <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
 </div>
 
-  <div id="proUnlockPrompt" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Unlock your full CV improvement plan</div>
+  <div id="proUnlockPrompt" class="results-upgrade-cta upgrade-gate hidden">
+  <div class="results-upgrade-cta-title">See exactly how to fix this</div>
   <div class="results-upgrade-cta-copy">
-    <p>Your CV has clear gaps. The full report shows exactly how to fix them.</p>
-    <p>• Full rewritten professional summary</p>
-    <p>• Stronger bullet points tailored to the job</p>
-    <p>• Complete keyword optimisation</p>
-    <p>• Step-by-step improvement plan</p>
+    <p>The full report includes rewritten sections, keywords, and a step-by-step improvement plan.</p>
   </div>
   <div class="checkout-option-stack">
     <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
@@ -2589,6 +2644,8 @@
     let shouldPromptPasswordSetup = false;
     let lastSignInMethod = null;
     let lastPlanJson = "";
+    let currentUser = null;
+    let currentPlan = "free";
     let historyLoadedForUserId = null;
 
     const optimiseBtn = document.getElementById("optimiseBtn");
@@ -2669,6 +2726,8 @@
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
     const resultKeywordPreview = document.getElementById("resultKeywordPreview");
     const resultKeywordTail = document.getElementById("resultKeywordTail");
+    const resultKeywordTitle = document.getElementById("resultKeywordTitle");
+    const resultKeywordSubtitle = document.getElementById("resultKeywordSubtitle");
     const scoreKicker = document.getElementById("scoreKicker");
     const resultPlanBadge = document.getElementById("resultPlanBadge");
     const resultStatusHeadline = document.getElementById("resultStatusHeadline");
@@ -2684,12 +2743,17 @@
     const proSkillsWrap = document.getElementById("proSkillsWrap");
     const proAtsWrap = document.getElementById("proAtsWrap");
     const proRisksWrap = document.getElementById("proRisksWrap");
+    const proActionPlanWrap = document.getElementById("proActionPlanWrap");
     const detailKeywordsWrap = document.getElementById("detailKeywordsWrap");
     const detailStrengthsWrap = document.getElementById("detailStrengthsWrap");
     const bulletsWrap = document.getElementById("bulletsWrap");
     const bestNextStepWrap = document.getElementById("bestNextStepWrap");
     const resultDisclaimerWrap = document.getElementById("resultDisclaimerWrap");
+    const proActionPlan = document.getElementById("proActionPlan");
     const resultsPanel = document.getElementById("results");
+    const toolTrustCopy = document.getElementById("toolTrustCopy");
+    const toolFreeCopy = document.getElementById("toolFreeCopy");
+    const toolPlanBadge = document.getElementById("toolPlanBadge");
     const loginPasswordInput = document.getElementById("loginPasswordInput");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
     const passwordCardTitle = document.getElementById("passwordCardTitle");
@@ -2707,10 +2771,116 @@
 
     function getCurrentAccountState(data) {
       if (data && data.plan && data.plan.is_pro) return "signed_in_pro";
+      if (currentPlan === "pro") return "signed_in_pro";
+      if (currentUser && currentPlan === "free") return "signed_in_free";
       if (accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro") return "signed_in_pro";
       if (data && data.plan) return "signed_in_free";
       if (accessToken) return "signed_in_free";
       return "signed_out";
+    }
+
+    function normalizeCurrentPlan(plan) {
+      if (!plan) return "free";
+      if (typeof plan === "string") return plan.toLowerCase() === "pro" ? "pro" : "free";
+      if (plan.is_pro) return "pro";
+      return "free";
+    }
+
+    function updateToolHelperCopy(accountState, plan) {
+      if (!toolTrustCopy || !toolFreeCopy || !toolLoadingNote) return;
+
+      const state = accountState || "signed_out";
+      if (toolPlanBadge) {
+        toolPlanBadge.classList.toggle("hidden", state !== "signed_in_pro");
+      }
+
+      if (state === "signed_in_pro") {
+        toolTrustCopy.textContent = "Pro active — unlimited CV checks available.";
+        toolFreeCopy.textContent = "Full reports included with your plan.";
+        if (toolPlanBadge) {
+          toolFreeCopy.appendChild(document.createTextNode(" "));
+          toolFreeCopy.appendChild(toolPlanBadge);
+        }
+        if (!loadingStageTimer) {
+          toolLoadingNote.textContent = "Full reports included with your plan.";
+        }
+        return;
+      }
+
+      if (state === "signed_in_free") {
+        toolTrustCopy.textContent = "You’re signed in on the free plan.";
+        const remaining = plan && typeof plan.remaining_free_analyses_today === "number"
+          ? plan.remaining_free_analyses_today
+          : 1;
+        toolFreeCopy.textContent = remaining === 1
+          ? "1 free CV check available today."
+          : String(remaining) + " free CV checks available today.";
+        if (!loadingStageTimer) {
+          toolLoadingNote.textContent = "You’re signed in on the free plan.";
+        }
+        return;
+      }
+
+      toolTrustCopy.textContent = "No signup required. Takes 30 seconds.";
+      toolFreeCopy.textContent = "1 free CV check available — no card required";
+      if (!loadingStageTimer) {
+        toolLoadingNote.textContent = "No signup needed for your first result";
+      }
+    }
+
+    function applyUserUi(plan) {
+      currentPlan = normalizeCurrentPlan(plan || currentPlan);
+
+      if (accountEmail && currentUser && currentUser.email) {
+        accountEmail.textContent = currentUser.email;
+      }
+
+      document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
+        el.style.display = currentPlan === "pro" ? "none" : "";
+      });
+
+      updateToolHelperCopy(getCurrentAccountState(plan ? { plan: plan } : null), plan || null);
+    }
+
+    async function loadUserState() {
+      if (!sbClient) {
+        currentUser = null;
+        currentPlan = "free";
+        applyUserUi(null);
+        return;
+      }
+
+      const sessionResult = await sbClient.auth.getSession();
+      const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+
+      if (!session) {
+        currentUser = null;
+        currentPlan = "free";
+        applyUserUi(null);
+        return;
+      }
+
+      currentUser = session.user || null;
+
+      try {
+        const response = await fetch("/api/me", {
+          headers: {
+            Authorization: "Bearer " + session.access_token
+          }
+        });
+        const data = await response.json();
+        currentPlan = normalizeCurrentPlan(data.plan);
+        applyUserUi(data.plan || null);
+      } catch (error) {
+        currentPlan = "free";
+        applyUserUi(null);
+      }
+    }
+
+    function resetToolHelperCopy(accountState, plan) {
+      stopLoadingStages();
+      loadingSteps.classList.add("hidden");
+      updateToolHelperCopy(accountState || getCurrentAccountState(), plan || null);
     }
 
     function openSupportModal() {
@@ -2841,13 +3011,11 @@
 
         const res = await fetch("/api/create-checkout-session", {
           method: "POST",
-          headers: token ? {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
-          } : {
-            "Content-Type": "application/json"
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + (token || "")
           },
-          body: JSON.stringify({ plan: plan })
+          body: JSON.stringify({ type: plan })
         });
 
         const raw = await res.text();
@@ -3101,14 +3269,17 @@
 
     function setPlanUi(plan) {
   if (!plan) {
+    currentPlan = "free";
     planBadge.textContent = "Plan: signed out";
     usageBadge.classList.add("hidden");
     topStatusRow.classList.add("hidden");
     upgradeBtn.classList.remove("hidden");
     upgradeBtn.textContent = "Upgrade to Pro";
+    applyUserUi(null);
     return;
   }
 
+  currentPlan = normalizeCurrentPlan(plan);
   topStatusRow.classList.add("hidden");
 
   planBadge.textContent = "Plan: " + plan.plan;
@@ -3117,10 +3288,12 @@
   if (plan.is_pro) {
     usageBadge.textContent = "Unlimited analyses";
     upgradeBtn.classList.add("hidden");
+    applyUserUi(plan);
   } else {
     usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
     upgradeBtn.classList.remove("hidden");
     upgradeBtn.textContent = "Upgrade to Pro";
+    applyUserUi(plan);
   }
 }
 
@@ -3202,6 +3375,7 @@
       try {
         if (!sbClient) {
           authStatus.textContent = "Add your Supabase URL and anon key in static/index.html to enable login.";
+          updateToolHelperCopy("signed_out", null);
           return;
         }
 
@@ -3210,6 +3384,8 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
+          currentUser = null;
+          currentPlan = "free";
           authTitle.textContent = "Create a free account to save your results";
           authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
           authStatus.textContent = "Not signed in. You can still run a free CV check.";
@@ -3242,6 +3418,7 @@
         }
 
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
+        currentUser = session.user || null;
 
         authCard.classList.add("hidden");
         headerSignInBtn.classList.add("hidden");
@@ -3270,6 +3447,7 @@
         }
 
         const isPro = !!(me.plan && me.plan.is_pro);
+        currentPlan = isPro ? "pro" : "free";
         accountPlanText.textContent = "Plan: " + (isPro ? "Pro" : "Free");
 
         if (isPro) {
@@ -3748,9 +3926,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         alert("Please add a job description or CV before running optimisation.");
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
-        toolLoadingNote.textContent = "No signup needed for your first result";
-        loadingSteps.classList.add("hidden");
-        stopLoadingStages();
+        resetToolHelperCopy();
         return;
       }
 
@@ -3758,9 +3934,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         status.textContent = "Paste your CV text or upload a CV file.";
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
-        toolLoadingNote.textContent = "No signup needed for your first result";
-        loadingSteps.classList.add("hidden");
-        stopLoadingStages();
+        resetToolHelperCopy();
         return;
       }
 
@@ -3793,9 +3967,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = "Server returned invalid response. Check Render logs.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
-          toolLoadingNote.textContent = "No signup needed for your first result";
-          loadingSteps.classList.add("hidden");
-          stopLoadingStages();
+          resetToolHelperCopy();
           return;
         }
 
@@ -3803,9 +3975,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = data.error || data.detail || "Something went wrong.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
-          toolLoadingNote.textContent = "No signup needed for your first result";
-          loadingSteps.classList.add("hidden");
-          stopLoadingStages();
+          resetToolHelperCopy();
           return;
         }
 
@@ -3814,9 +3984,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           setPlanUi(data.plan);
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
-          toolLoadingNote.textContent = "No signup needed for your first result";
-          loadingSteps.classList.add("hidden");
-          stopLoadingStages();
+          resetToolHelperCopy(getCurrentAccountState(data), data.plan || null);
           return;
         }
 
@@ -3824,9 +3992,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = data.error;
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
-          toolLoadingNote.textContent = "No signup needed for your first result";
-          loadingSteps.classList.add("hidden");
-          stopLoadingStages();
+          resetToolHelperCopy();
           return;
         }
 
@@ -3835,6 +4001,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         const accountState = getCurrentAccountState(data);
         const isCurrentlyPro = accountState === "signed_in_pro";
         const isAnonymousResult = !!data.isAnonymousResult;
+        const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
 
         document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
         document.getElementById("nextStep").textContent = data.nextStep || "";
@@ -3852,6 +4019,14 @@ passwordLoginBtn.addEventListener("click", async function() {
         resultPotentialCopy.textContent = isCurrentlyPro
           ? "Use the full guidance below to improve role fit, clarity, and keyword coverage."
           : narrative.potential;
+        if (resultKeywordTitle) {
+          resultKeywordTitle.textContent = isCurrentlyPro ? "Add these keywords to match the role" : "Missing keywords";
+        }
+        if (resultKeywordSubtitle) {
+          resultKeywordSubtitle.textContent = isCurrentlyPro
+            ? "Use these terms naturally across your summary, experience, and skills sections."
+            : "These missing terms make your CV look less aligned with the role.";
+        }
 
         const sections = [
           ["matchedKeywords", data.matchedKeywords || []],
@@ -3971,38 +4146,58 @@ passwordLoginBtn.addEventListener("click", async function() {
           (data.atsTips && data.atsTips.length) ||
           (data.interviewRisks && data.interviewRisks.length)
         );
+        const actionPlanItems = [];
+        (data.priorityFixes || []).slice(0, 3).forEach(function(item) {
+          if (item && !actionPlanItems.includes(item)) {
+            actionPlanItems.push(item);
+          }
+        });
+        if (data.nextStep && !actionPlanItems.includes(data.nextStep) && actionPlanItems.length < 3) {
+          actionPlanItems.push(data.nextStep);
+        }
+        if (data.missingKeywords && data.missingKeywords.length && actionPlanItems.length < 3) {
+          actionPlanItems.push("Add and support keywords like " + data.missingKeywords.slice(0, 2).join(" and ") + " where they genuinely match your experience.");
+        }
         professionalSummaryEl.textContent = data.professionalSummary || "";
-        proSummaryWrap.classList.toggle("hidden", !hasProfessionalSummary);
+        proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
 
-        proPriorityWrap.classList.toggle("hidden", !(data.priorityFixes && data.priorityFixes.length));
-        proSkillsWrap.classList.toggle("hidden", !(data.skillsSection && data.skillsSection.length));
-        proAtsWrap.classList.toggle("hidden", !(data.atsTips && data.atsTips.length));
-        proRisksWrap.classList.toggle("hidden", !(data.interviewRisks && data.interviewRisks.length));
+        proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.priorityFixes && data.priorityFixes.length));
+        proSkillsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.skillsSection && data.skillsSection.length));
+        proAtsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.atsTips && data.atsTips.length));
+        proRisksWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.interviewRisks && data.interviewRisks.length));
+        proActionPlan.innerHTML = "";
+        actionPlanItems.forEach(function(item) {
+          const li = document.createElement("li");
+          li.textContent = item;
+          proActionPlan.appendChild(li);
+        });
+        proActionPlanWrap.classList.toggle("hidden", !isCurrentlyPro || !actionPlanItems.length);
         const lockedInsights = document.getElementById("lockedInsights");
         if (lockedInsights) {
-          lockedInsights.classList.toggle("hidden", isCurrentlyPro || isAnonymousResult);
+          lockedInsights.classList.add("hidden");
         }
         resultsUpgradeCta.classList.add("hidden");
         anonymousSummaryWrap.classList.add("hidden");
         anonymousPriorityWrap.classList.add("hidden");
         anonymousKeywordGapWrap.classList.add("hidden");
-        detailKeywordsWrap.classList.toggle("hidden", isAnonymousResult);
-        detailStrengthsWrap.classList.toggle("hidden", isAnonymousResult);
-        bulletsWrap.classList.toggle("hidden", isAnonymousResult);
-        bestNextStepWrap.classList.toggle("hidden", isAnonymousResult);
-        resultDisclaimerWrap.classList.toggle("hidden", isAnonymousResult);
+        if (resultKeywordSection) {
+          resultKeywordSection.classList.toggle("hidden", !isCurrentlyPro);
+        }
+        detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
+        detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
+        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro);
+        bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
+        resultDisclaimerWrap.classList.toggle("hidden", !isCurrentlyPro);
         fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
         anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
         proUnlockPrompt.classList.toggle("hidden", isCurrentlyPro);
-        lockedPreviewCard.classList.toggle("hidden", isCurrentlyPro);
+        lockedPreviewCard.classList.add("hidden");
         resultsPanel.classList.remove("hidden");
         resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
         status.textContent = "Done.";
         status.classList.add("is-success");
-        toolLoadingNote.textContent = "No signup needed for your first result";
-        loadingSteps.classList.add("hidden");
-        stopLoadingStages();
+        resetToolHelperCopy(accountState, data.plan || null);
         trackEvent("result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         logEvent("cv_result_generated", { anonymous_result: isAnonymousResult, account_state: accountState });
         if (!isCurrentlyPro) {
@@ -4031,9 +4226,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         console.error(err);
         status.textContent = "Something went wrong. Check terminal or browser console for details.";
         status.classList.add("is-error");
-        toolLoadingNote.textContent = "No signup needed for your first result";
-        loadingSteps.classList.add("hidden");
-        stopLoadingStages();
+        resetToolHelperCopy();
       } finally {
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
@@ -4074,6 +4267,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     window.addEventListener("load", async function() {
       trackEvent("page_view");
       trackEvent("homepage_loaded");
+      await loadUserState();
       await refreshAuthUi();
       await handleCheckoutReturn();
     });
