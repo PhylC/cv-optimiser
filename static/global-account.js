@@ -69,10 +69,10 @@
   }
 
   function applyHeaderAccountUi(account) {
-    const signInLink = document.getElementById("headerSignInLink");
+    const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
     const accountWrap = document.getElementById("accountMenuWrap");
     const accountEmail = document.getElementById("accountEmail");
-    const accountPlan = document.getElementById("accountPlanText");
+    const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
     const billingBtn = document.getElementById("menuManageSubBtn");
     const dropdown = document.getElementById("accountDropdown");
 
@@ -183,6 +183,7 @@
   async function refreshGlobalAccountUi(options) {
     const account = await getAccountState(options);
     applyHeaderAccountUi(account);
+    console.log("GLOBAL_ACCOUNT_STATE", account);
     dispatchAccountState(account);
     return account;
   }

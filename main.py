@@ -1411,6 +1411,7 @@ def build_site_header_css() -> str:
             align-items: center;
             gap: 12px;
             margin-left: auto;
+            min-width: 0;
           }
           .site-nav {
             display: flex;
@@ -1488,6 +1489,13 @@ def build_site_header_css() -> str:
             gap: 2px;
             min-width: 0;
           }
+          .account-mobile-label {
+            display: none;
+            color: #F4F7FF;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.2;
+          }
           .account-email {
             max-width: 220px;
             color: #F4F7FF;
@@ -1562,32 +1570,57 @@ def build_site_header_css() -> str:
             color: #9FB0D4;
             cursor: default;
           }
-          @media (max-width: 900px) {
+          @media (max-width: 768px) {
             .site-header-inner {
+              display: grid;
+              grid-template-columns: minmax(0, 1fr) auto;
               gap: 12px;
+              align-items: center;
             }
             .site-nav {
               display: none;
+            }
+            .site-header-right {
+              display: contents;
+            }
+            .site-logo {
+              min-width: 0;
             }
             .site-logo-title {
               font-size: 22px;
             }
             .header-signin-link {
-              display: none;
-            }
-            .account-menu-button {
-              padding: 10px 12px;
-            }
-            .header-account-email {
-              max-width: 96px;
-            }
-            .header-account-plan {
-              display: none;
+              grid-column: 1 / -1;
+              width: 100%;
             }
             .site-header-cta {
-              margin-left: auto;
+              grid-column: 2;
+              grid-row: 1;
+              margin-left: 0;
               padding: 11px 14px;
               font-size: 13px;
+              white-space: nowrap;
+            }
+            .account-menu-wrap {
+              grid-column: 1 / -1;
+              width: 100%;
+            }
+            .account-menu-button {
+              width: 100%;
+              max-width: 100%;
+              justify-content: space-between;
+              padding: 10px 12px;
+            }
+            .account-email {
+              display: none;
+            }
+            .account-mobile-label {
+              display: inline;
+            }
+            .account-dropdown {
+              position: static;
+              width: 100%;
+              margin-top: 8px;
             }
           }
     """
@@ -1675,7 +1708,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         for key, href, label in nav_items
     )
     return f"""
-    <header class="site-header">
+    <header id="siteHeader" class="site-header">
       <div class="site-header-inner">
         <a href="/" class="site-logo">
           <span class="site-logo-mark">CV</span>
@@ -1685,12 +1718,13 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           <nav class="site-nav" aria-label="Primary">
             {nav_html}
           </nav>
-          <a href="/#authCard" id="headerSignInLink" class="header-signin-link">Sign in</a>
+          <a href="/#authCard" id="signInLink" class="header-signin-link">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
             <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
               <span class="account-chip-text">
+                <span class="account-mobile-label">Account</span>
                 <span id="accountEmail" class="account-email">Signed in</span>
-                <span id="accountPlanText" class="account-plan">Plan: Free</span>
+                <span id="accountPlan" class="account-plan">Plan: Free</span>
               </span>
               <span class="account-caret">▾</span>
             </button>

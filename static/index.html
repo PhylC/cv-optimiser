@@ -469,6 +469,7 @@
     align-items: center;
     gap: 12px;
     margin-left: auto;
+    min-width: 0;
   }
 
   .site-logo {
@@ -1399,6 +1400,14 @@
     min-width: 0;
   }
 
+  .account-mobile-label {
+    display: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #F3F7FF;
+    line-height: 1.2;
+  }
+
   .account-email {
     font-size: 12.5px;
     font-weight: 700;
@@ -1480,19 +1489,63 @@
     display: none;
   }
 
-  @media (max-width: 900px) {
-    .site-nav,
-    #headerSignInBtn {
+  @media (max-width: 768px) {
+    .site-header-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .site-nav {
       display: none;
     }
 
     .site-header-right {
-      margin-left: auto;
+      display: contents;
+    }
+
+    .site-logo {
+      min-width: 0;
+    }
+
+    .site-header-cta {
+      grid-column: 2;
+      grid-row: 1;
+      white-space: nowrap;
+      padding: 11px 14px;
+      font-size: 13px;
+    }
+
+    #signInLink {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .account-menu-wrap {
+      grid-column: 1 / -1;
+      width: 100%;
     }
 
     .account-menu-button {
       width: 100%;
       min-width: 0;
+      max-width: 100%;
+      justify-content: space-between;
+    }
+
+    .account-email {
+      display: none;
+    }
+
+    .account-mobile-label {
+      display: inline;
+    }
+
+    .account-dropdown {
+      position: static;
+      width: 100%;
+      margin-top: 8px;
     }
 
     .main-grid {
@@ -2116,7 +2169,7 @@
 </style>
 </head>
 <body>
-  <header class="site-header">
+  <header id="siteHeader" class="site-header">
     <div class="site-header-inner">
     <a href="/" class="site-logo logo-wrap">
       <div class="logo-mark">
@@ -2135,7 +2188,7 @@
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
         <a href="/upgrade" class="site-nav-link" data-upgrade-link>Upgrade</a>
       </nav>
-      <button id="headerSignInBtn" class="site-nav-link header-link" type="button">Sign in</button>
+      <button id="signInLink" class="site-nav-link header-link" type="button">Sign in</button>
       <a href="/#tool" class="site-header-cta">Check my CV</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
@@ -2145,8 +2198,9 @@
       <div id="accountMenuWrap" class="account-menu-wrap hidden">
         <button type="button" id="accountMenuButton" class="account-menu-button" aria-expanded="false" aria-controls="accountDropdown">
           <span class="account-chip-text">
+            <span class="account-mobile-label">Account</span>
             <span id="accountEmail" class="account-email">Logged out</span>
-            <span id="accountPlanText" class="account-plan">Plan: Free</span>
+            <span id="accountPlan" class="account-plan">Plan: Free</span>
           </span>
           <span class="account-caret">⌄</span>
         </button>
@@ -2665,10 +2719,10 @@
     const planBadge = document.getElementById("planBadge");
     const usageBadge = document.getElementById("usageBadge");
     const topStatusRow = document.getElementById("topStatusRow");
-    const headerSignInBtn = document.getElementById("headerSignInBtn");
+    const headerSignInBtn = document.getElementById("signInLink") || document.getElementById("headerSignInBtn");
     const accountMenuButton = document.getElementById("accountMenuButton");
     const accountEmail = document.getElementById("accountEmail");
-    const accountPlanText = document.getElementById("accountPlanText");
+    const accountPlanText = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
     const accountMenuWrap = document.getElementById("accountMenuWrap");
     const accountDropdown = document.getElementById("accountDropdown");
     const menuUpgradeBtn = document.getElementById("menuUpgradeBtn");
