@@ -1285,13 +1285,19 @@
     .result-grid-two,
     .before-after,
     .mini-steps-inline,
-    .trust-row {
+    .trust-row,
+    .site-footer-grid {
       grid-template-columns: 1fr;
     }
 
     .recheck-btn {
       width: 100%;
       min-width: 0;
+    }
+
+    .site-footer {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 
@@ -1806,72 +1812,69 @@
     color: #FFC0C0;
   }
 
-  .footer-shell {
-    margin-top: 28px;
-    padding: 18px 0 6px;
+  .site-footer {
+    margin-top: 36px;
+    padding: 20px 4px 10px;
     border-top: 1px solid rgba(80, 103, 146, 0.24);
   }
 
-  .footer-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+  .site-footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
   }
 
-  .footer-copy {
-    max-width: 58ch;
-  }
-
-  .footer-title {
+  .site-footer-title {
     color: #E9EEFC;
     font-size: 14px;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
-  .footer-copy p {
+  .site-footer-brand p {
     font-size: 13px;
     color: #9FB0D4;
     line-height: 1.6;
+    margin: 0;
+    max-width: 28ch;
   }
 
-  .footer-links {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+  .site-footer-links-group {
+    display: grid;
+    gap: 8px;
   }
 
-  .footer-links a,
-  .footer-links button {
-    color: #C9D7F6;
+  .site-footer-links-group a,
+  .site-footer-links-group button {
+    color: #AFC0FF;
     font-size: 13px;
     background: none;
     border: none;
     padding: 0;
     margin: 0;
     box-shadow: none;
-    text-decoration: none;
-  }
-
-  .footer-links a:hover,
-  .footer-links button:hover {
-    color: #FFFFFF;
-    transform: none;
-    text-decoration: underline;
-  }
-
-  .support-link {
-    color: #C9D7F6;
     text-decoration: underline;
     text-underline-offset: 2px;
-    cursor: pointer;
+    text-align: left;
   }
 
-  .support-link:hover {
+  .site-footer-links-group a:hover,
+  .site-footer-links-group button:hover {
     color: #FFFFFF;
+    transform: none;
+  }
+
+  .site-footer-bottom {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(80, 103, 146, 0.16);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: #8FA3CD;
+    font-size: 12px;
   }
 
   .upgrade-cta-card {
@@ -2505,16 +2508,31 @@
     </div>
   </div>
 
-<footer style="margin-top:36px; padding:18px 4px 10px; border-top:1px solid rgba(80,103,146,0.28); color:#9FB0D4; font-size:13px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
-    <a href="/cv-checker" class="footer-link">CV Checker</a>
-    <a href="/ats-cv-checker" class="footer-link">ATS CV Checker</a>
-    <a href="/cv-keyword-optimiser" class="footer-link">CV Keyword Optimiser</a>
-    <a href="/cv-improvement-tool" class="footer-link">CV Improvement Tool</a>
-    <a href="/faq" class="footer-link">FAQ</a>
-    <a href="/privacy" class="footer-link">Privacy</a>
-    <a href="/terms" class="footer-link">Terms</a>
-    <a href="/billing" class="footer-link">Billing & cancellation</a>
-    <button id="footerSupportBtn" type="button" class="footer-link">Support</button>
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="site-footer-brand">
+        <div class="site-footer-title">CV Optimiser</div>
+        <p>Fast, practical CV feedback for job applications</p>
+      </div>
+      <div class="site-footer-links-group">
+        <a href="/cv-checker">CV Checker</a>
+        <a href="/ats-cv-checker">ATS CV Checker</a>
+        <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+        <a href="/cv-improvement-tool">CV Improvement Tool</a>
+      </div>
+      <div class="site-footer-links-group">
+        <a href="/how-it-works">How it works</a>
+        <a href="/features">Features</a>
+        <a href="/faq">FAQ</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/about">About</a>
+      </div>
+    </div>
+    <div class="site-footer-bottom">
+      <span>© 2026 CV Optimiser</span>
+      <span>Secure • Private • No CV storage</span>
+    </div>
   </footer>
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
@@ -3239,12 +3257,14 @@ const result = await sbClient.auth.signInWithOtp({
       supportModal.classList.remove("hidden");
     });
 
-    footerSupportBtn.addEventListener("click", function() {
-      supportStatus.textContent = "";
-      supportStatus.classList.remove("support-success");
-      trackEvent("support_opened", { source: "footer" });
-      openSupportModal();
-    });
+    if (footerSupportBtn) {
+      footerSupportBtn.addEventListener("click", function() {
+        supportStatus.textContent = "";
+        supportStatus.classList.remove("support-success");
+        trackEvent("support_opened", { source: "footer" });
+        openSupportModal();
+      });
+    }
 
     closeSupportModalBtn.addEventListener("click", function() {
       supportModal.classList.add("hidden");

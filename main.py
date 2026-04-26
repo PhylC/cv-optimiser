@@ -138,6 +138,65 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
     },
 }
 
+SUPPORT_PAGES: dict[str, dict[str, Any]] = {
+    "how-it-works": {
+        "title": "How It Works | CV Optimiser",
+        "description": "See how CV Optimiser checks your CV against a job description and shows your score, missing keywords and top fixes.",
+        "h1": "How CV Optimiser works",
+        "intro": "CV Optimiser is designed to give job seekers fast, practical feedback before they apply. The process is simple and keeps the main focus on helping you improve your CV for a real role.",
+        "sections": [
+            ("1. Upload your CV", "Upload a PDF, DOCX or TXT version of your CV, or paste the text directly into the tool."),
+            ("2. Paste the job description", "Paste the role you want to apply for so the tool can compare your CV against the real requirements."),
+            ("3. Get your score and fixes", "You’ll see a CV match score, missing keywords, priority fixes and practical improvement ideas in seconds."),
+        ],
+    },
+    "features": {
+        "title": "Features | CV Optimiser",
+        "description": "Explore the main CV Optimiser features including CV scoring, keyword gap detection, ATS checks and recruiter-style feedback.",
+        "h1": "CV Optimiser features",
+        "intro": "CV Optimiser focuses on the parts of CV feedback that matter most when you are applying for a real job and need clear next steps.",
+        "sections": [
+            ("CV match score", "See how closely your CV aligns with the role before you apply."),
+            ("Missing keyword detection", "Spot the role-specific terms your CV is missing or not supporting strongly enough."),
+            ("Priority fixes", "Get the top improvements most likely to raise your interview chances."),
+            ("Full report upgrade", "Unlock deeper feedback, stronger wording and a more detailed improvement plan when you need more help."),
+        ],
+    },
+    "about": {
+        "title": "About | CV Optimiser",
+        "description": "Learn what CV Optimiser is built for and why it focuses on fast, practical CV feedback for real job applications.",
+        "h1": "About CV Optimiser",
+        "intro": "CV Optimiser was built for job seekers who want quick, useful CV feedback before applying. Instead of generic advice, the goal is to help you compare your CV against a specific role and see what needs to improve first.",
+        "sections": [
+            ("Built for real applications", "The tool is designed around the way recruiters and ATS systems evaluate relevance, clarity and evidence of fit."),
+            ("Practical before perfect", "The focus is on actionable improvements you can actually use, not bloated reports or vague encouragement."),
+            ("Free first value", "You can run a free check before deciding whether you want to save your result or unlock the full report."),
+        ],
+    },
+    "privacy": {
+        "title": "Privacy | CV Optimiser",
+        "description": "Read how CV Optimiser handles your CV, job descriptions, account details and support messages.",
+        "h1": "Privacy",
+        "intro": "CV Optimiser processes the information you provide so it can analyse your CV, return your result, and support account and billing functions where needed.",
+        "sections": [
+            ("What we process", "This can include CV text, job descriptions, account details and support messages that you choose to provide."),
+            ("Payments and support", "Payments are handled by Stripe and support forms are handled by Formspree."),
+            ("Using your result responsibly", "You should review and edit generated suggestions before using them in any application."),
+        ],
+    },
+    "terms": {
+        "title": "Terms | CV Optimiser",
+        "description": "Read the core terms for using CV Optimiser, including your responsibility for reviewing generated CV suggestions.",
+        "h1": "Terms",
+        "intro": "CV Optimiser provides CV improvement suggestions and analysis for informational purposes. You are responsible for checking that your final CV remains truthful, accurate and appropriate for the role.",
+        "sections": [
+            ("Using the tool", "The service is designed to help you improve your CV, but you remain responsible for all final application content."),
+            ("Subscriptions", "If you choose Pro, subscriptions renew according to your Stripe billing settings until cancelled."),
+            ("Final responsibility", "You should review all generated suggestions and make sure they accurately reflect your real experience and achievements."),
+        ],
+    },
+}
+
 
 def require_openai() -> OpenAI:
     if not openai_client:
@@ -708,6 +767,37 @@ def build_software_json_ld(url: str) -> str:
     )
 
 
+def build_site_footer() -> str:
+    return """
+    <footer class="site-footer">
+      <div class="site-footer-grid">
+        <div class="site-footer-brand">
+          <div class="site-footer-title">CV Optimiser</div>
+          <p>Fast, practical CV feedback for job applications</p>
+        </div>
+        <div class="site-footer-links-group">
+          <a href="/cv-checker">CV Checker</a>
+          <a href="/ats-cv-checker">ATS CV Checker</a>
+          <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+          <a href="/cv-improvement-tool">CV Improvement Tool</a>
+        </div>
+        <div class="site-footer-links-group">
+          <a href="/how-it-works">How it works</a>
+          <a href="/features">Features</a>
+          <a href="/faq">FAQ</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+          <a href="/about">About</a>
+        </div>
+      </div>
+      <div class="site-footer-bottom">
+        <span>© 2026 CV Optimiser</span>
+        <span>Secure • Private • No CV storage</span>
+      </div>
+    </footer>
+    """
+
+
 def render_seo_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
     faq_html = "".join(
@@ -868,25 +958,60 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             color: #EEF3FF;
             font-size: 14px;
           }}
-          .nav-links, .footer-links {{
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
+          .site-footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
           }}
-          .nav-links a, .footer-links a {{
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
             font-size: 13px;
           }}
-          footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          .site-footer a:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
           }}
           @media (max-width: 900px) {{
             .layout {{
               grid-template-columns: 1fr;
+            }}
+            .site-footer-grid {{
+              grid-template-columns: 1fr;
+              gap: 16px;
             }}
           }}
         </style>
@@ -928,19 +1053,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             <h2>Frequently asked questions</h2>
             <div class="faq-list">{faq_html}</div>
           </div>
-
-          <footer>
-            <div class="footer-links">
-              <a href="/cv-checker">CV Checker</a>
-              <a href="/ats-cv-checker">ATS CV Checker</a>
-              <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-              <a href="/cv-improvement-tool">CV Improvement Tool</a>
-              <a href="/faq">FAQ</a>
-              <a href="/privacy">Privacy</a>
-              <a href="/terms">Terms</a>
-              <a href="/billing">Billing &amp; cancellation</a>
-            </div>
-          </footer>
+          {build_site_footer()}
         </div>
       </body>
     </html>
@@ -1023,7 +1136,7 @@ def render_faq_page() -> str:
           }}
           .logo-title strong {{ font-weight: 800; }}
           .logo-title span {{ font-weight: 400; }}
-          .header-link, .footer-links a {{
+          .header-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1058,15 +1171,52 @@ def render_faq_page() -> str:
             color: #EEF3FF;
             font-size: 15px;
           }}
-          footer {{
+          .site-footer {{
             margin-top: 32px;
             padding-top: 18px;
             border-top: 1px solid rgba(80, 103, 146, 0.24);
           }}
-          .footer-links {{
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
             display: flex;
-            gap: 14px;
+            justify-content: space-between;
+            gap: 12px;
             flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
+          }}
+          @media (max-width: 900px) {{
+            .site-footer-grid {{
+              grid-template-columns: 1fr;
+              gap: 16px;
+            }}
           }}
         </style>
       </head>
@@ -1084,15 +1234,186 @@ def render_faq_page() -> str:
             <p>Answers about free usage, privacy, CV scoring and what you get with the full report.</p>
             <div class="faq-list">{faq_html}</div>
           </div>
-          <footer>
-            <div class="footer-links">
-              <a href="/cv-checker">CV Checker</a>
-              <a href="/ats-cv-checker">ATS CV Checker</a>
-              <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-              <a href="/cv-improvement-tool">CV Improvement Tool</a>
-              <a href="/faq">FAQ</a>
-            </div>
-          </footer>
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
+def render_support_page(slug: str, page: dict[str, Any]) -> str:
+    page_url = f"{SITE_URL}/{slug}"
+    sections_html = "".join(
+        f"""
+        <div class="section-block">
+          <h2>{html.escape(title)}</h2>
+          <p>{html.escape(copy)}</p>
+        </div>
+        """
+        for title, copy in page["sections"]
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(page["title"])}</title>
+        <meta name="description" content="{html.escape(page["description"])}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(page["title"])}">
+        <meta property="og:description" content="{html.escape(page["description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(page["title"])}">
+        <meta name="twitter:description" content="{html.escape(page["description"])}">
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{ font-weight: 800; }}
+          .logo-title span {{ font-weight: 400; }}
+          .header-link, .site-footer a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 13px;
+          }}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          h1 {{
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          h2 {{
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #EEF3FF;
+          }}
+          p {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          .section-block + .section-block {{
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.18);
+          }}
+          .site-footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
+          }}
+          @media (max-width: 900px) {{
+            .site-footer-grid {{
+              grid-template-columns: 1fr;
+              gap: 16px;
+            }}
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#authCard" class="header-link">Sign in</a>
+          </div>
+          <div class="card">
+            <h1>{html.escape(page["h1"])}</h1>
+            <p>{html.escape(page["intro"])}</p>
+            {sections_html}
+          </div>
+          {build_site_footer()}
         </div>
       </body>
     </html>
@@ -1129,6 +1450,21 @@ def faq_page() -> str:
     return render_faq_page()
 
 
+@app.get("/how-it-works", response_class=HTMLResponse)
+def how_it_works_page() -> str:
+    return render_support_page("how-it-works", SUPPORT_PAGES["how-it-works"])
+
+
+@app.get("/features", response_class=HTMLResponse)
+def features_page() -> str:
+    return render_support_page("features", SUPPORT_PAGES["features"])
+
+
+@app.get("/about", response_class=HTMLResponse)
+def about_page() -> str:
+    return render_support_page("about", SUPPORT_PAGES["about"])
+
+
 @app.get("/success")
 def success() -> FileResponse:
     return FileResponse("static/success.html")
@@ -1141,49 +1477,12 @@ def cancel() -> FileResponse:
 
 @app.get("/privacy", response_class=HTMLResponse)
 def privacy_page() -> str:
-    return """
-    <html>
-      <head>
-        <title>Privacy | CV Optimiser</title>
-        <style>
-          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
-          h1,h2 { color: #FFFFFF; }
-          a { color: #9AB0FF; }
-          p, li { color: #C7D3EE; }
-        </style>
-      </head>
-      <body>
-        <h1>Privacy Policy</h1>
-        <p>CV Optimiser processes the information you provide, including CV text, job descriptions, account details, and support messages, to deliver the service.</p>
-        <p>Payments are handled by Stripe. Support forms are handled by Formspree. We do not display your email address publicly.</p>
-        <p>You are responsible for reviewing and editing generated suggestions before using them.</p>
-        <p><a href="/">Back to CV Optimiser</a></p>
-      </body>
-    </html>
-    """
+    return render_support_page("privacy", SUPPORT_PAGES["privacy"])
 
 
 @app.get("/terms", response_class=HTMLResponse)
 def terms_page() -> str:
-    return """
-    <html>
-      <head>
-        <title>Terms | CV Optimiser</title>
-        <style>
-          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
-          h1,h2 { color: #FFFFFF; }
-          a { color: #9AB0FF; }
-          p, li { color: #C7D3EE; }
-        </style>
-      </head>
-      <body>
-        <h1>Terms of Use</h1>
-        <p>CV Optimiser provides CV improvement suggestions and analysis for informational purposes. You remain responsible for checking that all final content is truthful and appropriate.</p>
-        <p>Subscriptions renew according to your Stripe billing settings until cancelled.</p>
-        <p><a href="/">Back to CV Optimiser</a></p>
-      </body>
-    </html>
-    """
+    return render_support_page("terms", SUPPORT_PAGES["terms"])
 
 
 @app.get("/billing", response_class=HTMLResponse)
