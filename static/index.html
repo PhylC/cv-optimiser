@@ -149,6 +149,20 @@
     color: #E8EEFC;
   }
 
+  .checkout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .checkout-btn.secondary {
+    background: rgba(20, 35, 60, 0.72);
+    box-shadow: none;
+    border: 1px solid rgba(92, 112, 150, 0.26);
+    color: #E8EEFC;
+  }
+
   .card {
     background: rgba(15, 28, 50, 0.78);
     border: 1px solid rgba(92, 112, 150, 0.24);
@@ -2423,8 +2437,8 @@
     See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
   </div>
   <div class="checkout-option-stack">
-    <button id="resultsUpgradeBtn" class="unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
-    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+    <button id="resultsUpgradeMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
   <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
 </div>
@@ -2439,8 +2453,8 @@
     <p>• Step-by-step improvement plan</p>
   </div>
   <div class="checkout-option-stack">
-    <button id="unlockFullReportBtn" class="unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
-    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+    <button id="proMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
   <p class="small checkout-trust-line">No CV is stored. Takes less than a minute.</p>
 </div>
@@ -2772,26 +2786,36 @@
       setCheckoutButtonState(button, true, "Opening checkout…", defaultText);
 
       try {
-        if (!sbClient) {
+        const requiresSignIn = plan === "pro_monthly";
+
+        if (!sbClient && requiresSignIn) {
           status.textContent = "Auth is not configured.";
           showCheckoutError("Could not open checkout. Please try again.");
           return;
         }
 
-        const sessionResult = await sbClient.auth.getSession();
-        const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-        const token = await getSessionToken();
+        let session = null;
+        let token = null;
+        if (sbClient) {
+          const sessionResult = await sbClient.auth.getSession();
+          session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+          token = await getSessionToken();
+        }
 
-        if (!token || !session) {
-          status.textContent = "Sign in first before upgrading.";
-          showCheckoutError("Please sign in before opening checkout.");
+        if (requiresSignIn && (!token || !session)) {
+          status.textContent = "Sign in to start Pro monthly.";
+          showCheckoutError("Sign in to start Pro monthly.");
+          if (authCard) {
+            authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
           return;
         }
 
-        if (passwordCard && !passwordCard.classList.contains("hidden")) {
+        if (requiresSignIn && passwordCard && !passwordCard.classList.contains("hidden")) {
           status.textContent = "Please create your password before upgrading.";
           showCheckoutError("Please create your password before opening checkout.");
           openPasswordCardForUser(false);
+          passwordCard.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
         }
 
@@ -2799,8 +2823,10 @@
 
         const res = await fetch("/api/create-checkout-session", {
           method: "POST",
-          headers: {
+          headers: token ? {
             Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+          } : {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({ plan: plan })
@@ -3653,28 +3679,37 @@ passwordLoginBtn.addEventListener("click", async function() {
       trackEvent("sample_cv_clicked");
     });
 
-    document.addEventListener("click", function(event) {
-      const checkoutButton = event.target.closest("[data-checkout-plan]");
-      if (!checkoutButton) return;
+    (function () {
+      if (window.__cvCheckoutHandlerInstalled) return;
+      window.__cvCheckoutHandlerInstalled = true;
 
-      event.preventDefault();
-      const plan = checkoutButton.getAttribute("data-checkout-plan");
+      document.addEventListener("click", function(event) {
+        const checkoutButton = event.target.closest("[data-checkout-plan]");
+        if (!checkoutButton) return;
 
-      if (checkoutButton === resultsUpgradeBtn) {
-        trackEvent("results_upgrade_clicked");
-        trackEvent("unlock_full_report_clicked");
-      } else if (checkoutButton === resultsUpgradeMonthlyBtn) {
-        trackEvent("results_upgrade_clicked");
-      } else if (checkoutButton === unlockFullReportBtn) {
-        trackEvent("pro_unlock_clicked");
-        trackEvent("unlock_full_report_clicked");
-      } else if (checkoutButton === proMonthlyBtn) {
-        trackEvent("pro_unlock_clicked");
-      }
+        event.preventDefault();
+        const plan = checkoutButton.getAttribute("data-checkout-plan");
+        if (!plan) {
+          showCheckoutError("Could not open checkout. Please try again.");
+          return;
+        }
 
-      logEvent("upgrade_clicked");
-      startCheckout(plan, checkoutButton);
-    });
+        if (checkoutButton === resultsUpgradeBtn) {
+          trackEvent("results_upgrade_clicked");
+          trackEvent("unlock_full_report_clicked");
+        } else if (checkoutButton === resultsUpgradeMonthlyBtn) {
+          trackEvent("results_upgrade_clicked");
+        } else if (checkoutButton === unlockFullReportBtn) {
+          trackEvent("pro_unlock_clicked");
+          trackEvent("unlock_full_report_clicked");
+        } else if (checkoutButton === proMonthlyBtn) {
+          trackEvent("pro_unlock_clicked");
+        }
+
+        logEvent("upgrade_clicked");
+        startCheckout(plan, checkoutButton);
+      });
+    })();
 
     optimiseBtn.addEventListener("click", async function() {
       optimiseBtn.disabled = true;

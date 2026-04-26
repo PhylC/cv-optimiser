@@ -1581,7 +1581,6 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
     example_score = page.get("example_score", "Score: 58/100 — likely to be skipped")
     example_keywords = page.get("example_keywords", ["stakeholder management", "forecasting", "commercial planning"])
     example_fixes = page.get("example_fixes", ["Add measurable results", "Strengthen your summary", "Match role keywords"])
-    example_link_label = page.get("example_link_label", "View full example report →")
     tool_intro_html = "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in page["tool_intro"])
     return f"""
     <!doctype html>
@@ -1646,12 +1645,6 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             background: transparent;
             margin-top: 18px;
           }}
-          .tool-links {{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 14px;
-          }}
           .content-grid {{
             display: grid;
             grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
@@ -1694,6 +1687,22 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
+          .final-cta {{
+            margin-top: 56px;
+            margin-bottom: 56px;
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.72);
+            text-align: left;
+          }}
+          .final-cta h2 {{
+            margin-bottom: 12px;
+          }}
+          .final-cta p {{
+            max-width: 640px;
+            margin-bottom: 20px;
+          }}
 
           .text-link:hover {{
             color: #FFFFFF;
@@ -1726,10 +1735,6 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             <h2>{html.escape(page["tool_heading"])}</h2>
             {tool_intro_html}
             <iframe class="tool-frame" src="/?embed_tool=1" title="{html.escape(page['h1'])} tool"></iframe>
-            <div class="tool-links">
-              <a href="/how-it-works" class="text-link">How it works →</a>
-              <a href="/example-cv-report" class="text-link">View example CV report →</a>
-            </div>
           </div>
           <div class="content-grid">
             <div class="section-stack">{section_html}</div>
@@ -1747,16 +1752,14 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
                     <ul>{"".join(f"<li>{html.escape(item)}</li>" for item in example_fixes)}</ul>
                   </div>
                 </div>
-                <a href="/example-cv-report" class="text-link">{html.escape(example_link_label)}</a>
-              </div>
-              <div class="card cta-block">
-                <h2>Check your CV now</h2>
-                <p>{html.escape(page["cta_copy"])}</p>
-                <a href="#landing-tool" class="cta cta-button">Check your CV now</a>
-                <p class="helper">Prefer the homepage flow? The same tool is available there too.</p>
               </div>
             </div>
           </div>
+          <section class="final-cta">
+            <h2>Check your CV now</h2>
+            <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
+            <a href="/#tool" class="cta cta-button">Check your CV now</a>
+          </section>
           {build_site_footer()}
         </div>
       </body>
@@ -1919,6 +1922,22 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             font-weight: 800;
             text-decoration: none;
           }}
+          .final-cta {{
+            margin-top: 56px;
+            margin-bottom: 56px;
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.72);
+            text-align: left;
+          }}
+          .final-cta h2 {{
+            margin-bottom: 12px;
+          }}
+          .final-cta p {{
+            max-width: 640px;
+            margin-bottom: 20px;
+          }}
 
           .text-link:hover {{
             color: #FFFFFF;
@@ -1942,11 +1961,11 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             {sections_html}
             {related_html}
           </div>
-          <div class="cta-card cta-block">
+          <section class="final-cta">
             <h2>Check your CV now</h2>
             <p>Use the CV checker to compare your CV against a real job description and see what to improve.</p>
             <a href="/cv-checker" class="cta cta-button">{html.escape(page["bottom_cta"])}</a>
-          </div>
+          </section>
           {build_site_footer()}
         </div>
       </body>
@@ -2193,7 +2212,6 @@ def render_cv_checker_page() -> str:
                     </ul>
                   </div>
                 </div>
-                <a href="/example-cv-report" class="text-link">View full example report →</a>
               </div>
 
               <div class="card cta-block">
@@ -2418,13 +2436,7 @@ def render_ats_cv_checker_page() -> str:
               </div>
             </div>
 
-            <div class="section-stack">
-              <div class="card cta-block">
-                <h2>See a full example CV report</h2>
-                <p>Want to see the type of diagnosis and rewrite guidance before you run your own check?</p>
-                <a href="/example-cv-report" class="text-link">See a full example CV report →</a>
-              </div>
-            </div>
+            <div class="section-stack"></div>
           </div>
 
           {build_site_footer()}
@@ -2560,6 +2572,22 @@ def render_example_report_page() -> str:
             color: white;
             font-weight: 800;
             text-decoration: none;
+          }}
+          .final-cta {{
+            margin-top: 56px;
+            margin-bottom: 56px;
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.72);
+            text-align: left;
+          }}
+          .final-cta h2 {{
+            margin-bottom: 12px;
+          }}
+          .final-cta p {{
+            max-width: 640px;
+            margin-bottom: 20px;
           }}
           .secondary-cta {{
             background: rgba(10, 19, 35, 0.34);
@@ -2775,13 +2803,13 @@ def render_example_report_page() -> str:
             </div>
           </div>
 
-          <div class="card cta-panel cta-block-large">
+          <section class="final-cta">
             <h2>Check your CV now</h2>
             <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
-            <div class="cta-row cta-block-tight" style="justify-content:center;">
+            <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
             </div>
-          </div>
+          </section>
 
           {build_site_footer()}
         </div>
@@ -3061,6 +3089,22 @@ def render_faq_page() -> str:
             font-weight: 800;
             text-decoration: none;
           }}
+          .final-cta {{
+            margin-top: 56px;
+            margin-bottom: 56px;
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.72);
+            text-align: left;
+          }}
+          .final-cta h2 {{
+            margin-bottom: 12px;
+          }}
+          .final-cta p {{
+            max-width: 640px;
+            margin-bottom: 20px;
+          }}
           .text-link:hover {{
             color: #FFFFFF;
           }}
@@ -3085,10 +3129,12 @@ def render_faq_page() -> str:
               </ul>
             </div>
             <div class="faq-list">{faq_html}</div>
-            <div class="cta-block">
-              <a href="/cv-checker" class="cta cta-button">Check your CV now</a>
-            </div>
           </div>
+          <section class="final-cta">
+            <h2>Check your CV now</h2>
+            <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
+            <a href="/cv-checker" class="cta cta-button">Check your CV now</a>
+          </section>
           {build_site_footer()}
         </div>
       </body>
@@ -3395,6 +3441,7 @@ def render_upgrade_page() -> str:
                 <li>Step-by-step improvement plan</li>
               </ul>
               <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+              <p class="upgrade-helper">No account needed for one-time checkout.</p>
             </div>
 
             <div class="upgrade-card">
@@ -3407,7 +3454,7 @@ def render_upgrade_page() -> str:
                 <li>Ongoing improvements</li>
               </ul>
               <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
-              <p class="upgrade-helper">You’ll need to be signed in to start checkout.</p>
+              <p class="upgrade-helper">Sign in required for monthly Pro access.</p>
             </div>
           </div>
 
@@ -3436,16 +3483,19 @@ def render_upgrade_page() -> str:
               button.disabled = true;
               button.textContent = "Opening checkout…";
 
+              const requiresSignIn = plan === "pro_monthly";
               const token = await getUpgradeSessionToken();
-              if (!token) {{
-                throw new Error("Please sign in before opening checkout.");
+              if (requiresSignIn && !token) {{
+                throw new Error("Sign in to start Pro monthly.");
               }}
 
               const response = await fetch("/api/create-checkout-session", {{
                 method: "POST",
-                headers: {{
+                headers: token ? {{
                   "Content-Type": "application/json",
                   "Authorization": "Bearer " + token
+                }} : {{
+                  "Content-Type": "application/json"
                 }},
                 body: JSON.stringify({{ plan }})
               }});
@@ -3861,25 +3911,38 @@ def create_checkout_session(
     payload: Optional[dict[str, Any]] = Body(default=None),
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
-    user = get_user_from_token(authorization)
-    upsert_profile(user["id"], user["email"])
-    if not get_profile_password_ready(user["id"]):
-        return {
-            "error": "Please create a password before upgrading to Pro.",
-            "code": "PASSWORD_SETUP_REQUIRED"
-        }
     checkout_plan = (payload or {}).get("plan", "pro_monthly")
     if checkout_plan not in {"one_time", "pro_monthly"}:
         return {"error": "Invalid checkout plan.", "code": "INVALID_PLAN"}
+
+    user: Optional[dict[str, Any]] = None
+    if authorization:
+        try:
+            user = get_user_from_token(authorization)
+        except HTTPException:
+            user = None
+
+    if checkout_plan == "pro_monthly":
+        if not user:
+            raise HTTPException(status_code=401, detail="Sign in to start Pro monthly.")
+        upsert_profile(user["id"], user["email"])
+        if not get_profile_password_ready(user["id"]):
+            return {
+                "error": "Please create a password before upgrading to Pro.",
+                "code": "PASSWORD_SETUP_REQUIRED"
+            }
+        active_subscription = get_active_subscription(user["id"])
+        if active_subscription:
+            return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
+    elif user:
+        upsert_profile(user["id"], user["email"])
+
     track_event(
         event_name="upgrade_clicked",
-        user_id=user["id"],
-        email=user["email"],
+        user_id=user["id"] if user else None,
+        email=user["email"] if user else None,
         metadata={"checkout_plan": checkout_plan}
     )
-    active_subscription = get_active_subscription(user["id"])
-    if active_subscription:
-        return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
 
     if checkout_plan == "one_time":
         print("CHECKOUT_SESSION_REQUEST: one_time")
@@ -3898,10 +3961,10 @@ def create_checkout_session(
         success_url=f"{SITE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{SITE_URL}/cancel",
         line_items=[{"price": price_id, "quantity": 1}],
-        customer_email=user["email"],
-        client_reference_id=user["id"],
+        customer_email=user["email"] if user and user.get("email") else None,
+        client_reference_id=user["id"] if user else None,
         metadata={
-            "user_id": user["id"],
+            "user_id": user["id"] if user else "",
             "checkout_plan": checkout_plan,
         },
     )
