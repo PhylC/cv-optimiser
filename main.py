@@ -1546,11 +1546,12 @@ def build_site_footer() -> str:
           <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
         </div>
         <div class="site-footer-links-group">
-          <div class="site-footer-title">Help</div>
+          <div class="site-footer-title">Trust</div>
           <a href="/how-it-works">How it works</a>
           <a href="/faq">FAQ</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
+          <a href="/about">About</a>
         </div>
       </div>
       <div class="site-footer-bottom">
