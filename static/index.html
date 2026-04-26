@@ -13,6 +13,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
   <meta name="twitter:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <link rel="stylesheet" href="/static/global-footer.css">
   <script>
     (function() {
       try {
@@ -276,7 +277,7 @@
 
   html.embed-tool-mode .site-header,
   html.embed-tool-mode .helper-column,
-  html.embed-tool-mode .site-footer,
+  html.embed-tool-mode #siteFooter,
   html.embed-tool-mode #supportModal {
     display: none !important;
   }
@@ -1322,8 +1323,7 @@
     .diagnosis-bar,
     .result-summary-grid,
     .result-grid-two,
-    .before-after,
-    .site-footer-grid {
+    .before-after {
       grid-template-columns: 1fr;
     }
 
@@ -1332,10 +1332,6 @@
       min-width: 0;
     }
 
-    .site-footer {
-      padding-left: 0;
-      padding-right: 0;
-    }
   }
 
   .account-chip {
@@ -1902,71 +1898,6 @@
     color: #FFC0C0;
   }
 
-  .site-footer {
-    margin-top: 36px;
-    padding: 20px 4px 10px;
-    border-top: 1px solid rgba(80, 103, 146, 0.24);
-  }
-
-  .site-footer-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-    gap: 28px;
-    align-items: start;
-  }
-
-  .site-footer-title {
-    color: #E9EEFC;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .site-footer-brand p {
-    font-size: 13px;
-    color: #9FB0D4;
-    line-height: 1.6;
-    margin: 0;
-    max-width: 28ch;
-  }
-
-  .site-footer-links-group {
-    display: grid;
-    gap: 8px;
-  }
-
-  .site-footer-links-group a,
-  .site-footer-links-group button {
-    color: #AFC0FF;
-    font-size: 13px;
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    text-align: left;
-  }
-
-  .site-footer-links-group a:hover,
-  .site-footer-links-group button:hover {
-    color: #FFFFFF;
-    transform: none;
-  }
-
-  .site-footer-bottom {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(80, 103, 146, 0.16);
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    color: #8FA3CD;
-    font-size: 12px;
-  }
-
   .upgrade-cta-card {
     display: flex;
     align-items: center;
@@ -2036,8 +1967,15 @@
   justify-content: center;
 }
 
-.checkout-trust-line {
+  .checkout-trust-line {
   margin-top: 10px;
+}
+
+.checkout-error {
+  margin-top: 10px;
+  color: #ffb4aa;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
  .full-plan-ready {
@@ -2086,7 +2024,7 @@
         <a href="/cv-checker" class="site-nav-link">CV Checker</a>
         <a href="/how-it-works" class="site-nav-link">How it works</a>
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
-        <a href="/cv-improvement-tool" class="site-nav-link">Upgrade</a>
+        <a href="/#mainToolCard" class="site-nav-link">Upgrade</a>
       </nav>
       <button id="headerSignInBtn" class="site-nav-link header-link" type="button">Sign in</button>
       <a href="/#mainToolCard" class="site-header-cta">Check my CV</a>
@@ -2183,7 +2121,7 @@
           </details>
 
           <div class="tool-actions-row">
-            <button id="tryExampleBtn" class="text-link-btn" type="button">Try with example CV</button>
+            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" type="button">Try with example CV</button>
           </div>
 
           <div class="tool-step">
@@ -2430,9 +2368,10 @@
     See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
   </div>
   <div class="checkout-option-stack">
-    <button id="resultsUpgradeBtn" type="button">Unlock full report — £7.99</button>
-    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary" type="button">Or get Pro — £9.99/month</button>
+    <button id="resultsUpgradeBtn" class="unlock-report" type="button">Unlock full report — £7.99</button>
+    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
+  <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
 </div>
 
   <div id="proUnlockPrompt" class="results-upgrade-cta hidden">
@@ -2445,8 +2384,8 @@
     <p>• Step-by-step improvement plan</p>
   </div>
   <div class="checkout-option-stack">
-    <button id="proUnlockBtn" type="button">Unlock full report — £7.99</button>
-    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary" type="button">Or get Pro — £9.99/month</button>
+    <button id="unlockFullReportBtn" class="unlock-report" type="button">Unlock full report — £7.99</button>
+    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
   <p class="small checkout-trust-line">No CV is stored. Takes less than a minute.</p>
 </div>
@@ -2548,40 +2487,8 @@
     </div>
   </div>
 
-  <footer class="site-footer">
-    <div class="site-footer-grid">
-      <div class="site-footer-brand">
-        <div class="site-footer-title">CV Optimiser</div>
-        <p>Fast, practical CV feedback for job applications</p>
-      </div>
-      <div class="site-footer-links-group">
-        <div class="site-footer-title">Tools</div>
-        <a href="/cv-checker">CV Checker</a>
-        <a href="/cv-score-checker">CV Score Checker</a>
-        <a href="/ats-cv-checker">ATS CV Checker</a>
-        <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-      </div>
-      <div class="site-footer-links-group">
-        <div class="site-footer-title">Guides</div>
-        <a href="/why-is-my-cv-not-getting-interviews">Why your CV is not getting interviews</a>
-        <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV</a>
-        <a href="/ats-cv-keywords">ATS CV keywords</a>
-        <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
-      </div>
-      <div class="site-footer-links-group">
-        <div class="site-footer-title">Trust</div>
-        <a href="/how-it-works">How it works</a>
-        <a href="/faq">FAQ</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/about">About</a>
-      </div>
-    </div>
-    <div class="site-footer-bottom">
-      <span>© 2026 CV Optimiser</span>
-      <span>Secure • Private • No CV storage</span>
-    </div>
-  </footer>
+  <div id="siteFooter"></div>
+  <script src="/static/global-footer.js" defer></script>
   <script>
     const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
@@ -2608,7 +2515,6 @@
     const status = document.getElementById("status");
     const toolLoadingNote = document.getElementById("toolLoadingNote");
     const loadingSteps = document.getElementById("loadingSteps");
-    const tryExampleBtn = document.getElementById("tryExampleBtn");
     const pasteToggle = document.querySelector(".paste-toggle");
     const cvTextInput = document.getElementById("cvText");
     const jobDescriptionInput = document.getElementById("jobDescription");
@@ -2667,9 +2573,10 @@
     const resultEmailInput = document.getElementById("resultEmailInput");
     const emailResultsBtn = document.getElementById("emailResultsBtn");
     const emailCaptureStatus = document.getElementById("emailCaptureStatus");
+    const checkoutError = document.getElementById("checkoutError");
     const proUnlockPrompt = document.getElementById("proUnlockPrompt");
     const lockedPreviewCard = document.getElementById("lockedPreviewCard");
-    const proUnlockBtn = document.getElementById("proUnlockBtn");
+    const unlockFullReportBtn = document.getElementById("unlockFullReportBtn");
     const proMonthlyBtn = document.getElementById("proMonthlyBtn");
     const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
@@ -2801,13 +2708,30 @@
       delete button.dataset.defaultText;
     }
 
-    async function openCheckout(plan, button) {
+    function showCheckoutError(message) {
+      if (checkoutError) {
+        checkoutError.textContent = message || "Could not open checkout. Please try again.";
+        checkoutError.classList.remove("hidden");
+      }
+    }
+
+    function hideCheckoutError() {
+      if (checkoutError) {
+        checkoutError.classList.add("hidden");
+        checkoutError.textContent = "Could not open checkout. Please try again.";
+      }
+    }
+
+    async function startCheckout(plan, button) {
+      console.log("Checkout clicked:", plan);
       const defaultText = button ? button.textContent : "";
+      hideCheckoutError();
       setCheckoutButtonState(button, true, "Opening checkout…", defaultText);
 
       try {
         if (!sbClient) {
           status.textContent = "Auth is not configured.";
+          showCheckoutError("Could not open checkout. Please try again.");
           return;
         }
 
@@ -2817,11 +2741,13 @@
 
         if (!token || !session) {
           status.textContent = "Sign in first before upgrading.";
+          showCheckoutError("Please sign in before opening checkout.");
           return;
         }
 
         if (passwordCard && !passwordCard.classList.contains("hidden")) {
           status.textContent = "Please create your password before upgrading.";
+          showCheckoutError("Please create your password before opening checkout.");
           openPasswordCardForUser(false);
           return;
         }
@@ -2845,6 +2771,7 @@
           data = JSON.parse(raw);
         } catch (e) {
           status.textContent = "Checkout failed. Check Render logs.";
+          showCheckoutError("Could not open checkout. Please try again.");
           return;
         }
 
@@ -2855,13 +2782,16 @@
 
         if (data.code === "ALREADY_PRO") {
           status.textContent = "You already have an active subscription.";
+          showCheckoutError("You already have an active subscription.");
           return;
         }
 
         status.textContent = data.detail || data.error || "Could not start checkout.";
+        showCheckoutError(data.detail || data.error || "Could not open checkout. Please try again.");
       } catch (err) {
         console.error("upgrade error:", err);
         status.textContent = "Upgrade failed. Check browser console.";
+        showCheckoutError("Could not open checkout. Please try again.");
       } finally {
         setCheckoutButtonState(button, false, "Opening checkout…", defaultText);
       }
@@ -2878,9 +2808,31 @@
       if (pasteToggle) {
         pasteToggle.open = true;
       }
-      document.getElementById("cvText").value = "Customer Success Specialist with experience supporting client accounts, resolving issues, tracking renewals, and improving retention through clear communication and consistent follow-up.";
-      document.getElementById("jobDescription").value = "We are hiring a Customer Success Executive to manage client relationships, improve retention, support renewals, and work closely with sales and operations to deliver strong customer outcomes.";
-      status.textContent = "Example CV and job description added. Click Get my CV score when you're ready.";
+      const cvText = document.getElementById("cvText");
+      const jobDescription = document.getElementById("jobDescription");
+
+      if (cvText) {
+        cvText.value = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, and improving commercial performance.";
+        cvText.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
+      if (jobDescription) {
+        jobDescription.value = "We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, and customer relationship management.";
+        jobDescription.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
+      status.textContent = "Example CV and job description added. Click Check my CV when you're ready.";
+      const toolCard = document.getElementById("mainToolCard");
+      if (toolCard) {
+        toolCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      window.setTimeout(function() {
+        if (jobDescription) {
+          jobDescription.focus();
+        } else if (cvText) {
+          cvText.focus();
+        }
+      }, 180);
     }
 
     let loadingStageTimer = null;
@@ -3565,35 +3517,41 @@ passwordLoginBtn.addEventListener("click", async function() {
       status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
     });
 
-    resultsUpgradeBtn.addEventListener("click", function() {
+    resultsUpgradeBtn.addEventListener("click", function(event) {
+      event.preventDefault();
+      console.log("Unlock full report clicked");
       trackEvent("results_upgrade_clicked");
       trackEvent("unlock_full_report_clicked");
       logEvent("upgrade_clicked");
-      openCheckout("one_time", resultsUpgradeBtn);
+      startCheckout("one_time", resultsUpgradeBtn);
     });
 
     if (resultsUpgradeMonthlyBtn) {
       resultsUpgradeMonthlyBtn.addEventListener("click", function() {
         trackEvent("results_upgrade_clicked");
         logEvent("upgrade_clicked");
-        openCheckout("pro_monthly", resultsUpgradeMonthlyBtn);
+        startCheckout("pro_monthly", resultsUpgradeMonthlyBtn);
       });
     });
 
-    proUnlockBtn.addEventListener("click", function() {
-      trackEvent("pro_unlock_clicked");
-      trackEvent("unlock_full_report_clicked");
-      logEvent("upgrade_clicked");
-      openCheckout("one_time", proUnlockBtn);
-    });
+    if (unlockFullReportBtn) {
+      unlockFullReportBtn.addEventListener("click", function(event) {
+        event.preventDefault();
+        console.log("Unlock full report clicked");
+        trackEvent("pro_unlock_clicked");
+        trackEvent("unlock_full_report_clicked");
+        logEvent("upgrade_clicked");
+        startCheckout("one_time", unlockFullReportBtn);
+      });
+    }
 
     if (proMonthlyBtn) {
       proMonthlyBtn.addEventListener("click", function() {
         trackEvent("pro_unlock_clicked");
         logEvent("upgrade_clicked");
-        openCheckout("pro_monthly", proMonthlyBtn);
+        startCheckout("pro_monthly", proMonthlyBtn);
       });
-    });
+    }
 
     recheckBtn.addEventListener("click", function() {
       document.querySelector(".primary-tool-card").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3645,7 +3603,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     upgradeBtn.addEventListener("click", async function() {
       console.log("upgrade clicked");
       logEvent("upgrade_clicked");
-      openCheckout("pro_monthly", upgradeBtn);
+      startCheckout("pro_monthly", upgradeBtn);
     });
 
     dropzone.addEventListener("dragover", function(e) {
@@ -3677,7 +3635,11 @@ passwordLoginBtn.addEventListener("click", async function() {
       });
     }
 
-    tryExampleBtn.addEventListener("click", function() {
+    document.addEventListener("click", function(event) {
+      const sampleBtn = event.target.closest("#sampleCvBtn, .sample-cv-btn");
+      if (!sampleBtn) return;
+
+      event.preventDefault();
       fillExampleContent();
       trackEvent("sample_cv_clicked");
     });

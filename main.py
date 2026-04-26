@@ -770,6 +770,7 @@ SITEMAP_URLS: list[str] = [
     f"{SITE_URL}/ats-cv-checker",
     f"{SITE_URL}/cv-improvement-tool",
     f"{SITE_URL}/cv-statistics",
+    f"{SITE_URL}/faq",
     f"{SITE_URL}/how-it-works",
     f"{SITE_URL}/example-cv-report",
     f"{SITE_URL}/why-is-my-cv-not-getting-interviews",
@@ -777,6 +778,9 @@ SITEMAP_URLS: list[str] = [
     f"{SITE_URL}/ats-cv-keywords",
     f"{SITE_URL}/cv-mistakes-that-cost-interviews",
     f"{SITE_URL}/how-to-improve-cv-score",
+    f"{SITE_URL}/about",
+    f"{SITE_URL}/privacy",
+    f"{SITE_URL}/terms",
 ]
 
 
@@ -1499,7 +1503,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#mainT
         ("cv-checker", "/cv-checker", "CV Checker"),
         ("how-it-works", "/how-it-works", "How it works"),
         ("example-report", "/example-cv-report", "Example Report"),
-        ("upgrade", "/cv-improvement-tool", "Upgrade"),
+        ("upgrade", "/#mainToolCard", "Upgrade"),
         ("sign-in", "/#authCard", "Sign in"),
     ]
     nav_html = "".join(
@@ -1524,43 +1528,12 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#mainT
     """
 
 
+def build_footer_assets_head() -> str:
+    return '<link rel="stylesheet" href="/static/global-footer.css">'
+
+
 def build_site_footer() -> str:
-    return """
-    <footer class="site-footer">
-      <div class="site-footer-grid">
-        <div class="site-footer-brand">
-          <div class="site-footer-title">CV Optimiser</div>
-          <p>Fast, practical CV feedback for job applications</p>
-        </div>
-        <div class="site-footer-links-group">
-          <div class="site-footer-title">Tools</div>
-          <a href="/cv-checker">CV Checker</a>
-          <a href="/cv-score-checker">CV Score Checker</a>
-          <a href="/ats-cv-checker">ATS CV Checker</a>
-          <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-        </div>
-        <div class="site-footer-links-group">
-          <div class="site-footer-title">Guides</div>
-          <a href="/why-is-my-cv-not-getting-interviews">Why your CV is not getting interviews</a>
-          <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV</a>
-          <a href="/ats-cv-keywords">ATS CV keywords</a>
-          <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
-        </div>
-        <div class="site-footer-links-group">
-          <div class="site-footer-title">Trust</div>
-          <a href="/how-it-works">How it works</a>
-          <a href="/faq">FAQ</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/terms">Terms</a>
-          <a href="/about">About</a>
-        </div>
-      </div>
-      <div class="site-footer-bottom">
-        <span>© 2026 CV Optimiser</span>
-        <span>Secure • Private • No CV storage</span>
-      </div>
-    </footer>
-    """
+    return '<div id="siteFooter"></div><script src="/static/global-footer.js" defer></script>'
 
 
 def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
@@ -1600,6 +1573,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="twitter:title" content="{html.escape(page["title"])}">
         <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -1617,7 +1591,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
-          .text-link, .site-footer a {{
+.text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1696,49 +1670,13 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover, .text-link:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .content-grid, .site-footer-grid {{
+            .content-grid {{
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
@@ -1869,6 +1807,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{html.escape(page["title"])}">
         <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -1886,7 +1825,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
-          .text-link, .site-footer a {{
+.text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1959,52 +1898,13 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             font-weight: 800;
             text-decoration: none;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover, .text-link:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .site-footer-grid {{
-              grid-template-columns: 1fr;
-              gap: 16px;
-            }}
+
           }}
         </style>
       </head>
@@ -2052,6 +1952,7 @@ def render_cv_checker_page() -> str:
         <meta name="twitter:title" content="Free CV Checker | Compare Your CV to Any Job Description">
         <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -2068,7 +1969,7 @@ def render_cv_checker_page() -> str:
             padding: 28px 20px 60px;
           }}
 {build_site_header_css()}
-          .text-link, .site-footer a {{
+.text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -2161,49 +2062,13 @@ def render_cv_checker_page() -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover, .text-link:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .layout, .site-footer-grid {{
+            .layout {{
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
@@ -2345,6 +2210,7 @@ def render_ats_cv_checker_page() -> str:
         <meta name="twitter:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
         <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -2361,7 +2227,7 @@ def render_ats_cv_checker_page() -> str:
             padding: 28px 20px 60px;
           }}
 {build_typography_css()}
-          .topbar {{
+.topbar {{
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -2394,7 +2260,7 @@ def render_ats_cv_checker_page() -> str:
           }}
           .logo-title strong {{ font-weight: 800; }}
           .logo-title span {{ font-weight: 400; }}
-          .header-link, .text-link, .site-footer a {{
+          .header-link, .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -2462,49 +2328,13 @@ def render_ats_cv_checker_page() -> str:
           .cta-block {{
             text-align: left;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+
+          .text-link:hover, .header-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .layout, .site-footer-grid {{
+            .layout {{
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
@@ -2601,6 +2431,7 @@ def render_example_report_page() -> str:
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
         <meta name="twitter:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -2617,7 +2448,7 @@ def render_example_report_page() -> str:
             padding: 28px 20px 60px;
           }}
 {build_typography_css()}
-          .topbar {{
+.topbar {{
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -2650,7 +2481,7 @@ def render_example_report_page() -> str:
           }}
           .logo-title strong {{ font-weight: 800; }}
           .logo-title span {{ font-weight: 400; }}
-          .header-link, .site-footer a, .text-link {{
+          .header-link, .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -2829,49 +2660,13 @@ def render_example_report_page() -> str:
             margin-top: 24px;
             text-align: center;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover, .text-link:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .report-grid, .before-after, .site-footer-grid {{
+            .report-grid, .before-after {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -3039,6 +2834,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
         <script type="application/ld+json">{build_faq_json_ld()}</script>
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -3055,7 +2851,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             padding: 28px 20px 60px;
           }}
 {build_typography_css()}
-          .topbar {{
+.topbar {{
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -3150,61 +2946,22 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             color: #EEF3FF;
             font-size: 14px;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a {{
+
+          .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
             font-size: 13px;
           }}
-          .site-footer a:hover {{
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
             .layout {{
               grid-template-columns: 1fr;
             }}
-            .site-footer-grid {{
-              grid-template-columns: 1fr;
-              gap: 16px;
-            }}
+
           }}
         </style>
       </head>
@@ -3280,6 +3037,7 @@ def render_faq_page() -> str:
         <meta name="twitter:title" content="CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored">
         <meta name="twitter:description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <script type="application/ld+json">{build_faq_json_ld()}</script>
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -3297,7 +3055,7 @@ def render_faq_page() -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
-          .site-footer a {{
+.text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -3360,52 +3118,13 @@ def render_faq_page() -> str:
             flex-wrap: wrap;
             margin-top: 18px;
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .site-footer-grid {{
-              grid-template-columns: 1fr;
-              gap: 16px;
-            }}
+
           }}
         </style>
       </head>
@@ -3512,6 +3231,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{html.escape(page["title"])}">
         <meta name="twitter:description" content="{html.escape(page["description"])}">
+        {build_footer_assets_head()}
         <style>
           body {{
             font-family: Inter, Arial, sans-serif;
@@ -3529,7 +3249,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
-          .site-footer a {{
+.text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -3592,52 +3312,13 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             padding-top: 18px;
             border-top: 1px solid rgba(80, 103, 146, 0.18);
           }}
-          .site-footer {{
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(80, 103, 146, 0.24);
-          }}
-          .site-footer-grid {{
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
-            align-items: start;
-          }}
-          .site-footer-title {{
-            color: #EEF3FF;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }}
-          .site-footer-brand p {{
-            color: #9FB0D4;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 0;
-          }}
-          .site-footer-links-group {{
-            display: grid;
-            gap: 8px;
-          }}
-          .site-footer a:hover {{
+
+          .text-link:hover {{
             color: #FFFFFF;
           }}
-          .site-footer-bottom {{
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(80, 103, 146, 0.16);
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #8FA3CD;
-            font-size: 12px;
-          }}
+
           @media (max-width: 900px) {{
-            .site-footer-grid {{
-              grid-template-columns: 1fr;
-              gap: 16px;
-            }}
+
           }}
         </style>
       </head>
@@ -3821,6 +3502,7 @@ def billing_page() -> str:
     <html>
       <head>
         <title>Billing & Cancellation | CV Optimiser</title>
+        {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
           h1,h2 { color: #FFFFFF; }
@@ -3908,6 +3590,7 @@ def admin_analytics_page() -> str:
     <html>
       <head>
         <title>Analytics | CV Optimiser</title>
+        {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }
           h1 { margin-bottom: 18px; }
@@ -3981,9 +3664,11 @@ def create_checkout_session(
         return {"error": "You already have an active subscription.", "code": "ALREADY_PRO"}
 
     if checkout_plan == "one_time":
+        print("CHECKOUT_SESSION_REQUEST: one_time")
         price_id = STRIPE_PRICE_ONE_TIME
         mode = "payment"
     else:
+        print("CHECKOUT_SESSION_REQUEST: pro_monthly")
         price_id = STRIPE_PRICE_PRO_MONTHLY
         mode = "subscription"
 
