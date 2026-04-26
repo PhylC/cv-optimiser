@@ -1655,7 +1655,8 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         ("upgrade", "/upgrade", "Upgrade"),
     ]
     nav_html = "".join(
-        f'<a href="{href}" class="site-nav-link{" is-active" if active_key == key else ""}">{label}</a>'
+        f'<a href="{href}" class="site-nav-link{" is-active" if active_key == key else ""}"'
+        f'{" data-upgrade-link" if key == "upgrade" else ""}>{label}</a>'
         for key, href, label in nav_items
     )
     return f"""
@@ -1679,7 +1680,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
               <span class="header-account-caret">▾</span>
             </button>
             <div id="headerAccountMenu" class="header-account-menu hidden">
-              <a href="/" id="headerAccountLink">Account</a>
+              <a href="/#authCard" id="headerAccountLink">Account</a>
               <button id="headerBillingBtn" type="button">Manage subscription</button>
               <div id="headerBillingNote" class="header-account-menu-note hidden">Billing coming soon</div>
               <button id="headerSignOutBtn" type="button">Sign out</button>
@@ -1693,7 +1694,13 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
 
 
 def build_footer_assets_head() -> str:
-    return '<link rel="stylesheet" href="/static/global-footer.css">'
+    return (
+        '<link rel="stylesheet" href="/static/global-footer.css">'
+        '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
+        f"<script>window.CV_OPTIMISER_SUPABASE_URL = {json.dumps(SUPABASE_URL)};"
+        f"window.CV_OPTIMISER_SUPABASE_ANON_KEY = {json.dumps(SUPABASE_ANON_KEY)};</script>"
+        '<script src="/static/global-account.js"></script>'
+    )
 
 
 def build_site_footer() -> str:
@@ -2934,7 +2941,7 @@ def render_example_report_page() -> str:
                 <h2>Unlock the full report</h2>
                 <p>Get the full rewrite, deeper fixes, stronger role-specific phrasing and a more complete improvement plan tailored to your own CV.</p>
                 <div class="cta-row cta-block-tight">
-                  <a href="/upgrade" class="cta cta-button">Unlock full report</a>
+                  <a href="/upgrade" class="cta cta-button" data-upgrade-link>Unlock full report</a>
                 </div>
               </div>
             </div>
@@ -3598,7 +3605,6 @@ def render_upgrade_page() -> str:
             }}
           }}
         </style>
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
       </head>
       <body>
         <div class="page">
@@ -3649,22 +3655,6 @@ def render_upgrade_page() -> str:
           {build_site_footer()}
         </div>
         <script>
-          const SUPABASE_URL = {json.dumps(SUPABASE_URL)};
-          const SUPABASE_ANON_KEY = {json.dumps(SUPABASE_ANON_KEY)};
-          let sbClient = null;
-          if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {{
-            sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          }}
-
-          const headerSignInLink = document.getElementById("headerSignInLink");
-          const headerAccountWrap = document.getElementById("headerAccountWrap");
-          const headerAccountChip = document.getElementById("headerAccountChip");
-          const headerAccountMenu = document.getElementById("headerAccountMenu");
-          const headerAccountEmail = document.getElementById("headerAccountEmail");
-          const headerAccountPlan = document.getElementById("headerAccountPlan");
-          const headerBillingBtn = document.getElementById("headerBillingBtn");
-          const headerBillingNote = document.getElementById("headerBillingNote");
-          const headerSignOutBtn = document.getElementById("headerSignOutBtn");
           const upgradeInlineError = document.getElementById("upgradeInlineError");
           const upgradeGrid = document.getElementById("upgradeGrid");
           const oneTimeCard = document.getElementById("oneTimeCard");
@@ -3683,92 +3673,37 @@ def render_upgrade_page() -> str:
             upgradeInlineError.textContent = "Please sign in to start Pro monthly.";
           }}
 
-          function closeHeaderAccountMenu() {{
-            if (!headerAccountMenu || !headerAccountChip) return;
-            headerAccountMenu.classList.add("hidden");
-            headerAccountChip.setAttribute("aria-expanded", "false");
-          }}
+          function applyUpgradePageState(account) {{
+            const state = account || {{ signedIn: false, plan: "free" }};
+            const isPro = state.plan === "pro";
+            console.log("Upgrade account state:", {{
+              signedIn: !!state.signedIn,
+              plan: isPro ? "signed_in_pro" : (state.signedIn ? "signed_in_free" : "signed_out")
+            }});
 
-          async function getUpgradeSessionToken() {{
-            if (!sbClient) return null;
-            const result = await sbClient.auth.getSession();
-            const session = result && result.data ? result.data.session : null;
-            return session && session.access_token ? session.access_token : null;
-          }}
-
-          async function refreshUpgradeAuthUi() {{
-            if (!sbClient) {{
-              console.log("Upgrade auth state:", "signed_out");
-              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
-              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
-              if (proCard) proCard.classList.remove("hidden");
-              if (alreadyProState) alreadyProState.classList.add("hidden");
-              return {{ signedIn: false, token: null, email: "", plan: "signed_out", isPro: false }};
-            }}
-
-            const sessionResult = await sbClient.auth.getSession();
-            const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-            const signedIn = !!(session && session.access_token);
-            console.log("Upgrade auth state:", signedIn ? "signed_in" : "signed_out");
-
-            if (!signedIn) {{
-              if (headerSignInLink) headerSignInLink.classList.remove("hidden");
-              if (headerAccountWrap) headerAccountWrap.classList.add("hidden");
-              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
-              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
-              if (proCard) proCard.classList.remove("hidden");
-              if (alreadyProState) alreadyProState.classList.add("hidden");
-              closeHeaderAccountMenu();
-              console.log("Upgrade account state:", {{ signedIn: false, plan: "signed_out" }});
-              return {{ signedIn: false, token: null, email: "", plan: "signed_out", isPro: false }};
-            }}
-
-            const token = session.access_token;
-            let email = session.user && session.user.email ? session.user.email : "Signed in";
-            let isPro = false;
-
-            try {{
-              const meResponse = await fetch("/api/me", {{
-                headers: {{
-                  Authorization: "Bearer " + token
-                }}
-              }});
-              const meData = await meResponse.json();
-              if (!meData.error) {{
-                isPro = !!(meData.plan && meData.plan.is_pro);
-              }}
-            }} catch (error) {{
-              console.error("Upgrade auth refresh error:", error);
-            }}
-
-            if (headerSignInLink) headerSignInLink.classList.add("hidden");
-            if (headerAccountWrap) headerAccountWrap.classList.remove("hidden");
-            if (headerAccountEmail) headerAccountEmail.textContent = email;
-            if (headerAccountPlan) headerAccountPlan.textContent = "Plan: " + (isPro ? "Pro" : "Free");
-            if (headerBillingBtn) headerBillingBtn.classList.toggle("hidden", !isPro);
-            if (headerBillingNote) headerBillingNote.classList.toggle("hidden", isPro);
             if (isPro) {{
               if (upgradeGrid) upgradeGrid.classList.add("hidden");
               if (alreadyProState) alreadyProState.classList.remove("hidden");
               if (oneTimeCard) oneTimeCard.classList.add("hidden");
               if (proCard) proCard.classList.add("hidden");
-            }} else {{
-              if (upgradeGrid) upgradeGrid.classList.remove("hidden");
-              if (alreadyProState) alreadyProState.classList.add("hidden");
-              if (oneTimeCard) oneTimeCard.classList.remove("hidden");
-              if (proCard) proCard.classList.remove("hidden");
+              hideUpgradeInlineError();
+              return;
             }}
-            console.log("Upgrade account state:", {{ signedIn: true, plan: isPro ? "signed_in_pro" : "signed_in_free" }});
-            return {{ signedIn: true, token, email, plan: isPro ? "signed_in_pro" : "signed_in_free", isPro }};
+
+            if (upgradeGrid) upgradeGrid.classList.remove("hidden");
+            if (alreadyProState) alreadyProState.classList.add("hidden");
+            if (oneTimeCard) oneTimeCard.classList.remove("hidden");
+            if (proCard) proCard.classList.remove("hidden");
           }}
 
-          async function protectUpgradePage() {{
-            const authState = await refreshUpgradeAuthUi();
-            if (authState && authState.plan === "signed_in_pro") {{
-              window.location.href = "/cv-checker";
-              return true;
+          async function refreshUpgradePageState() {{
+            if (typeof window.getAccountState !== "function") {{
+              applyUpgradePageState({{ signedIn: false, email: null, plan: "free", token: null }});
+              return {{ signedIn: false, email: null, plan: "free", token: null }};
             }}
-            return false;
+            const account = await window.getAccountState({{ forceRefresh: true }});
+            applyUpgradePageState(account);
+            return account;
           }}
 
           async function startCheckout(plan, button) {{
@@ -3782,13 +3717,13 @@ def render_upgrade_page() -> str:
               button.textContent = "Opening checkout…";
 
               const requiresSignIn = plan === "pro_monthly";
-              const authState = await refreshUpgradeAuthUi();
-              const token = authState.token;
-              if (authState.isPro) {{
+              const account = await refreshUpgradePageState();
+              const token = account.token;
+              if (account.plan === "pro") {{
                 showUpgradeInlineError(plan === "one_time" ? "You already have Pro access." : "You are already on Pro.");
                 return;
               }}
-              if (requiresSignIn && !authState.signedIn) {{
+              if (requiresSignIn && !account.signedIn) {{
                 showUpgradeInlineError("Please sign in to start Pro monthly.");
                 return;
               }}
@@ -3826,52 +3761,6 @@ def render_upgrade_page() -> str:
             }}
           }}
 
-          if (headerAccountChip) {{
-            headerAccountChip.addEventListener("click", function() {{
-              if (!headerAccountMenu) return;
-              const shouldOpen = headerAccountMenu.classList.contains("hidden");
-              headerAccountMenu.classList.toggle("hidden");
-              headerAccountChip.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
-            }});
-          }}
-
-          if (headerBillingBtn) {{
-            headerBillingBtn.addEventListener("click", async function() {{
-              hideUpgradeInlineError();
-              const authState = await refreshUpgradeAuthUi();
-              if (!authState.signedIn || !authState.token) {{
-                showUpgradeInlineError("Please sign in to manage your subscription.");
-                return;
-              }}
-
-              const response = await fetch("/api/create-portal-session", {{
-                method: "POST",
-                headers: {{
-                  Authorization: "Bearer " + authState.token
-                }}
-              }});
-              const data = await response.json();
-              if (data.url) {{
-                window.location.href = data.url;
-                return;
-              }}
-              showUpgradeInlineError(data.detail || data.error || "Could not open billing right now.");
-            }});
-          }}
-
-          if (headerSignOutBtn && sbClient) {{
-            headerSignOutBtn.addEventListener("click", async function() {{
-              await sbClient.auth.signOut();
-              closeHeaderAccountMenu();
-              await refreshUpgradeAuthUi();
-            }});
-          }}
-
-          document.addEventListener("click", function(event) {{
-            if (!headerAccountWrap || !headerAccountMenu || headerAccountWrap.contains(event.target)) return;
-            closeHeaderAccountMenu();
-          }});
-
           document.addEventListener("click", function(event) {{
             const button = event.target.closest("[data-checkout-plan]");
             if (!button) return;
@@ -3880,13 +3769,13 @@ def render_upgrade_page() -> str:
             startCheckout(plan, button);
           }});
 
-          if (sbClient) {{
-            sbClient.auth.onAuthStateChange(function() {{
-              protectUpgradePage();
-            }});
-          }}
+          document.addEventListener("cv-account-state-changed", function(event) {{
+            applyUpgradePageState((event.detail && event.detail.account) || null);
+          }});
 
-          protectUpgradePage();
+          window.addEventListener("load", function() {{
+            refreshUpgradePageState();
+          }});
         </script>
       </body>
     </html>
@@ -4243,15 +4132,37 @@ def admin_analytics_page() -> str:
 @app.get("/api/me")
 def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
     try:
-        user = get_user_from_token(authorization)
+        user: Optional[dict[str, Any]] = None
+        if authorization and authorization.lower().startswith("bearer "):
+            try:
+                user = get_user_from_token(authorization)
+            except HTTPException:
+                user = None
+
+        if not user:
+            print("API_ME_AUTH: signed_out")
+            print("API_ME_PLAN: free")
+            return {
+                "signed_in": False,
+                "email": None,
+                "plan": "free",
+                "plan_state": None,
+                "user": None,
+                "user_id": None,
+            }
+
         upsert_profile(user["id"], user["email"])
         plan_state = get_plan_state(user["id"])
         plan_name = get_user_plan(user)
+        print("API_ME_AUTH: signed_in")
+        print(f"API_ME_PLAN: {plan_name}")
         return {
+            "signed_in": True,
+            "email": user["email"],
+            "plan": plan_name,
+            "plan_state": plan_state,
             "user": user,
             "user_id": user["id"],
-            "plan": plan_state,
-            "plan_name": plan_name,
         }
     except Exception as e:
         return {"error": str(e)}
@@ -4388,6 +4299,11 @@ def create_portal_session(authorization: Optional[str] = Header(None)) -> dict[s
     except Exception as e:
         print("STRIPE PORTAL ERROR:", repr(e))
         return {"error": str(e)}
+
+
+@app.post("/api/create-billing-portal-session")
+def create_billing_portal_session(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+    return create_portal_session(authorization)
 
 
 @app.post("/api/mark-password-ready")
