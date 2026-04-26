@@ -698,6 +698,21 @@
     line-height: 1.6;
   }
 
+  .example-preview-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 12px;
+    color: #AFC0FF;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .example-preview-link:hover {
+    color: #FFFFFF;
+  }
+
   .sidebar-card {
     padding: 18px;
     background: rgba(15, 28, 50, 0.62);
@@ -750,43 +765,6 @@
 
   .paste-toggle[open] summary {
     margin-bottom: 10px;
-  }
-
-  .mini-steps {
-    display: grid;
-    gap: 10px;
-  }
-
-  .mini-steps-inline {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .mini-step {
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: rgba(10, 19, 35, 0.34);
-    border: 1px solid rgba(92, 112, 150, 0.18);
-    color: #d7e2fa;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .trust-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .trust-pill {
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: rgba(10, 19, 35, 0.24);
-    border: 1px solid rgba(92, 112, 150, 0.14);
-    color: #D7E2FA;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.5;
-    text-align: center;
   }
 
   .tool-loading-note {
@@ -913,54 +891,8 @@
     font-size: 14px;
   }
 
-  .simple-list {
-    margin: 0;
-    padding-left: 18px;
-  }
-
-  .simple-list li {
-    margin-bottom: 8px;
-    color: #D7E2FA;
-  }
-
-  .trust-note {
-    margin-top: 14px;
-    color: #C9D7F6;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .proof-note {
-    margin-top: 10px;
-    color: #AFC0E4;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .faq-list {
-    display: grid;
-    gap: 14px;
-  }
-
-  .faq-item strong {
-    display: block;
-    margin-bottom: 6px;
-    color: #EEF3FF;
-    font-size: 14px;
-  }
-
-  .faq-item p {
-    color: #B7C6E6;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
   .save-result-btn {
     width: 100%;
-  }
-
-  .plans-section {
-    margin-top: 28px;
   }
 
   .example-card-title {
@@ -1284,8 +1216,6 @@
     .result-summary-grid,
     .result-grid-two,
     .before-after,
-    .mini-steps-inline,
-    .trust-row,
     .site-footer-grid {
       grid-template-columns: 1fr;
     }
@@ -2075,47 +2005,22 @@
           </div>
         </div>
 
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
           <button id="upgradeBtn" class="secondary-btn" type="button">Upgrade to Pro</button>
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
-      </div>
-
-      <div class="card sidebar-secondary">
-        <div class="section-title">How it works</div>
-        <div class="mini-steps mini-steps-inline">
-          <div class="mini-step">1. Upload your CV</div>
-          <div class="mini-step">2. Paste the job description</div>
-          <div class="mini-step">3. Get your CV score and improvements</div>
-        </div>
-      </div>
-
-      <div class="trust-row">
-        <div class="trust-pill">No signup needed</div>
-        <div class="trust-pill">Your CV isn’t stored</div>
-        <div class="trust-pill">Works with any job description</div>
-      </div>
-
-      <div class="card sidebar-secondary">
-        <div class="section-title">What you’ll get</div>
-        <ul class="simple-list">
-          <li>CV match score</li>
-          <li>Missing keywords</li>
-          <li>Top priority fixes</li>
-          <li>Improvement suggestions</li>
-        </ul>
-        <p class="trust-note">Your CV is not stored or shared. All analysis is secure and private.</p>
-        <p class="proof-note">Built for job seekers who want fast, practical CV feedback</p>
+        <p class="small" style="margin-top:10px;">
+          <a href="/how-it-works" class="example-preview-link">How it works →</a>
+        </p>
       </div>
 
       <div class="card sidebar-secondary mobile-only">
         <div class="section-title">Example CV diagnosis</div>
         <div class="example-preview">
           <strong>Example CV diagnosis</strong>
-          <div class="example-preview-score">Match Score: 58/100</div>
-          <div class="example-preview-verdict">Likely to be skipped unless improved</div>
+          <div class="example-preview-score">Score: 58/100 — likely to be skipped</div>
           <div class="example-preview-grid">
             <div class="example-preview-block">
               <strong>Missing keywords</strong>
@@ -2126,23 +2031,15 @@
               </ul>
             </div>
             <div class="example-preview-block">
-              <strong>What recruiters may miss</strong>
-              <ul>
-                <li>Commercial impact is not clear enough</li>
-                <li>Summary does not match the role closely</li>
-                <li>Achievements need stronger numbers</li>
-              </ul>
-            </div>
-            <div class="example-preview-block">
-              <strong>Priority fixes</strong>
+              <strong>Top fixes</strong>
               <ul>
                 <li>Add measurable results</li>
-                <li>Rewrite the summary around the target role</li>
-                <li>Mirror key phrases from the job description</li>
+                <li>Strengthen your summary</li>
+                <li>Match role keywords</li>
               </ul>
             </div>
           </div>
-          <p class="example-preview-note">Your real report will be tailored to your CV and the job you paste in.</p>
+          <a href="/example-cv-report" class="example-preview-link">View full example report →</a>
         </div>
       </div>
 
@@ -2376,19 +2273,6 @@
         </div>
       </div>
 
-      <div class="card sidebar-secondary">
-        <div class="section-title">Example improvement</div>
-        <div class="before-after">
-          <div class="before-after-card">
-            <strong>Before</strong>
-            <p>Responsible for managing accounts and sales targets.</p>
-          </div>
-          <div class="before-after-card">
-            <strong>After</strong>
-            <p>Drove account growth by turning customer plans into measurable revenue opportunities and improving retail execution.</p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="helper-column">
@@ -2396,8 +2280,7 @@
         <div class="section-title example-card-title">Example CV diagnosis</div>
         <div class="example-preview">
           <strong>Example CV diagnosis</strong>
-          <div class="example-preview-score">Match Score: 58/100</div>
-          <div class="example-preview-verdict">Likely to be skipped unless improved</div>
+          <div class="example-preview-score">Score: 58/100 — likely to be skipped</div>
           <div class="example-preview-grid">
             <div class="example-preview-block">
               <strong>Missing keywords</strong>
@@ -2408,23 +2291,15 @@
               </ul>
             </div>
             <div class="example-preview-block">
-              <strong>What recruiters may miss</strong>
-              <ul>
-                <li>Commercial impact is not clear enough</li>
-                <li>Summary does not match the role closely</li>
-                <li>Achievements need stronger numbers</li>
-              </ul>
-            </div>
-            <div class="example-preview-block">
-              <strong>Priority fixes</strong>
+              <strong>Top fixes</strong>
               <ul>
                 <li>Add measurable results</li>
-                <li>Rewrite the summary around the target role</li>
-                <li>Mirror key phrases from the job description</li>
+                <li>Strengthen your summary</li>
+                <li>Match role keywords</li>
               </ul>
             </div>
           </div>
-          <p class="example-preview-note">Your real report will be tailored to your CV and the job you paste in.</p>
+          <a href="/example-cv-report" class="example-preview-link">View full example report →</a>
         </div>
       </div>
 
@@ -2481,33 +2356,6 @@
     </div>
   </div>
 
-  <div class="plans-section">
-    <div class="sidebar-stack">
-      <div class="card sidebar-secondary">
-        <div class="section-title">Plans</div>
-        <div class="section-subtitle plan-copy">Choose the level of support you need.</div>
-
-        <div class="price-box">
-          <p style="font-weight:780; color:#F3F7FF; margin-bottom:6px;">Free</p>
-          <p class="muted">3 analyses per day with core match feedback, strengths, gaps, and rewritten bullet suggestions.</p>
-        </div>
-
-        <div class="price-box">
-          <p style="font-weight:780; color:#F3F7FF; margin-bottom:6px;">Pro</p>
-          <p class="muted">Unlimited analyses plus professional summary, priority fixes, ATS improvements, interview-risk feedback, and richer job-ready output.</p>
-        </div>
-      </div>
-
-      <div class="card section sidebar-secondary" style="opacity:0.9;">
-        <div class="section-title">Recent history</div>
-        <div class="section-subtitle">Your previous CV analyses.</div>
-        <div id="historyList" class="small muted">
-          No analyses yet. Your recent CV checks will appear here.
-        </div>
-      </div>
-    </div>
-  </div>
-
   <footer class="site-footer">
     <div class="site-footer-grid">
       <div class="site-footer-brand">
@@ -2519,6 +2367,7 @@
         <a href="/ats-cv-checker">ATS CV Checker</a>
         <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
         <a href="/cv-improvement-tool">CV Improvement Tool</a>
+        <a href="/example-cv-report">Example Report</a>
       </div>
       <div class="site-footer-links-group">
         <a href="/how-it-works">How it works</a>
@@ -2938,6 +2787,9 @@
 }
 
     function renderHistory(items) {
+      if (!historyList) {
+        return;
+      }
       if (!items || !items.length) {
         historyList.textContent = "No saved analyses yet.";
         return;
@@ -3102,6 +2954,11 @@ if (shouldPromptPasswordSetup) {
 
         const currentUserId = me.user && me.user.id ? me.user.id : null;
         if (currentUserId && historyLoadedForUserId === currentUserId) {
+          return;
+        }
+
+        if (!historyList) {
+          historyLoadedForUserId = currentUserId;
           return;
         }
 

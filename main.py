@@ -140,14 +140,72 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
 
 SUPPORT_PAGES: dict[str, dict[str, Any]] = {
     "how-it-works": {
-        "title": "How It Works | CV Optimiser",
-        "description": "See how CV Optimiser checks your CV against a job description and shows your score, missing keywords and top fixes.",
+        "title": "How CV Optimiser works",
+        "description": "Learn how CV Optimiser checks your CV against a job description, calculates your score, and highlights missing keywords and improvements.",
         "h1": "How CV Optimiser works",
-        "intro": "CV Optimiser is designed to give job seekers fast, practical feedback before they apply. The process is simple and keeps the main focus on helping you improve your CV for a real role.",
+        "intro": "CV Optimiser compares your CV against a job description to show how well it matches, what recruiters may miss, and what to improve.",
         "sections": [
-            ("1. Upload your CV", "Upload a PDF, DOCX or TXT version of your CV, or paste the text directly into the tool."),
-            ("2. Paste the job description", "Paste the role you want to apply for so the tool can compare your CV against the real requirements."),
-            ("3. Get your score and fixes", "You’ll see a CV match score, missing keywords, priority fixes and practical improvement ideas in seconds."),
+            {
+                "title": "What this tool does",
+                "bullets": [
+                    "Compares your CV to a job description",
+                    "Calculates a match score",
+                    "Highlights missing keywords",
+                    "Shows the most important improvements to make",
+                ],
+            },
+            {
+                "title": "How your CV score is calculated",
+                "copy": "Your CV score is based on a combination of:",
+                "bullets": [
+                    "Keyword match: whether your CV includes the terms used in the job description",
+                    "Relevance: how closely your experience aligns with the role",
+                    "Structure: clarity, organisation and readability",
+                    "Recruiter best practices: how clearly your impact and achievements are shown",
+                ],
+                "helper": "The score is designed to reflect how likely your CV is to pass initial screening and attract attention.",
+            },
+            {
+                "title": "What ATS systems and recruiters look for",
+                "copy": "Many companies use Applicant Tracking Systems (ATS) to filter CVs before a recruiter reviews them.",
+                "bullets": [
+                    "Relevant keywords from the job description",
+                    "Clear, readable formatting",
+                    "Experience that matches the role",
+                    "Evidence of impact (results, numbers, outcomes)",
+                ],
+                "helper": "If key information is missing or unclear, your CV may be filtered out before a human sees it.",
+            },
+            {
+                "title": "What you get from your CV check",
+                "bullets": [
+                    "A CV match score",
+                    "Missing keywords for the role",
+                    "Top priority fixes",
+                    "Feedback on structure and clarity",
+                ],
+                "helper": "The full report (Pro) includes deeper improvements, rewrites and keyword optimisation.",
+            },
+            {
+                "title": "How to use CV Optimiser",
+                "bullets": [
+                    "1. Upload your CV or paste the text",
+                    "2. Paste the job description",
+                    "3. Get your CV score and improvement suggestions",
+                ],
+            },
+            {
+                "title": "See an example CV report",
+                "copy": "Want to see the type of feedback before you try it?",
+                "link_href": "/example-cv-report",
+                "link_label": "View example CV report →",
+            },
+            {
+                "title": "Check your own CV",
+                "copy": "Upload your CV, paste a job description and get your score in under 60 seconds.",
+                "cta_href": "/#mainToolCard",
+                "cta_label": "Get my CV score",
+            },
         ],
     },
     "features": {
@@ -195,6 +253,13 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             ("Final responsibility", "You should review all generated suggestions and make sure they accurately reflect your real experience and achievements."),
         ],
     },
+}
+
+EXAMPLE_REPORT_PAGE: dict[str, Any] = {
+    "title": "Example CV Report | CV Optimiser",
+    "description": "See an example CV Optimiser report with match score, missing keywords, priority fixes and rewrite suggestions.",
+    "h1": "Example CV report",
+    "intro": "See the type of feedback CV Optimiser gives before you run your own check.",
 }
 
 
@@ -780,6 +845,7 @@ def build_site_footer() -> str:
           <a href="/ats-cv-checker">ATS CV Checker</a>
           <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
           <a href="/cv-improvement-tool">CV Improvement Tool</a>
+          <a href="/example-cv-report">Example Report</a>
         </div>
         <div class="site-footer-links-group">
           <a href="/how-it-works">How it works</a>
@@ -795,6 +861,451 @@ def build_site_footer() -> str:
         <span>Secure • Private • No CV storage</span>
       </div>
     </footer>
+    """
+
+
+def render_example_report_page() -> str:
+    page_url = f"{SITE_URL}/example-cv-report"
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(EXAMPLE_REPORT_PAGE["title"])}</title>
+        <meta name="description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
+        <meta property="og:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
+        <meta name="twitter:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+          .topbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+          }}
+          .logo {{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+          }}
+          .logo-mark {{
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+          }}
+          .logo-title {{
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+          }}
+          .logo-title strong {{ font-weight: 800; }}
+          .logo-title span {{ font-weight: 400; }}
+          .header-link, .site-footer a, .text-link {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 13px;
+          }}
+          .hero-card, .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          .hero-card {{
+            margin-bottom: 24px;
+          }}
+          h1 {{
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            color: #F4F7FF;
+          }}
+          h2 {{
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #EEF3FF;
+          }}
+          p, li {{
+            color: #B7C6E6;
+            line-height: 1.7;
+            font-size: 15px;
+          }}
+          .report-grid {{
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+          }}
+          .score-block {{
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(91,120,255,0.18), rgba(18,31,58,0.92));
+            border: 1px solid rgba(91,120,255,0.32);
+            margin-bottom: 18px;
+          }}
+          .score-value {{
+            font-size: 52px;
+            font-weight: 850;
+            color: #FFFFFF;
+            line-height: 1;
+            margin-bottom: 8px;
+          }}
+          .section-list {{
+            margin: 0;
+            padding-left: 20px;
+          }}
+          .section-list li {{
+            margin-bottom: 8px;
+          }}
+          .blurred {{
+            filter: blur(4px);
+            opacity: 0.72;
+            user-select: none;
+          }}
+          .locked-block {{
+            position: relative;
+            overflow: hidden;
+          }}
+          .pro-badge {{
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #DDE6FF;
+            background: rgba(91,120,255,0.14);
+            border: 1px solid rgba(91,120,255,0.35);
+          }}
+          .before-after {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+          }}
+          .before-after-card {{
+            padding: 18px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .cta-row {{
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+          .secondary-cta {{
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+          }}
+          .eyebrow {{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #AFC0FF;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }}
+          .eyebrow::before {{
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #5B78FF;
+          }}
+          .section-helper {{
+            margin-top: 12px;
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+          }}
+          .keyword-chip-row {{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+          }}
+          .keyword-chip {{
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            background: rgba(12, 23, 43, 0.8);
+            color: #E6EEFF;
+            font-size: 13px;
+            font-weight: 600;
+          }}
+          .priority-grid {{
+            display: grid;
+            gap: 14px;
+            margin-top: 14px;
+          }}
+          .priority-card {{
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 14px;
+            align-items: start;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .priority-number {{
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(91, 120, 255, 0.16);
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 800;
+          }}
+          .priority-card strong {{
+            display: block;
+            color: #EEF3FF;
+            font-size: 15px;
+            margin-bottom: 6px;
+          }}
+          .priority-card p {{
+            margin: 0;
+          }}
+          .locked-list p {{
+            margin: 0 0 10px;
+          }}
+          .cta-panel {{
+            margin-top: 24px;
+            text-align: center;
+          }}
+          .site-footer {{
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(80, 103, 146, 0.24);
+          }}
+          .site-footer-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+          }}
+          .site-footer-title {{
+            color: #EEF3FF;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+          }}
+          .site-footer-brand p {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+          }}
+          .site-footer-links-group {{
+            display: grid;
+            gap: 8px;
+          }}
+          .site-footer a:hover, .text-link:hover {{
+            color: #FFFFFF;
+          }}
+          .site-footer-bottom {{
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(80, 103, 146, 0.16);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8FA3CD;
+            font-size: 12px;
+          }}
+          @media (max-width: 900px) {{
+            .report-grid, .before-after, .site-footer-grid {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="topbar">
+            <a href="/" class="logo">
+              <span class="logo-mark">CV</span>
+              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+            </a>
+            <a href="/#mainToolCard" class="header-link">Try the tool</a>
+          </div>
+
+          <div class="hero-card">
+            <div class="eyebrow">Example report</div>
+            <h1>{html.escape(EXAMPLE_REPORT_PAGE["h1"])}</h1>
+            <p>{html.escape(EXAMPLE_REPORT_PAGE["intro"])}</p>
+            <div class="cta-row">
+              <a href="/#mainToolCard" class="cta">Get my CV score</a>
+            </div>
+          </div>
+
+          <div class="report-grid">
+            <div>
+              <div class="card">
+                <h2>Score overview</h2>
+                <div class="score-block">
+                  <div class="score-value">Match Score: 58/100</div>
+                  <p><strong>Likely to be skipped unless improved</strong></p>
+                  <p>This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.</p>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Missing keywords</h2>
+                <div class="keyword-chip-row">
+                  <span class="keyword-chip">stakeholder management</span>
+                  <span class="keyword-chip">forecasting</span>
+                  <span class="keyword-chip">commercial planning</span>
+                  <span class="keyword-chip">P&amp;L</span>
+                  <span class="keyword-chip">retailer execution</span>
+                  <span class="keyword-chip">category growth</span>
+                </div>
+                <p class="section-helper">These are examples of keywords a recruiter or ATS may expect for this type of role.</p>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>What recruiters may miss</h2>
+                <ul class="section-list">
+                  <li>Commercial impact is not clear enough.</li>
+                  <li>Summary does not closely match the target role.</li>
+                  <li>Achievements are written as responsibilities rather than outcomes.</li>
+                  <li>Important role keywords are missing or buried.</li>
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Top priority fixes</h2>
+                <div class="priority-grid">
+                  <div class="priority-card">
+                    <span class="priority-number">1</span>
+                    <div>
+                      <strong>Add measurable impact</strong>
+                      <p>Replace vague responsibilities with outcomes, numbers and commercial results.</p>
+                    </div>
+                  </div>
+                  <div class="priority-card">
+                    <span class="priority-number">2</span>
+                    <div>
+                      <strong>Rewrite the summary around the target role</strong>
+                      <p>The summary should immediately show why this CV fits the job description.</p>
+                    </div>
+                  </div>
+                  <div class="priority-card">
+                    <span class="priority-number">3</span>
+                    <div>
+                      <strong>Mirror important job description language</strong>
+                      <p>Use relevant role keywords naturally so the CV feels aligned to the vacancy.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Example improvement</h2>
+                <div class="before-after">
+                  <div class="before-after-card">
+                    <strong>Before</strong>
+                    <p>Responsible for managing customer accounts and sales targets.</p>
+                  </div>
+                  <div class="before-after-card">
+                    <strong>After</strong>
+                    <p>Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="card locked-block">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                  <h2 style="margin:0;">Full report preview</h2>
+                  <span class="pro-badge">PRO</span>
+                </div>
+                <div class="locked-list blurred">
+                  <p>• Full rewritten professional summary</p>
+                  <p>• Stronger bullet points</p>
+                  <p>• Full keyword optimisation plan</p>
+                  <p>• Export-ready improvement checklist</p>
+                </div>
+                <p>The free check gives you the score and top fixes. The full report helps you rewrite and improve the CV properly.</p>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Unlock the full report</h2>
+                <p>Get the full rewrite, deeper fixes, stronger role-specific phrasing and a more complete improvement plan tailored to your own CV.</p>
+                <div class="cta-row">
+                  <a href="/#mainToolCard" class="cta">Unlock full report</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card cta-panel">
+            <h2>Check your own CV</h2>
+            <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
+            <div class="cta-row" style="justify-content:center;">
+              <a href="/#mainToolCard" class="cta">Get my CV score</a>
+            </div>
+          </div>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
     """
 
 
@@ -1243,15 +1754,56 @@ def render_faq_page() -> str:
 
 def render_support_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
-    sections_html = "".join(
-        f"""
-        <div class="section-block">
-          <h2>{html.escape(title)}</h2>
-          <p>{html.escape(copy)}</p>
-        </div>
-        """
-        for title, copy in page["sections"]
-    )
+    section_parts = []
+    for section in page["sections"]:
+        if isinstance(section, tuple):
+            title, copy = section
+            section_parts.append(
+                f"""
+                <div class="section-block">
+                  <h2>{html.escape(title)}</h2>
+                  <p>{html.escape(copy)}</p>
+                </div>
+                """
+            )
+            continue
+
+        title = html.escape(section["title"])
+        copy_html = f"<p>{html.escape(section['copy'])}</p>" if section.get("copy") else ""
+        bullets_html = ""
+        if section.get("bullets"):
+            bullets_html = "<ul class=\"section-list\">" + "".join(
+                f"<li>{html.escape(item)}</li>"
+                for item in section["bullets"]
+            ) + "</ul>"
+        helper_html = (
+            f"<p class=\"section-helper\">{html.escape(section['helper'])}</p>"
+            if section.get("helper")
+            else ""
+        )
+        link_html = (
+            f"<a href=\"{html.escape(section['link_href'])}\" class=\"text-link\">{html.escape(section['link_label'])}</a>"
+            if section.get("link_href") and section.get("link_label")
+            else ""
+        )
+        cta_html = (
+            f"<div class=\"section-cta\"><a href=\"{html.escape(section['cta_href'])}\" class=\"cta\">{html.escape(section['cta_label'])}</a></div>"
+            if section.get("cta_href") and section.get("cta_label")
+            else ""
+        )
+        section_parts.append(
+            f"""
+            <div class="section-block">
+              <h2>{title}</h2>
+              {copy_html}
+              {bullets_html}
+              {helper_html}
+              {link_html}
+              {cta_html}
+            </div>
+            """
+        )
+    sections_html = "".join(section_parts)
     return f"""
     <!doctype html>
     <html lang="en">
@@ -1344,6 +1896,43 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             color: #B7C6E6;
             line-height: 1.7;
             font-size: 15px;
+          }}
+          .section-list {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+            color: #B7C6E6;
+          }}
+          .section-list li {{
+            margin-bottom: 8px;
+            line-height: 1.7;
+          }}
+          .section-helper {{
+            margin-top: 12px;
+            color: #9FB0D4;
+            font-size: 14px;
+          }}
+          .text-link {{
+            display: inline-block;
+            margin-top: 10px;
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 14px;
+            font-weight: 700;
+          }}
+          .section-cta {{
+            margin-top: 16px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
           }}
           .section-block + .section-block {{
             margin-top: 18px;
@@ -1443,6 +2032,16 @@ def cv_keyword_optimiser_page() -> str:
 @app.get("/cv-improvement-tool", response_class=HTMLResponse)
 def cv_improvement_tool_page() -> str:
     return render_seo_page("cv-improvement-tool", SEO_PAGES["cv-improvement-tool"])
+
+
+@app.get("/example-cv-report", response_class=HTMLResponse)
+def example_cv_report_page() -> str:
+    return render_example_report_page()
+
+
+@app.get("/google4cffcb1da00a66a5.html")
+def google_verification() -> PlainTextResponse:
+    return PlainTextResponse("google-site-verification: google4cffcb1da00a66a5.html")
 
 
 @app.get("/faq", response_class=HTMLResponse)
