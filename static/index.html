@@ -266,7 +266,7 @@
       #07142D;
   }
 
-  html.embed-tool-mode .topbar,
+  html.embed-tool-mode .site-header,
   html.embed-tool-mode .helper-column,
   html.embed-tool-mode .site-footer,
   html.embed-tool-mode #supportModal {
@@ -422,19 +422,68 @@
     gap: 20px;
   }
 
-  .topbar {
+  .site-header {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(80, 103, 146, 0.24);
+  }
+
+  .site-header-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 18px;
-    margin-bottom: 20px;
-    padding-bottom: 4px;
   }
 
-  .topbar-right {
+  .site-header-right {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-left: auto;
+  }
+
+  .site-logo {
+    text-decoration: none;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .site-nav-link {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    color: #dce5ff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-nav-link:hover,
+  .site-nav-link.is-active {
+    color: #ffffff;
+    transform: none;
+  }
+
+  .site-header-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.22);
+    white-space: nowrap;
   }
 
   .account-menu {
@@ -586,21 +635,8 @@
   }
 
   .header-link {
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
-    box-shadow: none;
-    color: #dce5ff;
-    font-size: 14px;
-    font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 2px;
-  }
-
-  .header-link:hover {
-    color: #ffffff;
-    transform: none;
   }
 
   .hero-eyebrow {
@@ -1005,15 +1041,8 @@
       font-size: 1.45rem;
     }
 
-    .topbar {
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .topbar-right {
-      width: 100%;
-      justify-content: flex-end;
+    .site-header-inner {
+      gap: 12px;
     }
 
     .logo-mark {
@@ -1278,13 +1307,6 @@
     }
   }
 
-  .topbar-right {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    min-width: 240px;
-  }
-
   .account-chip {
     display: inline-flex;
     align-items: flex-start;
@@ -1378,9 +1400,13 @@
   }
 
   @media (max-width: 900px) {
-    .topbar-right {
-      width: 100%;
-      justify-content: flex-start;
+    .site-nav,
+    #headerSignInBtn {
+      display: none;
+    }
+
+    .site-header-right {
+      margin-left: auto;
     }
 
     .account-chip {
@@ -1454,6 +1480,14 @@
     letter-spacing: 0.08em;
     color: #AFC0FF;
     font-weight: 700;
+  }
+
+  .score-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #D8E2FF;
   }
 
   .score-value {
@@ -1927,8 +1961,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div class="topbar">
-    <div class="logo-wrap">
+  <header class="site-header">
+    <div class="site-header-inner">
+    <a href="/" class="site-logo logo-wrap">
       <div class="logo-mark">
         <span>CV</span>
       </div>
@@ -1936,10 +1971,17 @@
         <div class="logo-title"><span class="logo-title-strong">CV</span> <span class="logo-title-light">Optimiser</span></div>
         <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
       </div>
-    </div>
+    </a>
 
-    <div class="topbar-right">
-      <button id="headerSignInBtn" class="header-link" type="button">Sign in</button>
+    <div class="site-header-right">
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/cv-checker" class="site-nav-link">CV Checker</a>
+        <a href="/how-it-works" class="site-nav-link">How it works</a>
+        <a href="/example-cv-report" class="site-nav-link">Example Report</a>
+        <a href="/cv-improvement-tool" class="site-nav-link">Upgrade</a>
+      </nav>
+      <button id="headerSignInBtn" class="site-nav-link header-link" type="button">Sign in</button>
+      <a href="/#mainToolCard" class="site-header-cta">Check my CV</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -1964,7 +2006,8 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </header>
 
   <div id="checkoutStatus" class="status-banner info hidden"></div>
 
@@ -2052,10 +2095,9 @@
           <p class="tool-free-copy">1 free CV check available — no card required</p>
           <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
           <div id="loadingSteps" class="loading-steps hidden">
-            <div class="loading-step">Analyzing your CV...</div>
-            <div class="loading-step">Checking keywords...</div>
-            <div class="loading-step">Comparing to job description...</div>
-            <div class="loading-step">Building improvement plan...</div>
+            <div class="loading-step">Checking structure…</div>
+            <div class="loading-step">Finding missing keywords…</div>
+            <div class="loading-step">Building priority fixes…</div>
           </div>
         </div>
 
@@ -2102,7 +2144,8 @@
 
           <div class="score-hero">
             <div class="score-hero-left">
-              <div class="score-kicker">Your CV score</div>
+              <div class="score-kicker">Your free CV check</div>
+              <div class="score-label">CV Match Score</div>
               <div id="score" class="score-value"></div>
               <div id="resultStatusHeadline" class="score-headline">Unlikely to pass ATS filters</div>
               <div id="resultStatusCopy" class="score-subtext">You’re missing key keywords and your CV isn’t aligned with this role yet.</div>
@@ -2130,16 +2173,31 @@
           </div>
 
           <div class="result-section">
-            <div class="result-section-title">Top 3 fixes to improve your CV</div>
+            <div class="result-section-title">Top 3 fixes to make first</div>
             <div class="result-section-subtitle">Focus on these first to improve your chances.</div>
             <ul id="resultPriorityPreview" class="result-list"></ul>
           </div>
 
           <div class="result-section">
-            <div class="result-section-title">Missing keywords recruiters expect</div>
+            <div class="result-section-title">Missing keywords</div>
             <div class="result-section-subtitle">These missing terms make your CV look less aligned with the role.</div>
             <ul id="resultKeywordPreview" class="result-list"></ul>
             <p id="resultKeywordTail" class="keyword-tail-note hidden">…and more in the full report</p>
+          </div>
+
+          <div class="result-section">
+            <div class="result-section-title">Example improvement</div>
+            <div class="result-section-subtitle">A stronger, more results-focused way to phrase the same experience.</div>
+            <div class="before-after">
+              <div class="before-after-card">
+                <strong>Before</strong>
+                <p id="resultExampleBefore">Responsible for managing customer accounts.</p>
+              </div>
+              <div class="before-after-card">
+                <strong>After</strong>
+                <p id="resultExampleAfter">Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
+              </div>
+            </div>
           </div>
 
           <div class="urgency-block">
@@ -2192,35 +2250,35 @@
             <ul id="priorityFixes" class="result-list"></ul>
           </div>
 
-          <div class="result-grid-two">
-            <div class="result-section">
+          <div id="detailKeywordsWrap" class="result-grid-two">
+            <div id="matchedKeywordsWrap" class="result-section">
               <div class="result-section-title">Matched keywords</div>
               <div class="result-section-subtitle">What your CV already supports well for this role.</div>
               <ul id="matchedKeywords" class="result-list"></ul>
             </div>
 
-            <div class="result-section">
+            <div id="missingKeywordsDetailWrap" class="result-section">
               <div class="result-section-title">Missing keywords</div>
               <div class="result-section-subtitle">Important gaps or weak signals in the current CV.</div>
               <ul id="keywords" class="result-list"></ul>
             </div>
           </div>
 
-          <div class="result-grid-two">
-            <div class="result-section">
+          <div id="detailStrengthsWrap" class="result-grid-two">
+            <div id="strongPointsWrap" class="result-section">
               <div class="result-section-title">What works</div>
               <div class="result-section-subtitle">Strengths that support interview potential.</div>
               <ul id="strongPoints" class="result-list"></ul>
             </div>
 
-            <div class="result-section">
+            <div id="weakPointsWrap" class="result-section">
               <div class="result-section-title">What will hold you back</div>
               <div class="result-section-subtitle">Weaknesses, ambiguity, or missing evidence hurting fit.</div>
               <ul id="weakPoints" class="result-list"></ul>
             </div>
           </div>
 
-          <div class="result-section">
+          <div id="bulletsWrap" class="result-section">
             <div class="result-section-title">Rewritten CV bullets</div>
             <div class="result-section-subtitle">Stronger bullet points you can adapt directly into your CV.</div>
             <ul id="bullets" class="result-list"></ul>
@@ -2255,13 +2313,13 @@
             </div>
           </div>
 
-          <div class="result-section">
+          <div id="bestNextStepWrap" class="result-section">
             <div class="result-section-title">Best next step</div>
             <div class="result-section-subtitle">The single highest-value improvement to make next.</div>
             <p id="nextStep" class="result-paragraph"></p>
           </div>
 
-          <div class="result-section" style="padding:14px 16px;">
+          <div id="resultDisclaimerWrap" class="result-section" style="padding:14px 16px;">
             <p class="small">
               Always review and edit suggestions to make sure they remain fully accurate to your real experience, responsibilities, and results.
             </p>
@@ -2285,33 +2343,17 @@
   <button id="resultsUpgradeBtn" type="button">Upgrade to Pro</button>
 </div>
 
-<div id="anonymousSignupPrompt" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Want to save this result?</div>
-  <div id="anonymousSignupPromptCopy" class="results-upgrade-cta-copy">
-    Create a free account to save your CV check and unlock the full report.
-  </div>
-  <div class="email-capture-form">
-    <input id="resultEmailInput" type="email" placeholder="you@example.com">
-    <div class="email-capture-actions">
-      <button id="emailResultsBtn" class="save-result-btn" type="button">Email my results</button>
-    </div>
-    <p class="small">We’ll email you a secure link so you can save this result and come back to it. No spam.</p>
-    <p id="emailCaptureStatus" class="small email-capture-status"></p>
-  </div>
-</div>
-
 <div id="proUnlockPrompt" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Want the full CV rewrite and detailed improvements?</div>
+  <div class="results-upgrade-cta-title">Unlock the full CV improvement plan</div>
   <div class="results-upgrade-cta-copy">
-    <p>Get a full breakdown of your CV including:</p>
-    <p>• Improved professional summary</p>
-    <p>• Stronger bullet points</p>
-    <p>• Role-specific keyword optimisation</p>
-    <p>• ATS optimisation suggestions</p>
-    <p>Upgrade to unlock the full report.</p>
+    <p>Your free check shows what is holding your CV back. The full report shows exactly how to rewrite and improve it.</p>
+    <p>• Full professional summary rewrite</p>
+    <p>• Stronger bullet points tailored to the role</p>
+    <p>• Complete ATS keyword optimisation</p>
+    <p>• Detailed priority improvement plan</p>
+    <p>• Export-ready action checklist</p>
   </div>
   <button id="proUnlockBtn" type="button">Unlock full report</button>
-  <p class="small" style="margin-top:10px;">Most users improve their CV score by 20–40% after applying these changes.</p>
 </div>
 
 <div id="lockedPreviewCard" class="results-upgrade-cta locked-preview hidden">
@@ -2324,6 +2366,21 @@
   </div>
   <div class="locked-preview-overlay">
     <span class="pro-badge">PRO</span>
+  </div>
+</div>
+
+<div id="anonymousSignupPrompt" class="results-upgrade-cta hidden">
+  <div class="results-upgrade-cta-title">Want to save this result?</div>
+  <div id="anonymousSignupPromptCopy" class="results-upgrade-cta-copy">
+    Create a free account to save your CV check and come back to it later.
+  </div>
+  <div class="email-capture-form">
+    <input id="resultEmailInput" type="email" placeholder="you@example.com">
+    <div class="email-capture-actions">
+      <button id="emailResultsBtn" class="save-result-btn" type="button">Save my result</button>
+    </div>
+    <p class="small">We’ll email you a secure link so you can save this result and come back to it. No spam.</p>
+    <p id="emailCaptureStatus" class="small email-capture-status"></p>
   </div>
 </div>
         </div>
@@ -2419,31 +2476,25 @@
         <p>Fast, practical CV feedback for job applications</p>
       </div>
       <div class="site-footer-links-group">
-        <div class="site-footer-title">Landing Pages</div>
+        <div class="site-footer-title">Tools</div>
         <a href="/cv-checker">CV Checker</a>
         <a href="/cv-score-checker">CV Score Checker</a>
-        <a href="/job-description-cv-match">Job Description CV Match</a>
         <a href="/ats-cv-checker">ATS CV Checker</a>
         <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-        <a href="/cv-improvement-tool">CV Improvement Tool</a>
-        <a href="/example-cv-report">Example Report</a>
       </div>
       <div class="site-footer-links-group">
         <div class="site-footer-title">Guides</div>
         <a href="/why-is-my-cv-not-getting-interviews">Why your CV is not getting interviews</a>
-        <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV to a job description</a>
+        <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV</a>
         <a href="/ats-cv-keywords">ATS CV keywords</a>
-        <a href="/cv-mistakes-that-cost-interviews">CV mistakes that cost interviews</a>
-        <a href="/how-to-improve-cv-score">How to improve CV score</a>
+        <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
       </div>
       <div class="site-footer-links-group">
-        <div class="site-footer-title">Trust</div>
+        <div class="site-footer-title">Help</div>
         <a href="/how-it-works">How it works</a>
-        <a href="/features">Features</a>
         <a href="/faq">FAQ</a>
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
-        <a href="/about">About</a>
       </div>
     </div>
     <div class="site-footer-bottom">
@@ -2538,6 +2589,8 @@
     const proUnlockPrompt = document.getElementById("proUnlockPrompt");
     const lockedPreviewCard = document.getElementById("lockedPreviewCard");
     const proUnlockBtn = document.getElementById("proUnlockBtn");
+    const resultExampleBefore = document.getElementById("resultExampleBefore");
+    const resultExampleAfter = document.getElementById("resultExampleAfter");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
     const resultKeywordPreview = document.getElementById("resultKeywordPreview");
     const resultKeywordTail = document.getElementById("resultKeywordTail");
@@ -2554,6 +2607,12 @@
     const proSkillsWrap = document.getElementById("proSkillsWrap");
     const proAtsWrap = document.getElementById("proAtsWrap");
     const proRisksWrap = document.getElementById("proRisksWrap");
+    const detailKeywordsWrap = document.getElementById("detailKeywordsWrap");
+    const detailStrengthsWrap = document.getElementById("detailStrengthsWrap");
+    const bulletsWrap = document.getElementById("bulletsWrap");
+    const bestNextStepWrap = document.getElementById("bestNextStepWrap");
+    const resultDisclaimerWrap = document.getElementById("resultDisclaimerWrap");
+    const resultsPanel = document.getElementById("results");
     const loginPasswordInput = document.getElementById("loginPasswordInput");
     const setPasswordBtn = document.getElementById("setPasswordBtn");
     const passwordCardTitle = document.getElementById("passwordCardTitle");
@@ -2669,10 +2728,9 @@
 
     function startLoadingStages() {
       const stages = [
-        "Analyzing your CV...",
-        "Checking keywords...",
-        "Comparing to job description...",
-        "Building improvement plan..."
+        "Checking structure…",
+        "Finding missing keywords…",
+        "Building priority fixes…"
       ];
       let stageIndex = 0;
       toolLoadingNote.textContent = stages[stageIndex];
@@ -3343,12 +3401,14 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     resultsUpgradeBtn.addEventListener("click", function() {
       trackEvent("results_upgrade_clicked");
+      trackEvent("unlock_full_report_clicked");
       logEvent("upgrade_clicked");
       upgradeBtn.click();
     });
 
     proUnlockBtn.addEventListener("click", function() {
       trackEvent("pro_unlock_clicked");
+      trackEvent("unlock_full_report_clicked");
       logEvent("upgrade_clicked");
       upgradeBtn.click();
     });
@@ -3373,6 +3433,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         return;
       }
 
+      trackEvent("save_result_clicked");
       emailCaptureStatus.textContent = "Sending your result link...";
       emailInput.value = email;
 
@@ -3493,7 +3554,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     optimiseBtn.addEventListener("click", async function() {
       optimiseBtn.disabled = true;
       const originalText = optimiseBtn.textContent;
-      optimiseBtn.textContent = "Analyzing your CV...";
+      optimiseBtn.textContent = "Checking your CV…";
       console.log("optimise clicked");
       startLoadingStages();
       loadingSteps.classList.remove("hidden");
@@ -3637,7 +3698,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         anonymousPriorityWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.previewPriorityFixes && data.previewPriorityFixes.length));
 
         anonymousKeywordGap.textContent = data.keywordGapInsight || "";
-        anonymousKeywordGapWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.keywordGapInsight));
+        anonymousKeywordGapWrap.classList.add("hidden");
 
         const priorityPreviewItems = (data.previewPriorityFixes && data.previewPriorityFixes.length)
           ? data.previewPriorityFixes.slice(0, 3)
@@ -3661,7 +3722,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           });
         }
 
-        const keywordPreviewItems = (data.missingKeywords || []).slice(0, 6);
+        const keywordPreviewItems = (data.missingKeywords || []).slice(0, 5);
         resultKeywordPreview.innerHTML = "";
         keywordPreviewItems.forEach(function(item) {
           const li = document.createElement("li");
@@ -3674,6 +3735,11 @@ passwordLoginBtn.addEventListener("click", async function() {
           resultKeywordPreview.appendChild(li);
         }
         resultKeywordTail.classList.toggle("hidden", !(data.missingKeywords && data.missingKeywords.length > keywordPreviewItems.length));
+
+        resultExampleBefore.textContent = "Responsible for managing customer accounts.";
+        resultExampleAfter.textContent = (data.bulletPoints && data.bulletPoints.length && data.bulletPoints[0])
+          ? data.bulletPoints[0]
+          : "Managed key customer accounts and turned plans into measurable commercial opportunities.";
 
         const matchedKeywordCount = (data.matchedKeywords || []).length;
         const missingKeywordCount = (data.missingKeywords || []).length;
@@ -3720,17 +3786,28 @@ passwordLoginBtn.addEventListener("click", async function() {
           lockedInsights.classList.toggle("hidden", isCurrentlyPro || !!data.isAnonymousResult);
         }
         resultsUpgradeCta.classList.add("hidden");
-        anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and unlock the full report.";
+        const isAnonymousResult = !!data.isAnonymousResult;
+        anonymousSummaryWrap.classList.add("hidden");
+        anonymousPriorityWrap.classList.add("hidden");
+        anonymousKeywordGapWrap.classList.add("hidden");
+        detailKeywordsWrap.classList.toggle("hidden", isAnonymousResult);
+        detailStrengthsWrap.classList.toggle("hidden", isAnonymousResult);
+        bulletsWrap.classList.toggle("hidden", isAnonymousResult);
+        bestNextStepWrap.classList.toggle("hidden", isAnonymousResult);
+        resultDisclaimerWrap.classList.toggle("hidden", isAnonymousResult);
+        anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !data.isAnonymousResult);
         proUnlockPrompt.classList.toggle("hidden", !!isCurrentlyPro);
         lockedPreviewCard.classList.toggle("hidden", !!isCurrentlyPro);
-        document.getElementById("results").classList.remove("hidden");
+        resultsPanel.classList.remove("hidden");
+        resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
         status.textContent = "Done.";
         status.classList.add("is-success");
         toolLoadingNote.textContent = "No signup needed for your first result";
         loadingSteps.classList.add("hidden");
         stopLoadingStages();
         trackEvent("result_shown", { anonymous_result: !!data.isAnonymousResult });
+        trackEvent("free_result_shown", { anonymous_result: !!data.isAnonymousResult });
         logEvent("cv_result_generated", { anonymous_result: !!data.isAnonymousResult });
 
         if (data.isAnonymousResult) {
@@ -3741,6 +3818,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
         if (!isCurrentlyPro) {
           trackEvent("pro_unlock_prompt_shown");
+          trackEvent("locked_report_preview_shown", { anonymous_result: !!data.isAnonymousResult });
         }
 
         if (data.plan) {

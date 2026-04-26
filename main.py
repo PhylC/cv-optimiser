@@ -75,19 +75,29 @@ if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
     supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 FAQ_ENTRIES: list[tuple[str, str]] = [
-    ("Do I need to create an account?", "No. You can run a free CV check without signing up."),
-    ("Is my CV stored?", "No. Your CV is only used to generate your result and is not stored."),
     (
-        "How does the CV score work?",
-        "The score is based on keyword relevance, structure, role alignment and recruiter-style best practices.",
+        "Why does my CV get rejected instantly?",
+        "Most CVs are filtered by ATS systems before a recruiter sees them. If your CV doesn’t contain the right keywords or match the job description, it can be rejected automatically.",
     ),
     (
-        "What do I get with the full report?",
-        "The full report gives you a detailed improvement plan, keyword optimisation and stronger CV wording.",
+        "What is a good CV score?",
+        "A good CV score means your CV matches the job description closely in skills, experience, and keywords. High relevance matters more than generic polish.",
     ),
     (
-        "Can I use this for any job?",
-        "Yes. Paste the job description for the role you want and the tool will compare your CV against it.",
+        "Do recruiters actually read CVs?",
+        "They scan them first. Most recruiters spend seconds looking for relevant experience, keywords, and proof of impact before deciding whether to keep reading.",
+    ),
+    (
+        "How many keywords should a CV have?",
+        "Usually 10 to 30 relevant keywords, used naturally. Too few hurts relevance. Too many hurts readability.",
+    ),
+    (
+        "Should I tailor my CV for every job?",
+        "Yes. A tailored CV performs better because it shows the exact relevance recruiters and ATS systems are looking for.",
+    ),
+    (
+        "Can I beat ATS without keywords?",
+        "No. If your CV doesn’t reflect the language and priorities in the job description, ATS systems have less evidence that you fit the role.",
     ),
 ]
 
@@ -139,6 +149,55 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
 }
 
 SUPPORT_PAGES: dict[str, dict[str, Any]] = {
+    "cv-statistics": {
+        "title": "CV Statistics 2026 | Job Application, ATS and Hiring Data",
+        "description": "Key CV and hiring statistics including ATS filtering rates, recruiter behaviour and job application trends.",
+        "h1": "CV Statistics (2026)",
+        "intro": "This page summarises key CV and hiring statistics to help job seekers understand how recruitment works today.",
+        "sections": [
+            {
+                "title": "Key CV statistics",
+                "bullets": [
+                    "Recruiters often spend only 6 to 10 seconds on an initial CV scan",
+                    "A large share of CVs are filtered by ATS systems before a recruiter reviews them properly",
+                    "Tailored CVs perform better than generic versions because relevance is easier to see",
+                ],
+            },
+            {
+                "title": "ATS statistics",
+                "bullets": [
+                    "Many companies use Applicant Tracking Systems (ATS) to filter candidates",
+                    "CVs missing relevant keywords are less likely to pass initial screening",
+                    "Keyword alignment is one of the biggest factors in CV success",
+                ],
+            },
+            {
+                "title": "Job application statistics",
+                "bullets": [
+                    "Most job seekers apply to multiple roles before getting interviews",
+                    "Response rates usually improve when CVs are tailored to the role instead of reused unchanged",
+                ],
+            },
+            {
+                "title": "Why these stats matter",
+                "copy": "These patterns shape what happens in real job applications. If your CV is generic, missing the job language, or unclear about impact, it is easier for ATS systems and recruiters to skip. A stronger match, clearer structure, and better keyword coverage give your application a better chance of surviving that first screening stage.",
+            },
+            {
+                "title": "Use the tool",
+                "copy": "Want to see how your CV performs?",
+                "cta_href": "/#mainToolCard",
+                "cta_label": "Check your CV →",
+            },
+            {
+                "title": "Related pages",
+                "copy": "Use these pages if you want to understand the tool better or run your own check.",
+                "links": [
+                    ("/cv-checker", "CV Checker"),
+                    ("/how-it-works", "How CV Optimiser works"),
+                ],
+            },
+        ],
+    },
     "how-it-works": {
         "title": "How CV Optimiser works",
         "description": "Learn how CV Optimiser checks your CV against a job description, calculates your score, and highlights missing keywords and improvements.",
@@ -484,103 +543,141 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
 
 BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     "why-is-my-cv-not-getting-interviews": {
-        "title": "Why Your CV Is Not Getting Interviews | CV Optimiser",
-        "meta_description": "Applying for jobs but not hearing back? Learn common reasons your CV may be ignored and how to improve it.",
-        "h1": "Why your CV is not getting interviews",
-        "intro": "If you are applying for jobs but not hearing back, your CV may not be showing your experience clearly enough.",
-        "top_cta": "Check your CV here →",
-        "bottom_cta": "Check your CV here →",
+        "title": "Why Your CV Isn’t Getting Interviews (And How to Fix It Fast)",
+        "meta_description": "Applying for jobs and hearing nothing back? See why your CV is getting ignored and what to fix first.",
+        "h1": "Why Your CV Isn’t Getting Interviews",
+        "intro": "If you're applying for jobs and hearing nothing back, your CV isn’t working. Not because you're unqualified — but because your CV isn’t aligned with how hiring actually works.",
+        "summary_title": "Quick summary:",
+        "summary_bullets": [
+            "Your CV isn’t tailored to the job",
+            "You’re missing key ATS keywords",
+            "Your achievements aren’t clear or measurable",
+        ],
+        "top_cta": "Check your CV now",
+        "bottom_cta": "Check your CV now",
         "sections": [
             {
-                "title": "Common reasons CVs get ignored",
-                "bullets": [
-                    "the CV does not match the job description",
-                    "important keywords are missing",
-                    "achievements are unclear",
-                    "the summary is too generic",
-                    "relevant experience is buried too far down the page",
+                "title": "1. Your CV isn’t tailored to the job",
+                "paragraphs": [
+                    "Most CVs fail because they’re generic. Recruiters scan for relevance — not effort.",
+                    "Fix: Match your CV to the job description. Use the same language and priorities.",
                 ],
             },
             {
-                "title": "Why relevance matters",
-                "copy": "Recruiters scan quickly. If your CV does not make your fit obvious, it is easy to move on to another candidate.",
+                "title": "2. You’re missing critical keywords",
+                "paragraphs": [
+                    "Applicant Tracking Systems scan CVs for keywords from the job description. If they don’t find them, your CV gets filtered out even if you could do the job.",
+                    "Fix: Add the relevant skills, tools, responsibilities, and job terms naturally across your summary, experience, and skills sections.",
+                ],
             },
             {
-                "title": "How to fix it",
-                "bullets": [
-                    "tailor your CV to each job",
-                    "use measurable results",
-                    "include relevant keywords",
-                    "strengthen your professional summary",
-                    "make achievements easier to scan",
+                "title": "3. Your CV lacks measurable impact",
+                "paragraphs": [
+                    "Recruiters don’t care about responsibilities. They care about results.",
+                ],
+                "examples": [
+                    ("Weak", "Managed accounts"),
+                    ("Strong", "Managed £2M account portfolio, delivering 18% growth"),
+                ],
+            },
+            {
+                "title": "What to do next",
+                "paragraphs": [
+                    "Most people don’t know what to fix — that’s the real problem.",
+                    "Use the tool below to see exactly what’s missing from your CV and how to improve it.",
                 ],
             },
         ],
         "related_links": [
             ("/how-to-tailor-cv-to-job-description", "How to tailor your CV to a job description"),
-            ("/example-cv-report", "View example CV report"),
+            ("/example-cv-report", "See an example CV report"),
+            ("/cv-checker", "Use the CV checker"),
         ],
     },
     "how-to-tailor-cv-to-job-description": {
         "title": "How to Tailor Your CV to a Job Description | CV Optimiser",
         "meta_description": "Learn how to tailor your CV to a job description using keywords, relevant experience and clearer achievements.",
-        "h1": "How to tailor your CV to a job description",
-        "intro": "Tailoring your CV is one of the simplest ways to improve your chances of getting interviews.",
-        "top_cta": "Test your CV against a job →",
-        "bottom_cta": "Test your CV against a job →",
+        "h1": "How to Tailor Your CV to a Job Description",
+        "intro": "Tailoring your CV isn’t optional — it’s the difference between getting ignored and getting interviews.",
+        "summary_bullets": [
+            "Match keywords from the job description",
+            "Reorder your experience to match priorities",
+            "Highlight relevant achievements first",
+        ],
+        "top_cta": "Tailor your CV automatically",
+        "bottom_cta": "Tailor your CV automatically",
         "sections": [
             {
-                "title": "Start with the job description",
-                "copy": "Read the job description and highlight the skills, experience and responsibilities that appear most important.",
+                "title": "Step 1: Extract keywords",
+                "paragraphs": [
+                    "Look for repeated skills, tools, and job titles. Those repeated terms usually tell you what matters most.",
+                ],
             },
             {
-                "title": "Match your experience to the role",
-                "copy": "Rewrite your CV so the most relevant experience is easy to find. Use similar language where it is natural and truthful.",
+                "title": "Step 2: Mirror the language",
+                "paragraphs": [
+                    "Use the exact wording where possible. If the job description says stakeholder management, don’t hide behind a softer phrase like client coordination.",
+                ],
             },
             {
-                "title": "Use keywords carefully",
-                "copy": "Add relevant keywords from the job description, but do not force them in. Your CV still needs to read naturally.",
+                "title": "Step 3: Reorder your CV",
+                "paragraphs": [
+                    "Put the most relevant experience at the top. Recruiters scan, not read.",
+                ],
+                "examples": [
+                    ("Before", "General experience first"),
+                    ("After", "Role-relevant experience first"),
+                ],
             },
             {
-                "title": "Make achievements specific",
-                "copy": "Replace vague responsibilities with clear outcomes, numbers and business impact where possible.",
+                "title": "What this changes",
+                "paragraphs": [
+                    "A tailored CV makes your fit obvious faster. That is what gets interviews.",
+                ],
             },
         ],
         "related_links": [
             ("/job-description-cv-match", "Match your CV to any job description"),
             ("/how-it-works", "Learn how CV Optimiser works"),
+            ("/cv-score-checker", "Check your CV score"),
         ],
     },
     "ats-cv-keywords": {
         "title": "ATS CV Keywords Explained | CV Optimiser",
         "meta_description": "Learn what ATS CV keywords are, why they matter and how to find missing keywords in your CV.",
-        "h1": "ATS CV keywords explained",
-        "intro": "ATS keywords are the words and phrases that connect your CV to a job description.",
-        "top_cta": "Find missing keywords →",
-        "bottom_cta": "Find missing keywords →",
+        "h1": "ATS CV Keywords: How to Get Past Filters",
+        "intro": "Most CVs fail before a human ever sees them. ATS software scans for keywords that match the job description.",
+        "top_cta": "Find missing keywords in your CV",
+        "bottom_cta": "Find missing keywords in your CV",
         "sections": [
             {
-                "title": "What are ATS keywords?",
-                "copy": "They often include job titles, skills, tools, qualifications and responsibilities mentioned in the job advert.",
-            },
-            {
-                "title": "Why they matter",
-                "copy": "Applicant Tracking Systems and recruiters use keywords to understand whether your CV matches the role.",
-            },
-            {
-                "title": "Examples of keyword types",
-                "bullets": [
-                    "technical skills",
-                    "job titles",
-                    "systems and tools",
-                    "industry terms",
-                    "responsibilities",
-                    "qualifications",
+                "title": "What are CV keywords?",
+                "paragraphs": [
+                    "Keywords are the skills, job titles, tools, qualifications, and industry terms that match what employers are looking for.",
                 ],
             },
             {
-                "title": "How to use them well",
-                "copy": "Use relevant keywords naturally in your summary, experience and skills sections. Avoid stuffing your CV with repeated phrases.",
+                "title": "How many keywords should you include?",
+                "paragraphs": [
+                    "Usually 10 to 30 relevant keywords, used naturally across your CV. More is not better if the wording starts sounding forced.",
+                ],
+            },
+            {
+                "title": "Examples",
+                "bullets": [
+                    "Project management",
+                    "Data analysis",
+                    "Stakeholder management",
+                    "Sales growth",
+                ],
+            },
+            {
+                "title": "Mistakes to avoid",
+                "bullets": [
+                    "Keyword stuffing",
+                    "Using irrelevant skills",
+                    "Generic wording",
+                ],
             },
         ],
         "related_links": [
@@ -591,29 +688,31 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     "cv-mistakes-that-cost-interviews": {
         "title": "CV Mistakes That Cost You Interviews | CV Optimiser",
         "meta_description": "Avoid common CV mistakes that reduce your chances of getting interviews, from vague achievements to missing keywords.",
-        "h1": "CV mistakes that cost you interviews",
+        "h1": "CV Mistakes That Cost You Interviews",
         "intro": "Small CV mistakes can make strong candidates look weaker than they are.",
-        "top_cta": "Check your CV →",
-        "bottom_cta": "Check your CV →",
+        "top_cta": "Fix your CV now",
+        "bottom_cta": "Fix your CV now",
         "sections": [
             {
-                "title": "Common CV mistakes",
+                "title": "The mistakes",
                 "bullets": [
-                    "vague responsibilities",
-                    "no measurable impact",
-                    "poor structure",
-                    "generic summary",
-                    "not tailored to the job",
-                    "missing role-specific keywords",
+                    "Generic CVs",
+                    "No measurable achievements",
+                    "Missing keywords",
+                    "Poor structure",
                 ],
             },
             {
-                "title": "Why these mistakes matter",
-                "copy": "Recruiters need to understand your fit quickly. If your CV is hard to scan or does not match the role, it may be skipped.",
+                "title": "Biggest mistake: Writing for yourself",
+                "paragraphs": [
+                    "Your CV isn’t about you. It’s about what the employer needs and whether they can see that fit quickly.",
+                ],
             },
             {
-                "title": "How to improve",
-                "copy": "Focus on clarity, relevance and measurable impact. Make the strongest evidence easy to find.",
+                "title": "Fix it",
+                "paragraphs": [
+                    "Align your CV with the role, not your history. Lead with relevance, impact, and proof.",
+                ],
             },
         ],
         "related_links": [
@@ -624,26 +723,34 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     "how-to-improve-cv-score": {
         "title": "How to Improve Your CV Score | CV Optimiser",
         "meta_description": "Learn how to improve your CV score by adding keywords, measurable results and clearer role alignment.",
-        "h1": "How to improve your CV score",
+        "h1": "How to Improve Your CV Score",
         "intro": "Your CV score improves when your CV becomes clearer, more relevant and better matched to the job description.",
-        "top_cta": "Check your CV score →",
-        "bottom_cta": "Check your CV score →",
+        "top_cta": "Check your CV score",
+        "bottom_cta": "Check your CV score",
         "sections": [
             {
                 "title": "Add measurable results",
-                "copy": "Use numbers, outcomes and examples of impact where possible.",
+                "paragraphs": [
+                    "Use numbers, outcomes, and evidence of impact. Responsibilities don’t move the score much. Results do.",
+                ],
             },
             {
                 "title": "Match the job description",
-                "copy": "Use relevant keywords and make your most relevant experience easy to find.",
+                "paragraphs": [
+                    "Use relevant keywords and make your most relevant experience easy to find. If the alignment is hidden, the score stays weak.",
+                ],
             },
             {
                 "title": "Improve your summary",
-                "copy": "Your summary should quickly explain why you are a strong fit for the target role.",
+                "paragraphs": [
+                    "Your summary should make your fit obvious fast. Generic opening lines waste valuable space.",
+                ],
             },
             {
                 "title": "Simplify the structure",
-                "copy": "A clear CV structure helps recruiters and ATS systems understand your experience faster.",
+                "paragraphs": [
+                    "A clear structure helps both recruiters and ATS systems understand your experience faster. If they have to work for it, they usually won’t.",
+                ],
             },
         ],
         "related_links": [
@@ -661,6 +768,7 @@ SITEMAP_URLS: list[str] = [
     f"{SITE_URL}/cv-keyword-optimiser",
     f"{SITE_URL}/ats-cv-checker",
     f"{SITE_URL}/cv-improvement-tool",
+    f"{SITE_URL}/cv-statistics",
     f"{SITE_URL}/how-it-works",
     f"{SITE_URL}/example-cv-report",
     f"{SITE_URL}/why-is-my-cv-not-getting-interviews",
@@ -1244,6 +1352,134 @@ def log_seo_page_hit(path: str) -> None:
     print(f"SEO_PAGE_HIT: {path}")
 
 
+def build_site_header_css() -> str:
+    return """
+          .site-header {
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(80, 103, 146, 0.24);
+          }
+          .site-header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+          }
+          .site-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            min-width: 0;
+          }
+          .site-logo-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+            flex-shrink: 0;
+          }
+          .site-logo-title {
+            color: #E8EEFC;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+            line-height: 1;
+          }
+          .site-logo-title strong { font-weight: 800; }
+          .site-logo-title span { font-weight: 400; }
+          .site-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+          }
+          .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+          }
+          .site-nav-link {
+            color: #C7D4F1;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.12s ease;
+          }
+          .site-nav-link:hover,
+          .site-nav-link.is-active {
+            color: #FFFFFF;
+          }
+          .site-header-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 10px 24px rgba(91, 120, 255, 0.22);
+            white-space: nowrap;
+          }
+          @media (max-width: 900px) {
+            .site-header-inner {
+              gap: 12px;
+            }
+            .site-nav {
+              display: none;
+            }
+            .site-logo-title {
+              font-size: 22px;
+            }
+            .site-header-cta {
+              margin-left: auto;
+              padding: 11px 14px;
+              font-size: 13px;
+            }
+          }
+    """
+
+
+def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#mainToolCard") -> str:
+    nav_items = [
+        ("cv-checker", "/cv-checker", "CV Checker"),
+        ("how-it-works", "/how-it-works", "How it works"),
+        ("example-report", "/example-cv-report", "Example Report"),
+        ("upgrade", "/cv-improvement-tool", "Upgrade"),
+        ("sign-in", "/#authCard", "Sign in"),
+    ]
+    nav_html = "".join(
+        f'<a href="{href}" class="site-nav-link{" is-active" if active_key == key else ""}">{label}</a>'
+        for key, href, label in nav_items
+    )
+    return f"""
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="/" class="site-logo">
+          <span class="site-logo-mark">CV</span>
+          <span class="site-logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+        </a>
+        <div class="site-header-right">
+          <nav class="site-nav" aria-label="Primary">
+            {nav_html}
+          </nav>
+          <a href="{html.escape(cta_href)}" class="site-header-cta">Check my CV</a>
+        </div>
+      </div>
+    </header>
+    """
+
+
 def build_site_footer() -> str:
     return """
     <footer class="site-footer">
@@ -1253,31 +1489,25 @@ def build_site_footer() -> str:
           <p>Fast, practical CV feedback for job applications</p>
         </div>
         <div class="site-footer-links-group">
-          <div class="site-footer-title">Landing Pages</div>
+          <div class="site-footer-title">Tools</div>
           <a href="/cv-checker">CV Checker</a>
           <a href="/cv-score-checker">CV Score Checker</a>
-          <a href="/job-description-cv-match">Job Description CV Match</a>
           <a href="/ats-cv-checker">ATS CV Checker</a>
           <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
-          <a href="/cv-improvement-tool">CV Improvement Tool</a>
-          <a href="/example-cv-report">Example Report</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Guides</div>
           <a href="/why-is-my-cv-not-getting-interviews">Why your CV is not getting interviews</a>
-          <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV to a job description</a>
+          <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV</a>
           <a href="/ats-cv-keywords">ATS CV keywords</a>
-          <a href="/cv-mistakes-that-cost-interviews">CV mistakes that cost interviews</a>
-          <a href="/how-to-improve-cv-score">How to improve CV score</a>
+          <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
         </div>
         <div class="site-footer-links-group">
-          <div class="site-footer-title">Trust</div>
+          <div class="site-footer-title">Help</div>
           <a href="/how-it-works">How it works</a>
-          <a href="/features">Features</a>
           <a href="/faq">FAQ</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
-          <a href="/about">About</a>
         </div>
       </div>
       <div class="site-footer-bottom">
@@ -1340,40 +1570,8 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
-          .topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .text-link, .site-footer a {{
+{build_site_header_css()}
+          .text-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1493,7 +1691,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             display: grid;
             gap: 8px;
           }}
-          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+          .site-footer a:hover, .text-link:hover {{
             color: #FFFFFF;
           }}
           .site-footer-bottom {{
@@ -1519,13 +1717,13 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#mainToolCard" class="header-link">Homepage tool</a>
-          </div>
+          {build_site_header(
+              "upgrade" if slug == "cv-improvement-tool" else (
+                  "cv-checker" if slug == "cv-checker" else (
+                      "how-it-works" if slug == "how-it-works" else None
+                  )
+              )
+          )}
           <div class="hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
@@ -1558,9 +1756,9 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
                 <a href="/example-cv-report" class="text-link">{html.escape(example_link_label)}</a>
               </div>
               <div class="card cta-block">
-                <h2>{html.escape(page["cta_title"])}</h2>
+                <h2>Check your CV now</h2>
                 <p>{html.escape(page["cta_copy"])}</p>
-                <a href="#landing-tool" class="cta">{html.escape(page["cta_label"])}</a>
+                <a href="#landing-tool" class="cta">Check your CV now</a>
                 <p class="helper">Prefer the homepage flow? The same tool is available there too.</p>
               </div>
             </div>
@@ -1574,16 +1772,37 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
 
 def render_article_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
-    sections_html = "".join(
-        f"""
-        <div class="section-block">
-          <h2>{html.escape(section["title"])}</h2>
-          {f'<p>{html.escape(section["copy"])}</p>' if section.get("copy") else ""}
-          {('<ul class="section-list">' + ''.join(f'<li>{html.escape(item)}</li>' for item in section["bullets"]) + '</ul>') if section.get("bullets") else ""}
-        </div>
-        """
-        for section in page["sections"]
-    )
+    section_parts = []
+    for section in page["sections"]:
+        paragraphs_html = "".join(
+            f"<p>{html.escape(paragraph)}</p>"
+            for paragraph in section.get("paragraphs", [])
+        )
+        if section.get("copy"):
+            paragraphs_html = f"<p>{html.escape(section['copy'])}</p>" + paragraphs_html
+        bullets_html = ""
+        if section.get("bullets"):
+            bullets_html = '<ul class="section-list">' + "".join(
+                f"<li>{html.escape(item)}</li>"
+                for item in section["bullets"]
+            ) + "</ul>"
+        examples_html = ""
+        if section.get("examples"):
+            examples_html = '<div class="example-stack">' + "".join(
+                f'<div class="example-row"><strong>{html.escape(label)}:</strong><span>{html.escape(copy)}</span></div>'
+                for label, copy in section["examples"]
+            ) + "</div>"
+        section_parts.append(
+            f"""
+            <div class="section-block">
+              <h2>{html.escape(section["title"])}</h2>
+              {paragraphs_html}
+              {bullets_html}
+              {examples_html}
+            </div>
+            """
+        )
+    sections_html = "".join(section_parts)
     related_html = ""
     if page.get("related_links"):
         related_html = (
@@ -1592,6 +1811,14 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
                 f'<li><a href="{html.escape(href)}" class="text-link inline-link">{html.escape(label)}</a></li>'
                 for href, label in page["related_links"]
             ) +
+            "</ul></div>"
+        )
+    summary_html = ""
+    if page.get("summary_bullets"):
+        summary_html = (
+            f'<div class="summary-box"><strong>{html.escape(page.get("summary_title", "Quick summary:"))}</strong>'
+            '<ul class="section-list">' +
+            "".join(f"<li>{html.escape(item)}</li>" for item in page["summary_bullets"]) +
             "</ul></div>"
         )
     return f"""
@@ -1625,40 +1852,8 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
-          .topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .text-link, .site-footer a {{
+{build_site_header_css()}
+          .text-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1668,6 +1863,19 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             border: 1px solid rgba(92, 112, 150, 0.22);
             border-radius: 18px;
             padding: 24px;
+          }}
+          .summary-box {{
+            margin-top: 20px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.44);
+            border: 1px solid rgba(92, 112, 150, 0.2);
+          }}
+          .summary-box strong {{
+            display: block;
+            color: #EEF3FF;
+            margin-bottom: 10px;
+            font-size: 15px;
           }}
           h1 {{
             margin: 0 0 12px;
@@ -1692,6 +1900,22 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .section-list li {{
             margin-bottom: 8px;
+          }}
+          .example-stack {{
+            display: grid;
+            gap: 12px;
+            margin-top: 14px;
+          }}
+          .example-row {{
+            display: grid;
+            gap: 6px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .example-row strong {{
+            color: #EEF3FF;
           }}
           .inline-link {{
             display: inline;
@@ -1746,7 +1970,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             display: grid;
             gap: 8px;
           }}
-          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+          .site-footer a:hover, .text-link:hover {{
             color: #FFFFFF;
           }}
           .site-footer-bottom {{
@@ -1770,18 +1994,13 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/cv-checker" class="header-link">CV checker</a>
-          </div>
+          {build_site_header()}
           <div class="card">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
+            {summary_html}
             <div class="top-cta">
-              <a href="/cv-checker" class="text-link">{html.escape(page["top_cta"])}</a>
+              <a href="/cv-checker" class="cta">{html.escape(page["top_cta"])}</a>
             </div>
             {sections_html}
             {related_html}
@@ -1832,40 +2051,8 @@ def render_cv_checker_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
-          .topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .text-link, .site-footer a {{
+{build_site_header_css()}
+          .text-link, .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -1985,7 +2172,7 @@ def render_cv_checker_page() -> str:
             display: grid;
             gap: 8px;
           }}
-          .site-footer a:hover, .text-link:hover, .header-link:hover {{
+          .site-footer a:hover, .text-link:hover {{
             color: #FFFFFF;
           }}
           .site-footer-bottom {{
@@ -2110,7 +2297,7 @@ def render_cv_checker_page() -> str:
               <div class="card cta-block">
                 <h2>Check your CV now</h2>
                 <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
-                <a href="/#mainToolCard" class="cta">Get my CV score</a>
+                <a href="/#mainToolCard" class="cta">Check your CV now</a>
                 <div class="helper-note">Prefer the homepage flow? The same tool is available there too.</div>
               </div>
             </div>
@@ -2691,20 +2878,14 @@ def render_example_report_page() -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#mainToolCard" class="header-link">Try the tool</a>
-          </div>
+          {build_site_header("example-report")}
 
           <div class="hero-card">
             <div class="eyebrow">Example report</div>
             <h1>{html.escape(EXAMPLE_REPORT_PAGE["h1"])}</h1>
             <p>{html.escape(EXAMPLE_REPORT_PAGE["intro"])}</p>
             <div class="cta-row">
-              <a href="/#mainToolCard" class="cta">Get my CV score</a>
+              <a href="/#mainToolCard" class="cta">Check your CV now</a>
             </div>
           </div>
 
@@ -2810,10 +2991,10 @@ def render_example_report_page() -> str:
           </div>
 
           <div class="card cta-panel">
-            <h2>Check your own CV</h2>
+            <h2>Check your CV now</h2>
             <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
             <div class="cta-row" style="justify-content:center;">
-              <a href="/#mainToolCard" class="cta">Get my CV score</a>
+              <a href="/#mainToolCard" class="cta">Check your CV now</a>
             </div>
           </div>
 
@@ -3059,9 +3240,9 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
               <p class="trust">Free check • No signup required • Your CV isn’t stored</p>
               <h2>What this page helps you do</h2>
               <ul>{bullet_html}</ul>
-              <a href="/#mainToolCard" class="cta">Try the free CV checker</a>
-              <p class="helper">Use the main tool to upload your CV, paste a job description, and get your result instantly.</p>
-            </div>
+            <a href="/#mainToolCard" class="cta">Check your CV now</a>
+            <p class="helper">Use the main tool to upload your CV, paste a job description, and get your result instantly.</p>
+          </div>
 
             <div class="card">
               <h2>What you get</h2>
@@ -3103,16 +3284,16 @@ def render_faq_page() -> str:
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>FAQ | CV Optimiser</title>
-        <meta name="description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <title>CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored</title>
+        <meta name="description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <link rel="canonical" href="{page_url}">
-        <meta property="og:title" content="FAQ | CV Optimiser">
-        <meta property="og:description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <meta property="og:title" content="CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored">
+        <meta property="og:description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="FAQ | CV Optimiser">
-        <meta name="twitter:description" content="Frequently asked questions about CV Optimiser, including free usage, privacy, CV scoring and the full report.">
+        <meta name="twitter:title" content="CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored">
+        <meta name="twitter:description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <script type="application/ld+json">{build_faq_json_ld()}</script>
         <style>
           body {{
@@ -3129,40 +3310,8 @@ def render_faq_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
-          .topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .site-footer a {{
+{build_site_header_css()}
+          .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -3196,6 +3345,46 @@ def render_faq_page() -> str:
             margin-bottom: 6px;
             color: #EEF3FF;
             font-size: 15px;
+          }}
+          .summary-box {{
+            margin-top: 20px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.44);
+            border: 1px solid rgba(92, 112, 150, 0.2);
+          }}
+          .summary-box strong {{
+            display: block;
+            color: #EEF3FF;
+            margin-bottom: 10px;
+            font-size: 15px;
+          }}
+          .summary-box ul {{
+            margin: 0;
+            padding-left: 20px;
+          }}
+          .summary-box li {{
+            color: #DCE6FB;
+            line-height: 1.7;
+            margin-bottom: 8px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+          .link-row {{
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 18px;
           }}
           .site-footer {{
             margin-top: 32px;
@@ -3248,17 +3437,24 @@ def render_faq_page() -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#authCard" class="header-link">Sign in</a>
-          </div>
+          {build_site_header()}
           <div class="card">
             <h1>Frequently asked questions</h1>
-            <p>Answers about free usage, privacy, CV scoring and what you get with the full report.</p>
+            <p>If your CV keeps getting ignored, these are the questions that actually matter.</p>
+            <div class="summary-box">
+              <strong>Quick answers:</strong>
+              <ul>
+                <li>ATS systems filter weak matches before recruiters see them</li>
+                <li>Keywords matter, but only when they reflect real relevance</li>
+                <li>Generic CVs lose because they make fit harder to see</li>
+              </ul>
+            </div>
             <div class="faq-list">{faq_html}</div>
+            <a href="/cv-checker" class="cta">Check your CV now</a>
+            <div class="link-row">
+              <a href="/how-it-works" class="header-link">How it works</a>
+              <a href="/example-cv-report" class="header-link">Example report</a>
+            </div>
           </div>
           {build_site_footer()}
         </div>
@@ -3296,6 +3492,12 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             if section.get("helper")
             else ""
         )
+        links_html = ""
+        if section.get("links"):
+            links_html = "<div class=\"section-links\">" + "".join(
+                f'<a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a>'
+                for href, label in section["links"]
+            ) + "</div>"
         link_html = (
             f"<a href=\"{html.escape(section['link_href'])}\" class=\"text-link\">{html.escape(section['link_label'])}</a>"
             if section.get("link_href") and section.get("link_label")
@@ -3313,6 +3515,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
               {copy_html}
               {bullets_html}
               {helper_html}
+              {links_html}
               {link_html}
               {cta_html}
             </div>
@@ -3350,40 +3553,8 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
-          .topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .site-footer a {{
+{build_site_header_css()}
+          .site-footer a {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -3434,6 +3605,15 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             text-underline-offset: 2px;
             font-size: 14px;
             font-weight: 700;
+          }}
+          .section-links {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 10px;
+          }}
+          .section-links .text-link {{
+            margin-top: 0;
           }}
           .section-cta {{
             margin-top: 16px;
@@ -3505,13 +3685,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#authCard" class="header-link">Sign in</a>
-          </div>
+          {build_site_header("how-it-works" if slug == "how-it-works" else None)}
           <div class="card">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
@@ -3609,6 +3783,13 @@ def faq_page() -> str:
 def how_it_works_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_support_page("how-it-works", SUPPORT_PAGES["how-it-works"])
+
+
+@app.get("/cv-statistics", response_class=HTMLResponse)
+@app.get("/cv-statistics/", response_class=HTMLResponse, include_in_schema=False)
+def cv_statistics_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("cv-statistics", SUPPORT_PAGES["cv-statistics"])
 
 
 @app.get("/why-is-my-cv-not-getting-interviews", response_class=HTMLResponse)
