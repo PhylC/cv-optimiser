@@ -730,6 +730,50 @@
     border-radius: 16px;
     border: 1px solid rgba(92, 112, 150, 0.18);
     background: linear-gradient(180deg, rgba(13, 24, 45, 0.62), rgba(10, 19, 35, 0.5));
+    margin-top: 14px;
+  }
+
+  .example-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(10, 19, 35, 0.72);
+    border: 1px solid rgba(92, 112, 150, 0.22);
+    color: #dce6ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .example-score {
+    margin-top: 12px;
+    color: #f4f7ff;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .example-points {
+    margin: 12px 0 0;
+    padding-left: 18px;
+  }
+
+  .example-points li {
+    margin-bottom: 6px;
+    color: #d7e2fa;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .example-hint {
+    margin-top: 12px;
+    color: #aabce3;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 600;
   }
 
   .example-preview strong {
@@ -2024,10 +2068,10 @@
         <a href="/cv-checker" class="site-nav-link">CV Checker</a>
         <a href="/how-it-works" class="site-nav-link">How it works</a>
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
-        <a href="/#mainToolCard" class="site-nav-link">Upgrade</a>
+        <a href="/upgrade" class="site-nav-link">Upgrade</a>
       </nav>
       <button id="headerSignInBtn" class="site-nav-link header-link" type="button">Sign in</button>
-      <a href="/#mainToolCard" class="site-header-cta">Check my CV</a>
+      <a href="/#tool" class="site-header-cta">Check my CV</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -2095,6 +2139,7 @@
 
   <div class="main-grid">
     <div class="main-column">
+      <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card" style="overflow:hidden;">
         <h1 class="homepage-hero-title">Check your CV against any job description</h1>
         <p class="homepage-hero-subtitle">Find out why your CV isn’t getting interviews — and fix it in minutes</p>
@@ -2121,7 +2166,7 @@
           </details>
 
           <div class="tool-actions-row">
-            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" type="button">Try with example CV</button>
+            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try with example CV</button>
           </div>
 
           <div class="tool-step">
@@ -2159,6 +2204,16 @@
           <li>Paste the job description</li>
           <li>Get instant feedback</li>
         </ul>
+        <div class="example-preview">
+          <div class="example-label">Example result</div>
+          <div class="example-score">Match score: 62/100</div>
+          <ul class="example-points">
+            <li>Missing keywords: stakeholder management</li>
+            <li>Weak bullet points</li>
+            <li>Summary not tailored to role</li>
+          </ul>
+          <div class="example-hint">Full report shows how to fix this →</div>
+        </div>
       </div>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
@@ -2368,8 +2423,8 @@
     See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
   </div>
   <div class="checkout-option-stack">
-    <button id="resultsUpgradeBtn" class="unlock-report" type="button">Unlock full report — £7.99</button>
-    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="resultsUpgradeBtn" class="unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+    <button id="resultsUpgradeMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
   <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
 </div>
@@ -2384,8 +2439,8 @@
     <p>• Step-by-step improvement plan</p>
   </div>
   <div class="checkout-option-stack">
-    <button id="unlockFullReportBtn" class="unlock-report" type="button">Unlock full report — £7.99</button>
-    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="unlockFullReportBtn" class="unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+    <button id="proMonthlyBtn" class="secondary-btn checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
   </div>
   <p class="small checkout-trust-line">No CV is stored. Takes less than a minute.</p>
 </div>
@@ -2668,26 +2723,14 @@
     }
 
     function updateUpgradeAccess(passwordAlreadySet) {
-      const canUpgrade = !!passwordAlreadySet;
-
-      upgradeBtn.disabled = !canUpgrade;
-      menuUpgradeBtn.disabled = !canUpgrade;
       if (resultsUpgradeBtn) {
         resultsUpgradeBtn.disabled = false;
       }
 
-      if (canUpgrade) {
-        upgradeBtn.textContent = "Upgrade to Pro";
-        menuUpgradeBtn.textContent = "Upgrade to Pro";
-        if (resultsUpgradeBtn) {
-          resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
-        }
-      } else {
-        upgradeBtn.textContent = "Set a password to upgrade";
-        menuUpgradeBtn.textContent = "Set a password to upgrade";
-        if (resultsUpgradeBtn) {
-          resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
-        }
+      upgradeBtn.textContent = "Upgrade to Pro";
+      menuUpgradeBtn.textContent = "Upgrade to Pro";
+      if (resultsUpgradeBtn) {
+        resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
       }
     }
 
@@ -2805,20 +2848,28 @@
 
     function fillExampleContent() {
       resetSelectedFile();
+      const cvText = document.querySelector("#cvText, #cv_text, textarea[name='cv_text'], textarea[name='cv']");
+      const jobDescription = document.querySelector("#jobDescription, #job_description, textarea[name='job_description'], textarea[name='job']");
+      const cvPasteArea = document.querySelector("#cvPasteArea, .cv-paste-area, .cv-text-wrapper");
+
+      if (cvPasteArea) {
+        cvPasteArea.classList.remove("hidden");
+        cvPasteArea.style.display = "";
+      }
       if (pasteToggle) {
         pasteToggle.open = true;
       }
-      const cvText = document.getElementById("cvText");
-      const jobDescription = document.getElementById("jobDescription");
 
       if (cvText) {
-        cvText.value = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, and improving commercial performance.";
+        cvText.value = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, improving commercial performance, and working with senior stakeholders.";
         cvText.dispatchEvent(new Event("input", { bubbles: true }));
+        cvText.dispatchEvent(new Event("change", { bubbles: true }));
       }
 
       if (jobDescription) {
-        jobDescription.value = "We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, and customer relationship management.";
+        jobDescription.value = "We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, customer relationship management, P&L ownership, and retailer execution.";
         jobDescription.dispatchEvent(new Event("input", { bubbles: true }));
+        jobDescription.dispatchEvent(new Event("change", { bubbles: true }));
       }
 
       status.textContent = "Example CV and job description added. Click Check my CV when you're ready.";
@@ -2833,6 +2884,7 @@
           cvText.focus();
         }
       }, 180);
+      console.log("Sample CV filled");
     }
 
     let loadingStageTimer = null;
@@ -3300,12 +3352,11 @@ const result = await sbClient.auth.signInWithOtp({
 
     menuUpgradeBtn.addEventListener("click", async function() {
       closeAccountMenu();
-      if (menuUpgradeBtn.disabled) {
-        authStatus.textContent = "Set a password first, then you can upgrade to Pro.";
-        openPasswordCardForUser(false);
-        return;
-      }
-      upgradeBtn.click();
+      window.location.href = "/upgrade";
+    });
+
+    upgradeBtn.addEventListener("click", function() {
+      window.location.href = "/upgrade";
     });
 
     menuManageSubBtn.addEventListener("click", async function() {
@@ -3517,42 +3568,6 @@ passwordLoginBtn.addEventListener("click", async function() {
       status.textContent = "Uploaded file removed. You can now run the tool using pasted CV text.";
     });
 
-    resultsUpgradeBtn.addEventListener("click", function(event) {
-      event.preventDefault();
-      console.log("Unlock full report clicked");
-      trackEvent("results_upgrade_clicked");
-      trackEvent("unlock_full_report_clicked");
-      logEvent("upgrade_clicked");
-      startCheckout("one_time", resultsUpgradeBtn);
-    });
-
-    if (resultsUpgradeMonthlyBtn) {
-      resultsUpgradeMonthlyBtn.addEventListener("click", function() {
-        trackEvent("results_upgrade_clicked");
-        logEvent("upgrade_clicked");
-        startCheckout("pro_monthly", resultsUpgradeMonthlyBtn);
-      });
-    });
-
-    if (unlockFullReportBtn) {
-      unlockFullReportBtn.addEventListener("click", function(event) {
-        event.preventDefault();
-        console.log("Unlock full report clicked");
-        trackEvent("pro_unlock_clicked");
-        trackEvent("unlock_full_report_clicked");
-        logEvent("upgrade_clicked");
-        startCheckout("one_time", unlockFullReportBtn);
-      });
-    }
-
-    if (proMonthlyBtn) {
-      proMonthlyBtn.addEventListener("click", function() {
-        trackEvent("pro_unlock_clicked");
-        logEvent("upgrade_clicked");
-        startCheckout("pro_monthly", proMonthlyBtn);
-      });
-    }
-
     recheckBtn.addEventListener("click", function() {
       document.querySelector(".primary-tool-card").scrollIntoView({ behavior: "smooth", block: "start" });
       window.setTimeout(function() {
@@ -3600,12 +3615,6 @@ passwordLoginBtn.addEventListener("click", async function() {
       }
     });
 
-    upgradeBtn.addEventListener("click", async function() {
-      console.log("upgrade clicked");
-      logEvent("upgrade_clicked");
-      startCheckout("pro_monthly", upgradeBtn);
-    });
-
     dropzone.addEventListener("dragover", function(e) {
       e.preventDefault();
       dropzone.classList.add("dragover");
@@ -3636,12 +3645,35 @@ passwordLoginBtn.addEventListener("click", async function() {
     }
 
     document.addEventListener("click", function(event) {
-      const sampleBtn = event.target.closest("#sampleCvBtn, .sample-cv-btn");
+      const sampleBtn = event.target.closest("#sampleCvBtn, .sample-cv-btn, [data-action='sample-cv']");
       if (!sampleBtn) return;
 
       event.preventDefault();
       fillExampleContent();
       trackEvent("sample_cv_clicked");
+    });
+
+    document.addEventListener("click", function(event) {
+      const checkoutButton = event.target.closest("[data-checkout-plan]");
+      if (!checkoutButton) return;
+
+      event.preventDefault();
+      const plan = checkoutButton.getAttribute("data-checkout-plan");
+
+      if (checkoutButton === resultsUpgradeBtn) {
+        trackEvent("results_upgrade_clicked");
+        trackEvent("unlock_full_report_clicked");
+      } else if (checkoutButton === resultsUpgradeMonthlyBtn) {
+        trackEvent("results_upgrade_clicked");
+      } else if (checkoutButton === unlockFullReportBtn) {
+        trackEvent("pro_unlock_clicked");
+        trackEvent("unlock_full_report_clicked");
+      } else if (checkoutButton === proMonthlyBtn) {
+        trackEvent("pro_unlock_clicked");
+      }
+
+      logEvent("upgrade_clicked");
+      startCheckout(plan, checkoutButton);
     });
 
     optimiseBtn.addEventListener("click", async function() {

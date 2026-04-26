@@ -186,7 +186,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "Use the tool",
                 "copy": "Want to see how your CV performs?",
-                "cta_href": "/#mainToolCard",
+                "cta_href": "/#tool",
                 "cta_label": "Check your CV →",
             },
             {
@@ -263,7 +263,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "Check your own CV",
                 "copy": "Upload your CV, paste a job description and get your score in under 60 seconds.",
-                "cta_href": "/#mainToolCard",
+                "cta_href": "/#tool",
                 "cta_label": "Get my CV score",
             },
         ],
@@ -769,6 +769,7 @@ SITEMAP_URLS: list[str] = [
     f"{SITE_URL}/cv-keyword-optimiser",
     f"{SITE_URL}/ats-cv-checker",
     f"{SITE_URL}/cv-improvement-tool",
+    f"{SITE_URL}/upgrade",
     f"{SITE_URL}/cv-statistics",
     f"{SITE_URL}/faq",
     f"{SITE_URL}/how-it-works",
@@ -1466,18 +1467,23 @@ def build_typography_css() -> str:
             font-weight: 820;
           }
           h2 {
-            margin: 0 0 10px;
+            margin: 32px 0 16px;
             font-size: clamp(1.5rem, 3vw, 2rem);
             line-height: 1.12;
             color: #EEF3FF;
             font-weight: 780;
           }
           h3 {
-            margin: 0 0 8px;
+            margin: 32px 0 16px;
             font-size: clamp(1.2rem, 2.2vw, 1.45rem);
             line-height: 1.2;
             color: #EEF3FF;
             font-weight: 760;
+          }
+          h1:first-child,
+          h2:first-child,
+          h3:first-child {
+            margin-top: 0;
           }
           p, li {
             color: #B7C6E6;
@@ -1498,12 +1504,33 @@ def build_typography_css() -> str:
     """
 
 
-def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#mainToolCard") -> str:
+def build_cta_spacing_css() -> str:
+    return """
+          .cta-block {
+            margin-top: 32px;
+            margin-bottom: 40px;
+          }
+          .cta-block-tight {
+            margin-top: 24px;
+            margin-bottom: 32px;
+          }
+          .cta-block-large {
+            margin-top: 40px;
+            margin-bottom: 56px;
+          }
+          .cta-button {
+            display: inline-block;
+            margin-top: 16px;
+          }
+    """
+
+
+def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool") -> str:
     nav_items = [
         ("cv-checker", "/cv-checker", "CV Checker"),
         ("how-it-works", "/how-it-works", "How it works"),
         ("example-report", "/example-cv-report", "Example Report"),
-        ("upgrade", "/#mainToolCard", "Upgrade"),
+        ("upgrade", "/upgrade", "Upgrade"),
         ("sign-in", "/#authCard", "Sign in"),
     ]
     nav_html = "".join(
@@ -1591,6 +1618,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
+{build_cta_spacing_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -1650,14 +1678,10 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #EEF3FF;
             font-size: 15px;
           }}
-          .cta-block {{
-            text-align: center;
-          }}
           .cta {{
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 18px;
             padding: 14px 18px;
             border-radius: 14px;
             background: linear-gradient(135deg, #5B78FF, #3E5EFF);
@@ -1728,7 +1752,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               <div class="card cta-block">
                 <h2>Check your CV now</h2>
                 <p>{html.escape(page["cta_copy"])}</p>
-                <a href="#landing-tool" class="cta">Check your CV now</a>
+                <a href="#landing-tool" class="cta cta-button">Check your CV now</a>
                 <p class="helper">Prefer the homepage flow? The same tool is available there too.</p>
               </div>
             </div>
@@ -1825,6 +1849,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
+{build_cta_spacing_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -1878,9 +1903,6 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             font-size: inherit;
             font-weight: 600;
           }}
-          .top-cta, .bottom-cta {{
-            margin-top: 18px;
-          }}
           .section-block + .section-block {{
             margin-top: 22px;
             padding-top: 22px;
@@ -1890,7 +1912,6 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 16px;
             padding: 14px 18px;
             border-radius: 14px;
             background: linear-gradient(135deg, #5B78FF, #3E5EFF);
@@ -1915,16 +1936,16 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
             {summary_html}
-            <div class="top-cta">
-              <a href="/cv-checker" class="cta">{html.escape(page["top_cta"])}</a>
+            <div class="cta-block-tight">
+              <a href="/cv-checker" class="cta cta-button">{html.escape(page["top_cta"])}</a>
             </div>
             {sections_html}
             {related_html}
           </div>
-          <div class="cta-card">
+          <div class="cta-card cta-block">
             <h2>Check your CV now</h2>
             <p>Use the CV checker to compare your CV against a real job description and see what to improve.</p>
-            <a href="/cv-checker" class="cta">{html.escape(page["bottom_cta"])}</a>
+            <a href="/cv-checker" class="cta cta-button">{html.escape(page["bottom_cta"])}</a>
           </div>
           {build_site_footer()}
         </div>
@@ -2084,7 +2105,7 @@ def render_cv_checker_page() -> str:
               <span class="logo-mark">CV</span>
               <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
             </a>
-            <a href="/#mainToolCard" class="header-link">Homepage tool</a>
+            <a href="/#tool" class="header-link">Homepage tool</a>
           </div>
 
           <div class="hero">
@@ -2178,7 +2199,7 @@ def render_cv_checker_page() -> str:
               <div class="card cta-block">
                 <h2>Check your CV now</h2>
                 <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
-                <a href="/#mainToolCard" class="cta">Check your CV now</a>
+                <a href="/#tool" class="cta">Check your CV now</a>
                 <div class="helper-note">Prefer the homepage flow? The same tool is available there too.</div>
               </div>
             </div>
@@ -2350,7 +2371,7 @@ def render_ats_cv_checker_page() -> str:
               <span class="logo-mark">CV</span>
               <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
             </a>
-            <a href="/#mainToolCard" class="header-link">Homepage tool</a>
+            <a href="/#tool" class="header-link">Homepage tool</a>
           </div>
 
           <div class="hero">
@@ -2447,40 +2468,9 @@ def render_example_report_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_site_header_css()}
 {build_typography_css()}
-.topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
+{build_cta_spacing_css()}
           .header-link, .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -2559,7 +2549,6 @@ def render_example_report_page() -> str:
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 20px;
           }}
           .cta {{
             display: inline-flex;
@@ -2680,8 +2669,8 @@ def render_example_report_page() -> str:
             <div class="eyebrow">Example report</div>
             <h1>{html.escape(EXAMPLE_REPORT_PAGE["h1"])}</h1>
             <p>{html.escape(EXAMPLE_REPORT_PAGE["intro"])}</p>
-            <div class="cta-row">
-              <a href="/#mainToolCard" class="cta">Check your CV now</a>
+            <div class="cta-row cta-block-tight">
+              <a href="/#tool" class="cta cta-button">Check your CV now</a>
             </div>
           </div>
 
@@ -2779,18 +2768,18 @@ def render_example_report_page() -> str:
               <div class="card" style="margin-top:24px;">
                 <h2>Unlock the full report</h2>
                 <p>Get the full rewrite, deeper fixes, stronger role-specific phrasing and a more complete improvement plan tailored to your own CV.</p>
-                <div class="cta-row">
-                  <a href="/#mainToolCard" class="cta">Unlock full report</a>
+                <div class="cta-row cta-block-tight">
+                  <a href="/upgrade" class="cta cta-button">Unlock full report</a>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="card cta-panel">
+          <div class="card cta-panel cta-block-large">
             <h2>Check your CV now</h2>
             <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
-            <div class="cta-row" style="justify-content:center;">
-              <a href="/#mainToolCard" class="cta">Check your CV now</a>
+            <div class="cta-row cta-block-tight" style="justify-content:center;">
+              <a href="/#tool" class="cta cta-button">Check your CV now</a>
             </div>
           </div>
 
@@ -2850,44 +2839,9 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_site_header_css()}
 {build_typography_css()}
-.topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{
-            font-weight: 800;
-          }}
-          .logo-title span {{
-            font-weight: 400;
-          }}
+{build_cta_spacing_css()}
           .header-link {{
             color: #DCE5FF;
             font-size: 14px;
@@ -2923,7 +2877,6 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 18px;
             padding: 14px 18px;
             border-radius: 14px;
             background: linear-gradient(135deg, #5B78FF, #3E5EFF);
@@ -2967,13 +2920,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
       </head>
       <body>
         <div class="page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#authCard" class="header-link">Sign in</a>
-          </div>
+          {build_site_header("upgrade" if slug == "cv-improvement-tool" else None)}
 
           <div class="layout">
             <div class="card">
@@ -2982,7 +2929,9 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
               <p class="trust">Free check • No signup required • Your CV isn’t stored</p>
               <h2>What this page helps you do</h2>
               <ul>{bullet_html}</ul>
-            <a href="/#mainToolCard" class="cta">Check your CV now</a>
+            <div class="cta-block">
+              <a href="/#tool" class="cta cta-button">Check your CV now</a>
+            </div>
             <p class="helper">Use the main tool to upload your CV, paste a job description, and get your result instantly.</p>
           </div>
 
@@ -3055,6 +3004,7 @@ def render_faq_page() -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
+{build_cta_spacing_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -3104,7 +3054,6 @@ def render_faq_page() -> str:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 18px;
             padding: 14px 18px;
             border-radius: 14px;
             background: linear-gradient(135deg, #5B78FF, #3E5EFF);
@@ -3112,13 +3061,6 @@ def render_faq_page() -> str:
             font-weight: 800;
             text-decoration: none;
           }}
-          .link-row {{
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-          }}
-
           .text-link:hover {{
             color: #FFFFFF;
           }}
@@ -3143,10 +3085,8 @@ def render_faq_page() -> str:
               </ul>
             </div>
             <div class="faq-list">{faq_html}</div>
-            <a href="/cv-checker" class="cta">Check your CV now</a>
-            <div class="link-row">
-              <a href="/how-it-works" class="header-link">How it works</a>
-              <a href="/example-cv-report" class="header-link">Example report</a>
+            <div class="cta-block">
+              <a href="/cv-checker" class="cta cta-button">Check your CV now</a>
             </div>
           </div>
           {build_site_footer()}
@@ -3197,7 +3137,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             else ""
         )
         cta_html = (
-            f"<div class=\"section-cta\"><a href=\"{html.escape(section['cta_href'])}\" class=\"cta\">{html.escape(section['cta_label'])}</a></div>"
+            f"<div class=\"section-cta cta-block-tight\"><a href=\"{html.escape(section['cta_href'])}\" class=\"cta cta-button\">{html.escape(section['cta_label'])}</a></div>"
             if section.get("cta_href") and section.get("cta_label")
             else ""
         )
@@ -3249,6 +3189,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
+{build_cta_spacing_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -3294,7 +3235,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             margin-top: 0;
           }}
           .section-cta {{
-            margin-top: 16px;
+            margin-top: 0;
           }}
           .cta {{
             display: inline-flex;
@@ -3329,6 +3270,269 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
             {sections_html}
+          </div>
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
+def render_upgrade_page() -> str:
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Upgrade | CV Optimiser</title>
+        <meta name="description" content="Choose between a one-time full CV report or an ongoing Pro plan.">
+        {build_footer_assets_head()}
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+          .hero {{
+            display: grid;
+            gap: 14px;
+            margin-bottom: 24px;
+          }}
+          .hero p {{
+            margin: 0;
+            max-width: 60ch;
+          }}
+          .upgrade-grid {{
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+          }}
+          .upgrade-card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          .upgrade-card-primary {{
+            border-color: rgba(91, 120, 255, 0.34);
+            box-shadow: 0 14px 30px rgba(91, 120, 255, 0.14);
+          }}
+          .price {{
+            font-size: 34px;
+            line-height: 1;
+            color: #FFFFFF;
+            font-weight: 820;
+            margin: 8px 0 18px;
+          }}
+          .upgrade-card ul {{
+            margin: 0;
+            padding-left: 20px;
+          }}
+          .upgrade-card li {{
+            margin-bottom: 8px;
+          }}
+          .checkout-btn {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+          }}
+          .checkout-btn.secondary {{
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            color: #EAF0FF;
+          }}
+          .upgrade-helper {{
+            margin-top: 12px;
+            color: #9FB0D4;
+            font-size: 13px;
+          }}
+          @media (max-width: 900px) {{
+            .upgrade-grid {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      </head>
+      <body>
+        <div class="page">
+          {build_site_header("upgrade")}
+          <div class="hero">
+            <h1>Unlock your full CV improvement plan</h1>
+            <p>Choose how you want to improve your CV.</p>
+          </div>
+
+          <div class="upgrade-grid">
+            <div class="upgrade-card upgrade-card-primary">
+              <h2>Unlock this report</h2>
+              <div class="price">£7.99 one-time</div>
+              <ul>
+                <li>Full rewritten professional summary</li>
+                <li>Stronger bullet points tailored to the job</li>
+                <li>Complete keyword optimisation</li>
+                <li>Step-by-step improvement plan</li>
+              </ul>
+              <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+            </div>
+
+            <div class="upgrade-card">
+              <h2>Go Pro</h2>
+              <div class="price">£9.99/month</div>
+              <ul>
+                <li>Unlimited CV checks</li>
+                <li>Full reports</li>
+                <li>Saved results</li>
+                <li>Ongoing improvements</li>
+              </ul>
+              <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
+              <p class="upgrade-helper">You’ll need to be signed in to start checkout.</p>
+            </div>
+          </div>
+
+          {build_site_footer()}
+        </div>
+        <script>
+          const SUPABASE_URL = {json.dumps(SUPABASE_URL)};
+          const SUPABASE_ANON_KEY = {json.dumps(SUPABASE_ANON_KEY)};
+          let sbClient = null;
+          if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {{
+            sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          }}
+
+          async function getUpgradeSessionToken() {{
+            if (!sbClient) return null;
+            const result = await sbClient.auth.getSession();
+            const session = result && result.data ? result.data.session : null;
+            return session && session.access_token ? session.access_token : null;
+          }}
+
+          async function startCheckout(plan, button) {{
+            const originalText = button.textContent;
+            console.log("Checkout clicked:", plan);
+
+            try {{
+              button.disabled = true;
+              button.textContent = "Opening checkout…";
+
+              const token = await getUpgradeSessionToken();
+              if (!token) {{
+                throw new Error("Please sign in before opening checkout.");
+              }}
+
+              const response = await fetch("/api/create-checkout-session", {{
+                method: "POST",
+                headers: {{
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + token
+                }},
+                body: JSON.stringify({{ plan }})
+              }});
+
+              const data = await response.json();
+
+              if (!response.ok || !data.url) {{
+                throw new Error(data.detail || data.error || "Checkout could not be opened");
+              }}
+
+              window.location.href = data.url;
+            }} catch (error) {{
+              console.error("Checkout error:", error);
+              button.disabled = false;
+              button.textContent = originalText;
+              alert(error.message || "Could not open checkout. Please try again.");
+            }}
+          }}
+
+          document.addEventListener("click", function(event) {{
+            const button = event.target.closest("[data-checkout-plan]");
+            if (!button) return;
+            event.preventDefault();
+            const plan = button.getAttribute("data-checkout-plan");
+            startCheckout(plan, button);
+          }});
+        </script>
+      </body>
+    </html>
+    """
+
+
+def render_status_page(title: str, heading: str, copy: str) -> str:
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(title)}</title>
+        {build_footer_assets_head()}
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+          .card {{
+            background: rgba(15, 28, 50, 0.72);
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          {build_site_header()}
+          <div class="card">
+            <h1>{html.escape(heading)}</h1>
+            <p>{html.escape(copy)}</p>
+            <div class="cta-block">
+              <a href="/#tool" class="cta cta-button">Check my CV</a>
+            </div>
           </div>
           {build_site_footer()}
         </div>
@@ -3476,14 +3680,28 @@ def about_page() -> str:
     return render_support_page("about", SUPPORT_PAGES["about"])
 
 
-@app.get("/success")
-def success() -> FileResponse:
-    return FileResponse("static/success.html")
+@app.get("/upgrade", response_class=HTMLResponse)
+@app.get("/upgrade/", response_class=HTMLResponse, include_in_schema=False)
+def upgrade_page() -> str:
+    return render_upgrade_page()
 
 
-@app.get("/cancel")
-def cancel() -> FileResponse:
-    return FileResponse("static/cancel.html")
+@app.get("/success", response_class=HTMLResponse)
+def success() -> str:
+    return render_status_page(
+        "Payment successful | CV Optimiser",
+        "Payment successful",
+        "Your full CV improvement plan is ready.",
+    )
+
+
+@app.get("/cancel", response_class=HTMLResponse)
+def cancel() -> str:
+    return render_status_page(
+        "Payment cancelled | CV Optimiser",
+        "Payment cancelled",
+        "You can return to your CV check anytime.",
+    )
 
 
 @app.get("/privacy", response_class=HTMLResponse)
