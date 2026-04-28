@@ -1763,8 +1763,61 @@ def build_site_footer() -> str:
     return '<div id="siteFooter"></div><script src="/static/global-footer.js" defer></script>'
 
 
+def build_tool_embed_script() -> str:
+    return """
+        <script>
+          (function () {
+            function resizeToolFrame(targetFrame, nextHeight) {
+              if (!targetFrame || !nextHeight) return;
+              const safeHeight = Math.max(Number(nextHeight) || 0, 960);
+              targetFrame.style.height = safeHeight + "px";
+            }
+
+            window.addEventListener("message", function (event) {
+              if (!event || !event.data || event.data.type !== "cv-optimiser-embed-height") return;
+              document.querySelectorAll("iframe.tool-frame").forEach(function (frame) {
+                if (frame.contentWindow === event.source) {
+                  resizeToolFrame(frame, event.data.height);
+                }
+              });
+            });
+
+            window.addEventListener("load", function () {
+              document.querySelectorAll("iframe.tool-frame").forEach(function (frame) {
+                frame.setAttribute("scrolling", "no");
+                frame.style.overflow = "hidden";
+              });
+            });
+          })();
+        </script>
+    """
+
+
 def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
+    upgrade_notice_html = ""
+    upgrade_notice_script = ""
+    if slug == "cv-checker":
+        upgrade_notice_html = """
+          <div id="upgradeRequiredBanner" class="card upgrade-required-banner hidden" role="status" aria-live="polite">
+            <strong>You need to run a CV check first before unlocking your full report.</strong>
+          </div>
+        """
+        upgrade_notice_script = """
+          <script>
+            (function () {
+              const banner = document.getElementById("upgradeRequiredBanner");
+              if (!banner) return;
+              try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("upgrade_required") === "1") {
+                  banner.classList.remove("hidden");
+                  banner.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              } catch (error) {}
+            })();
+          </script>
+        """
     section_html = "".join(
         f"""
         <div class="card">
@@ -1837,13 +1890,22 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           .tool-card h2, .card h2 {{
             margin: 0 0 10px;
           }}
+          .tool-embed {{
+            height: auto;
+            max-height: none;
+            overflow: visible;
+          }}
           .tool-frame {{
             width: 100%;
-            min-height: 1400px;
+            min-height: 980px;
+            height: auto;
+            max-height: none;
             border: 0;
             border-radius: 18px;
             background: transparent;
             margin-top: 18px;
+            overflow: visible;
+            display: block;
           }}
           .content-grid {{
             display: grid;
@@ -1887,6 +1949,11 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
+          .upgrade-required-banner {{
+            margin-bottom: 20px;
+            border-color: rgba(91, 120, 255, 0.28);
+            background: linear-gradient(180deg, rgba(19, 34, 64, 0.96), rgba(13, 25, 49, 0.96));
+          }}
           .final-cta {{
             margin-top: 56px;
             margin-bottom: 56px;
@@ -1913,7 +1980,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
-              min-height: 1650px;
+              min-height: 1120px;
             }}
           }}
         </style>
@@ -1927,6 +1994,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
                   )
               )
           )}
+          {upgrade_notice_html}
           <div class="hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
@@ -1934,7 +2002,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div id="landing-tool" class="tool-card">
             <h2>{html.escape(page["tool_heading"])}</h2>
             {tool_intro_html}
-            <iframe class="tool-frame" src="/?embed_tool=1" title="{html.escape(page['h1'])} tool"></iframe>
+            <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="{html.escape(page['h1'])} tool"></iframe>
           </div>
           <div class="content-grid">
             <div class="section-stack">{section_html}</div>
@@ -1962,6 +2030,8 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           </section>
           {build_site_footer()}
         </div>
+        {build_tool_embed_script()}
+        {upgrade_notice_script}
       </body>
     </html>
     """
@@ -2267,12 +2337,21 @@ def render_cv_checker_page() -> str:
             gap: 20px;
             margin-top: 24px;
           }}
+          .tool-embed {{
+            height: auto;
+            max-height: none;
+            overflow: visible;
+          }}
           .tool-frame {{
             width: 100%;
-            min-height: 1400px;
+            min-height: 980px;
+            height: auto;
+            max-height: none;
             border: 0;
             border-radius: 18px;
             background: transparent;
+            overflow: visible;
+            display: block;
           }}
           .example-mini {{
             display: grid;
@@ -2312,7 +2391,7 @@ def render_cv_checker_page() -> str:
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
-              min-height: 1650px;
+              min-height: 1120px;
             }}
           }}
         </style>
@@ -2338,7 +2417,7 @@ def render_cv_checker_page() -> str:
                 <h2>Check my CV</h2>
                 <p>Most CVs get rejected in seconds — not because of experience, but because they don’t match the job.</p>
                 <p style="margin-top:12px;">Paste your CV and a job description below to get your match score and improvement suggestions.</p>
-                <iframe class="tool-frame" src="/?embed_tool=1" title="CV checker tool"></iframe>
+                <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="CV checker tool"></iframe>
               </div>
 
               <div class="section-stack">
@@ -2425,6 +2504,7 @@ def render_cv_checker_page() -> str:
 
           {build_site_footer()}
         </div>
+        {build_tool_embed_script()}
       </body>
     </html>
     """
@@ -2557,12 +2637,21 @@ def render_ats_cv_checker_page() -> str:
             gap: 20px;
             margin-top: 24px;
           }}
+          .tool-embed {{
+            height: auto;
+            max-height: none;
+            overflow: visible;
+          }}
           .tool-frame {{
             width: 100%;
-            min-height: 1400px;
+            min-height: 980px;
+            height: auto;
+            max-height: none;
             border: 0;
             border-radius: 18px;
             background: transparent;
+            overflow: visible;
+            display: block;
           }}
           .cta-block {{
             text-align: left;
@@ -2577,7 +2666,7 @@ def render_ats_cv_checker_page() -> str:
               grid-template-columns: 1fr;
             }}
             .tool-frame {{
-              min-height: 1650px;
+              min-height: 1120px;
             }}
           }}
         </style>
@@ -2604,7 +2693,7 @@ def render_ats_cv_checker_page() -> str:
                 <p>Most companies use ATS software to filter CVs before a human sees them.</p>
                 <p style="margin-top:12px;">If your CV doesn’t match the job description, it may never be reviewed.</p>
                 <p style="margin-top:12px;">Use the tool below to check your CV against a job description and identify what’s missing.</p>
-                <iframe class="tool-frame" src="/?embed_tool=1" title="ATS CV checker tool"></iframe>
+                <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="ATS CV checker tool"></iframe>
               </div>
 
               <div class="section-stack">
@@ -2641,6 +2730,7 @@ def render_ats_cv_checker_page() -> str:
 
           {build_site_footer()}
         </div>
+        {build_tool_embed_script()}
       </body>
     </html>
     """
@@ -3716,6 +3806,28 @@ def render_upgrade_page() -> str:
           const oneTimeCard = document.getElementById("oneTimeCard");
           const proCard = document.getElementById("proCard");
           const alreadyProState = document.getElementById("alreadyProState");
+          const oneTimeButton = document.querySelector('[data-checkout-plan="one_time"]');
+
+          function hasStoredCvResult() {{
+            try {{
+              return window.localStorage.getItem("has_cv_result") === "true";
+            }} catch (error) {{
+              return false;
+            }}
+          }}
+
+          function redirectToCvCheckerForUpgrade() {{
+            window.location.href = "/cv-checker?upgrade_required=1";
+          }}
+
+          function updateOneTimeButtonState() {{
+            if (!oneTimeButton) return;
+            if (hasStoredCvResult()) {{
+              oneTimeButton.textContent = "Unlock full report — £7.99";
+              return;
+            }}
+            oneTimeButton.textContent = "Run CV check first";
+          }}
 
           function showUpgradeInlineError(message) {{
             if (!upgradeInlineError) return;
@@ -3755,10 +3867,12 @@ def render_upgrade_page() -> str:
           async function refreshUpgradePageState() {{
             if (typeof window.getAccountState !== "function") {{
               applyUpgradePageState({{ signedIn: false, email: null, plan: "free", token: null }});
+              updateOneTimeButtonState();
               return {{ signedIn: false, email: null, plan: "free", token: null }};
             }}
             const account = await window.getAccountState({{ forceRefresh: true }});
             applyUpgradePageState(account);
+            updateOneTimeButtonState();
             return account;
           }}
 
@@ -3777,6 +3891,11 @@ def render_upgrade_page() -> str:
               const token = account.token;
               if (account.plan === "pro") {{
                 showUpgradeInlineError(plan === "one_time" ? "You already have Pro access." : "You are already on Pro.");
+                return;
+              }}
+              if (plan === "one_time" && !hasStoredCvResult()) {{
+                showUpgradeInlineError("Run your free CV check first to unlock your personalised report.");
+                redirectToCvCheckerForUpgrade();
                 return;
               }}
               if (requiresSignIn && !account.signedIn) {{
@@ -3827,6 +3946,7 @@ def render_upgrade_page() -> str:
 
           document.addEventListener("cv-account-state-changed", function(event) {{
             applyUpgradePageState((event.detail && event.detail.account) || null);
+            updateOneTimeButtonState();
           }});
 
           window.addEventListener("load", function() {{

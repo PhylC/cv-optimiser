@@ -27,6 +27,9 @@
         if (params.get("embed_tool") === "1") {
           document.documentElement.classList.add("embed-tool-mode");
         }
+        if (params.get("compact") === "1") {
+          document.documentElement.classList.add("compact-tool-mode");
+        }
       } catch (error) {}
     })();
   </script>
@@ -322,6 +325,38 @@
   html.embed-tool-mode #mainToolCard {
     border-top: 0;
     margin-top: 0;
+    overflow: visible !important;
+  }
+
+  .tool-embed {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .tool-embed-title {
+    display: none;
+    margin-bottom: 14px;
+    color: #EEF3FF;
+    font-size: 18px;
+    font-weight: 760;
+    line-height: 1.2;
+  }
+
+  html.embed-tool-mode.compact-tool-mode .tool-embed-title {
+    display: block;
+  }
+
+  html.embed-tool-mode.compact-tool-mode .tool-hero-title {
+    display: none;
+  }
+
+  html.embed-tool-mode.compact-tool-mode .tool-hero-support {
+    display: none;
+  }
+
+  html.embed-tool-mode.compact-tool-mode #mainToolCard {
+    padding-top: 20px;
   }
 
   .main-column {
@@ -2256,10 +2291,11 @@
   <div class="main-grid">
     <div class="main-column">
       <div id="tool"></div>
-      <div id="mainToolCard" class="card section primary-tool-card" style="overflow:hidden;">
-        <h1 class="homepage-hero-title">Check your CV against any job description</h1>
-        <p class="homepage-hero-subtitle">Find out why your CV isn’t getting interviews — and fix it in minutes</p>
-        <p class="hero-trust-line">Built for real job applications</p>
+      <div id="mainToolCard" class="card section primary-tool-card tool-embed">
+        <div class="tool-embed-title">Check your CV</div>
+        <h1 class="homepage-hero-title tool-hero-title">Check your CV against any job description</h1>
+        <p class="homepage-hero-subtitle tool-hero-support">Find out why your CV isn’t getting interviews — and fix it in minutes</p>
+        <p class="hero-trust-line tool-hero-support">Built for real job applications</p>
 
         <div class="tool-form">
           <div class="tool-step">
@@ -3298,6 +3334,29 @@
       }
     }
 
+    function reportEmbedHeight() {
+      if (!document.documentElement.classList.contains("embed-tool-mode")) {
+        return;
+      }
+      try {
+        const mainToolCard = document.getElementById("mainToolCard");
+        const resultsPanel = document.getElementById("results");
+        const toolCardHeight = mainToolCard ? mainToolCard.offsetHeight : 0;
+        const resultsHeight = resultsPanel && !resultsPanel.classList.contains("hidden") ? resultsPanel.offsetHeight : 0;
+        const pageHeight = Math.max(
+          document.body ? document.body.scrollHeight : 0,
+          document.documentElement ? document.documentElement.scrollHeight : 0,
+          toolCardHeight + resultsHeight + 80
+        );
+        window.parent.postMessage({
+          type: "cv-optimiser-embed-height",
+          height: pageHeight
+        }, window.location.origin);
+      } catch (error) {
+        console.warn("Could not report embed height:", error);
+      }
+    }
+
     function setSelectedFile(file) {
       const lowerName = file.name.toLowerCase();
 
@@ -4183,6 +4242,12 @@ passwordLoginBtn.addEventListener("click", async function() {
         lockedPreviewCard.classList.add("hidden");
         resultsPanel.classList.remove("hidden");
         resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        try {
+          window.localStorage.setItem("has_cv_result", "true");
+          window.localStorage.setItem("last_cv_timestamp", String(Date.now()));
+        } catch (storageError) {
+          console.warn("Could not persist CV result flag:", storageError);
+        }
         status.textContent = "Done.";
         status.classList.add("is-success");
         resetToolHelperCopy(accountState, data.plan || null);
