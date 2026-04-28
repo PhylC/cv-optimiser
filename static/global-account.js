@@ -87,13 +87,19 @@
 
     if (!account.signedIn) {
       signInLink.classList.remove("hidden");
+      signInLink.style.display = "";
       accountWrap.classList.add("hidden");
+      accountWrap.style.display = "none";
       closeHeaderAccountMenu();
+      document.body.dataset.accountPlan = "free";
+      document.body.dataset.signedIn = "false";
       return;
     }
 
     signInLink.classList.add("hidden");
+    signInLink.style.display = "none";
     accountWrap.classList.remove("hidden");
+    accountWrap.style.display = "";
     accountEmail.textContent = account.email || "Signed in";
     accountPlan.textContent = "Plan: " + (account.plan === "pro" ? "Pro" : "Free");
     if (dropdown) {
@@ -107,6 +113,8 @@
     if (billingBtn) {
       billingBtn.classList.toggle("hidden", account.plan !== "pro");
     }
+    document.body.dataset.accountPlan = account.plan;
+    document.body.dataset.signedIn = "true";
   }
 
   function dispatchAccountState(account) {
@@ -186,6 +194,10 @@
     console.log("GLOBAL_ACCOUNT_STATE", account);
     dispatchAccountState(account);
     return account;
+  }
+
+  async function refreshGlobalAccountState(options) {
+    return refreshGlobalAccountUi(options);
   }
 
   async function handleHeaderBilling() {
@@ -332,20 +344,24 @@
   async function bootstrapAccountUi() {
     installHeaderDropdownHandlers();
     closeHeaderAccountMenu();
-    await refreshGlobalAccountUi();
+    await refreshGlobalAccountState();
     const client = getSupabaseClient();
     if (client && !window.__cvGlobalAccountAuthListenerInstalled) {
       window.__cvGlobalAccountAuthListenerInstalled = true;
       client.auth.onAuthStateChange(function () {
-        refreshGlobalAccountUi({ forceRefresh: true });
+        refreshGlobalAccountState({ forceRefresh: true });
       });
     }
   }
 
   window.getAccountState = getAccountState;
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
+  window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
   window.addEventListener("DOMContentLoaded", function () {
     bootstrapAccountUi();
+  });
+  window.addEventListener("pageshow", function () {
+    refreshGlobalAccountState({ forceRefresh: true });
   });
 })();

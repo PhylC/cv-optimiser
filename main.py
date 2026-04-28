@@ -57,8 +57,15 @@ APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip
 SITE_URL = os.getenv("SITE_URL", "https://www.cv-optimiser.com").strip().rstrip("/")
 FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
+DEFAULT_SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co"
+DEFAULT_SUPABASE_ANON_KEY = (
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+    "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30."
+    "m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY"
+)
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", DEFAULT_SUPABASE_URL).strip()
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", DEFAULT_SUPABASE_ANON_KEY).strip()
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
