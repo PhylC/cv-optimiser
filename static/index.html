@@ -507,6 +507,14 @@
     min-width: 0;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    min-width: 0;
+  }
+
   .site-logo {
     text-decoration: none;
   }
@@ -534,6 +542,20 @@
   .site-nav-link.is-active {
     color: #ffffff;
     transform: none;
+  }
+
+  .header-signin-link {
+    display: inline-flex;
+    align-items: center;
+    color: #dce5ff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .header-signin-link:hover {
+    color: #ffffff;
   }
 
   body[data-auth-loading="true"] #signInLink,
@@ -1553,6 +1575,10 @@
       display: contents;
     }
 
+    .header-actions {
+      display: contents;
+    }
+
     .site-logo {
       min-width: 0;
     }
@@ -2230,15 +2256,14 @@
       </div>
     </a>
 
-    <div class="site-header-right">
+    <div class="site-header-right header-actions">
       <nav class="site-nav" aria-label="Primary">
         <a href="/cv-checker" class="site-nav-link">CV Checker</a>
         <a href="/how-it-works" class="site-nav-link">How it works</a>
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
         <a href="/upgrade" id="upgradeLink" class="site-nav-link" data-upgrade-link>Upgrade</a>
       </nav>
-      <button id="signInLink" class="site-nav-link header-link" type="button">Sign in</button>
-      <a href="/#tool" class="site-header-cta">Check my CV</a>
+      <a id="signInLink" href="#authCard" class="header-signin-link">Sign in</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -2260,6 +2285,7 @@
           <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
         </div>
       </div>
+      <a href="/#tool" class="site-header-cta">Check my CV</a>
     </div>
     </div>
   </header>
@@ -2858,15 +2884,32 @@
       supportModal.setAttribute("aria-hidden", "true");
     }
 
+    function getAccountStateFromBody() {
+      const signedIn = document.body && document.body.dataset ? document.body.dataset.signedIn === "true" : false;
+      const plan = document.body && document.body.dataset && document.body.dataset.accountPlan
+        ? document.body.dataset.accountPlan
+        : "free";
+      return {
+        signedIn: signedIn,
+        plan: normalizeCurrentPlan(plan)
+      };
+    }
+
     function getCurrentAccountState(data) {
+      const explicitSignedIn = typeof (data && data.signed_in) === "boolean" ? data.signed_in : null;
       const planData = data && (data.plan_state || data.plan);
-      if (typeof planData === "string" && planData.toLowerCase() === "pro") return "signed_in_pro";
-      if (planData && typeof planData === "object" && planData.is_pro) return "signed_in_pro";
-      if (currentPlan === "pro") return "signed_in_pro";
-      if (currentUser && currentPlan === "free") return "signed_in_free";
-      if (accountPlanText && accountPlanText.textContent.trim().toLowerCase().includes("pro")) return "signed_in_pro";
-      if (planData) return "signed_in_free";
-      if (accessToken) return "signed_in_free";
+      const explicitPlan = normalizeCurrentPlan(planData);
+      const bodyState = getAccountStateFromBody();
+
+      if (explicitSignedIn === true) {
+        return explicitPlan === "pro" ? "signed_in_pro" : "signed_in_free";
+      }
+      if (explicitSignedIn === false) {
+        return "signed_out";
+      }
+      if (bodyState.signedIn) {
+        return bodyState.plan === "pro" ? "signed_in_pro" : "signed_in_free";
+      }
       return "signed_out";
     }
 
@@ -2919,8 +2962,9 @@
       }
     }
 
-    function applyUserUi(plan) {
-      currentPlan = normalizeCurrentPlan(plan || currentPlan);
+    function applyUserUi(plan, account) {
+      const accountState = account || getAccountStateFromBody();
+      currentPlan = normalizeCurrentPlan(plan || accountState.plan || currentPlan);
 
       if (accountEmail && currentUser && currentUser.email) {
         accountEmail.textContent = currentUser.email;
@@ -2930,43 +2974,24 @@
         el.style.display = currentPlan === "pro" ? "none" : "";
       });
 
-      updateToolHelperCopy(getCurrentAccountState(plan ? { plan: plan } : null), plan || null);
+      updateToolHelperCopy(
+        accountState.signedIn
+          ? (currentPlan === "pro" ? "signed_in_pro" : "signed_in_free")
+          : "signed_out",
+        plan || null
+      );
     }
 
     async function loadUserState() {
-      if (!sbClient) {
-        currentUser = null;
-        currentPlan = "free";
-        applyUserUi(null);
+      if (typeof window.getAccountState === "function") {
+        const account = await window.getAccountState({ forceRefresh: true });
+        currentPlan = normalizeCurrentPlan(account.plan);
+        applyUserUi(null, account);
         return;
       }
-
-      const sessionResult = await sbClient.auth.getSession();
-      const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-
-      if (!session) {
-        currentUser = null;
-        currentPlan = "free";
-        applyUserUi(null);
-        return;
-      }
-
-      currentUser = session.user || null;
-
-      try {
-        const response = await fetch("/api/me", {
-          headers: {
-            Authorization: "Bearer " + session.access_token
-          }
-        });
-        const data = await response.json();
-        const planData = data.plan_state || data.plan || null;
-        currentPlan = normalizeCurrentPlan(data.plan);
-        applyUserUi(planData);
-      } catch (error) {
-        currentPlan = "free";
-        applyUserUi(null);
-      }
+      currentUser = null;
+      currentPlan = "free";
+      applyUserUi(null, { signedIn: false, plan: "free" });
     }
 
     function resetToolHelperCopy(accountState, plan) {
@@ -3324,7 +3349,7 @@
         historyLoadedForUserId = null;
         await refreshAuthUi();
 
-        if (accountPlanText && accountPlanText.textContent.trim().toLowerCase().includes("pro")) {
+        if (getAccountStateFromBody().plan === "pro") {
           checkoutStatus.classList.remove("info", "error");
           checkoutStatus.classList.add("success");
           checkoutStatus.textContent = "Your Pro plan is now active.";
@@ -3396,7 +3421,7 @@
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";
     }
-    applyUserUi(null);
+    applyUserUi(null, { signedIn: false, plan: "free" });
     return;
   }
 
@@ -3411,14 +3436,14 @@
     if (upgradeBtn) {
       upgradeBtn.classList.add("hidden");
     }
-    applyUserUi(plan);
+    applyUserUi(plan, { signedIn: true, plan: "pro" });
   } else {
     usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
     if (upgradeBtn) {
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";
     }
-    applyUserUi(plan);
+    applyUserUi(plan, { signedIn: true, plan: "free" });
   }
 }
 
@@ -3565,12 +3590,15 @@
         });
         const me = await meRes.json();
 
-        if (me.error) {
+        if (!meRes.ok || me.error) {
           authStatus.textContent = "Signed in, but the account is still loading. Please refresh in a few seconds.";
           return;
         }
 
-        const planData = me.plan_state || me.plan || null;
+        currentUser = {
+          email: me.email || (session.user && session.user.email) || null
+        };
+        const planData = me.plan_state || { plan: me.plan || "free", is_pro: normalizeCurrentPlan(me.plan) === "pro" };
         const nextPlanJson = JSON.stringify(planData || {});
         if (nextPlanJson !== lastPlanJson) {
           setPlanUi(planData);
@@ -3579,6 +3607,8 @@
 
         const isPro = normalizeCurrentPlan(me.plan) === "pro";
         currentPlan = isPro ? "pro" : "free";
+        document.body.dataset.signedIn = me.signed_in ? "true" : "false";
+        document.body.dataset.accountPlan = currentPlan;
         accountPlanText.textContent = isPro ? "Pro" : "Free";
 
         if (isPro) {
@@ -4042,10 +4072,10 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         if (data.code === "PAYWALL") {
           status.textContent = data.error;
-          setPlanUi(data.plan);
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
-          resetToolHelperCopy(getCurrentAccountState(data), data.plan || null);
+          await refreshAuthUi();
+          resetToolHelperCopy(getCurrentAccountState(), null);
           return;
         }
 
@@ -4059,7 +4089,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         const scoreNumber = getScoreNumber(data.score);
         const narrative = buildResultNarrative(scoreNumber, data);
-        const accountState = getCurrentAccountState(data);
+        const accountState = getCurrentAccountState();
         const isCurrentlyPro = accountState === "signed_in_pro";
         const isAnonymousResult = !!data.isAnonymousResult;
         const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
@@ -4265,7 +4295,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
         status.textContent = "Done.";
         status.classList.add("is-success");
-        resetToolHelperCopy(accountState, data.plan || null);
+        resetToolHelperCopy(accountState, null);
         trackEvent("result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         logEvent("cv_result_generated", { anonymous_result: isAnonymousResult, account_state: accountState });
         if (!isCurrentlyPro) {
@@ -4281,10 +4311,6 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (!isCurrentlyPro) {
           trackEvent("pro_unlock_prompt_shown");
           trackEvent("locked_report_preview_shown", { anonymous_result: !!data.isAnonymousResult });
-        }
-
-        if (data.plan) {
-          setPlanUi(data.plan);
         }
 
         lastPlanJson = "";
@@ -4350,6 +4376,13 @@ passwordLoginBtn.addEventListener("click", async function() {
     });
 
     window.addEventListener("resize", reportEmbedHeight);
+
+    document.addEventListener("cv-account-state-changed", function(event) {
+      const account = event.detail && event.detail.account ? event.detail.account : { signedIn: false, email: null, plan: "free" };
+      currentUser = account.signedIn ? { email: account.email || null } : null;
+      currentPlan = normalizeCurrentPlan(account.plan);
+      applyUserUi(null, account);
+    });
   </script>
 </body>
 </html>

@@ -82,6 +82,9 @@
 
     document.documentElement.dataset.accountPlan = account.plan;
     document.documentElement.dataset.signedIn = account.signedIn ? "true" : "false";
+    document.body.dataset.accountPlan = account.plan || "free";
+    document.body.dataset.signedIn = account.signedIn ? "true" : "false";
+    document.body.dataset.authLoading = "false";
 
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
       el.classList.toggle("hidden", account.plan === "pro");
@@ -98,9 +101,6 @@
       accountWrap.classList.add("hidden");
       accountWrap.style.display = "none";
       closeHeaderAccountMenu();
-      document.body.dataset.accountPlan = "free";
-      document.body.dataset.signedIn = "false";
-      document.body.dataset.authLoading = "false";
       return;
     }
 
@@ -121,9 +121,6 @@
     if (billingBtn) {
       billingBtn.classList.toggle("hidden", account.plan !== "pro");
     }
-    document.body.dataset.accountPlan = account.plan;
-    document.body.dataset.signedIn = "true";
-    document.body.dataset.authLoading = "false";
   }
 
   function dispatchAccountState(account) {
@@ -376,7 +373,7 @@
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
   window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
-  window.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     bootstrapAccountUi();
   });
   window.addEventListener("pageshow", function () {

@@ -1420,6 +1420,13 @@ def build_site_header_css() -> str:
             margin-left: auto;
             min-width: 0;
           }
+          .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+            min-width: 0;
+          }
           .site-nav {
             display: flex;
             align-items: center;
@@ -1603,6 +1610,9 @@ def build_site_header_css() -> str:
             .site-header-right {
               display: contents;
             }
+            .header-actions {
+              display: contents;
+            }
             .site-logo {
               min-width: 0;
             }
@@ -1736,7 +1746,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           <span class="site-logo-mark">CV</span>
           <span class="site-logo-title"><strong>CV</strong> <span>Optimiser</span></span>
         </a>
-        <div class="site-header-right">
+        <div class="site-header-right header-actions">
           <nav class="site-nav" aria-label="Primary">
             {nav_html}
           </nav>
@@ -4332,6 +4342,7 @@ def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
 
         if not user:
             print("API_ME_AUTH: signed_out")
+            print("API_ME_USER: None")
             print("API_ME_PLAN: free")
             return {
                 "signed_in": False,
@@ -4346,6 +4357,7 @@ def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         plan_state = get_plan_state(user["id"])
         plan_name = get_user_plan(user)
         print("API_ME_AUTH: signed_in")
+        print(f"API_ME_USER: {user['email']}")
         print(f"API_ME_PLAN: {plan_name}")
         return {
             "signed_in": True,
