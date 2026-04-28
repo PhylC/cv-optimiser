@@ -1464,6 +1464,11 @@ def build_site_header_css() -> str:
           .header-signin-link:hover {
             color: #FFFFFF;
           }
+          body[data-auth-loading="true"] #signInLink,
+          body[data-auth-loading="true"] #upgradeLink,
+          body[data-auth-loading="true"] #accountMenuWrap {
+            visibility: hidden;
+          }
           .hidden {
             display: none !important;
           }
@@ -1474,8 +1479,9 @@ def build_site_header_css() -> str:
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            min-height: 46px;
-            padding: 10px 14px;
+            height: 44px;
+            max-width: 240px;
+            padding: 0 14px;
             border-radius: 14px;
             border: 1px solid rgba(92, 112, 150, 0.26);
             background: rgba(10, 19, 35, 0.6);
@@ -1491,9 +1497,9 @@ def build_site_header_css() -> str:
             transform: translateY(-1px);
           }
           .account-chip-text {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             min-width: 0;
           }
           .account-mobile-label {
@@ -1514,9 +1520,16 @@ def build_site_header_css() -> str:
             text-overflow: ellipsis;
           }
           .account-plan {
-            color: #9FB0D4;
-            font-size: 12px;
-            line-height: 1.2;
+            color: #DCE6FF;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(91, 120, 255, 0.18);
+            border: 1px solid rgba(91, 120, 255, 0.24);
+            white-space: nowrap;
           }
           .account-caret {
             color: #9FB0D4;
@@ -1616,7 +1629,7 @@ def build_site_header_css() -> str:
               width: 100%;
               max-width: 100%;
               justify-content: space-between;
-              padding: 10px 12px;
+              padding: 0 12px;
             }
             .account-email {
               display: none;
@@ -1710,7 +1723,9 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         ("upgrade", "/upgrade", "Upgrade"),
     ]
     nav_html = "".join(
-        f'<a href="{href}" class="site-nav-link{" is-active" if active_key == key else ""}"'
+        f'<a href="{href}"'
+        f'{" id=\"upgradeLink\"" if key == "upgrade" else ""}'
+        f' class="site-nav-link{" is-active" if active_key == key else ""}"'
         f'{" data-upgrade-link" if key == "upgrade" else ""}>{label}</a>'
         for key, href, label in nav_items
     )
@@ -1731,7 +1746,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
               <span class="account-chip-text">
                 <span class="account-mobile-label">Account</span>
                 <span id="accountEmail" class="account-email">Signed in</span>
-                <span id="accountPlan" class="account-plan">Plan: Free</span>
+                <span id="accountPlan" class="account-plan">Free</span>
               </span>
               <span class="account-caret">▾</span>
             </button>
@@ -1985,7 +2000,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header(
               "upgrade" if slug == "cv-improvement-tool" else (
@@ -2218,7 +2233,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -2396,7 +2411,7 @@ def render_cv_checker_page() -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           <div class="topbar">
             <a href="/" class="logo">
@@ -2671,7 +2686,7 @@ def render_ats_cv_checker_page() -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           <div class="topbar">
             <a href="/" class="logo">
@@ -2979,7 +2994,7 @@ def render_example_report_page() -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header("example-report")}
 
@@ -3236,7 +3251,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header("upgrade" if slug == "cv-improvement-tool" else None)}
 
@@ -3404,7 +3419,7 @@ def render_faq_page() -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -3599,7 +3614,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header("how-it-works" if slug == "how-it-works" else None)}
           <div class="card">
@@ -3752,7 +3767,7 @@ def render_upgrade_page() -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header("upgrade")}
           <div class="hero">
@@ -4004,7 +4019,7 @@ def render_status_page(title: str, heading: str, copy: str) -> str:
           }}
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -4208,7 +4223,7 @@ def billing_page() -> str:
           p, li { color: #C7D3EE; }
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <h1>Billing & Cancellation</h1>
         <p>Pro subscriptions are billed through Stripe. You can manage or cancel your subscription from the account menu inside the app.</p>
         <p>If you need billing help, please use the support form.</p>
@@ -4296,7 +4311,7 @@ def admin_analytics_page() -> str:
           p, a { color: #C7D3EE; }
         </style>
       </head>
-      <body>
+      <body data-auth-loading="true">
         <h1>Analytics</h1>
         <p>Open the raw analytics endpoint here:</p>
         <p><a href="/api/admin/analytics" target="_blank">/api/admin/analytics</a></p>

@@ -536,6 +536,12 @@
     transform: none;
   }
 
+  body[data-auth-loading="true"] #signInLink,
+  body[data-auth-loading="true"] #upgradeLink,
+  body[data-auth-loading="true"] #accountMenuWrap {
+    visibility: hidden;
+  }
+
   .site-header-cta {
     display: inline-flex;
     align-items: center;
@@ -1409,14 +1415,14 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    min-height: 46px;
-    padding: 10px 14px;
+    height: 44px;
+    max-width: 240px;
+    padding: 0 14px;
     border-radius: 14px;
     background: rgba(12, 23, 43, 0.86);
     border: 1px solid rgba(80, 103, 146, 0.32);
     color: #E8EEFC;
     cursor: pointer;
-    min-width: 228px;
     transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
     box-shadow: none;
   }
@@ -1428,9 +1434,9 @@
   }
 
   .account-chip-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     text-align: left;
     min-width: 0;
   }
@@ -1455,9 +1461,16 @@
   }
 
   .account-plan {
-    font-size: 12px;
-    color: #9FB0D4;
-    line-height: 1.2;
+    font-size: 11px;
+    font-weight: 800;
+    color: #DCE6FF;
+    line-height: 1;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(91, 120, 255, 0.18);
+    border: 1px solid rgba(91, 120, 255, 0.24);
+    white-space: nowrap;
   }
 
   .account-caret {
@@ -1567,6 +1580,7 @@
       min-width: 0;
       max-width: 100%;
       justify-content: space-between;
+      padding: 0 12px;
     }
 
     .account-email {
@@ -2203,7 +2217,7 @@
   }
 </style>
 </head>
-<body>
+<body data-auth-loading="true">
   <header id="siteHeader" class="site-header">
     <div class="site-header-inner">
     <a href="/" class="site-logo logo-wrap">
@@ -2221,7 +2235,7 @@
         <a href="/cv-checker" class="site-nav-link">CV Checker</a>
         <a href="/how-it-works" class="site-nav-link">How it works</a>
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
-        <a href="/upgrade" class="site-nav-link" data-upgrade-link>Upgrade</a>
+        <a href="/upgrade" id="upgradeLink" class="site-nav-link" data-upgrade-link>Upgrade</a>
       </nav>
       <button id="signInLink" class="site-nav-link header-link" type="button">Sign in</button>
       <a href="/#tool" class="site-header-cta">Check my CV</a>
@@ -2235,7 +2249,7 @@
           <span class="account-chip-text">
             <span class="account-mobile-label">Account</span>
             <span id="accountEmail" class="account-email">Logged out</span>
-            <span id="accountPlan" class="account-plan">Plan: Free</span>
+            <span id="accountPlan" class="account-plan">Free</span>
           </span>
           <span class="account-caret">⌄</span>
         </button>
@@ -2850,7 +2864,7 @@
       if (planData && typeof planData === "object" && planData.is_pro) return "signed_in_pro";
       if (currentPlan === "pro") return "signed_in_pro";
       if (currentUser && currentPlan === "free") return "signed_in_free";
-      if (accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro") return "signed_in_pro";
+      if (accountPlanText && accountPlanText.textContent.trim().toLowerCase().includes("pro")) return "signed_in_pro";
       if (planData) return "signed_in_free";
       if (accessToken) return "signed_in_free";
       return "signed_out";
@@ -3310,7 +3324,7 @@
         historyLoadedForUserId = null;
         await refreshAuthUi();
 
-        if (accountPlanText && accountPlanText.textContent.trim().toLowerCase() === "plan: pro") {
+        if (accountPlanText && accountPlanText.textContent.trim().toLowerCase().includes("pro")) {
           checkoutStatus.classList.remove("info", "error");
           checkoutStatus.classList.add("success");
           checkoutStatus.textContent = "Your Pro plan is now active.";
@@ -3524,7 +3538,7 @@
           loginPasswordInput.value = "";
 
           accountEmail.textContent = "Logged out";
-          accountPlanText.textContent = "Plan: Free";
+          accountPlanText.textContent = "Free";
 
           shouldPromptPasswordSetup = false;
           lastPlanJson = "";
@@ -3565,7 +3579,7 @@
 
         const isPro = normalizeCurrentPlan(me.plan) === "pro";
         currentPlan = isPro ? "pro" : "free";
-        accountPlanText.textContent = "Plan: " + (isPro ? "Pro" : "Free");
+        accountPlanText.textContent = isPro ? "Pro" : "Free";
 
         if (isPro) {
           if (menuUpgradeBtn) {
@@ -4242,6 +4256,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         lockedPreviewCard.classList.add("hidden");
         resultsPanel.classList.remove("hidden");
         resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        reportEmbedHeight();
         try {
           window.localStorage.setItem("has_cv_result", "true");
           window.localStorage.setItem("last_cv_timestamp", String(Date.now()));
@@ -4283,6 +4298,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       } finally {
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
+        reportEmbedHeight();
       }
     });
 
@@ -4323,7 +4339,17 @@ passwordLoginBtn.addEventListener("click", async function() {
       await loadUserState();
       await refreshAuthUi();
       await handleCheckoutReturn();
+      reportEmbedHeight();
+
+      if (document.documentElement.classList.contains("embed-tool-mode") && window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(function() {
+          reportEmbedHeight();
+        });
+        resizeObserver.observe(document.body);
+      }
     });
+
+    window.addEventListener("resize", reportEmbedHeight);
   </script>
 </body>
 </html>

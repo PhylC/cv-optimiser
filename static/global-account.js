@@ -1,6 +1,9 @@
 (function () {
   if (window.__cvGlobalAccountInstalled) return;
   window.__cvGlobalAccountInstalled = true;
+  if (document.body) {
+    document.body.dataset.authLoading = "true";
+  }
 
   const supabaseUrl = window.CV_OPTIMISER_SUPABASE_URL || "";
   const supabaseAnonKey = window.CV_OPTIMISER_SUPABASE_ANON_KEY || "";
@@ -75,6 +78,7 @@
     const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
     const billingBtn = document.getElementById("menuManageSubBtn");
     const dropdown = document.getElementById("accountDropdown");
+    const upgradeLink = document.getElementById("upgradeLink");
 
     document.documentElement.dataset.accountPlan = account.plan;
     document.documentElement.dataset.signedIn = account.signedIn ? "true" : "false";
@@ -82,6 +86,9 @@
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
       el.classList.toggle("hidden", account.plan === "pro");
     });
+    if (upgradeLink) {
+      upgradeLink.style.display = account.plan === "pro" ? "none" : "";
+    }
 
     if (!signInLink || !accountWrap || !accountEmail || !accountPlan) return;
 
@@ -93,6 +100,7 @@
       closeHeaderAccountMenu();
       document.body.dataset.accountPlan = "free";
       document.body.dataset.signedIn = "false";
+      document.body.dataset.authLoading = "false";
       return;
     }
 
@@ -101,7 +109,7 @@
     accountWrap.classList.remove("hidden");
     accountWrap.style.display = "";
     accountEmail.textContent = account.email || "Signed in";
-    accountPlan.textContent = "Plan: " + (account.plan === "pro" ? "Pro" : "Free");
+    accountPlan.textContent = account.plan === "pro" ? "Pro" : "Free";
     if (dropdown) {
       dropdown.classList.add("hidden");
       dropdown.setAttribute("aria-hidden", "true");
@@ -115,6 +123,7 @@
     }
     document.body.dataset.accountPlan = account.plan;
     document.body.dataset.signedIn = "true";
+    document.body.dataset.authLoading = "false";
   }
 
   function dispatchAccountState(account) {
@@ -189,11 +198,20 @@
   }
 
   async function refreshGlobalAccountUi(options) {
-    const account = await getAccountState(options);
-    applyHeaderAccountUi(account);
-    console.log("GLOBAL_ACCOUNT_STATE", account);
-    dispatchAccountState(account);
-    return account;
+    try {
+      const account = await getAccountState(options);
+      applyHeaderAccountUi(account);
+      console.log("GLOBAL_ACCOUNT_STATE", account);
+      dispatchAccountState(account);
+      return account;
+    } catch (error) {
+      console.error("refreshGlobalAccountUi error:", error);
+      const fallbackAccount = signedOutState();
+      applyHeaderAccountUi(fallbackAccount);
+      console.log("GLOBAL_ACCOUNT_STATE", fallbackAccount);
+      dispatchAccountState(fallbackAccount);
+      return fallbackAccount;
+    }
   }
 
   async function refreshGlobalAccountState(options) {
