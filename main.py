@@ -1480,11 +1480,7 @@ def build_site_header_css() -> str:
             display: inline-flex !important;
           }
           .auth-placeholder {
-            width: 160px;
-            height: 44px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            display: none !important;
           }
           body[data-auth-state="signed_out"] #authLoadingPlaceholder,
           body[data-auth-state="free"] #authLoadingPlaceholder,
