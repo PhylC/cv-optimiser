@@ -558,10 +558,29 @@
     color: #ffffff;
   }
 
-  body[data-auth-loading="true"] #signInLink,
-  body[data-auth-loading="true"] #upgradeLink,
-  body[data-auth-loading="true"] #accountMenuWrap {
-    visibility: hidden;
+  body[data-auth-state="loading"] #signInLink,
+  body[data-auth-state="loading"] #upgradeLink,
+  body[data-auth-state="loading"] #accountMenuWrap {
+    display: none !important;
+  }
+
+  body[data-auth-plan-pending="true"] #accountMenuWrap {
+    display: inline-flex !important;
+  }
+
+  .auth-placeholder {
+    width: 160px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  body[data-auth-state="signed_out"] #authLoadingPlaceholder,
+  body[data-auth-state="free"] #authLoadingPlaceholder,
+  body[data-auth-state="pro"] #authLoadingPlaceholder,
+  body[data-auth-plan-pending="true"] #authLoadingPlaceholder {
+    display: none !important;
   }
 
   .site-header-cta {
@@ -2243,7 +2262,7 @@
   }
 </style>
 </head>
-<body data-auth-loading="true">
+<body data-auth-state="loading">
   <header id="siteHeader" class="site-header">
     <div class="site-header-inner">
     <a href="/" class="site-logo logo-wrap">
@@ -2261,9 +2280,10 @@
         <a href="/cv-checker" class="site-nav-link">CV Checker</a>
         <a href="/how-it-works" class="site-nav-link">How it works</a>
         <a href="/example-cv-report" class="site-nav-link">Example Report</a>
-        <a href="/upgrade" id="upgradeLink" class="site-nav-link" data-upgrade-link>Upgrade</a>
+        <a href="/upgrade" id="upgradeLink" class="site-nav-link hidden" data-upgrade-link>Upgrade</a>
       </nav>
-      <a id="signInLink" href="#authCard" class="header-signin-link">Sign in</a>
+      <div id="authLoadingPlaceholder" class="auth-placeholder"></div>
+      <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -2273,8 +2293,8 @@
         <button type="button" id="accountMenuButton" class="account-menu-button" aria-expanded="false" aria-controls="accountDropdown">
           <span class="account-chip-text">
             <span class="account-mobile-label">Account</span>
-            <span id="accountEmail" class="account-email">Logged out</span>
-            <span id="accountPlan" class="account-plan">Free</span>
+            <span id="accountEmail" class="account-email">Account</span>
+            <span id="accountPlan" class="account-plan">Checking plan...</span>
           </span>
           <span class="account-caret">⌄</span>
         </button>
@@ -2371,9 +2391,9 @@
           <div>
             <button id="optimiseBtn" style="width:100%;">Check my CV</button>
           </div>
-          <p id="toolTrustCopy" class="small tool-trust-copy">No signup required. Takes 30 seconds.</p>
-          <p id="toolFreeCopy" class="tool-free-copy" data-free-copy>1 free CV check available — no card required <span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
-          <p id="toolLoadingNote" class="small tool-loading-note">No signup needed for your first result</p>
+          <p id="toolTrustCopy" class="small tool-trust-copy">Checking account status...</p>
+          <p id="toolFreeCopy" class="tool-free-copy" data-free-copy>Checking account status... <span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
+          <p id="toolLoadingNote" class="small tool-loading-note">Checking account status...</p>
           <div id="loadingSteps" class="loading-steps hidden">
             <div class="loading-step">Scanning CV…</div>
             <div class="loading-step">Matching to job description…</div>
@@ -2413,7 +2433,7 @@
 
           <div class="score-hero">
             <div class="score-hero-left">
-              <div id="scoreKicker" class="score-kicker">Your free CV check</div>
+              <div id="scoreKicker" class="score-kicker">Your CV analysis</div>
               <div class="score-label">CV Match Score</div>
               <div id="score" class="score-value"></div>
               <div id="resultStatusHeadline" class="score-headline">Unlikely to pass ATS filters</div>
@@ -2758,7 +2778,7 @@
     let lastSignInMethod = null;
     let lastPlanJson = "";
     let currentUser = null;
-    let currentPlan = "free";
+    let currentPlan = null;
     let historyLoadedForUserId = null;
 
     const optimiseBtn = document.getElementById("optimiseBtn");
@@ -2888,10 +2908,12 @@
       const signedIn = document.body && document.body.dataset ? document.body.dataset.signedIn === "true" : false;
       const plan = document.body && document.body.dataset && document.body.dataset.accountPlan
         ? document.body.dataset.accountPlan
-        : "free";
+        : null;
+      const authState = document.body && document.body.dataset ? document.body.dataset.authState : "loading";
       return {
         signedIn: signedIn,
-        plan: normalizeCurrentPlan(plan)
+        plan: normalizeCurrentPlan(plan),
+        loading: authState === "loading"
       };
     }
 
@@ -2902,19 +2924,24 @@
       const bodyState = getAccountStateFromBody();
 
       if (explicitSignedIn === true) {
+        if (!explicitPlan) return "loading";
         return explicitPlan === "pro" ? "signed_in_pro" : "signed_in_free";
       }
       if (explicitSignedIn === false) {
         return "signed_out";
       }
       if (bodyState.signedIn) {
+        if (!bodyState.plan) return "loading";
         return bodyState.plan === "pro" ? "signed_in_pro" : "signed_in_free";
+      }
+      if (bodyState.loading) {
+        return "loading";
       }
       return "signed_out";
     }
 
     function normalizeCurrentPlan(plan) {
-      if (!plan) return "free";
+      if (!plan) return null;
       if (typeof plan === "string") return plan.toLowerCase() === "pro" ? "pro" : "free";
       if (plan.is_pro) return "pro";
       return "free";
@@ -2923,9 +2950,18 @@
     function updateToolHelperCopy(accountState, plan) {
       if (!toolTrustCopy || !toolFreeCopy || !toolLoadingNote) return;
 
-      const state = accountState || "signed_out";
+      const state = accountState || "loading";
       if (toolPlanBadge) {
         toolPlanBadge.classList.toggle("hidden", state !== "signed_in_pro");
+      }
+
+      if (state === "loading") {
+        toolTrustCopy.textContent = "Checking account status...";
+        toolFreeCopy.textContent = "Checking account status...";
+        if (!loadingStageTimer) {
+          toolLoadingNote.textContent = "Checking account status...";
+        }
+        return;
       }
 
       if (state === "signed_in_pro") {
@@ -2964,18 +3000,25 @@
 
     function applyUserUi(plan, account) {
       const accountState = account || getAccountStateFromBody();
-      currentPlan = normalizeCurrentPlan(plan || accountState.plan || currentPlan);
+      const resolvedPlan = normalizeCurrentPlan(plan || accountState.plan);
+      if (resolvedPlan) {
+        currentPlan = resolvedPlan;
+      }
 
       if (accountEmail && currentUser && currentUser.email) {
         accountEmail.textContent = currentUser.email;
       }
 
       document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
-        el.style.display = currentPlan === "pro" ? "none" : "";
+        const planKnown = !!currentPlan;
+        el.classList.toggle("hidden", !planKnown || currentPlan === "pro");
+        el.style.display = !planKnown || currentPlan === "pro" ? "none" : "";
       });
 
       updateToolHelperCopy(
-        accountState.signedIn
+        !currentPlan
+          ? "loading"
+          : accountState.signedIn
           ? (currentPlan === "pro" ? "signed_in_pro" : "signed_in_free")
           : "signed_out",
         plan || null
@@ -2990,7 +3033,7 @@
         return;
       }
       currentUser = null;
-      currentPlan = "free";
+      currentPlan = null;
       applyUserUi(null, { signedIn: false, plan: "free" });
     }
 
@@ -3413,7 +3456,7 @@
 
     function setPlanUi(plan) {
   if (!plan) {
-    currentPlan = "free";
+    currentPlan = null;
     planBadge.textContent = "Plan: signed out";
     usageBadge.classList.add("hidden");
     topStatusRow.classList.add("hidden");
@@ -3421,7 +3464,8 @@
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";
     }
-    applyUserUi(null, { signedIn: false, plan: "free" });
+    currentPlan = "free";
+    applyUserUi({ plan: "free", is_pro: false }, { signedIn: false, plan: "free" });
     return;
   }
 
@@ -3509,7 +3553,7 @@
       if (!sbClient) return;
       await sbClient.auth.signOut();
       currentUser = null;
-      currentPlan = "free";
+      currentPlan = null;
       accessToken = null;
       passwordStatus.textContent = "";
       passwordInput.value = "";
@@ -3541,7 +3585,9 @@
 
         if (!session) {
           currentUser = null;
-          currentPlan = "free";
+          currentPlan = null;
+          document.body.dataset.authState = "signed_out";
+          document.body.dataset.authPlanPending = "false";
           authTitle.textContent = "Create a free account to save your results";
           authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
           authStatus.textContent = "Not signed in. You can still run a free CV check.";
@@ -3575,23 +3621,44 @@
 
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
         currentUser = session.user || null;
+        currentPlan = null;
+        document.body.dataset.authState = "loading";
+        document.body.dataset.authPlanPending = "true";
 
         authCard.classList.add("hidden");
         headerSignInBtn.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
-        accountEmail.textContent = session.user.email || "Signed in";
+        accountEmail.textContent = "Account";
+        accountPlanText.textContent = "Checking plan...";
+        document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
+          el.classList.add("hidden");
+          el.style.display = "none";
+        });
         closeAccountMenu();
 
         passwordStatus.textContent = "";
         passwordInput.value = "";
 
-        const meRes = await fetch("/api/me", {
-          headers: { Authorization: "Bearer " + accessToken }
-        });
-        const me = await meRes.json();
+        let meRes;
+        let me;
+        try {
+          meRes = await fetch("/api/me", {
+            headers: { Authorization: "Bearer " + accessToken }
+          });
+          me = await meRes.json();
+        } catch (error) {
+          authStatus.textContent = "Signed in. Checking plan...";
+          accountEmail.textContent = "Account";
+          accountPlanText.textContent = "Checking plan...";
+          updateToolHelperCopy("loading", null);
+          return;
+        }
 
         if (!meRes.ok || me.error) {
-          authStatus.textContent = "Signed in, but the account is still loading. Please refresh in a few seconds.";
+          authStatus.textContent = "Signed in. Checking plan...";
+          accountEmail.textContent = "Account";
+          accountPlanText.textContent = "Checking plan...";
+          updateToolHelperCopy("loading", null);
           return;
         }
 
@@ -3607,6 +3674,8 @@
 
         const isPro = normalizeCurrentPlan(me.plan) === "pro";
         currentPlan = isPro ? "pro" : "free";
+        document.body.dataset.authState = currentPlan;
+        document.body.dataset.authPlanPending = "false";
         document.body.dataset.signedIn = me.signed_in ? "true" : "false";
         document.body.dataset.accountPlan = currentPlan;
         accountPlanText.textContent = isPro ? "Pro" : "Free";
@@ -4099,7 +4168,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         document.getElementById("source").textContent = data.source || "unknown";
         resultStatusHeadline.textContent = narrative.headline;
         if (scoreKicker) {
-          scoreKicker.textContent = isCurrentlyPro ? "Your full CV analysis" : "Your free CV check";
+          scoreKicker.textContent = accountState === "loading"
+            ? "Your CV analysis"
+            : (isCurrentlyPro ? "Your full CV analysis" : "Your free CV check");
         }
         if (resultPlanBadge) {
           resultPlanBadge.classList.toggle("hidden", !isCurrentlyPro);

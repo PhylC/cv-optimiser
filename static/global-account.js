@@ -2,6 +2,7 @@
   if (window.__cvGlobalAccountInstalled) return;
   window.__cvGlobalAccountInstalled = true;
   if (document.body) {
+    document.body.dataset.authState = "loading";
     document.body.dataset.authLoading = "true";
   }
 
@@ -9,10 +10,12 @@
   const supabaseAnonKey = window.CV_OPTIMISER_SUPABASE_ANON_KEY || "";
   let supabaseClient = null;
   let cachedAccountState = {
-    signedIn: false,
+    signedIn: null,
     email: null,
-    plan: "free",
-    token: null
+    plan: null,
+    token: null,
+    planKnown: false,
+    status: "loading"
   };
   let inflightAccountState = null;
 
@@ -42,8 +45,56 @@
       signedIn: false,
       email: null,
       plan: "free",
-      token: null
+      token: null,
+      planKnown: true,
+      status: "signed_out"
     };
+  }
+
+  function loadingState() {
+    return {
+      signedIn: null,
+      email: null,
+      plan: null,
+      token: null,
+      planKnown: false,
+      status: "loading"
+    };
+  }
+
+  function signedInPlanPendingState(session, token) {
+    return {
+      signedIn: true,
+      email: session && session.user && session.user.email ? session.user.email : null,
+      plan: null,
+      token: token || null,
+      planKnown: false,
+      status: "loading"
+    };
+  }
+
+  function setInitialAuthLoadingUi() {
+    const body = document.body;
+    if (!body) return;
+    const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
+    const accountWrap = document.getElementById("accountMenuWrap");
+    const upgradeLink = document.getElementById("upgradeLink");
+    const placeholder = document.getElementById("authLoadingPlaceholder");
+
+    body.dataset.authState = "loading";
+    body.dataset.authLoading = "true";
+    body.dataset.signedIn = "";
+    body.dataset.accountPlan = "";
+    body.dataset.authPlanPending = "false";
+
+    if (signInLink) signInLink.classList.add("hidden");
+    if (upgradeLink) upgradeLink.classList.add("hidden");
+    document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
+      el.classList.add("hidden");
+    });
+    if (accountWrap) accountWrap.classList.add("hidden");
+    if (placeholder) placeholder.classList.remove("hidden");
+    closeHeaderAccountMenu();
   }
 
   function closeHeaderAccountMenu() {
@@ -72,6 +123,7 @@
   }
 
   function applyHeaderAccountUi(account) {
+    account = account || loadingState();
     const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
     const accountWrap = document.getElementById("accountMenuWrap");
     const accountEmail = document.getElementById("accountEmail");
@@ -79,28 +131,51 @@
     const billingBtn = document.getElementById("menuManageSubBtn");
     const dropdown = document.getElementById("accountDropdown");
     const upgradeLink = document.getElementById("upgradeLink");
+    const placeholder = document.getElementById("authLoadingPlaceholder");
+    const planKnown = account.planKnown !== false && !!account.plan;
+    const authState = account.signedIn
+      ? (planKnown && account.plan === "pro" ? "pro" : (planKnown ? "free" : "loading"))
+      : (account.signedIn === false ? "signed_out" : "loading");
 
-    document.documentElement.dataset.accountPlan = account.plan;
+    document.documentElement.dataset.accountPlan = account.plan || "";
     document.documentElement.dataset.signedIn = account.signedIn ? "true" : "false";
-    document.body.dataset.accountPlan = account.plan || "free";
+    document.body.dataset.authState = authState;
+    document.body.dataset.accountPlan = account.plan || "";
     document.body.dataset.signedIn = account.signedIn ? "true" : "false";
-    document.body.dataset.authLoading = "false";
+    document.body.dataset.authLoading = authState === "loading" ? "true" : "false";
+    document.body.dataset.authPlanPending = account.signedIn && !planKnown ? "true" : "false";
 
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
-      el.classList.toggle("hidden", account.plan === "pro");
+      el.classList.toggle("hidden", account.plan === "pro" || !planKnown);
     });
     if (upgradeLink) {
-      upgradeLink.style.display = account.plan === "pro" ? "none" : "";
+      upgradeLink.classList.toggle("hidden", account.plan === "pro" || !planKnown);
+      upgradeLink.style.display = account.plan === "pro" || !planKnown ? "none" : "";
+    }
+    if (placeholder) {
+      placeholder.classList.toggle("hidden", authState !== "loading" || (account.signedIn && !planKnown));
     }
 
     if (!signInLink || !accountWrap || !accountEmail || !accountPlan) return;
 
-    if (!account.signedIn) {
+    if (account.signedIn === false) {
       signInLink.classList.remove("hidden");
       signInLink.style.display = "";
       accountWrap.classList.add("hidden");
       accountWrap.style.display = "none";
       closeHeaderAccountMenu();
+      return;
+    }
+
+    if (account.signedIn && !planKnown) {
+      signInLink.classList.add("hidden");
+      signInLink.style.display = "none";
+      accountWrap.classList.remove("hidden");
+      accountWrap.style.display = "";
+      accountEmail.textContent = "Account";
+      accountPlan.textContent = "Checking plan...";
+      closeHeaderAccountMenu();
+      if (billingBtn) billingBtn.classList.add("hidden");
       return;
     }
 
@@ -152,12 +227,7 @@
       }
 
       const token = session.access_token;
-      let account = {
-        signedIn: true,
-        email: session.user && session.user.email ? session.user.email : null,
-        plan: "free",
-        token: token
-      };
+      let account = signedInPlanPendingState(session, token);
 
       try {
         const response = await fetch("/api/me", {
@@ -167,15 +237,21 @@
         });
         const data = await response.json();
         if (response.ok && !data.error) {
+          const resolvedPlan = normalizePlan(data.plan || data.plan_state);
           account = {
             signedIn: !!data.signed_in,
             email: data.email || account.email,
-            plan: normalizePlan(data.plan || data.plan_state),
-            token: data.signed_in ? token : null
+            plan: resolvedPlan,
+            token: data.signed_in ? token : null,
+            planKnown: true,
+            status: data.signed_in ? resolvedPlan : "signed_out"
           };
+        } else {
+          account = signedInPlanPendingState(session, token);
         }
       } catch (error) {
         console.error("global account state error:", error);
+        account = signedInPlanPendingState(session, token);
       }
 
       if (!account.signedIn) {
@@ -196,6 +272,7 @@
 
   async function refreshGlobalAccountUi(options) {
     try {
+      setInitialAuthLoadingUi();
       const account = await getAccountState(options);
       applyHeaderAccountUi(account);
       console.log("GLOBAL_ACCOUNT_STATE", account);
@@ -203,7 +280,7 @@
       return account;
     } catch (error) {
       console.error("refreshGlobalAccountUi error:", error);
-      const fallbackAccount = signedOutState();
+      const fallbackAccount = cachedAccountState && cachedAccountState.signedIn ? cachedAccountState : signedOutState();
       applyHeaderAccountUi(fallbackAccount);
       console.log("GLOBAL_ACCOUNT_STATE", fallbackAccount);
       dispatchAccountState(fallbackAccount);
@@ -358,6 +435,7 @@
 
   async function bootstrapAccountUi() {
     installHeaderDropdownHandlers();
+    setInitialAuthLoadingUi();
     closeHeaderAccountMenu();
     await refreshGlobalAccountState();
     const client = getSupabaseClient();
@@ -373,6 +451,7 @@
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
   window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
+  setInitialAuthLoadingUi();
   document.addEventListener("DOMContentLoaded", function () {
     bootstrapAccountUi();
   });

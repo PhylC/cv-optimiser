@@ -1471,10 +1471,26 @@ def build_site_header_css() -> str:
           .header-signin-link:hover {
             color: #FFFFFF;
           }
-          body[data-auth-loading="true"] #signInLink,
-          body[data-auth-loading="true"] #upgradeLink,
-          body[data-auth-loading="true"] #accountMenuWrap {
-            visibility: hidden;
+          body[data-auth-state="loading"] #signInLink,
+          body[data-auth-state="loading"] #upgradeLink,
+          body[data-auth-state="loading"] #accountMenuWrap {
+            display: none !important;
+          }
+          body[data-auth-plan-pending="true"] #accountMenuWrap {
+            display: inline-flex !important;
+          }
+          .auth-placeholder {
+            width: 160px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+          }
+          body[data-auth-state="signed_out"] #authLoadingPlaceholder,
+          body[data-auth-state="free"] #authLoadingPlaceholder,
+          body[data-auth-state="pro"] #authLoadingPlaceholder,
+          body[data-auth-plan-pending="true"] #authLoadingPlaceholder {
+            display: none !important;
           }
           .hidden {
             display: none !important;
@@ -1735,7 +1751,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
     nav_html = "".join(
         f'<a href="{href}"'
         f'{" id=\"upgradeLink\"" if key == "upgrade" else ""}'
-        f' class="site-nav-link{" is-active" if active_key == key else ""}"'
+        f' class="site-nav-link{" hidden" if key == "upgrade" else ""}{" is-active" if active_key == key else ""}"'
         f'{" data-upgrade-link" if key == "upgrade" else ""}>{label}</a>'
         for key, href, label in nav_items
     )
@@ -1750,13 +1766,14 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           <nav class="site-nav" aria-label="Primary">
             {nav_html}
           </nav>
-          <a href="/#authCard" id="signInLink" class="header-signin-link">Sign in</a>
+          <div id="authLoadingPlaceholder" class="auth-placeholder"></div>
+          <a href="/#authCard" id="signInLink" class="header-signin-link hidden">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
             <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
               <span class="account-chip-text">
                 <span class="account-mobile-label">Account</span>
-                <span id="accountEmail" class="account-email">Signed in</span>
-                <span id="accountPlan" class="account-plan">Free</span>
+                <span id="accountEmail" class="account-email">Account</span>
+                <span id="accountPlan" class="account-plan">Checking plan...</span>
               </span>
               <span class="account-caret">▾</span>
             </button>
@@ -2010,7 +2027,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header(
               "upgrade" if slug == "cv-improvement-tool" else (
@@ -2243,7 +2260,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -2421,7 +2438,7 @@ def render_cv_checker_page() -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           <div class="topbar">
             <a href="/" class="logo">
@@ -2696,7 +2713,7 @@ def render_ats_cv_checker_page() -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           <div class="topbar">
             <a href="/" class="logo">
@@ -3004,7 +3021,7 @@ def render_example_report_page() -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header("example-report")}
 
@@ -3261,7 +3278,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header("upgrade" if slug == "cv-improvement-tool" else None)}
 
@@ -3269,7 +3286,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             <div class="card">
               <h1>{html.escape(page["h1"])}</h1>
               <p>{html.escape(page["intro"])}</p>
-              <p class="trust">Free check • No signup required • Your CV isn’t stored</p>
+              <p class="trust">Built for real job applications</p>
               <h2>What this page helps you do</h2>
               <ul>{bullet_html}</ul>
             <div class="cta-block">
@@ -3429,7 +3446,7 @@ def render_faq_page() -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -3624,7 +3641,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header("how-it-works" if slug == "how-it-works" else None)}
           <div class="card">
@@ -3767,6 +3784,14 @@ def render_upgrade_page() -> str:
             font-weight: 700;
             text-decoration: none;
           }}
+          .upgrade-loading-state {{
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            background: rgba(15, 28, 50, 0.72);
+            color: #DCE6FF;
+            font-weight: 700;
+          }}
           @media (max-width: 900px) {{
             .upgrade-grid {{
               grid-template-columns: 1fr;
@@ -3777,7 +3802,7 @@ def render_upgrade_page() -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header("upgrade")}
           <div class="hero">
@@ -3785,7 +3810,9 @@ def render_upgrade_page() -> str:
             <p>Choose how you want to improve your CV.</p>
           </div>
 
-          <div id="upgradeGrid" class="upgrade-grid">
+          <div id="upgradeLoadingState" class="upgrade-loading-state">Checking account status...</div>
+
+          <div id="upgradeGrid" class="upgrade-grid hidden">
             <div id="oneTimeCard" class="upgrade-card upgrade-card-primary">
               <h2>Unlock this report</h2>
               <div class="price">£7.99 one-time</div>
@@ -3809,7 +3836,8 @@ def render_upgrade_page() -> str:
                 <li>Ongoing improvements</li>
               </ul>
               <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
-              <p class="upgrade-helper">Sign in required for monthly Pro access.</p>
+              <p id="proSignedOutPrompt" class="upgrade-helper hidden">Sign in to start monthly Pro access.</p>
+              <p id="proSignedInPrompt" class="upgrade-helper hidden">Monthly Pro access is available for signed-in free accounts.</p>
               <div id="upgradeInlineError" class="upgrade-inline-error hidden">Please sign in to start Pro monthly.</div>
             </div>
           </div>
@@ -3828,10 +3856,13 @@ def render_upgrade_page() -> str:
         <script>
           const upgradeInlineError = document.getElementById("upgradeInlineError");
           const upgradeGrid = document.getElementById("upgradeGrid");
+          const upgradeLoadingState = document.getElementById("upgradeLoadingState");
           const oneTimeCard = document.getElementById("oneTimeCard");
           const proCard = document.getElementById("proCard");
           const alreadyProState = document.getElementById("alreadyProState");
           const oneTimeButton = document.querySelector('[data-checkout-plan="one_time"]');
+          const proSignedOutPrompt = document.getElementById("proSignedOutPrompt");
+          const proSignedInPrompt = document.getElementById("proSignedInPrompt");
 
           function hasStoredCvResult() {{
             try {{
@@ -3867,12 +3898,26 @@ def render_upgrade_page() -> str:
           }}
 
           function applyUpgradePageState(account) {{
-            const state = account || {{ signedIn: false, plan: "free" }};
-            const isPro = state.plan === "pro";
+            const state = account || {{ signedIn: null, plan: null, planKnown: false }};
+            const planKnown = state.planKnown !== false && !!state.plan;
+            const isLoading = state.signedIn === null || (state.signedIn && !planKnown);
+            const isPro = planKnown && state.plan === "pro";
             console.log("Upgrade account state:", {{
               signedIn: !!state.signedIn,
-              plan: isPro ? "signed_in_pro" : (state.signedIn ? "signed_in_free" : "signed_out")
+              plan: isLoading ? "loading" : (isPro ? "signed_in_pro" : (state.signedIn ? "signed_in_free" : "signed_out"))
             }});
+
+            if (isLoading) {{
+              if (upgradeLoadingState) upgradeLoadingState.classList.remove("hidden");
+              if (upgradeGrid) upgradeGrid.classList.add("hidden");
+              if (alreadyProState) alreadyProState.classList.add("hidden");
+              if (oneTimeCard) oneTimeCard.classList.add("hidden");
+              if (proCard) proCard.classList.add("hidden");
+              hideUpgradeInlineError();
+              return;
+            }}
+
+            if (upgradeLoadingState) upgradeLoadingState.classList.add("hidden");
 
             if (isPro) {{
               if (upgradeGrid) upgradeGrid.classList.add("hidden");
@@ -3887,13 +3932,15 @@ def render_upgrade_page() -> str:
             if (alreadyProState) alreadyProState.classList.add("hidden");
             if (oneTimeCard) oneTimeCard.classList.remove("hidden");
             if (proCard) proCard.classList.remove("hidden");
+            if (proSignedOutPrompt) proSignedOutPrompt.classList.toggle("hidden", !!state.signedIn);
+            if (proSignedInPrompt) proSignedInPrompt.classList.toggle("hidden", !state.signedIn);
           }}
 
           async function refreshUpgradePageState() {{
             if (typeof window.getAccountState !== "function") {{
-              applyUpgradePageState({{ signedIn: false, email: null, plan: "free", token: null }});
+              applyUpgradePageState({{ signedIn: null, email: null, plan: null, token: null, planKnown: false }});
               updateOneTimeButtonState();
-              return {{ signedIn: false, email: null, plan: "free", token: null }};
+              return {{ signedIn: null, email: null, plan: null, token: null, planKnown: false }};
             }}
             const account = await window.getAccountState({{ forceRefresh: true }});
             applyUpgradePageState(account);
@@ -4029,7 +4076,7 @@ def render_status_page(title: str, heading: str, copy: str) -> str:
           }}
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <div class="page">
           {build_site_header()}
           <div class="card">
@@ -4233,7 +4280,7 @@ def billing_page() -> str:
           p, li { color: #C7D3EE; }
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <h1>Billing & Cancellation</h1>
         <p>Pro subscriptions are billed through Stripe. You can manage or cancel your subscription from the account menu inside the app.</p>
         <p>If you need billing help, please use the support form.</p>
@@ -4321,7 +4368,7 @@ def admin_analytics_page() -> str:
           p, a { color: #C7D3EE; }
         </style>
       </head>
-      <body data-auth-loading="true">
+      <body data-auth-state="loading">
         <h1>Analytics</h1>
         <p>Open the raw analytics endpoint here:</p>
         <p><a href="/api/admin/analytics" target="_blank">/api/admin/analytics</a></p>
