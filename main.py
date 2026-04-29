@@ -1380,9 +1380,15 @@ def build_site_header_css() -> str:
           }
           .site-header-inner {
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+          .site-header-main {
+            display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            width: 100%;
           }
           .site-logo {
             display: inline-flex;
@@ -1430,8 +1436,14 @@ def build_site_header_css() -> str:
           .site-nav {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 18px;
             flex-wrap: wrap;
+          }
+          .site-header-account-row {
+            display: flex;
+            justify-content: flex-end;
+            min-height: 28px;
+            width: 100%;
           }
           .site-nav-link {
             color: #C7D4F1;
@@ -1472,9 +1484,11 @@ def build_site_header_css() -> str:
             color: #FFFFFF;
           }
           body[data-auth-state="loading"] #signInLink,
-          body[data-auth-state="loading"] #upgradeLink,
           body[data-auth-state="loading"] #accountMenuWrap {
             display: none !important;
+          }
+          body[data-auth-state="loading"] #upgradeLink {
+            visibility: hidden;
           }
           body[data-auth-plan-pending="true"] #accountMenuWrap {
             display: inline-flex !important;
@@ -1498,10 +1512,10 @@ def build_site_header_css() -> str:
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            height: 44px;
+            min-height: 34px;
             max-width: 240px;
-            padding: 0 14px;
-            border-radius: 14px;
+            padding: 6px 12px;
+            border-radius: 999px;
             border: 1px solid rgba(92, 112, 150, 0.26);
             background: rgba(10, 19, 35, 0.6);
             color: #E8EEFC;
@@ -1611,8 +1625,14 @@ def build_site_header_css() -> str:
           }
           @media (max-width: 768px) {
             .site-header-inner {
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              align-items: stretch;
+            }
+            .site-header-main {
               display: grid;
-              grid-template-columns: minmax(0, 1fr) auto;
+              grid-template-columns: 1fr auto;
               gap: 12px;
               align-items: center;
             }
@@ -1620,10 +1640,14 @@ def build_site_header_css() -> str:
               display: none;
             }
             .site-header-right {
-              display: contents;
+              display: flex;
+              justify-content: flex-end;
+              margin-left: 0;
             }
             .header-actions {
-              display: contents;
+              display: flex;
+              justify-content: flex-end;
+              margin-left: 0;
             }
             .site-logo {
               min-width: 0;
@@ -1632,8 +1656,10 @@ def build_site_header_css() -> str:
               font-size: 22px;
             }
             .header-signin-link {
-              grid-column: 1 / -1;
-              width: 100%;
+              width: auto;
+            }
+            .site-header-account-row {
+              justify-content: stretch;
             }
             .site-header-cta {
               grid-column: 2;
@@ -1644,14 +1670,13 @@ def build_site_header_css() -> str:
               white-space: nowrap;
             }
             .account-menu-wrap {
-              grid-column: 1 / -1;
               width: 100%;
             }
             .account-menu-button {
               width: 100%;
               max-width: 100%;
               justify-content: space-between;
-              padding: 0 12px;
+              padding: 6px 12px;
             }
             .account-email {
               display: none;
@@ -1747,22 +1772,27 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
     nav_html = "".join(
         f'<a href="{href}"'
         f'{" id=\"upgradeLink\"" if key == "upgrade" else ""}'
-        f' class="site-nav-link{" hidden" if key == "upgrade" else ""}{" is-active" if active_key == key else ""}"'
+        f' class="site-nav-link{" is-active" if active_key == key else ""}"'
         f'{" data-upgrade-link" if key == "upgrade" else ""}>{label}</a>'
         for key, href, label in nav_items
     )
     return f"""
     <header id="siteHeader" class="site-header">
       <div class="site-header-inner">
-        <a href="/" class="site-logo">
-          <span class="site-logo-mark">CV</span>
-          <span class="site-logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-        </a>
-        <div class="site-header-right header-actions">
-          <nav class="site-nav" aria-label="Primary">
-            {nav_html}
-          </nav>
-          <div id="authLoadingPlaceholder" class="auth-placeholder"></div>
+        <div class="site-header-main">
+          <a href="/" class="site-logo">
+            <span class="site-logo-mark">CV</span>
+            <span class="site-logo-title"><strong>CV</strong> <span>Optimiser</span></span>
+          </a>
+          <div class="site-header-right header-actions">
+            <nav class="site-nav" aria-label="Primary">
+              {nav_html}
+            </nav>
+            <a href="{html.escape(cta_href)}" class="site-header-cta header-cta">Check my CV</a>
+          </div>
+        </div>
+        <div class="site-header-account-row">
+          <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
           <a href="/#authCard" id="signInLink" class="header-signin-link hidden">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
             <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
@@ -1780,7 +1810,6 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
               <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
             </div>
           </div>
-          <a href="{html.escape(cta_href)}" class="site-header-cta">Check my CV</a>
         </div>
       </div>
     </header>

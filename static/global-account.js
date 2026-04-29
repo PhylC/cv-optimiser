@@ -88,8 +88,16 @@
     body.dataset.authPlanPending = "false";
 
     if (signInLink) signInLink.classList.add("hidden");
-    if (upgradeLink) upgradeLink.classList.add("hidden");
+    if (upgradeLink) {
+      upgradeLink.classList.remove("hidden");
+      upgradeLink.style.display = "";
+    }
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
+      if (el.id === "upgradeLink") {
+        el.classList.remove("hidden");
+        el.style.display = "";
+        return;
+      }
       el.classList.add("hidden");
     });
     if (accountWrap) accountWrap.classList.add("hidden");
@@ -146,11 +154,16 @@
     document.body.dataset.authPlanPending = account.signedIn && !planKnown ? "true" : "false";
 
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
+      if (el.id === "upgradeLink" && !planKnown) {
+        el.classList.remove("hidden");
+        el.style.display = "";
+        return;
+      }
       el.classList.toggle("hidden", account.plan === "pro" || !planKnown);
     });
     if (upgradeLink) {
-      upgradeLink.classList.toggle("hidden", account.plan === "pro" || !planKnown);
-      upgradeLink.style.display = account.plan === "pro" || !planKnown ? "none" : "";
+      upgradeLink.classList.toggle("hidden", account.plan === "pro");
+      upgradeLink.style.display = account.plan === "pro" ? "none" : "";
     }
     if (placeholder) {
       placeholder.classList.toggle("hidden", authState !== "loading" || (account.signedIn && !planKnown));

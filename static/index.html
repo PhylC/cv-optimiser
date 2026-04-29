@@ -494,9 +494,16 @@
 
   .site-header-inner {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .site-header-main {
+    display: flex;
     align-items: center;
-    gap: 18px;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
   }
 
   .site-header-right {
@@ -522,8 +529,15 @@
   .site-nav {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
     flex-wrap: wrap;
+  }
+
+  .site-header-account-row {
+    display: flex;
+    justify-content: flex-end;
+    min-height: 28px;
+    width: 100%;
   }
 
   .site-nav-link {
@@ -559,9 +573,12 @@
   }
 
   body[data-auth-state="loading"] #signInLink,
-  body[data-auth-state="loading"] #upgradeLink,
   body[data-auth-state="loading"] #accountMenuWrap {
     display: none !important;
+  }
+
+  body[data-auth-state="loading"] #upgradeLink {
+    visibility: hidden;
   }
 
   body[data-auth-plan-pending="true"] #accountMenuWrap {
@@ -592,6 +609,10 @@
     text-decoration: none;
     box-shadow: 0 10px 24px rgba(91, 120, 255, 0.22);
     white-space: nowrap;
+  }
+
+  .header-cta {
+    display: inline-flex;
   }
 
   .account-menu {
@@ -1452,10 +1473,10 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    height: 44px;
+    min-height: 34px;
     max-width: 240px;
-    padding: 0 14px;
-    border-radius: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
     background: rgba(12, 23, 43, 0.86);
     border: 1px solid rgba(80, 103, 146, 0.32);
     color: #E8EEFC;
@@ -1576,8 +1597,15 @@
 
   @media (max-width: 768px) {
     .site-header-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .site-header-main {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: 1fr auto;
       gap: 12px;
       align-items: center;
     }
@@ -1587,11 +1615,15 @@
     }
 
     .site-header-right {
-      display: contents;
+      display: flex;
+      justify-content: flex-end;
+      margin-left: 0;
     }
 
     .header-actions {
-      display: contents;
+      display: flex;
+      justify-content: flex-end;
+      margin-left: 0;
     }
 
     .site-logo {
@@ -1607,12 +1639,14 @@
     }
 
     #signInLink {
-      grid-column: 1 / -1;
-      width: 100%;
+      width: auto;
+    }
+
+    .site-header-account-row {
+      justify-content: stretch;
     }
 
     .account-menu-wrap {
-      grid-column: 1 / -1;
       width: 100%;
     }
 
@@ -1621,7 +1655,7 @@
       min-width: 0;
       max-width: 100%;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 6px 12px;
     }
 
     .account-email {
@@ -2261,25 +2295,31 @@
 <body data-auth-state="loading">
   <header id="siteHeader" class="site-header">
     <div class="site-header-inner">
-    <a href="/" class="site-logo logo-wrap">
-      <div class="logo-mark">
-        <span>CV</span>
-      </div>
-      <div class="logo-wordmark">
-        <div class="logo-title"><span class="logo-title-strong">CV</span> <span class="logo-title-light">Optimiser</span></div>
-        <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
-      </div>
-    </a>
+      <div class="site-header-main">
+        <a href="/" class="site-logo logo-wrap">
+          <div class="logo-mark">
+            <span>CV</span>
+          </div>
+          <div class="logo-wordmark">
+            <div class="logo-title"><span class="logo-title-strong">CV</span> <span class="logo-title-light">Optimiser</span></div>
+            <div class="logo-tag">AI-powered CV tailoring for real job applications</div>
+          </div>
+        </a>
 
-    <div class="site-header-right header-actions">
-      <nav class="site-nav" aria-label="Primary">
-        <a href="/cv-checker" class="site-nav-link">CV Checker</a>
-        <a href="/how-it-works" class="site-nav-link">How it works</a>
-        <a href="/example-cv-report" class="site-nav-link">Example Report</a>
-        <a href="/upgrade" id="upgradeLink" class="site-nav-link hidden" data-upgrade-link>Upgrade</a>
-      </nav>
-      <div id="authLoadingPlaceholder" class="auth-placeholder"></div>
-      <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
+        <div class="site-header-right header-actions">
+          <nav class="site-nav" aria-label="Primary">
+            <a href="/cv-checker" class="site-nav-link">CV Checker</a>
+            <a href="/how-it-works" class="site-nav-link">How it works</a>
+            <a href="/example-cv-report" class="site-nav-link">Example Report</a>
+            <a href="/upgrade" id="upgradeLink" class="site-nav-link" data-upgrade-link>Upgrade</a>
+          </nav>
+          <a href="/#tool" class="site-header-cta header-cta">Check my CV</a>
+        </div>
+      </div>
+
+      <div class="site-header-account-row">
+        <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
+        <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
@@ -2301,8 +2341,7 @@
           <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
         </div>
       </div>
-      <a href="/#tool" class="site-header-cta">Check my CV</a>
-    </div>
+      </div>
     </div>
   </header>
 
@@ -3007,6 +3046,11 @@
 
       document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
         const planKnown = !!currentPlan;
+        if (el.id === "upgradeLink" && !planKnown) {
+          el.classList.remove("hidden");
+          el.style.display = "";
+          return;
+        }
         el.classList.toggle("hidden", !planKnown || currentPlan === "pro");
         el.style.display = !planKnown || currentPlan === "pro" ? "none" : "";
       });
@@ -3627,6 +3671,11 @@
         accountEmail.textContent = "Account";
         accountPlanText.textContent = "Checking plan...";
         document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
+          if (el.id === "upgradeLink") {
+            el.classList.remove("hidden");
+            el.style.display = "";
+            return;
+          }
           el.classList.add("hidden");
           el.style.display = "none";
         });
