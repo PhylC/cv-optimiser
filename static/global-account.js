@@ -8,6 +8,8 @@
 
   const supabaseUrl = window.CV_OPTIMISER_SUPABASE_URL || "";
   const supabaseAnonKey = window.CV_OPTIMISER_SUPABASE_ANON_KEY || "";
+  const ACCOUNT_SNAPSHOT_KEY = "cv_account_snapshot";
+  const ACCOUNT_SNAPSHOT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
   let supabaseClient = null;
   let cachedAccountState = {
     signedIn: null,
@@ -38,6 +40,54 @@
       }
     }
     return "free";
+  }
+
+  function accountFromSnapshot(snapshot) {
+    if (!snapshot || typeof snapshot !== "object") return null;
+    if (!snapshot.cached_at || Date.now() - Number(snapshot.cached_at) > ACCOUNT_SNAPSHOT_MAX_AGE_MS) return null;
+    const signedIn = !!snapshot.signed_in;
+    const plan = normalizePlan(snapshot.plan);
+    return {
+      signedIn: signedIn,
+      email: snapshot.email || null,
+      plan: signedIn ? plan : "free",
+      token: null,
+      planKnown: true,
+      status: signedIn ? plan : "signed_out",
+      fromSnapshot: true
+    };
+  }
+
+  function readAccountSnapshot() {
+    try {
+      return accountFromSnapshot(JSON.parse(window.localStorage.getItem(ACCOUNT_SNAPSHOT_KEY) || "null"));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function writeAccountSnapshot(account) {
+    try {
+      window.localStorage.setItem(ACCOUNT_SNAPSHOT_KEY, JSON.stringify({
+        signed_in: !!account.signedIn,
+        email: account.email || null,
+        plan: normalizePlan(account.plan),
+        cached_at: Date.now()
+      }));
+    } catch (error) {}
+  }
+
+  function clearAccountSnapshot() {
+    try {
+      window.localStorage.removeItem(ACCOUNT_SNAPSHOT_KEY);
+    } catch (error) {}
+  }
+
+  function accountsDiffer(first, second) {
+    if (!first || !second) return true;
+    return !!first.signedIn !== !!second.signedIn ||
+      (first.email || "") !== (second.email || "") ||
+      normalizePlan(first.plan) !== normalizePlan(second.plan);
   }
 
   function signedOutState() {
@@ -91,11 +141,13 @@
     if (upgradeLink) {
       upgradeLink.classList.remove("hidden");
       upgradeLink.style.display = "";
+      upgradeLink.style.visibility = "";
     }
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
       if (el.id === "upgradeLink") {
         el.classList.remove("hidden");
         el.style.display = "";
+        el.style.visibility = "";
         return;
       }
       el.classList.add("hidden");
@@ -157,13 +209,21 @@
       if (el.id === "upgradeLink" && !planKnown) {
         el.classList.remove("hidden");
         el.style.display = "";
+        el.style.visibility = "hidden";
+        return;
+      }
+      if (el.id === "upgradeLink") {
+        el.classList.remove("hidden");
+        el.style.display = "";
+        el.style.visibility = account.plan === "pro" ? "hidden" : "";
         return;
       }
       el.classList.toggle("hidden", account.plan === "pro" || !planKnown);
     });
     if (upgradeLink) {
-      upgradeLink.classList.toggle("hidden", account.plan === "pro");
-      upgradeLink.style.display = account.plan === "pro" ? "none" : "";
+      upgradeLink.classList.remove("hidden");
+      upgradeLink.style.display = "";
+      upgradeLink.style.visibility = account.plan === "pro" || !planKnown ? "hidden" : "";
     }
     if (placeholder) {
       placeholder.classList.toggle("hidden", authState !== "loading" || (account.signedIn && !planKnown));
@@ -241,6 +301,9 @@
 
       const token = session.access_token;
       let account = signedInPlanPendingState(session, token);
+      const snapshotFallback = cachedAccountState && cachedAccountState.fromSnapshot && cachedAccountState.signedIn
+        ? Object.assign({}, cachedAccountState, { token: token })
+        : null;
 
       try {
         const response = await fetch("/api/me", {
@@ -259,16 +322,18 @@
             planKnown: true,
             status: data.signed_in ? resolvedPlan : "signed_out"
           };
+          writeAccountSnapshot(account);
         } else {
-          account = signedInPlanPendingState(session, token);
+          account = snapshotFallback || signedInPlanPendingState(session, token);
         }
       } catch (error) {
         console.error("global account state error:", error);
-        account = signedInPlanPendingState(session, token);
+        account = snapshotFallback || signedInPlanPendingState(session, token);
       }
 
       if (!account.signedIn) {
         cachedAccountState = signedOutState();
+        clearAccountSnapshot();
         return cachedAccountState;
       }
 
@@ -284,12 +349,18 @@
   }
 
   async function refreshGlobalAccountUi(options) {
+    const opts = options || {};
     try {
-      setInitialAuthLoadingUi();
+      if (!opts.skipLoadingReset) {
+        setInitialAuthLoadingUi();
+      }
+      const previousAccount = cachedAccountState;
       const account = await getAccountState(options);
-      applyHeaderAccountUi(account);
+      if (accountsDiffer(previousAccount, account) || !previousAccount.fromSnapshot) {
+        applyHeaderAccountUi(account);
+        dispatchAccountState(account);
+      }
       console.log("GLOBAL_ACCOUNT_STATE", account);
-      dispatchAccountState(account);
       return account;
     } catch (error) {
       console.error("refreshGlobalAccountUi error:", error);
@@ -343,6 +414,7 @@
     }
 
     await client.auth.signOut();
+    clearAccountSnapshot();
     cachedAccountState = signedOutState();
     applyHeaderAccountUi(cachedAccountState);
     dispatchAccountState(cachedAccountState);
@@ -448,19 +520,31 @@
 
   async function bootstrapAccountUi() {
     installHeaderDropdownHandlers();
-    setInitialAuthLoadingUi();
+    const snapshotAccount = readAccountSnapshot();
+    if (snapshotAccount) {
+      cachedAccountState = snapshotAccount;
+      applyHeaderAccountUi(snapshotAccount);
+      dispatchAccountState(snapshotAccount);
+    } else {
+      setInitialAuthLoadingUi();
+    }
     closeHeaderAccountMenu();
-    await refreshGlobalAccountState();
+    await refreshGlobalAccountState({ forceRefresh: true, skipLoadingReset: !!snapshotAccount });
     const client = getSupabaseClient();
     if (client && !window.__cvGlobalAccountAuthListenerInstalled) {
       window.__cvGlobalAccountAuthListenerInstalled = true;
-      client.auth.onAuthStateChange(function () {
+      client.auth.onAuthStateChange(function (event) {
+        if (event === "SIGNED_OUT") {
+          clearAccountSnapshot();
+        }
         refreshGlobalAccountState({ forceRefresh: true });
       });
     }
   }
 
   window.getAccountState = getAccountState;
+  window.getCachedAccountSnapshot = readAccountSnapshot;
+  window.clearCachedAccountSnapshot = clearAccountSnapshot;
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
   window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
@@ -469,6 +553,12 @@
     bootstrapAccountUi();
   });
   window.addEventListener("pageshow", function () {
-    refreshGlobalAccountState({ forceRefresh: true });
+    const snapshotAccount = readAccountSnapshot();
+    if (snapshotAccount) {
+      cachedAccountState = snapshotAccount;
+      applyHeaderAccountUi(snapshotAccount);
+      dispatchAccountState(snapshotAccount);
+    }
+    refreshGlobalAccountState({ forceRefresh: true, skipLoadingReset: !!snapshotAccount });
   });
 })();

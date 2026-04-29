@@ -536,7 +536,7 @@
   .site-header-account-row {
     display: flex;
     justify-content: flex-end;
-    min-height: 28px;
+    min-height: 34px;
     width: 100%;
   }
 
@@ -578,6 +578,10 @@
   }
 
   body[data-auth-state="loading"] #upgradeLink {
+    visibility: hidden;
+  }
+
+  body[data-auth-state="pro"] #upgradeLink {
     visibility: hidden;
   }
 
@@ -2924,6 +2928,27 @@
     const passwordCardTitle = document.getElementById("passwordCardTitle");
     const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
+    const ACCOUNT_SNAPSHOT_KEY = "cv_account_snapshot";
+
+    function writeAccountSnapshotFromMe(me) {
+      try {
+        window.localStorage.setItem(ACCOUNT_SNAPSHOT_KEY, JSON.stringify({
+          signed_in: !!(me && me.signed_in),
+          email: me && me.email ? me.email : null,
+          plan: normalizeCurrentPlan(me && (me.plan || me.plan_state)) || "free",
+          cached_at: Date.now()
+        }));
+      } catch (error) {}
+    }
+
+    function clearAccountSnapshot() {
+      try {
+        window.localStorage.removeItem(ACCOUNT_SNAPSHOT_KEY);
+      } catch (error) {}
+      if (typeof window.clearCachedAccountSnapshot === "function") {
+        window.clearCachedAccountSnapshot();
+      }
+    }
 
     function closeAccountMenu() {
       if (!accountDropdown) return;
@@ -3049,6 +3074,13 @@
         if (el.id === "upgradeLink" && !planKnown) {
           el.classList.remove("hidden");
           el.style.display = "";
+          el.style.visibility = "hidden";
+          return;
+        }
+        if (el.id === "upgradeLink") {
+          el.classList.remove("hidden");
+          el.style.display = "";
+          el.style.visibility = currentPlan === "pro" ? "hidden" : "";
           return;
         }
         el.classList.toggle("hidden", !planKnown || currentPlan === "pro");
@@ -3592,6 +3624,7 @@
     async function signOutUser() {
       if (!sbClient) return;
       await sbClient.auth.signOut();
+      clearAccountSnapshot();
       currentUser = null;
       currentPlan = null;
       accessToken = null;
@@ -3624,6 +3657,7 @@
         accessToken = session ? session.access_token : null;
 
         if (!session) {
+          clearAccountSnapshot();
           currentUser = null;
           currentPlan = null;
           document.body.dataset.authState = "signed_out";
@@ -3661,19 +3695,27 @@
 
         const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
         currentUser = session.user || null;
-        currentPlan = null;
-        document.body.dataset.authState = "loading";
-        document.body.dataset.authPlanPending = "true";
+        const existingPlan = normalizeCurrentPlan(document.body && document.body.dataset ? document.body.dataset.accountPlan : null);
+        currentPlan = existingPlan || null;
+        if (!existingPlan) {
+          document.body.dataset.authState = "loading";
+          document.body.dataset.authPlanPending = "true";
+        }
 
         authCard.classList.add("hidden");
         headerSignInBtn.classList.add("hidden");
         accountMenuWrap.classList.remove("hidden");
-        accountEmail.textContent = "Account";
-        accountPlanText.textContent = "Checking plan...";
+        accountEmail.textContent = existingPlan && document.body.dataset.signedIn === "true"
+          ? (accountEmail.textContent || session.user.email || "Signed in")
+          : "Account";
+        accountPlanText.textContent = existingPlan
+          ? (existingPlan === "pro" ? "Pro" : "Free")
+          : "Checking plan...";
         document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
           if (el.id === "upgradeLink") {
             el.classList.remove("hidden");
             el.style.display = "";
+            el.style.visibility = existingPlan === "pro" || !existingPlan ? "hidden" : "";
             return;
           }
           el.classList.add("hidden");
@@ -3692,24 +3734,29 @@
           });
           me = await meRes.json();
         } catch (error) {
-          authStatus.textContent = "Signed in. Checking plan...";
-          accountEmail.textContent = "Account";
-          accountPlanText.textContent = "Checking plan...";
-          updateToolHelperCopy("loading", null);
+          authStatus.textContent = existingPlan ? "Signed in." : "Signed in. Checking plan...";
+          if (!existingPlan) {
+            accountEmail.textContent = "Account";
+            accountPlanText.textContent = "Checking plan...";
+            updateToolHelperCopy("loading", null);
+          }
           return;
         }
 
         if (!meRes.ok || me.error) {
-          authStatus.textContent = "Signed in. Checking plan...";
-          accountEmail.textContent = "Account";
-          accountPlanText.textContent = "Checking plan...";
-          updateToolHelperCopy("loading", null);
+          authStatus.textContent = existingPlan ? "Signed in." : "Signed in. Checking plan...";
+          if (!existingPlan) {
+            accountEmail.textContent = "Account";
+            accountPlanText.textContent = "Checking plan...";
+            updateToolHelperCopy("loading", null);
+          }
           return;
         }
 
         currentUser = {
           email: me.email || (session.user && session.user.email) || null
         };
+        writeAccountSnapshotFromMe(me);
         const planData = me.plan_state || { plan: me.plan || "free", is_pro: normalizeCurrentPlan(me.plan) === "pro" };
         const nextPlanJson = JSON.stringify(planData || {});
         if (nextPlanJson !== lastPlanJson) {
@@ -3806,6 +3853,7 @@ const result = await sbClient.auth.signInWithOtp({
     async function handleSignOut() {
       if (!sbClient) return;
       await sbClient.auth.signOut();
+      clearAccountSnapshot();
       passwordStatus.textContent = "";
       passwordInput.value = "";
       loginPasswordInput.value = "";
@@ -4463,6 +4511,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         if (event === "SIGNED_OUT") {
           shouldPromptPasswordSetup = false;
+          clearAccountSnapshot();
           refreshAuthUi();
           return;
         }

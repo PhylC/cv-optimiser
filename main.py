@@ -1442,7 +1442,7 @@ def build_site_header_css() -> str:
           .site-header-account-row {
             display: flex;
             justify-content: flex-end;
-            min-height: 28px;
+            min-height: 34px;
             width: 100%;
           }
           .site-nav-link {
@@ -1488,6 +1488,9 @@ def build_site_header_css() -> str:
             display: none !important;
           }
           body[data-auth-state="loading"] #upgradeLink {
+            visibility: hidden;
+          }
+          body[data-auth-state="pro"] #upgradeLink {
             visibility: hidden;
           }
           body[data-auth-plan-pending="true"] #accountMenuWrap {
