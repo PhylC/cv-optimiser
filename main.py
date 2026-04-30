@@ -1577,26 +1577,29 @@ def build_site_header_css() -> str:
           .account-menu-wrap {
             position: relative;
           }
-          .account-menu-button {
+          .account-menu-button,
+          .account-pill {
             display: inline-flex;
             align-items: center;
             gap: 10px;
             min-height: 34px;
-            max-width: 240px;
+            max-width: min(100%, 440px);
             padding: 6px 12px;
             border-radius: 999px;
-            border: 1px solid rgba(92, 112, 150, 0.26);
-            background: rgba(10, 19, 35, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
             color: #E8EEFC;
             cursor: pointer;
             text-align: left;
             box-shadow: none;
-            transition: border-color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+            white-space: nowrap;
           }
-          .account-menu-button:hover {
-            border-color: rgba(120, 140, 194, 0.34);
-            background: rgba(14, 25, 46, 0.8);
-            transform: translateY(-1px);
+          .account-menu-button:hover,
+          .account-pill:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
           }
           .account-chip-text {
             display: inline-flex;
@@ -1604,39 +1607,65 @@ def build_site_header_css() -> str:
             gap: 8px;
             min-width: 0;
           }
-          .account-mobile-label {
-            display: none;
-            color: #F4F7FF;
+          .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            flex: 0 0 auto;
+          }
+          .account-text {
+            color: rgba(255, 255, 255, 0.6);
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 500;
             line-height: 1.2;
+            flex: 0 0 auto;
+          }
+          .divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            flex: 0 0 auto;
           }
           .account-email {
             max-width: 220px;
-            color: #F4F7FF;
+            color: #FFFFFF;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 500;
             line-height: 1.2;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 0;
           }
-          .account-plan {
-            color: #DCE6FF;
+          .account-pill .account-plan,
+          .account-pill .plan-badge {
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 600;
             line-height: 1;
             text-transform: uppercase;
-            padding: 3px 7px;
+            padding: 2px 8px;
             border-radius: 999px;
-            background: rgba(91, 120, 255, 0.18);
-            border: 1px solid rgba(91, 120, 255, 0.24);
             white-space: nowrap;
+            flex: 0 0 auto;
           }
-          .account-caret {
-            color: #9FB0D4;
+          .account-pill .account-plan.pro,
+          .account-pill .plan-badge.pro {
+            background: rgba(99, 102, 241, 0.2);
+            color: #A5B4FC;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+          }
+          .account-pill .account-plan.free,
+          .account-pill .plan-badge.free {
+            background: rgba(148, 163, 184, 0.14);
+            color: rgba(226, 232, 240, 0.78);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+          }
+          .account-caret,
+          .dropdown-arrow {
+            color: rgba(255, 255, 255, 0.5);
             font-size: 12px;
-            flex-shrink: 0;
+            flex: 0 0 auto;
           }
           .account-dropdown {
             position: absolute;
@@ -1747,11 +1776,12 @@ def build_site_header_css() -> str:
               justify-content: space-between;
               padding: 6px 12px;
             }
-            .account-email {
-              display: none;
+            .account-chip-text {
+              flex: 1 1 auto;
+              overflow: hidden;
             }
-            .account-mobile-label {
-              display: inline;
+            .account-email {
+              max-width: none;
             }
             .account-dropdown {
               position: static;
@@ -1865,13 +1895,15 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           <span id="accountStatusText" class="account-status-text">Checking account...</span>
           <a href="/#authCard" id="signInLink" class="header-signin-link hidden">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
-            <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
+            <button id="accountMenuButton" class="account-menu-button account-pill" type="button" aria-expanded="false" aria-controls="accountDropdown">
+              <span class="status-dot"></span>
+              <span id="accountPillStatus" class="account-text">Signed in</span>
+              <span class="divider"></span>
               <span class="account-chip-text">
-                <span class="account-mobile-label">Account</span>
                 <span id="accountEmail" class="account-email">Account</span>
-                <span id="accountPlan" class="account-plan">Checking plan...</span>
+                <span id="accountPlan" class="account-plan plan-badge hidden">Checking plan...</span>
               </span>
-              <span class="account-caret">▾</span>
+              <span class="account-caret dropdown-arrow">▾</span>
             </button>
             <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">
               <a href="/#authCard" id="headerAccountLink" data-account-action="account">Account</a>

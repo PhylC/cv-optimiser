@@ -1480,26 +1480,29 @@
 
   }
 
-  .account-menu-button {
+  .account-menu-button,
+  .account-pill {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     min-height: 34px;
-    max-width: 240px;
+    max-width: min(100%, 440px);
     padding: 6px 12px;
     border-radius: 999px;
-    background: rgba(12, 23, 43, 0.86);
-    border: 1px solid rgba(80, 103, 146, 0.32);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
     color: #E8EEFC;
     cursor: pointer;
-    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
     box-shadow: none;
+    white-space: nowrap;
   }
 
-  .account-menu-button:hover {
-    transform: translateY(-1px);
-    border-color: #5B78FF;
-    background: rgba(16, 30, 54, 0.94);
+  .account-menu-button:hover,
+  .account-pill:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   .account-chip-text {
@@ -1510,43 +1513,72 @@
     min-width: 0;
   }
 
-  .account-mobile-label {
-    display: none;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #F3F7FF;
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex: 0 0 auto;
+  }
+
+  .account-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
     line-height: 1.2;
+    flex: 0 0 auto;
+  }
+
+  .divider {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    flex: 0 0 auto;
   }
 
   .account-email {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #F3F7FF;
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFFFFF;
     line-height: 1.2;
-    max-width: 180px;
+    max-width: 220px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0;
   }
 
-  .account-plan {
+  .account-pill .account-plan,
+  .account-pill .plan-badge {
     font-size: 11px;
-    font-weight: 800;
-    color: #DCE6FF;
+    font-weight: 600;
     line-height: 1;
     text-transform: uppercase;
-    padding: 3px 7px;
+    padding: 2px 8px;
     border-radius: 999px;
-    background: rgba(91, 120, 255, 0.18);
-    border: 1px solid rgba(91, 120, 255, 0.24);
     white-space: nowrap;
+    flex: 0 0 auto;
   }
 
-  .account-caret {
-    margin-left: auto;
+  .account-pill .account-plan.pro,
+  .account-pill .plan-badge.pro {
+    background: rgba(99, 102, 241, 0.2);
+    color: #A5B4FC;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .account-pill .account-plan.free,
+  .account-pill .plan-badge.free {
+    background: rgba(148, 163, 184, 0.14);
+    color: rgba(226, 232, 240, 0.78);
+    border: 1px solid rgba(148, 163, 184, 0.24);
+  }
+
+  .account-caret,
+  .dropdown-arrow {
     font-size: 12px;
-    color: #9FB0D4;
-    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.5);
+    flex: 0 0 auto;
   }
 
   .account-menu-wrap {
@@ -1669,12 +1701,13 @@
       padding: 6px 12px;
     }
 
-    .account-email {
-      display: none;
+    .account-chip-text {
+      flex: 1 1 auto;
+      overflow: hidden;
     }
 
-    .account-mobile-label {
-      display: inline;
+    .account-email {
+      max-width: none;
     }
 
     .account-dropdown {
@@ -2332,19 +2365,21 @@
         <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
         <span id="accountStatusText" class="account-status-text">Checking account...</span>
         <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
-      <div id="topStatusRow" class="top-status-row">
+      <div id="topStatusRow" class="top-status-row hidden">
         <span id="planBadge" class="pill">Plan: signed out</span>
         <span id="usageBadge" class="pill hidden"></span>
       </div>
 
       <div id="accountMenuWrap" class="account-menu-wrap hidden">
-        <button type="button" id="accountMenuButton" class="account-menu-button" aria-expanded="false" aria-controls="accountDropdown">
+        <button type="button" id="accountMenuButton" class="account-menu-button account-pill" aria-expanded="false" aria-controls="accountDropdown">
+          <span class="status-dot"></span>
+          <span id="accountPillStatus" class="account-text">Signed in</span>
+          <span class="divider"></span>
           <span class="account-chip-text">
-            <span class="account-mobile-label">Account</span>
             <span id="accountEmail" class="account-email">Account</span>
-            <span id="accountPlan" class="account-plan">Checking plan...</span>
+            <span id="accountPlan" class="account-plan plan-badge hidden">Checking plan...</span>
           </span>
-          <span class="account-caret">⌄</span>
+          <span class="account-caret dropdown-arrow">⌄</span>
         </button>
 
         <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">

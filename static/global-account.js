@@ -116,6 +116,7 @@
     const accountEmail = document.getElementById("accountEmail");
     const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
     const accountStatus = document.getElementById("accountStatusText");
+    const accountPillStatus = document.getElementById("accountPillStatus");
     const billingBtn = document.getElementById("menuManageSubBtn");
     const placeholder = document.getElementById("authLoadingPlaceholder");
     const user = state.user || null;
@@ -157,8 +158,7 @@
 
     if (!user) {
       if (accountStatus) {
-        accountStatus.textContent = "Not signed in";
-        accountStatus.classList.remove("hidden");
+        accountStatus.classList.add("hidden");
       }
       if (signInLink) {
         signInLink.classList.remove("hidden");
@@ -183,14 +183,17 @@
     if (accountEmail) {
       accountEmail.textContent = user.email || "Signed in";
     }
+    if (accountPillStatus) {
+      accountPillStatus.textContent = "Signed in";
+    }
     if (accountPlan) {
-      accountPlan.textContent = plan === "pro" ? "Pro" : (plan === "free" ? "Free" : "Status unavailable");
+      accountPlan.textContent = plan === "pro" ? "PRO" : (plan === "free" ? "FREE" : "");
+      accountPlan.classList.toggle("pro", plan === "pro");
+      accountPlan.classList.toggle("free", plan === "free");
+      accountPlan.classList.toggle("hidden", !plan);
     }
     if (accountStatus) {
-      accountStatus.textContent = plan
-        ? "Signed in · " + (plan === "pro" ? "Pro" : "Free")
-        : "Signed in · Account status unavailable";
-      accountStatus.classList.remove("hidden");
+      accountStatus.classList.add("hidden");
     }
     if (billingBtn) {
       billingBtn.classList.toggle("hidden", plan !== "pro");
