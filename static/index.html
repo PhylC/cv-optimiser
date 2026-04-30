@@ -542,7 +542,7 @@
     width: 100%;
   }
 
-  .account-status-text {
+  .auth-loading-text {
     min-height: 32px;
     display: inline-flex;
     align-items: center;
@@ -2363,12 +2363,8 @@
 
       <div class="site-header-account-row">
         <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
-        <span id="accountStatusText" class="account-status-text">Checking account...</span>
+        <span id="authLoadingText" class="auth-loading-text">Checking account...</span>
         <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
-      <div id="topStatusRow" class="top-status-row hidden">
-        <span id="planBadge" class="pill">Plan: signed out</span>
-        <span id="usageBadge" class="pill hidden"></span>
-      </div>
 
       <div id="accountMenuWrap" class="account-menu-wrap hidden">
         <button type="button" id="accountMenuButton" class="account-menu-button account-pill" aria-expanded="false" aria-controls="accountDropdown">
@@ -2894,9 +2890,6 @@
     const emailInput = document.getElementById("emailInput");
     const authStatus = document.getElementById("authStatus");
     const checkoutStatus = document.getElementById("checkoutStatus");
-    const planBadge = document.getElementById("planBadge");
-    const usageBadge = document.getElementById("usageBadge");
-    const topStatusRow = document.getElementById("topStatusRow");
     const headerSignInBtn = document.getElementById("signInLink") || document.getElementById("headerSignInBtn");
     const accountMenuButton = document.getElementById("accountMenuButton");
     const accountEmail = document.getElementById("accountEmail");
@@ -3557,9 +3550,6 @@
     function setPlanUi(plan) {
   if (!plan) {
     currentPlan = null;
-    planBadge.textContent = "Plan: signed out";
-    usageBadge.classList.add("hidden");
-    topStatusRow.classList.add("hidden");
     if (upgradeBtn) {
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";
@@ -3569,19 +3559,13 @@
   }
 
   currentPlan = normalizeCurrentPlan(plan);
-  topStatusRow.classList.add("hidden");
-
-  planBadge.textContent = "Plan: " + plan.plan;
-  usageBadge.classList.remove("hidden");
 
   if (plan.is_pro) {
-    usageBadge.textContent = "Unlimited analyses";
     if (upgradeBtn) {
       upgradeBtn.classList.add("hidden");
     }
     applyUserUi(plan, { signedIn: true, plan: "pro" });
   } else {
-    usageBadge.textContent = String(plan.remaining_free_analyses_today) + " free analyses left today";
     if (upgradeBtn) {
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";

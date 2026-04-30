@@ -115,7 +115,7 @@
     const accountWrap = document.getElementById("accountMenuWrap");
     const accountEmail = document.getElementById("accountEmail");
     const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
-    const accountStatus = document.getElementById("accountStatusText");
+    const authLoadingText = document.getElementById("authLoadingText");
     const accountPillStatus = document.getElementById("accountPillStatus");
     const billingBtn = document.getElementById("menuManageSubBtn");
     const placeholder = document.getElementById("authLoadingPlaceholder");
@@ -140,9 +140,9 @@
     setUpgradeVisibility(plan);
 
     if (state.loading) {
-      if (accountStatus) {
-        accountStatus.textContent = "Checking account...";
-        accountStatus.classList.remove("hidden");
+      if (authLoadingText) {
+        authLoadingText.textContent = "Checking account...";
+        authLoadingText.classList.remove("hidden");
       }
       if (signInLink) {
         signInLink.classList.add("hidden");
@@ -157,8 +157,8 @@
     }
 
     if (!user) {
-      if (accountStatus) {
-        accountStatus.classList.add("hidden");
+      if (authLoadingText) {
+        authLoadingText.classList.add("hidden");
       }
       if (signInLink) {
         signInLink.classList.remove("hidden");
@@ -192,8 +192,8 @@
       accountPlan.classList.toggle("free", plan === "free");
       accountPlan.classList.toggle("hidden", !plan);
     }
-    if (accountStatus) {
-      accountStatus.classList.add("hidden");
+    if (authLoadingText) {
+      authLoadingText.classList.add("hidden");
     }
     if (billingBtn) {
       billingBtn.classList.toggle("hidden", plan !== "pro");

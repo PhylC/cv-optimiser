@@ -1506,7 +1506,7 @@ def build_site_header_css() -> str:
             min-height: 34px;
             width: 100%;
           }
-          .account-status-text {
+          .auth-loading-text {
             min-height: 32px;
             display: inline-flex;
             align-items: center;
@@ -1892,7 +1892,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         </div>
         <div class="site-header-account-row">
           <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
-          <span id="accountStatusText" class="account-status-text">Checking account...</span>
+          <span id="authLoadingText" class="auth-loading-text">Checking account...</span>
           <a href="/#authCard" id="signInLink" class="header-signin-link hidden">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
             <button id="accountMenuButton" class="account-menu-button account-pill" type="button" aria-expanded="false" aria-controls="accountDropdown">
