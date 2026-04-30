@@ -109,15 +109,29 @@
     });
   }
 
+  function accountInitial(email) {
+    const value = (email || "").trim();
+    if (!value) return "A";
+    return value.charAt(0).toUpperCase();
+  }
+
+  function setHeaderCtaVisibility(plan) {
+    document.querySelectorAll(".site-header-cta.header-cta").forEach(function (el) {
+      el.classList.remove("hidden");
+      el.style.display = "";
+      el.style.visibility = plan === "pro" ? "hidden" : "";
+    });
+  }
+
   function applyHeaderAccountUi(state) {
     const body = document.body;
     const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
     const accountWrap = document.getElementById("accountMenuWrap");
     const accountEmail = document.getElementById("accountEmail");
+    const accountAvatar = document.getElementById("accountAvatar");
     const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
     const authLoadingText = document.getElementById("authLoadingText");
     const accountPillStatus = document.getElementById("accountPillStatus");
-    const billingBtn = document.getElementById("menuManageSubBtn");
     const placeholder = document.getElementById("authLoadingPlaceholder");
     const user = state.user || null;
     const plan = state.plan || null;
@@ -138,6 +152,7 @@
     }
 
     setUpgradeVisibility(plan);
+    setHeaderCtaVisibility(plan);
 
     if (state.loading) {
       if (authLoadingText) {
@@ -183,6 +198,9 @@
     if (accountEmail) {
       accountEmail.textContent = user.email || "Signed in";
     }
+    if (accountAvatar) {
+      accountAvatar.textContent = accountInitial(user.email);
+    }
     if (accountPillStatus) {
       accountPillStatus.textContent = "Signed in";
     }
@@ -194,9 +212,6 @@
     }
     if (authLoadingText) {
       authLoadingText.classList.add("hidden");
-    }
-    if (billingBtn) {
-      billingBtn.classList.toggle("hidden", plan !== "pro");
     }
     closeHeaderAccountMenu();
   }
@@ -449,14 +464,6 @@
         closeHeaderAccountMenu();
         const actionType = action.getAttribute("data-account-action");
         if (actionType === "account") {
-          if (window.location.pathname === "/") {
-            const authCard = document.getElementById("authCard");
-            if (authCard) {
-              authCard.scrollIntoView({ behavior: "smooth", block: "start" });
-              return;
-            }
-          }
-          window.location.href = "/#authCard";
           return;
         }
         if (actionType === "billing") {

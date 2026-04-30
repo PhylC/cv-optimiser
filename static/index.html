@@ -592,6 +592,11 @@
     visibility: hidden;
   }
 
+  body[data-auth-state="loading"] .site-header-cta,
+  body[data-auth-state="pro"] .site-header-cta {
+    visibility: hidden;
+  }
+
   body[data-auth-plan-pending="true"] #accountMenuWrap {
     display: inline-flex !important;
   }
@@ -1548,6 +1553,23 @@
     min-width: 0;
   }
 
+  .account-avatar {
+    display: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    flex: 0 0 auto;
+  }
+
   .account-pill .account-plan,
   .account-pill .plan-badge {
     font-size: 11px;
@@ -1612,7 +1634,9 @@
     pointer-events: auto;
   }
 
+  .account-dropdown a,
   .account-dropdown button {
+    display: block;
     width: 100%;
     text-align: left;
     background: transparent;
@@ -1623,13 +1647,17 @@
     cursor: pointer;
     box-shadow: none;
     margin: 0 0 4px;
+    text-decoration: none;
+    font: inherit;
   }
 
+  .account-dropdown a:hover,
   .account-dropdown button:hover {
     background: rgba(31, 50, 84, 0.82);
     transform: none;
   }
 
+  .account-dropdown a:last-child,
   .account-dropdown button:last-child {
     margin-bottom: 0;
   }
@@ -1707,7 +1735,11 @@
     }
 
     .account-email {
-      max-width: none;
+      display: none;
+    }
+
+    .account-avatar {
+      display: inline-flex;
     }
 
     .account-dropdown {
@@ -2372,6 +2404,7 @@
           <span id="accountPillStatus" class="account-text">Signed in</span>
           <span class="divider"></span>
           <span class="account-chip-text">
+            <span id="accountAvatar" class="account-avatar">A</span>
             <span id="accountEmail" class="account-email">Account</span>
             <span id="accountPlan" class="account-plan plan-badge hidden">Checking plan...</span>
           </span>
@@ -2379,8 +2412,8 @@
         </button>
 
         <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">
-          <button type="button" data-account-action="account">Account</button>
-          <button id="menuManageSubBtn" type="button" data-account-action="billing">Manage subscription</button>
+          <a href="#" data-account-action="account">Account</a>
+          <a id="menuManageSubBtn" href="/billing">Billing</a>
           <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
         </div>
       </div>

@@ -1559,6 +1559,10 @@ def build_site_header_css() -> str:
           body[data-auth-state="pro"] #upgradeLink {
             visibility: hidden;
           }
+          body[data-auth-state="loading"] .site-header-cta,
+          body[data-auth-state="pro"] .site-header-cta {
+            visibility: hidden;
+          }
           body[data-auth-plan-pending="true"] #accountMenuWrap {
             display: inline-flex !important;
           }
@@ -1637,6 +1641,22 @@ def build_site_header_css() -> str:
             overflow: hidden;
             text-overflow: ellipsis;
             min-width: 0;
+          }
+          .account-avatar {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+            text-transform: uppercase;
+            flex: 0 0 auto;
           }
           .account-pill .account-plan,
           .account-pill .plan-badge {
@@ -1781,7 +1801,10 @@ def build_site_header_css() -> str:
               overflow: hidden;
             }
             .account-email {
-              max-width: none;
+              display: none;
+            }
+            .account-avatar {
+              display: inline-flex;
             }
             .account-dropdown {
               position: static;
@@ -1900,14 +1923,15 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
               <span id="accountPillStatus" class="account-text">Signed in</span>
               <span class="divider"></span>
               <span class="account-chip-text">
+                <span id="accountAvatar" class="account-avatar">A</span>
                 <span id="accountEmail" class="account-email">Account</span>
                 <span id="accountPlan" class="account-plan plan-badge hidden">Checking plan...</span>
               </span>
               <span class="account-caret dropdown-arrow">▾</span>
             </button>
             <div id="accountDropdown" class="account-dropdown hidden" aria-hidden="true">
-              <a href="/#authCard" id="headerAccountLink" data-account-action="account">Account</a>
-              <button id="menuManageSubBtn" type="button" data-account-action="billing">Manage subscription</button>
+              <a href="#" id="headerAccountLink" data-account-action="account">Account</a>
+              <a href="/billing" id="menuManageSubBtn">Billing</a>
               <div id="headerBillingNote" class="account-dropdown-note hidden">Billing management is not available yet.</div>
               <button id="menuLogoutBtn" type="button" data-account-action="signout">Sign out</button>
             </div>
