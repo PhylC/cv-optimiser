@@ -402,11 +402,10 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
         "meta_description": "Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.",
-        "h1": "Free CV Checker",
-        "intro": "See how well your CV matches a job description and what to fix.",
+        "h1": "Beat ATS filters and get more interviews — in under 60 seconds",
+        "intro": "See exactly why your CV gets rejected and fix it instantly with tailored suggestions.",
         "tool_intro": [
-            "Most CVs get rejected in seconds — not because of experience, but because they don’t match the job.",
-            "Paste your CV and a job description below to get your match score and improvement suggestions.",
+            "Upload your CV and a job description to get your personalised score and fixes.",
         ],
         "tool_heading": "Check my CV",
         "sections": [
@@ -2043,6 +2042,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
     upgrade_notice_html = ""
     upgrade_notice_script = ""
+    conversion_preview_html = ""
     if slug == "cv-checker":
         upgrade_notice_html = """
           <div id="upgradeRequiredBanner" class="card upgrade-required-banner hidden" role="status" aria-live="polite">
@@ -2063,6 +2063,26 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               } catch (error) {}
             })();
           </script>
+        """
+        conversion_preview_html = """
+          <div class="conversion-trust-row" aria-label="CV check details">
+            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
+            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Your CV is not stored</span></div>
+            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
+          </div>
+          <div class="result-preview-card" aria-label="Example CV result preview">
+            <div class="result-preview-header">
+              <div class="result-preview-title">Example CV Result</div>
+              <div class="result-preview-score">CV Score: <span>74</span> → <strong>89</strong></div>
+            </div>
+            <div class="result-preview-label">Top improvements</div>
+            <ul class="result-preview-list">
+              <li>Add missing keywords: stakeholder, revenue, pipeline</li>
+              <li>Strengthen bullet points with impact verbs</li>
+              <li>Optimise formatting for ATS scanning</li>
+            </ul>
+            <a class="result-preview-link" href="/example-report">See full example report</a>
+          </div>
         """
     section_html = "".join(
         f"""
@@ -2195,6 +2215,91 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #9FB0D4;
             font-size: 13px;
           }}
+          .conversion-trust-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 24px 0 0;
+            color: rgba(211, 221, 244, 0.78);
+            font-size: 13px;
+            font-weight: 650;
+          }}
+          .conversion-trust-item {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+          }}
+          .conversion-trust-icon {{
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.22);
+            color: #86efac;
+            font-size: 11px;
+            line-height: 1;
+          }}
+          .result-preview-card {{
+            margin-top: 28px;
+            padding: 22px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(18, 31, 58, 0.84), rgba(10, 20, 38, 0.9));
+            border: 1px solid rgba(105, 125, 170, 0.24);
+            box-shadow: inset 0 1px 0 rgba(160, 180, 255, 0.06);
+          }}
+          .result-preview-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+          }}
+          .result-preview-title {{
+            color: #F4F7FF;
+            font-size: 15px;
+            font-weight: 780;
+          }}
+          .result-preview-score {{
+            color: #C7D4F1;
+            font-size: 14px;
+            font-weight: 750;
+            white-space: nowrap;
+          }}
+          .result-preview-score strong {{
+            color: #86efac;
+          }}
+          .result-preview-label {{
+            color: rgba(211, 221, 244, 0.72);
+            font-size: 12px;
+            font-weight: 720;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+          }}
+          .result-preview-list {{
+            margin: 0;
+            padding-left: 18px;
+            color: #DCE6FF;
+            font-size: 14px;
+            line-height: 1.55;
+          }}
+          .result-preview-list li {{
+            margin-bottom: 6px;
+          }}
+          .result-preview-link {{
+            display: inline-flex;
+            margin-top: 14px;
+            color: #AFC0FF;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }}
           .upgrade-required-banner {{
             margin-bottom: 20px;
             border-color: rgba(91, 120, 255, 0.28);
@@ -2229,6 +2334,27 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               min-height: 1120px;
             }}
           }}
+          @media (max-width: 768px) {{
+            .conversion-trust-row {{
+              align-items: flex-start;
+              flex-direction: column;
+              gap: 10px;
+              margin-top: 22px;
+              font-size: 13px;
+            }}
+            .result-preview-card {{
+              margin-top: 26px;
+              padding: 20px;
+            }}
+            .result-preview-header {{
+              align-items: flex-start;
+              flex-direction: column;
+              gap: 6px;
+            }}
+            .result-preview-score {{
+              white-space: normal;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -2244,6 +2370,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div class="hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
+            {conversion_preview_html}
           </div>
           <div id="landing-tool" class="tool-card">
             <h2>{html.escape(page["tool_heading"])}</h2>
