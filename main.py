@@ -25,12 +25,6 @@ app = FastAPI(title="CV Optimiser V2")
 CANONICAL_SCHEME = "https"
 CANONICAL_HOST = "www.cv-optimiser.com"
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "testserver"}
-CANONICAL_PATH_ALIASES = {
-    "/example-cv-report": "/example-report",
-    "/why-is-my-cv-not-getting-interviews": "/why-your-cv-is-not-getting-interviews",
-    "/how-to-tailor-cv-to-job-description": "/how-to-tailor-your-cv",
-    "/cv-mistakes-that-cost-interviews": "/cv-mistakes",
-}
 
 
 def _split_host(host_header: str) -> tuple[str, str]:
@@ -41,41 +35,35 @@ def _split_host(host_header: str) -> tuple[str, str]:
     return name.lower(), f":{port}" if port else ""
 
 
-def _canonical_path(path: str) -> str:
-    path = CANONICAL_PATH_ALIASES.get(path, path)
-    if path != "/" and path.endswith("/"):
-        path = path.rstrip("/")
-        path = CANONICAL_PATH_ALIASES.get(path, path)
-    return path or "/"
-
-
 @app.middleware("http")
 async def canonical_redirects(request: Request, call_next):
     host_header = request.headers.get("host", "")
-    host, port = _split_host(host_header)
+    host, _ = _split_host(host_header)
     is_local = host in LOCAL_HOSTS
-    forwarded_proto = request.headers.get("x-forwarded-proto", "").split(",")[0].strip().lower()
-    scheme = forwarded_proto or request.url.scheme
-    path = request.url.path
-    target_path = _canonical_path(path)
+    if is_local or request.method not in {"GET", "HEAD"}:
+        return await call_next(request)
 
-    target_scheme = scheme
-    target_host = host_header
-    if not is_local:
-        target_scheme = CANONICAL_SCHEME
-        target_host = CANONICAL_HOST
-    elif target_path != path:
-        target_host = host + port
-
-    should_redirect = (
-        target_path != path
-        or (not is_local and (scheme != CANONICAL_SCHEME or host != CANONICAL_HOST))
+    forwarded_proto_header = request.headers.get("x-forwarded-proto", "")
+    forwarded_proto = forwarded_proto_header.split(",")[0].strip().lower()
+    forwarded_ssl = request.headers.get("x-forwarded-ssl", "").strip().lower()
+    forwarded_header = request.headers.get("forwarded", "").lower()
+    has_explicit_proxy_proto = bool(forwarded_proto_header or forwarded_ssl or forwarded_header)
+    is_https = (
+        forwarded_proto == CANONICAL_SCHEME
+        or forwarded_ssl == "on"
+        or "proto=https" in forwarded_header
+        or (not has_explicit_proxy_proto and request.url.scheme == CANONICAL_SCHEME)
+    )
+    needs_host_redirect = host != CANONICAL_HOST
+    needs_scheme_redirect = not is_https and (
+        has_explicit_proxy_proto
+        or host != CANONICAL_HOST
     )
 
-    if should_redirect and request.method in {"GET", "HEAD"}:
+    if needs_host_redirect or needs_scheme_redirect:
         query = f"?{request.url.query}" if request.url.query else ""
         return RedirectResponse(
-            url=f"{target_scheme}://{target_host}{target_path}{query}",
+            url=f"{CANONICAL_SCHEME}://{CANONICAL_HOST}{request.url.path}{query}",
             status_code=301,
         )
 
