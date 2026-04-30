@@ -13,7 +13,7 @@ from typing import Any, Optional
 from docx import Document
 from fastapi import Body, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pypdf import PdfReader
@@ -21,6 +21,65 @@ import stripe
 from supabase import Client, create_client
 
 app = FastAPI(title="CV Optimiser V2")
+
+CANONICAL_SCHEME = "https"
+CANONICAL_HOST = "www.cv-optimiser.com"
+LOCAL_HOSTS = {"127.0.0.1", "localhost", "testserver"}
+CANONICAL_PATH_ALIASES = {
+    "/example-cv-report": "/example-report",
+    "/why-is-my-cv-not-getting-interviews": "/why-your-cv-is-not-getting-interviews",
+    "/how-to-tailor-cv-to-job-description": "/how-to-tailor-your-cv",
+    "/cv-mistakes-that-cost-interviews": "/cv-mistakes",
+}
+
+
+def _split_host(host_header: str) -> tuple[str, str]:
+    host = (host_header or "").strip()
+    if ":" not in host:
+        return host.lower(), ""
+    name, port = host.rsplit(":", 1)
+    return name.lower(), f":{port}" if port else ""
+
+
+def _canonical_path(path: str) -> str:
+    path = CANONICAL_PATH_ALIASES.get(path, path)
+    if path != "/" and path.endswith("/"):
+        path = path.rstrip("/")
+        path = CANONICAL_PATH_ALIASES.get(path, path)
+    return path or "/"
+
+
+@app.middleware("http")
+async def canonical_redirects(request: Request, call_next):
+    host_header = request.headers.get("host", "")
+    host, port = _split_host(host_header)
+    is_local = host in LOCAL_HOSTS
+    forwarded_proto = request.headers.get("x-forwarded-proto", "").split(",")[0].strip().lower()
+    scheme = forwarded_proto or request.url.scheme
+    path = request.url.path
+    target_path = _canonical_path(path)
+
+    target_scheme = scheme
+    target_host = host_header
+    if not is_local:
+        target_scheme = CANONICAL_SCHEME
+        target_host = CANONICAL_HOST
+    elif target_path != path:
+        target_host = host + port
+
+    should_redirect = (
+        target_path != path
+        or (not is_local and (scheme != CANONICAL_SCHEME or host != CANONICAL_HOST))
+    )
+
+    if should_redirect and request.method in {"GET", "HEAD"}:
+        query = f"?{request.url.query}" if request.url.query else ""
+        return RedirectResponse(
+            url=f"{target_scheme}://{target_host}{target_path}{query}",
+            status_code=301,
+        )
+
+    return await call_next(request)
 
 app.add_middleware(
     CORSMiddleware,
@@ -264,7 +323,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "See an example CV report",
                 "copy": "Want to see the type of feedback before you try it?",
-                "link_href": "/example-cv-report",
+                "link_href": "/example-report",
                 "link_label": "View example CV report →",
             },
             {
@@ -285,6 +344,28 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             ("Missing keyword detection", "Spot the role-specific terms your CV is missing or not supporting strongly enough."),
             ("Priority fixes", "Get the top improvements most likely to raise your interview chances."),
             ("Full report upgrade", "Unlock deeper feedback, stronger wording and a more detailed improvement plan when you need more help."),
+        ],
+    },
+    "pricing": {
+        "title": "Pricing | CV Optimiser",
+        "description": "See CV Optimiser pricing options for unlocking full CV reports and ongoing Pro access.",
+        "h1": "Pricing",
+        "intro": "Choose the option that fits how often you want to improve and test your CV against job descriptions.",
+        "sections": [
+            ("One-time report", "Unlock a full CV improvement report for a single result when you want deeper feedback on one application."),
+            ("Pro access", "Go Pro for ongoing CV checks, full reports and saved results while you are actively applying."),
+            ("Start with a check", "Run the CV checker first so you can see your score and decide whether the full report is useful."),
+        ],
+    },
+    "contact": {
+        "title": "Contact | CV Optimiser",
+        "description": "Contact CV Optimiser for account, billing or support questions.",
+        "h1": "Contact",
+        "intro": "Need help with your account, billing, login or CV results? Use the support option inside the product so we can see the context of your request.",
+        "sections": [
+            ("Support", "Open CV Optimiser and use the support form in the footer for account, billing or product questions."),
+            ("Billing", "Subscription and payment management is handled through Stripe from the account menu when available."),
+            ("Privacy", "Do not send sensitive personal details unless they are needed to resolve your support request."),
         ],
     },
     "about": {
@@ -597,8 +678,8 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
             },
         ],
         "related_links": [
-            ("/how-to-tailor-cv-to-job-description", "How to tailor your CV to a job description"),
-            ("/example-cv-report", "See an example CV report"),
+            ("/how-to-tailor-your-cv", "How to tailor your CV to a job description"),
+            ("/example-report", "See an example CV report"),
             ("/cv-checker", "Use the CV checker"),
         ],
     },
@@ -725,7 +806,7 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         ],
         "related_links": [
             ("/how-to-improve-cv-score", "How to improve your CV score"),
-            ("/example-cv-report", "See an example CV report"),
+            ("/example-report", "See an example CV report"),
         ],
     },
     "how-to-improve-cv-score": {
@@ -768,27 +849,17 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     },
 }
 
-SITEMAP_URLS: list[str] = [
-    f"{SITE_URL}/",
-    f"{SITE_URL}/cv-checker",
-    f"{SITE_URL}/cv-score-checker",
-    f"{SITE_URL}/job-description-cv-match",
-    f"{SITE_URL}/cv-keyword-optimiser",
-    f"{SITE_URL}/ats-cv-checker",
-    f"{SITE_URL}/cv-improvement-tool",
-    f"{SITE_URL}/upgrade",
-    f"{SITE_URL}/cv-statistics",
-    f"{SITE_URL}/faq",
-    f"{SITE_URL}/how-it-works",
-    f"{SITE_URL}/example-cv-report",
-    f"{SITE_URL}/why-is-my-cv-not-getting-interviews",
-    f"{SITE_URL}/how-to-tailor-cv-to-job-description",
-    f"{SITE_URL}/ats-cv-keywords",
-    f"{SITE_URL}/cv-mistakes-that-cost-interviews",
-    f"{SITE_URL}/how-to-improve-cv-score",
-    f"{SITE_URL}/about",
-    f"{SITE_URL}/privacy",
-    f"{SITE_URL}/terms",
+SITEMAP_URLS: list[dict[str, str]] = [
+    {"group": "Core", "loc": f"{SITE_URL}/", "priority": "1.0"},
+    {"loc": f"{SITE_URL}/cv-checker", "priority": "0.9"},
+    {"group": "Guides (SEO drivers)", "loc": f"{SITE_URL}/why-your-cv-is-not-getting-interviews", "priority": "0.8"},
+    {"loc": f"{SITE_URL}/how-to-tailor-your-cv", "priority": "0.8"},
+    {"loc": f"{SITE_URL}/ats-cv-keywords", "priority": "0.8"},
+    {"loc": f"{SITE_URL}/cv-mistakes", "priority": "0.8"},
+    {"group": "Supporting", "loc": f"{SITE_URL}/how-it-works", "priority": "0.6"},
+    {"loc": f"{SITE_URL}/faq", "priority": "0.5"},
+    {"loc": f"{SITE_URL}/privacy", "priority": "0.3"},
+    {"loc": f"{SITE_URL}/terms", "priority": "0.3"},
 ]
 
 
@@ -1441,9 +1512,19 @@ def build_site_header_css() -> str:
           }
           .site-header-account-row {
             display: flex;
+            align-items: center;
+            gap: 10px;
             justify-content: flex-end;
             min-height: 34px;
             width: 100%;
+          }
+          .account-status-text {
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            color: #AAB7D4;
+            font-size: 13px;
+            font-weight: 700;
           }
           .site-nav-link {
             color: #C7D4F1;
@@ -1486,9 +1567,6 @@ def build_site_header_css() -> str:
           body[data-auth-state="loading"] #signInLink,
           body[data-auth-state="loading"] #accountMenuWrap {
             display: none !important;
-          }
-          body[data-auth-state="loading"] #upgradeLink {
-            visibility: hidden;
           }
           body[data-auth-state="pro"] #upgradeLink {
             visibility: hidden;
@@ -1769,7 +1847,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
     nav_items = [
         ("cv-checker", "/cv-checker", "CV Checker"),
         ("how-it-works", "/how-it-works", "How it works"),
-        ("example-report", "/example-cv-report", "Example Report"),
+        ("example-report", "/example-report", "Example Report"),
         ("upgrade", "/upgrade", "Upgrade"),
     ]
     nav_html = "".join(
@@ -1796,6 +1874,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         </div>
         <div class="site-header-account-row">
           <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
+          <span id="accountStatusText" class="account-status-text">Checking account...</span>
           <a href="/#authCard" id="signInLink" class="header-signin-link hidden">Sign in</a>
           <div id="accountMenuWrap" class="account-menu-wrap hidden">
             <button id="accountMenuButton" class="account-menu-button" type="button" aria-expanded="false" aria-controls="accountDropdown">
@@ -2807,7 +2886,7 @@ def render_ats_cv_checker_page() -> str:
 
 
 def render_example_report_page() -> str:
-    page_url = f"{SITE_URL}/example-cv-report"
+    page_url = f"{SITE_URL}/example-report"
     return f"""
     <!doctype html>
     <html lang="en">
@@ -4168,8 +4247,8 @@ def cv_improvement_tool_page(request: Request) -> str:
     return render_tool_landing_page("cv-improvement-tool", TOOL_LANDING_PAGES["cv-improvement-tool"])
 
 
-@app.get("/example-cv-report", response_class=HTMLResponse)
-@app.get("/example-cv-report/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/example-report", response_class=HTMLResponse)
+@app.get("/example-report/", response_class=HTMLResponse, include_in_schema=False)
 def example_cv_report_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_example_report_page()
@@ -4182,12 +4261,17 @@ def google_verification() -> PlainTextResponse:
 
 @app.get("/sitemap.xml")
 def sitemap() -> Response:
-    url_entries = "\n".join(
-        f"""  <url>
-    <loc>{html.escape(url)}</loc>
+    parts = []
+    for entry in SITEMAP_URLS:
+        if entry.get("group"):
+            parts.append(f"  <!-- {html.escape(entry['group'])} -->")
+        parts.append(
+            f"""  <url>
+    <loc>{html.escape(entry["loc"])}</loc>
+    <priority>{html.escape(entry["priority"])}</priority>
   </url>"""
-        for url in SITEMAP_URLS
-    )
+        )
+    url_entries = "\n\n".join(parts)
     xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {url_entries}
@@ -4215,18 +4299,18 @@ def cv_statistics_page(request: Request) -> str:
     return render_support_page("cv-statistics", SUPPORT_PAGES["cv-statistics"])
 
 
-@app.get("/why-is-my-cv-not-getting-interviews", response_class=HTMLResponse)
-@app.get("/why-is-my-cv-not-getting-interviews/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/why-your-cv-is-not-getting-interviews", response_class=HTMLResponse)
+@app.get("/why-your-cv-is-not-getting-interviews/", response_class=HTMLResponse, include_in_schema=False)
 def why_cv_not_getting_interviews_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_article_page("why-is-my-cv-not-getting-interviews", BLOG_ARTICLES["why-is-my-cv-not-getting-interviews"])
+    return render_article_page("why-your-cv-is-not-getting-interviews", BLOG_ARTICLES["why-is-my-cv-not-getting-interviews"])
 
 
-@app.get("/how-to-tailor-cv-to-job-description", response_class=HTMLResponse)
-@app.get("/how-to-tailor-cv-to-job-description/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/how-to-tailor-your-cv", response_class=HTMLResponse)
+@app.get("/how-to-tailor-your-cv/", response_class=HTMLResponse, include_in_schema=False)
 def tailor_cv_to_job_description_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_article_page("how-to-tailor-cv-to-job-description", BLOG_ARTICLES["how-to-tailor-cv-to-job-description"])
+    return render_article_page("how-to-tailor-your-cv", BLOG_ARTICLES["how-to-tailor-cv-to-job-description"])
 
 
 @app.get("/ats-cv-keywords", response_class=HTMLResponse)
@@ -4236,11 +4320,11 @@ def ats_cv_keywords_page(request: Request) -> str:
     return render_article_page("ats-cv-keywords", BLOG_ARTICLES["ats-cv-keywords"])
 
 
-@app.get("/cv-mistakes-that-cost-interviews", response_class=HTMLResponse)
-@app.get("/cv-mistakes-that-cost-interviews/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/cv-mistakes", response_class=HTMLResponse)
+@app.get("/cv-mistakes/", response_class=HTMLResponse, include_in_schema=False)
 def cv_mistakes_that_cost_interviews_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_article_page("cv-mistakes-that-cost-interviews", BLOG_ARTICLES["cv-mistakes-that-cost-interviews"])
+    return render_article_page("cv-mistakes", BLOG_ARTICLES["cv-mistakes-that-cost-interviews"])
 
 
 @app.get("/how-to-improve-cv-score", response_class=HTMLResponse)
@@ -4253,6 +4337,16 @@ def how_to_improve_cv_score_page(request: Request) -> str:
 @app.get("/features", response_class=HTMLResponse)
 def features_page() -> str:
     return render_support_page("features", SUPPORT_PAGES["features"])
+
+
+@app.get("/pricing", response_class=HTMLResponse)
+def pricing_page() -> str:
+    return render_support_page("pricing", SUPPORT_PAGES["pricing"])
+
+
+@app.get("/contact", response_class=HTMLResponse)
+def contact_page() -> str:
+    return render_support_page("contact", SUPPORT_PAGES["contact"])
 
 
 @app.get("/about", response_class=HTMLResponse)

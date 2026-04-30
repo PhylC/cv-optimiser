@@ -1,25 +1,21 @@
 (function () {
   if (window.__cvGlobalAccountInstalled) return;
   window.__cvGlobalAccountInstalled = true;
-  if (document.body) {
-    document.body.dataset.authState = "loading";
-    document.body.dataset.authLoading = "true";
-  }
 
   const supabaseUrl = window.CV_OPTIMISER_SUPABASE_URL || "";
   const supabaseAnonKey = window.CV_OPTIMISER_SUPABASE_ANON_KEY || "";
   const ACCOUNT_SNAPSHOT_KEY = "cv_account_snapshot";
-  const ACCOUNT_SNAPSHOT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
   let supabaseClient = null;
-  let cachedAccountState = {
-    signedIn: null,
-    email: null,
+  let inflightAuthState = null;
+  let authState = {
+    loading: true,
+    user: null,
     plan: null,
-    token: null,
-    planKnown: false,
-    status: "loading"
+    isPro: false,
+    error: null,
+    token: null
   };
-  let inflightAccountState = null;
 
   function getSupabaseClient() {
     if (supabaseClient) return supabaseClient;
@@ -28,133 +24,51 @@
     return supabaseClient;
   }
 
-  function normalizePlan(plan) {
-    if (!plan) return "free";
-    if (typeof plan === "string") {
-      return plan.toLowerCase() === "pro" ? "pro" : "free";
-    }
-    if (typeof plan === "object") {
-      if (plan.is_pro) return "pro";
-      if (typeof plan.plan === "string") {
-        return plan.plan.toLowerCase() === "pro" ? "pro" : "free";
-      }
-    }
-    return "free";
-  }
-
-  function accountFromSnapshot(snapshot) {
-    if (!snapshot || typeof snapshot !== "object") return null;
-    if (!snapshot.cached_at || Date.now() - Number(snapshot.cached_at) > ACCOUNT_SNAPSHOT_MAX_AGE_MS) return null;
-    const signedIn = !!snapshot.signed_in;
-    const plan = normalizePlan(snapshot.plan);
-    return {
-      signedIn: signedIn,
-      email: snapshot.email || null,
-      plan: signedIn ? plan : "free",
-      token: null,
-      planKnown: true,
-      status: signedIn ? plan : "signed_out",
-      fromSnapshot: true
-    };
-  }
-
-  function readAccountSnapshot() {
-    try {
-      return accountFromSnapshot(JSON.parse(window.localStorage.getItem(ACCOUNT_SNAPSHOT_KEY) || "null"));
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function writeAccountSnapshot(account) {
-    try {
-      window.localStorage.setItem(ACCOUNT_SNAPSHOT_KEY, JSON.stringify({
-        signed_in: !!account.signedIn,
-        email: account.email || null,
-        plan: normalizePlan(account.plan),
-        cached_at: Date.now()
-      }));
-    } catch (error) {}
-  }
-
   function clearAccountSnapshot() {
     try {
       window.localStorage.removeItem(ACCOUNT_SNAPSHOT_KEY);
     } catch (error) {}
   }
 
-  function accountsDiffer(first, second) {
-    if (!first || !second) return true;
-    return !!first.signedIn !== !!second.signedIn ||
-      (first.email || "") !== (second.email || "") ||
-      normalizePlan(first.plan) !== normalizePlan(second.plan);
-  }
-
-  function signedOutState() {
-    return {
-      signedIn: false,
-      email: null,
-      plan: "free",
-      token: null,
-      planKnown: true,
-      status: "signed_out"
-    };
-  }
-
-  function loadingState() {
-    return {
-      signedIn: null,
-      email: null,
-      plan: null,
-      token: null,
-      planKnown: false,
-      status: "loading"
-    };
-  }
-
-  function signedInPlanPendingState(session, token) {
-    return {
-      signedIn: true,
-      email: session && session.user && session.user.email ? session.user.email : null,
-      plan: null,
-      token: token || null,
-      planKnown: false,
-      status: "loading"
-    };
-  }
-
-  function setInitialAuthLoadingUi() {
-    const body = document.body;
-    if (!body) return;
-    const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
-    const accountWrap = document.getElementById("accountMenuWrap");
-    const upgradeLink = document.getElementById("upgradeLink");
-    const placeholder = document.getElementById("authLoadingPlaceholder");
-
-    body.dataset.authState = "loading";
-    body.dataset.authLoading = "true";
-    body.dataset.signedIn = "";
-    body.dataset.accountPlan = "";
-    body.dataset.authPlanPending = "false";
-
-    if (signInLink) signInLink.classList.add("hidden");
-    if (upgradeLink) {
-      upgradeLink.classList.remove("hidden");
-      upgradeLink.style.display = "";
-      upgradeLink.style.visibility = "";
+  function normalizePlanFromProfile(profile) {
+    if (!profile) return null;
+    const rawPlan = profile.plan || profile.plan_state;
+    if (!rawPlan) return null;
+    if (typeof rawPlan === "string") {
+      const lowered = rawPlan.toLowerCase();
+      if (lowered === "pro") return "pro";
+      if (lowered === "free") return "free";
+      return null;
     }
-    document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
-      if (el.id === "upgradeLink") {
-        el.classList.remove("hidden");
-        el.style.display = "";
-        el.style.visibility = "";
-        return;
+    if (typeof rawPlan === "object") {
+      if (rawPlan.is_pro === true) return "pro";
+      if (rawPlan.is_pro === false) return "free";
+      if (typeof rawPlan.plan === "string") {
+        const lowered = rawPlan.plan.toLowerCase();
+        if (lowered === "pro") return "pro";
+        if (lowered === "free") return "free";
       }
-      el.classList.add("hidden");
-    });
-    if (accountWrap) accountWrap.classList.add("hidden");
-    if (placeholder) placeholder.classList.remove("hidden");
-    closeHeaderAccountMenu();
+    }
+    return null;
+  }
+
+  function accountForConsumers(state) {
+    const user = state.user || null;
+    return {
+      loading: !!state.loading,
+      signedIn: !!user,
+      signed_in: !!user,
+      email: user && user.email ? user.email : null,
+      user: user,
+      plan: state.plan,
+      isPro: state.plan === "pro",
+      is_pro: state.plan === "pro",
+      planKnown: !!state.plan,
+      status: state.loading ? "loading" : (!user ? "signed_out" : (state.plan || "unavailable")),
+      error: state.error || null,
+      token: state.token || null,
+      profile: state.profile || null
+    };
   }
 
   function closeHeaderAccountMenu() {
@@ -182,194 +96,242 @@
     note.classList.add("hidden");
   }
 
-  function applyHeaderAccountUi(account) {
-    account = account || loadingState();
+  function setUpgradeVisibility(plan) {
+    document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
+      if (el.id === "upgradeLink") {
+        el.classList.remove("hidden");
+        el.style.display = "";
+        el.style.visibility = plan === "pro" ? "hidden" : "";
+        return;
+      }
+      el.classList.toggle("hidden", plan === "pro");
+      el.style.display = plan === "pro" ? "none" : "";
+    });
+  }
+
+  function applyHeaderAccountUi(state) {
+    const body = document.body;
     const signInLink = document.getElementById("signInLink") || document.getElementById("headerSignInLink");
     const accountWrap = document.getElementById("accountMenuWrap");
     const accountEmail = document.getElementById("accountEmail");
     const accountPlan = document.getElementById("accountPlan") || document.getElementById("accountPlanText");
+    const accountStatus = document.getElementById("accountStatusText");
     const billingBtn = document.getElementById("menuManageSubBtn");
-    const dropdown = document.getElementById("accountDropdown");
-    const upgradeLink = document.getElementById("upgradeLink");
     const placeholder = document.getElementById("authLoadingPlaceholder");
-    const planKnown = account.planKnown !== false && !!account.plan;
-    const authState = account.signedIn
-      ? (planKnown && account.plan === "pro" ? "pro" : (planKnown ? "free" : "loading"))
-      : (account.signedIn === false ? "signed_out" : "loading");
+    const user = state.user || null;
+    const plan = state.plan || null;
+    const stateName = state.loading ? "loading" : (!user ? "signed_out" : (plan || "unavailable"));
 
-    document.documentElement.dataset.accountPlan = account.plan || "";
-    document.documentElement.dataset.signedIn = account.signedIn ? "true" : "false";
-    document.body.dataset.authState = authState;
-    document.body.dataset.accountPlan = account.plan || "";
-    document.body.dataset.signedIn = account.signedIn ? "true" : "false";
-    document.body.dataset.authLoading = authState === "loading" ? "true" : "false";
-    document.body.dataset.authPlanPending = account.signedIn && !planKnown ? "true" : "false";
-
-    document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
-      if (el.id === "upgradeLink" && !planKnown) {
-        el.classList.remove("hidden");
-        el.style.display = "";
-        el.style.visibility = "hidden";
-        return;
-      }
-      if (el.id === "upgradeLink") {
-        el.classList.remove("hidden");
-        el.style.display = "";
-        el.style.visibility = account.plan === "pro" ? "hidden" : "";
-        return;
-      }
-      el.classList.toggle("hidden", account.plan === "pro" || !planKnown);
-    });
-    if (upgradeLink) {
-      upgradeLink.classList.remove("hidden");
-      upgradeLink.style.display = "";
-      upgradeLink.style.visibility = account.plan === "pro" || !planKnown ? "hidden" : "";
+    if (body) {
+      body.dataset.authState = stateName;
+      body.dataset.authLoading = state.loading ? "true" : "false";
+      body.dataset.authPlanPending = user && !plan ? "true" : "false";
+      body.dataset.signedIn = user ? "true" : "false";
+      body.dataset.accountPlan = plan || "";
     }
+    document.documentElement.dataset.signedIn = user ? "true" : "false";
+    document.documentElement.dataset.accountPlan = plan || "";
+
     if (placeholder) {
-      placeholder.classList.toggle("hidden", authState !== "loading" || (account.signedIn && !planKnown));
+      placeholder.classList.add("hidden");
     }
 
-    if (!signInLink || !accountWrap || !accountEmail || !accountPlan) return;
+    setUpgradeVisibility(plan);
 
-    if (account.signedIn === false) {
-      signInLink.classList.remove("hidden");
-      signInLink.style.display = "";
-      accountWrap.classList.add("hidden");
-      accountWrap.style.display = "none";
+    if (state.loading) {
+      if (accountStatus) {
+        accountStatus.textContent = "Checking account...";
+        accountStatus.classList.remove("hidden");
+      }
+      if (signInLink) {
+        signInLink.classList.add("hidden");
+        signInLink.style.display = "none";
+      }
+      if (accountWrap) {
+        accountWrap.classList.add("hidden");
+        accountWrap.style.display = "none";
+      }
       closeHeaderAccountMenu();
       return;
     }
 
-    if (account.signedIn && !planKnown) {
+    if (!user) {
+      if (accountStatus) {
+        accountStatus.textContent = "Not signed in";
+        accountStatus.classList.remove("hidden");
+      }
+      if (signInLink) {
+        signInLink.classList.remove("hidden");
+        signInLink.style.display = "";
+      }
+      if (accountWrap) {
+        accountWrap.classList.add("hidden");
+        accountWrap.style.display = "none";
+      }
+      closeHeaderAccountMenu();
+      return;
+    }
+
+    if (signInLink) {
       signInLink.classList.add("hidden");
       signInLink.style.display = "none";
+    }
+    if (accountWrap) {
       accountWrap.classList.remove("hidden");
       accountWrap.style.display = "";
-      accountEmail.textContent = "Account";
-      accountPlan.textContent = "Checking plan...";
-      closeHeaderAccountMenu();
-      if (billingBtn) billingBtn.classList.add("hidden");
-      return;
     }
-
-    signInLink.classList.add("hidden");
-    signInLink.style.display = "none";
-    accountWrap.classList.remove("hidden");
-    accountWrap.style.display = "";
-    accountEmail.textContent = account.email || "Signed in";
-    accountPlan.textContent = account.plan === "pro" ? "Pro" : "Free";
-    if (dropdown) {
-      dropdown.classList.add("hidden");
-      dropdown.setAttribute("aria-hidden", "true");
+    if (accountEmail) {
+      accountEmail.textContent = user.email || "Signed in";
     }
-    const button = document.getElementById("accountMenuButton");
-    if (button) {
-      button.setAttribute("aria-expanded", "false");
+    if (accountPlan) {
+      accountPlan.textContent = plan === "pro" ? "Pro" : (plan === "free" ? "Free" : "Status unavailable");
+    }
+    if (accountStatus) {
+      accountStatus.textContent = plan
+        ? "Signed in · " + (plan === "pro" ? "Pro" : "Free")
+        : "Signed in · Account status unavailable";
+      accountStatus.classList.remove("hidden");
     }
     if (billingBtn) {
-      billingBtn.classList.toggle("hidden", account.plan !== "pro");
+      billingBtn.classList.toggle("hidden", plan !== "pro");
     }
+    closeHeaderAccountMenu();
   }
 
-  function dispatchAccountState(account) {
-    document.dispatchEvent(
-      new CustomEvent("cv-account-state-changed", {
-        detail: { account: account }
-      })
-    );
+  function setAuthState(nextState) {
+    authState = Object.assign({
+      loading: true,
+      user: null,
+      plan: null,
+      isPro: false,
+      error: null,
+      token: null,
+      profile: null
+    }, nextState || {});
+    authState.isPro = authState.plan === "pro";
+    applyHeaderAccountUi(authState);
+    document.dispatchEvent(new CustomEvent("cv-account-state-changed", {
+      detail: {
+        authState: authState,
+        account: accountForConsumers(authState)
+      }
+    }));
+    return authState;
+  }
+
+  async function resolveAuthState() {
+    const client = getSupabaseClient();
+    setAuthState({
+      loading: true,
+      user: null,
+      plan: null,
+      isPro: false,
+      error: null,
+      token: null,
+      profile: null
+    });
+
+    if (!client) {
+      console.log("auth user", undefined);
+      console.log("profile response", null);
+      console.log("resolved plan", null);
+      return setAuthState({
+        loading: false,
+        user: null,
+        plan: null,
+        isPro: false,
+        error: null,
+        token: null,
+        profile: null
+      });
+    }
+
+    const sessionResult = await client.auth.getSession();
+    const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+    const user = session && session.user ? session.user : null;
+    const token = session && session.access_token ? session.access_token : null;
+    console.log("auth user", user && user.email);
+
+    if (!user || !token) {
+      clearAccountSnapshot();
+      console.log("profile response", null);
+      console.log("resolved plan", null);
+      return setAuthState({
+        loading: false,
+        user: null,
+        plan: null,
+        isPro: false,
+        error: null,
+        token: null,
+        profile: null
+      });
+    }
+
+    try {
+      const response = await fetch("/api/me", {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+      const profile = await response.json();
+      console.log("profile response", profile);
+
+      if (!response.ok || profile.error) {
+        console.log("resolved plan", null);
+        return setAuthState({
+          loading: false,
+          user: { id: user.id || null, email: user.email || profile.email || null },
+          plan: null,
+          isPro: false,
+          error: profile.error || profile.detail || "profile_unavailable",
+          token: token,
+          profile: profile
+        });
+      }
+
+      const plan = normalizePlanFromProfile(profile);
+      console.log("resolved plan", plan);
+      return setAuthState({
+        loading: false,
+        user: { id: user.id || (profile.user && profile.user.id) || null, email: profile.email || user.email || null },
+        plan: plan,
+        isPro: plan === "pro",
+        error: plan ? null : "profile_plan_unavailable",
+        token: token,
+        profile: profile
+      });
+    } catch (error) {
+      console.error("global account state error:", error);
+      console.log("profile response", null);
+      console.log("resolved plan", null);
+      return setAuthState({
+        loading: false,
+        user: { id: user.id || null, email: user.email || null },
+        plan: null,
+        isPro: false,
+        error: error,
+        token: token,
+        profile: null
+      });
+    }
   }
 
   async function getAccountState(options) {
     const opts = options || {};
-    if (inflightAccountState && !opts.forceRefresh) {
-      return inflightAccountState;
+    if (inflightAuthState && !opts.forceRefresh) {
+      return inflightAuthState;
     }
 
-    inflightAccountState = (async function () {
-      const client = getSupabaseClient();
-      if (!client) {
-        cachedAccountState = signedOutState();
-        return cachedAccountState;
-      }
-
-      const sessionResult = await client.auth.getSession();
-      const session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-      if (!session || !session.access_token) {
-        cachedAccountState = signedOutState();
-        return cachedAccountState;
-      }
-
-      const token = session.access_token;
-      let account = signedInPlanPendingState(session, token);
-      const snapshotFallback = cachedAccountState && cachedAccountState.fromSnapshot && cachedAccountState.signedIn
-        ? Object.assign({}, cachedAccountState, { token: token })
-        : null;
-
-      try {
-        const response = await fetch("/api/me", {
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        });
-        const data = await response.json();
-        if (response.ok && !data.error) {
-          const resolvedPlan = normalizePlan(data.plan || data.plan_state);
-          account = {
-            signedIn: !!data.signed_in,
-            email: data.email || account.email,
-            plan: resolvedPlan,
-            token: data.signed_in ? token : null,
-            planKnown: true,
-            status: data.signed_in ? resolvedPlan : "signed_out"
-          };
-          writeAccountSnapshot(account);
-        } else {
-          account = snapshotFallback || signedInPlanPendingState(session, token);
-        }
-      } catch (error) {
-        console.error("global account state error:", error);
-        account = snapshotFallback || signedInPlanPendingState(session, token);
-      }
-
-      if (!account.signedIn) {
-        cachedAccountState = signedOutState();
-        clearAccountSnapshot();
-        return cachedAccountState;
-      }
-
-      cachedAccountState = account;
-      return cachedAccountState;
-    })();
-
-    try {
-      return await inflightAccountState;
-    } finally {
-      inflightAccountState = null;
-    }
+    inflightAuthState = resolveAuthState().then(function (state) {
+      return accountForConsumers(state);
+    }).finally(function () {
+      inflightAuthState = null;
+    });
+    return inflightAuthState;
   }
 
   async function refreshGlobalAccountUi(options) {
-    const opts = options || {};
-    try {
-      if (!opts.skipLoadingReset) {
-        setInitialAuthLoadingUi();
-      }
-      const previousAccount = cachedAccountState;
-      const account = await getAccountState(options);
-      if (accountsDiffer(previousAccount, account) || !previousAccount.fromSnapshot) {
-        applyHeaderAccountUi(account);
-        dispatchAccountState(account);
-      }
-      console.log("GLOBAL_ACCOUNT_STATE", account);
-      return account;
-    } catch (error) {
-      console.error("refreshGlobalAccountUi error:", error);
-      const fallbackAccount = cachedAccountState && cachedAccountState.signedIn ? cachedAccountState : signedOutState();
-      applyHeaderAccountUi(fallbackAccount);
-      console.log("GLOBAL_ACCOUNT_STATE", fallbackAccount);
-      dispatchAccountState(fallbackAccount);
-      return fallbackAccount;
-    }
+    return getAccountState(Object.assign({}, options || {}, { forceRefresh: true }));
   }
 
   async function refreshGlobalAccountState(options) {
@@ -381,6 +343,10 @@
     closeHeaderAccountMenu();
     if (!account.signedIn || !account.token) {
       showHeaderBillingNote("Please sign in to manage your subscription.");
+      return;
+    }
+    if (account.plan !== "pro") {
+      showHeaderBillingNote("Subscription management is available for Pro accounts.");
       return;
     }
 
@@ -408,16 +374,19 @@
   async function handleHeaderSignOut() {
     const client = getSupabaseClient();
     closeHeaderAccountMenu();
-    if (!client) {
-      window.location.href = "/";
-      return;
-    }
-
-    await client.auth.signOut();
     clearAccountSnapshot();
-    cachedAccountState = signedOutState();
-    applyHeaderAccountUi(cachedAccountState);
-    dispatchAccountState(cachedAccountState);
+    if (client) {
+      await client.auth.signOut();
+    }
+    setAuthState({
+      loading: false,
+      user: null,
+      plan: null,
+      isPro: false,
+      error: null,
+      token: null,
+      profile: null
+    });
     if (window.location.pathname === "/") {
       window.location.reload();
       return;
@@ -465,8 +434,6 @@
 
     document.addEventListener("click", function (event) {
       const els = getEls();
-      if (!els.button || !els.dropdown) return;
-
       if (event.target.closest("#accountMenuButton")) {
         hideHeaderBillingNote();
         toggleDropdown(event);
@@ -499,7 +466,7 @@
         }
       }
 
-      if (!event.target.closest("#accountDropdown")) {
+      if (els.dropdown && !event.target.closest("#accountDropdown")) {
         closeHeaderAccountMenu();
       }
     });
@@ -511,8 +478,7 @@
     });
 
     document.addEventListener("click", function (event) {
-      const link = event.target.closest("a");
-      if (link) {
+      if (event.target.closest("a")) {
         closeHeaderAccountMenu();
       }
     });
@@ -520,16 +486,17 @@
 
   async function bootstrapAccountUi() {
     installHeaderDropdownHandlers();
-    const snapshotAccount = readAccountSnapshot();
-    if (snapshotAccount) {
-      cachedAccountState = snapshotAccount;
-      applyHeaderAccountUi(snapshotAccount);
-      dispatchAccountState(snapshotAccount);
-    } else {
-      setInitialAuthLoadingUi();
-    }
+    setAuthState({
+      loading: true,
+      user: null,
+      plan: null,
+      isPro: false,
+      error: null,
+      token: null,
+      profile: null
+    });
     closeHeaderAccountMenu();
-    await refreshGlobalAccountState({ forceRefresh: true, skipLoadingReset: !!snapshotAccount });
+    await refreshGlobalAccountState({ forceRefresh: true });
     const client = getSupabaseClient();
     if (client && !window.__cvGlobalAccountAuthListenerInstalled) {
       window.__cvGlobalAccountAuthListenerInstalled = true;
@@ -543,22 +510,23 @@
   }
 
   window.getAccountState = getAccountState;
-  window.getCachedAccountSnapshot = readAccountSnapshot;
+  window.getGlobalAuthState = function () { return authState; };
   window.clearCachedAccountSnapshot = clearAccountSnapshot;
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
   window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
-  setInitialAuthLoadingUi();
-  document.addEventListener("DOMContentLoaded", function () {
-    bootstrapAccountUi();
+
+  setAuthState({
+    loading: true,
+    user: null,
+    plan: null,
+    isPro: false,
+    error: null,
+    token: null,
+    profile: null
   });
+  document.addEventListener("DOMContentLoaded", bootstrapAccountUi);
   window.addEventListener("pageshow", function () {
-    const snapshotAccount = readAccountSnapshot();
-    if (snapshotAccount) {
-      cachedAccountState = snapshotAccount;
-      applyHeaderAccountUi(snapshotAccount);
-      dispatchAccountState(snapshotAccount);
-    }
-    refreshGlobalAccountState({ forceRefresh: true, skipLoadingReset: !!snapshotAccount });
+    refreshGlobalAccountState({ forceRefresh: true });
   });
 })();

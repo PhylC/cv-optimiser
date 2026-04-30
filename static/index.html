@@ -535,9 +535,20 @@
 
   .site-header-account-row {
     display: flex;
+    align-items: center;
+    gap: 10px;
     justify-content: flex-end;
     min-height: 34px;
     width: 100%;
+  }
+
+  .account-status-text {
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    color: #AAB7D4;
+    font-size: 13px;
+    font-weight: 700;
   }
 
   .site-nav-link {
@@ -575,10 +586,6 @@
   body[data-auth-state="loading"] #signInLink,
   body[data-auth-state="loading"] #accountMenuWrap {
     display: none !important;
-  }
-
-  body[data-auth-state="loading"] #upgradeLink {
-    visibility: hidden;
   }
 
   body[data-auth-state="pro"] #upgradeLink {
@@ -2314,7 +2321,7 @@
           <nav class="site-nav" aria-label="Primary">
             <a href="/cv-checker" class="site-nav-link">CV Checker</a>
             <a href="/how-it-works" class="site-nav-link">How it works</a>
-            <a href="/example-cv-report" class="site-nav-link">Example Report</a>
+            <a href="/example-report" class="site-nav-link">Example Report</a>
             <a href="/upgrade" id="upgradeLink" class="site-nav-link" data-upgrade-link>Upgrade</a>
           </nav>
           <a href="/#tool" class="site-header-cta header-cta">Check my CV</a>
@@ -2323,6 +2330,7 @@
 
       <div class="site-header-account-row">
         <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
+        <span id="accountStatusText" class="account-status-text">Checking account...</span>
         <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
       <div id="topStatusRow" class="top-status-row">
         <span id="planBadge" class="pill">Plan: signed out</span>
@@ -2928,23 +2936,8 @@
     const passwordCardTitle = document.getElementById("passwordCardTitle");
     const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
-    const ACCOUNT_SNAPSHOT_KEY = "cv_account_snapshot";
-
-    function writeAccountSnapshotFromMe(me) {
-      try {
-        window.localStorage.setItem(ACCOUNT_SNAPSHOT_KEY, JSON.stringify({
-          signed_in: !!(me && me.signed_in),
-          email: me && me.email ? me.email : null,
-          plan: normalizeCurrentPlan(me && (me.plan || me.plan_state)) || "free",
-          cached_at: Date.now()
-        }));
-      } catch (error) {}
-    }
 
     function clearAccountSnapshot() {
-      try {
-        window.localStorage.removeItem(ACCOUNT_SNAPSHOT_KEY);
-      } catch (error) {}
       if (typeof window.clearCachedAccountSnapshot === "function") {
         window.clearCachedAccountSnapshot();
       }
@@ -3088,7 +3081,7 @@
       });
 
       updateToolHelperCopy(
-        !currentPlan
+        !currentPlan && accountState.signedIn !== false
           ? "loading"
           : accountState.signedIn
           ? (currentPlan === "pro" ? "signed_in_pro" : "signed_in_free")
@@ -3099,7 +3092,7 @@
 
     async function loadUserState() {
       if (typeof window.getAccountState === "function") {
-        const account = await window.getAccountState({ forceRefresh: true });
+        const account = await window.getAccountState();
         currentPlan = normalizeCurrentPlan(account.plan);
         applyUserUi(null, account);
         return;
@@ -3536,8 +3529,7 @@
       upgradeBtn.classList.remove("hidden");
       upgradeBtn.textContent = "Upgrade to Pro";
     }
-    currentPlan = "free";
-    applyUserUi({ plan: "free", is_pro: false }, { signedIn: false, plan: "free" });
+    applyUserUi(null, { signedIn: false, plan: null });
     return;
   }
 
@@ -3646,29 +3638,25 @@
       authRefreshInProgress = true;
 
       try {
-        if (!sbClient) {
+        if (typeof window.getAccountState !== "function") {
           authStatus.textContent = "Add your Supabase URL and anon key in static/index.html to enable login.";
           updateToolHelperCopy("signed_out", null);
           return;
         }
 
-        const result = await sbClient.auth.getSession();
-        const session = result && result.data ? result.data.session : null;
-        accessToken = session ? session.access_token : null;
+        const account = await window.getAccountState({ forceRefresh: true });
+        const profile = account.profile || null;
+        accessToken = account.token || null;
 
-        if (!session) {
+        if (!account.signedIn) {
           clearAccountSnapshot();
           currentUser = null;
           currentPlan = null;
-          document.body.dataset.authState = "signed_out";
-          document.body.dataset.authPlanPending = "false";
           authTitle.textContent = "Create a free account to save your results";
           authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
           authStatus.textContent = "Not signed in. You can still run a free CV check.";
 
           authCard.classList.remove("hidden");
-          headerSignInBtn.classList.remove("hidden");
-          accountMenuWrap.classList.add("hidden");
           closeAccountMenu();
 
           sendMagicLinkBtn.classList.remove("hidden");
@@ -3682,9 +3670,6 @@
           passwordInput.value = "";
           loginPasswordInput.value = "";
 
-          accountEmail.textContent = "Logged out";
-          accountPlanText.textContent = "Free";
-
           shouldPromptPasswordSetup = false;
           lastPlanJson = "";
           historyLoadedForUserId = null;
@@ -3693,96 +3678,31 @@
           return;
         }
 
-        const userMeta = (session.user && session.user.user_metadata) ? session.user.user_metadata : {};
-        currentUser = session.user || null;
-        const existingPlan = normalizeCurrentPlan(document.body && document.body.dataset ? document.body.dataset.accountPlan : null);
-        currentPlan = existingPlan || null;
-        if (!existingPlan) {
-          document.body.dataset.authState = "loading";
-          document.body.dataset.authPlanPending = "true";
-        }
-
+        currentUser = account.user || { email: account.email || null };
         authCard.classList.add("hidden");
-        headerSignInBtn.classList.add("hidden");
-        accountMenuWrap.classList.remove("hidden");
-        accountEmail.textContent = existingPlan && document.body.dataset.signedIn === "true"
-          ? (accountEmail.textContent || session.user.email || "Signed in")
-          : "Account";
-        accountPlanText.textContent = existingPlan
-          ? (existingPlan === "pro" ? "Pro" : "Free")
-          : "Checking plan...";
-        document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
-          if (el.id === "upgradeLink") {
-            el.classList.remove("hidden");
-            el.style.display = "";
-            el.style.visibility = existingPlan === "pro" || !existingPlan ? "hidden" : "";
-            return;
-          }
-          el.classList.add("hidden");
-          el.style.display = "none";
-        });
         closeAccountMenu();
 
         passwordStatus.textContent = "";
         passwordInput.value = "";
 
-        let meRes;
-        let me;
-        try {
-          meRes = await fetch("/api/me", {
-            headers: { Authorization: "Bearer " + accessToken }
-          });
-          me = await meRes.json();
-        } catch (error) {
-          authStatus.textContent = existingPlan ? "Signed in." : "Signed in. Checking plan...";
-          if (!existingPlan) {
-            accountEmail.textContent = "Account";
-            accountPlanText.textContent = "Checking plan...";
-            updateToolHelperCopy("loading", null);
-          }
+        if (!account.plan) {
+          currentPlan = null;
+          authStatus.textContent = "Signed in. Account status unavailable.";
+          updateToolHelperCopy("loading", null);
           return;
         }
 
-        if (!meRes.ok || me.error) {
-          authStatus.textContent = existingPlan ? "Signed in." : "Signed in. Checking plan...";
-          if (!existingPlan) {
-            accountEmail.textContent = "Account";
-            accountPlanText.textContent = "Checking plan...";
-            updateToolHelperCopy("loading", null);
-          }
-          return;
-        }
-
-        currentUser = {
-          email: me.email || (session.user && session.user.email) || null
-        };
-        writeAccountSnapshotFromMe(me);
-        const planData = me.plan_state || { plan: me.plan || "free", is_pro: normalizeCurrentPlan(me.plan) === "pro" };
+        const planData = profile && profile.plan_state
+          ? profile.plan_state
+          : { plan: account.plan, is_pro: account.plan === "pro" };
         const nextPlanJson = JSON.stringify(planData || {});
         if (nextPlanJson !== lastPlanJson) {
           setPlanUi(planData);
           lastPlanJson = nextPlanJson;
         }
 
-        const isPro = normalizeCurrentPlan(me.plan) === "pro";
+        const isPro = account.plan === "pro";
         currentPlan = isPro ? "pro" : "free";
-        document.body.dataset.authState = currentPlan;
-        document.body.dataset.authPlanPending = "false";
-        document.body.dataset.signedIn = me.signed_in ? "true" : "false";
-        document.body.dataset.accountPlan = currentPlan;
-        accountPlanText.textContent = isPro ? "Pro" : "Free";
-
-        if (isPro) {
-          if (menuUpgradeBtn) {
-            menuUpgradeBtn.classList.add("hidden");
-          }
-          menuManageSubBtn.classList.remove("hidden");
-        } else {
-          if (menuUpgradeBtn) {
-            menuUpgradeBtn.classList.remove("hidden");
-          }
-          menuManageSubBtn.classList.add("hidden");
-        }
 
         // IMPORTANT:
         // First-time magic-link users with no password must be pushed into password creation
@@ -3794,7 +3714,7 @@ if (shouldPromptPasswordSetup) {
 }
         shouldPromptPasswordSetup = false;
 
-        const currentUserId = me.user && me.user.id ? me.user.id : null;
+        const currentUserId = account.user && account.user.id ? account.user.id : (profile && profile.user && profile.user.id ? profile.user.id : null);
         if (currentUserId && historyLoadedForUserId === currentUserId) {
           return;
         }
@@ -3804,6 +3724,10 @@ if (shouldPromptPasswordSetup) {
           return;
         }
 
+        if (!accessToken) {
+          historyList.textContent = "Sign in to view saved analyses.";
+          return;
+        }
         const historyRes = await fetch("/api/history", {
           headers: { Authorization: "Bearer " + accessToken }
         });
@@ -3838,7 +3762,7 @@ if (shouldPromptPasswordSetup) {
 
 const result = await sbClient.auth.signInWithOtp({
   email: email,
-  options: { emailRedirectTo: "https://cv-optimiser-nq8r.onrender.com" }
+  options: { emailRedirectTo: "https://www.cv-optimiser.com" }
 });
 
       if (!result.error) {
@@ -4075,7 +3999,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       try {
         const result = await sbClient.auth.signInWithOtp({
           email: email,
-          options: { emailRedirectTo: "https://cv-optimiser-nq8r.onrender.com" }
+          options: { emailRedirectTo: "https://www.cv-optimiser.com" }
         });
 
         if (result.error) {
@@ -4528,7 +4452,6 @@ passwordLoginBtn.addEventListener("click", async function() {
       trackEvent("page_view");
       trackEvent("homepage_loaded");
       await loadUserState();
-      await refreshAuthUi();
       await handleCheckoutReturn();
       reportEmbedHeight();
 

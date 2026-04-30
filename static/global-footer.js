@@ -15,10 +15,10 @@ function renderFooter() {
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Guides</div>
-          <a href="/why-is-my-cv-not-getting-interviews">Why your CV is not getting interviews</a>
-          <a href="/how-to-tailor-cv-to-job-description">How to tailor your CV</a>
+          <a href="/why-your-cv-is-not-getting-interviews">Why your CV is not getting interviews</a>
+          <a href="/how-to-tailor-your-cv">How to tailor your CV</a>
           <a href="/ats-cv-keywords">ATS CV keywords</a>
-          <a href="/cv-mistakes-that-cost-interviews">CV mistakes</a>
+          <a href="/cv-mistakes">CV mistakes</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Trust</div>
