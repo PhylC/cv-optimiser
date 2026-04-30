@@ -1742,29 +1742,35 @@ def build_site_header_css() -> str:
             cursor: default;
           }
           @media (max-width: 768px) {
+            .site-header {
+              margin-bottom: 12px;
+              padding-bottom: 10px;
+            }
             .site-header-inner {
               display: flex;
               flex-direction: column;
-              gap: 12px;
+              gap: 0;
               align-items: stretch;
+              position: relative;
             }
             .site-header-main {
               display: grid;
               grid-template-columns: 1fr auto;
-              gap: 12px;
+              gap: 10px;
               align-items: center;
+              padding-right: 118px;
             }
-            .site-nav {
-              display: none;
+            .site-nav,
+            .site-header-cta,
+            .header-cta {
+              display: none !important;
             }
             .site-header-right {
-              display: flex;
-              justify-content: flex-end;
+              display: none;
               margin-left: 0;
             }
             .header-actions {
-              display: flex;
-              justify-content: flex-end;
+              display: none;
               margin-left: 0;
             }
             .site-logo {
@@ -1777,7 +1783,12 @@ def build_site_header_css() -> str:
               width: auto;
             }
             .site-header-account-row {
-              justify-content: stretch;
+              position: absolute;
+              top: 0;
+              right: 0;
+              width: auto;
+              min-height: 0;
+              justify-content: flex-end;
             }
             .site-header-cta {
               grid-column: 2;
@@ -1788,28 +1799,70 @@ def build_site_header_css() -> str:
               white-space: nowrap;
             }
             .account-menu-wrap {
-              width: 100%;
+              width: auto;
             }
             .account-menu-button {
-              width: 100%;
+              width: auto;
               max-width: 100%;
-              justify-content: space-between;
-              padding: 6px 12px;
+              justify-content: center;
+              gap: 6px;
+              padding: 6px 8px;
             }
             .account-chip-text {
-              flex: 1 1 auto;
-              overflow: hidden;
+              flex: 0 0 auto;
+              gap: 6px;
+              overflow: visible;
+            }
+            .account-pill .status-dot,
+            .account-pill .account-text,
+            .account-pill .divider,
+            .account-pill .account-email {
+              display: none !important;
             }
             .account-email {
               display: none;
             }
             .account-avatar {
               display: inline-flex;
+              width: 34px;
+              height: 34px;
+              font-size: 14px;
+            }
+            .account-pill .account-plan,
+            .account-pill .plan-badge {
+              font-size: 10px;
+              padding: 2px 6px;
+            }
+            .dropdown-arrow {
+              font-size: 11px;
             }
             .account-dropdown {
-              position: static;
-              width: 100%;
+              position: absolute;
+              right: 0;
+              top: calc(100% + 8px);
+              width: 180px;
               margin-top: 8px;
+            }
+            .auth-loading-text {
+              min-height: 34px;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+            .hero,
+            .page-hero {
+              margin-top: 28px !important;
+            }
+            .hero h1,
+            .page-hero h1 {
+              font-size: clamp(42px, 11vw, 56px) !important;
+              line-height: 1.04 !important;
+            }
+            .card,
+            .checker-card,
+            .upload-card,
+            .tool-card,
+            .hero-card {
+              padding: 28px 22px !important;
             }
           }
     """
