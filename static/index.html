@@ -1686,6 +1686,10 @@
       gap: 10px;
       align-items: center;
       padding-right: 118px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .site-nav,
@@ -1706,6 +1710,19 @@
 
     .site-logo {
       min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .logo-wordmark {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .logo-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .site-header-cta {
@@ -2514,15 +2531,53 @@
     }
   }
 @media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    padding: 16px 16px 40px;
+    box-sizing: border-box;
+  }
+
+  main,
+  .page,
+  .page-wrap,
+  .page-wrapper,
+  .page-container,
+  .container,
+  .content-container,
+  .seo-page,
+  .tool-page {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+
   .main-container {
-    padding-top: 16px;
+    padding: 16px 0 40px;
   }
 
   .homepage-hero-title,
   .hero h1,
   .page-hero h1 {
-    font-size: clamp(42px, 11vw, 56px) !important;
-    line-height: 1.04 !important;
+    font-size: clamp(32px, 9vw, 44px) !important;
+    line-height: 1.08 !important;
+  }
+
+  h2 {
+    font-size: clamp(24px, 7vw, 34px);
+    line-height: 1.15;
+  }
+
+  h3 {
+    font-size: clamp(21px, 6vw, 28px);
+    line-height: 1.2;
   }
 
   .hero,
@@ -2533,7 +2588,38 @@
   .card,
   .checker-card,
   .upload-card {
-    padding: 28px 22px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .primary-tool-card {
+    padding: 20px 16px;
+  }
+
+  .main-grid,
+  .main-column,
+  .helper-column,
+  .tool-form,
+  .results-shell,
+  .hero,
+  .hero-section,
+  .content-section,
+  .tool-section,
+  .seo-section {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  p,
+  li {
+    font-size: 18px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
   }
 
   .conversion-trust-row {
@@ -2546,7 +2632,8 @@
 
   .result-preview-card {
     margin-top: 26px;
-    padding: 20px;
+    padding: 20px 16px;
+    border-radius: 20px;
   }
 
   .result-preview-header {
@@ -2562,6 +2649,59 @@
   .upload-intro {
     margin-top: 26px;
     font-size: 15px;
+  }
+
+  .score-hero,
+  .result-section,
+  .results-upgrade-cta,
+  .full-plan-ready,
+  .before-after-card,
+  .diagnosis-item,
+  .dropzone,
+  .example-preview {
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .diagnosis-bar,
+  .result-grid-two,
+  .before-after {
+    grid-template-columns: 1fr;
+  }
+
+  .score-headline {
+    font-size: 19px;
+    line-height: 1.24;
+  }
+
+  .score-value {
+    font-size: 42px;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg,
+  iframe,
+  .screenshot,
+  .example-image,
+  .report-preview,
+  .preview-image {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  img {
+    height: auto;
+  }
+
+  textarea,
+  input,
+  button,
+  select {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 </style>
@@ -2720,9 +2860,9 @@
           <div>
             <button id="optimiseBtn" style="width:100%;">Check my CV</button>
           </div>
-          <p id="toolTrustCopy" class="small tool-trust-copy">Checking account status...</p>
-          <p id="toolFreeCopy" class="tool-free-copy" data-free-copy>Checking account status... <span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
-          <p id="toolLoadingNote" class="small tool-loading-note">Checking account status...</p>
+          <p id="toolTrustCopy" class="small tool-trust-copy"></p>
+          <p id="toolFreeCopy" class="tool-free-copy" data-free-copy><span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
+          <p id="toolLoadingNote" class="small tool-loading-note"></p>
           <div id="loadingSteps" class="loading-steps hidden">
             <div class="loading-step">Scanning CV…</div>
             <div class="loading-step">Matching to job description…</div>
@@ -3288,10 +3428,13 @@
       }
 
       if (state === "loading") {
-        toolTrustCopy.textContent = "Checking account status...";
-        toolFreeCopy.textContent = "Checking account status...";
+        toolTrustCopy.textContent = "";
+        toolFreeCopy.textContent = "";
+        if (toolPlanBadge) {
+          toolFreeCopy.appendChild(toolPlanBadge);
+        }
         if (!loadingStageTimer) {
-          toolLoadingNote.textContent = "Checking account status...";
+          toolLoadingNote.textContent = "";
         }
         return;
       }
@@ -3372,7 +3515,7 @@
     async function loadUserState() {
       if (typeof window.getAccountState === "function") {
         const account = await window.getAccountState();
-        currentPlan = normalizeCurrentPlan(account.plan);
+        currentPlan = normalizeCurrentPlan(account.plan) || (account.signedIn ? "free" : null);
         applyUserUi(null, account);
         return;
       }
@@ -3483,6 +3626,17 @@
       }
     }
 
+    function publicErrorMessage(message, fallback) {
+      const text = String(message || "");
+      if (
+        /\[?Errno\s+\d+\]?/i.test(text) ||
+        /Traceback|Exception|Resource temporarily unavailable|ECONN|ENOTFOUND|EAI_AGAIN/i.test(text)
+      ) {
+        return fallback || "Something went wrong. Please try again.";
+      }
+      return text || fallback || "Something went wrong. Please try again.";
+    }
+
     async function startCheckout(plan, button) {
       console.log("Checkout clicked:", plan);
       const defaultText = button ? button.textContent : "";
@@ -3549,8 +3703,8 @@
           return;
         }
 
-        status.textContent = data.detail || data.error || "Could not start checkout.";
-        showCheckoutError(data.detail || data.error || "Could not open checkout. Please try again.");
+        status.textContent = publicErrorMessage(data.detail || data.error, "Could not start checkout.");
+        showCheckoutError(publicErrorMessage(data.detail || data.error, "Could not open checkout. Please try again."));
       } catch (err) {
         console.error("upgrade error:", err);
         status.textContent = "Upgrade failed. Check browser console.";
@@ -3567,18 +3721,8 @@
     }
 
     function fillExampleContent() {
-      resetSelectedFile();
       const cvText = document.querySelector("#cvText, #cv_text, textarea[name='cv_text'], textarea[name='cv']");
       const jobDescription = document.querySelector("#jobDescription, #job_description, textarea[name='job_description'], textarea[name='job']");
-      const cvPasteArea = document.querySelector("#cvPasteArea, .cv-paste-area, .cv-text-wrapper");
-
-      if (cvPasteArea) {
-        cvPasteArea.classList.remove("hidden");
-        cvPasteArea.style.display = "";
-      }
-      if (pasteToggle) {
-        pasteToggle.open = true;
-      }
 
       if (cvText) {
         cvText.value = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, improving commercial performance, and working with senior stakeholders.";
@@ -3592,18 +3736,6 @@
         jobDescription.dispatchEvent(new Event("change", { bubbles: true }));
       }
 
-      status.textContent = "Example CV and job description added. Click Check my CV when you're ready.";
-      const toolCard = document.getElementById("mainToolCard");
-      if (toolCard) {
-        toolCard.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-      window.setTimeout(function() {
-        if (jobDescription) {
-          jobDescription.focus();
-        } else if (cvText) {
-          cvText.focus();
-        }
-      }, 180);
       console.log("Sample CV filled");
     }
 
@@ -3728,7 +3860,7 @@
         if (confirmData.error) {
           checkoutStatus.classList.remove("info");
           checkoutStatus.classList.add("error");
-          checkoutStatus.textContent = confirmData.error;
+          checkoutStatus.textContent = publicErrorMessage(confirmData.error, "Payment succeeded, but your plan is still updating. Please refresh in a few seconds.");
           return;
         }
 
@@ -3867,7 +3999,7 @@
         const data = await res.json();
 
         if (!res.ok || data.error || data.detail) {
-          authStatus.textContent = data.detail || data.error || "Billing management is not available yet.";
+          authStatus.textContent = publicErrorMessage(data.detail || data.error, "Billing management is not available yet.");
           return;
         }
 
@@ -3956,9 +4088,9 @@
         passwordInput.value = "";
 
         if (!account.plan) {
-          currentPlan = null;
+          currentPlan = "free";
           authStatus.textContent = "Signed in. Account status unavailable.";
-          updateToolHelperCopy("loading", null);
+          updateToolHelperCopy("signed_in_free", null);
           return;
         }
 
@@ -4004,7 +4136,7 @@ if (shouldPromptPasswordSetup) {
         const historyData = await historyRes.json();
 
         if (historyData.error) {
-          historyList.textContent = "History error: " + historyData.error;
+          historyList.textContent = "Saved analyses are not available right now.";
           return;
         }
 
@@ -4038,7 +4170,7 @@ const result = await sbClient.auth.signInWithOtp({
       if (!result.error) {
         sessionStorage.setItem(MAGIC_LINK_PASSWORD_SETUP_KEY, email);
       }
-      authStatus.textContent = result.error ? result.error.message : "Magic link sent. Check your inbox.";
+      authStatus.textContent = result.error ? "Could not send the magic link. Please try again." : "Magic link sent. Check your inbox.";
       if (!result.error) {
         trackEvent("magic_link_sent");
       }
@@ -4161,7 +4293,7 @@ const result = await sbClient.auth.signInWithOtp({
   });
 
   if (result.error) {
-    passwordStatus.textContent = result.error.message;
+    passwordStatus.textContent = "Could not update your password. Please try again.";
     return;
   }
 
@@ -4208,7 +4340,7 @@ passwordLoginBtn.addEventListener("click", async function() {
   });
 
   if (result.error) {
-    authStatus.textContent = result.error.message;
+    authStatus.textContent = "Could not sign in. Please check your details and try again.";
     return;
   }
 
@@ -4273,7 +4405,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         });
 
         if (result.error) {
-          emailCaptureStatus.textContent = result.error.message;
+          emailCaptureStatus.textContent = "Could not send your email right now. Please try again.";
           return;
         }
 
@@ -4318,7 +4450,12 @@ passwordLoginBtn.addEventListener("click", async function() {
       if (!sampleBtn) return;
 
       event.preventDefault();
+      event.stopPropagation();
+      const currentScrollY = window.scrollY;
       fillExampleContent();
+      window.requestAnimationFrame(function() {
+        window.scrollTo({ top: currentScrollY, left: 0, behavior: "auto" });
+      });
       trackEvent("sample_cv_clicked");
     });
 
@@ -4419,7 +4556,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
 
         if (!res.ok) {
-          status.textContent = data.error || data.detail || "Something went wrong.";
+          status.textContent = publicErrorMessage(data.error || data.detail, "Something went wrong.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
           resetToolHelperCopy();
@@ -4427,7 +4564,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
 
         if (data.code === "PAYWALL") {
-          status.textContent = data.error;
+          status.textContent = publicErrorMessage(data.error, "You have reached today's free check limit.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
           await refreshAuthUi();
@@ -4436,7 +4573,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
 
         if (data.error) {
-          status.textContent = data.error;
+          status.textContent = publicErrorMessage(data.error, "Something went wrong.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
           resetToolHelperCopy();

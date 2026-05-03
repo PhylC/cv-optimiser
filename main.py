@@ -4,6 +4,7 @@ import io
 import errno
 import html
 import json
+import logging
 import os
 import re
 import time
@@ -21,6 +22,7 @@ import stripe
 from supabase import Client, create_client
 
 app = FastAPI(title="CV Optimiser V2")
+logger = logging.getLogger(__name__)
 
 CANONICAL_SCHEME = "https"
 CANONICAL_HOST = "www.cv-optimiser.com"
@@ -1741,6 +1743,11 @@ def build_site_header_css() -> str:
             cursor: default;
           }
           @media (max-width: 768px) {
+            html,
+            body {
+              max-width: 100%;
+              overflow-x: hidden;
+            }
             .site-header {
               margin-bottom: 12px;
               padding-bottom: 10px;
@@ -1758,6 +1765,10 @@ def build_site_header_css() -> str:
               gap: 10px;
               align-items: center;
               padding-right: 118px;
+              width: 100%;
+              max-width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
             }
             .site-nav,
             .site-header-cta,
@@ -1774,9 +1785,15 @@ def build_site_header_css() -> str:
             }
             .site-logo {
               min-width: 0;
+              max-width: 100%;
+              overflow: hidden;
             }
             .site-logo-title {
               font-size: 22px;
+              min-width: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
             .header-signin-link {
               width: auto;
@@ -1853,15 +1870,29 @@ def build_site_header_css() -> str:
             }
             .hero h1,
             .page-hero h1 {
-              font-size: clamp(42px, 11vw, 56px) !important;
-              line-height: 1.04 !important;
+              font-size: clamp(32px, 9vw, 44px) !important;
+              line-height: 1.08 !important;
             }
             .card,
             .checker-card,
             .upload-card,
             .tool-card,
             .hero-card {
-              padding: 28px 22px !important;
+              width: 100%;
+              max-width: 100%;
+              box-sizing: border-box;
+              padding: 20px 16px !important;
+              border-radius: 20px !important;
+            }
+            img,
+            picture,
+            video,
+            canvas,
+            iframe {
+              max-width: 100%;
+            }
+            img {
+              height: auto;
             }
           }
     """
@@ -1911,6 +1942,10 @@ def build_typography_css() -> str:
             h3 {
               font-size: clamp(1.1rem, 4.8vw, 1.3rem);
             }
+            p, li {
+              font-size: 15px;
+              line-height: 1.6;
+            }
           }
     """
 
@@ -1932,6 +1967,156 @@ def build_cta_spacing_css() -> str:
           .cta-button {
             display: inline-block;
             margin-top: 16px;
+          }
+    """
+
+
+def build_mobile_layout_css() -> str:
+    return """
+          @media (max-width: 768px) {
+            html,
+            body {
+              width: 100%;
+              max-width: 100%;
+              overflow-x: hidden;
+            }
+
+            main,
+            .page,
+            .page-wrap,
+            .page-wrapper,
+            .page-container,
+            .container,
+            .content-container,
+            .seo-page,
+            .tool-page {
+              width: 100%;
+              max-width: 100%;
+              padding-left: 16px;
+              padding-right: 16px;
+              box-sizing: border-box;
+            }
+
+            .hero,
+            .hero-section,
+            .hero-card,
+            .content-section,
+            .tool-section,
+            .seo-section,
+            .section-stack,
+            .layout,
+            .content-grid,
+            .report-grid,
+            .upgrade-grid {
+              width: 100%;
+              max-width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
+            }
+
+            .layout,
+            .content-grid,
+            .report-grid,
+            .before-after,
+            .upgrade-grid {
+              grid-template-columns: 1fr !important;
+            }
+
+            .card,
+            .content-card,
+            .tool-card,
+            .example-card,
+            .report-card,
+            .preview-card,
+            .ats-card,
+            .checker-card,
+            .hero-card,
+            .cta-card,
+            .upgrade-card,
+            .upgrade-active-state,
+            .final-cta,
+            .result-preview-card,
+            .score-block,
+            .priority-card,
+            .before-after-card,
+            .summary-box,
+            .example-row,
+            .faq-item {
+              width: 100%;
+              max-width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
+              padding: 20px 16px;
+              border-radius: 20px;
+            }
+
+            .tool-frame {
+              width: 100%;
+              max-width: 100%;
+              min-width: 0;
+              border-radius: 16px;
+              box-sizing: border-box;
+            }
+
+            img,
+            picture,
+            video,
+            canvas,
+            svg,
+            iframe,
+            .screenshot,
+            .example-image,
+            .report-preview,
+            .preview-image {
+              max-width: 100%;
+              height: auto;
+              box-sizing: border-box;
+            }
+
+            textarea,
+            input,
+            button,
+            select {
+              max-width: 100%;
+              box-sizing: border-box;
+            }
+
+            h1 {
+              font-size: clamp(32px, 9vw, 44px);
+              line-height: 1.08;
+            }
+
+            h2 {
+              font-size: clamp(24px, 7vw, 34px);
+              line-height: 1.15;
+            }
+
+            h3 {
+              font-size: clamp(21px, 6vw, 28px);
+              line-height: 1.2;
+            }
+
+            p,
+            li {
+              font-size: 18px;
+              line-height: 1.55;
+              overflow-wrap: anywhere;
+            }
+
+            ul,
+            ol {
+              max-width: 100%;
+              box-sizing: border-box;
+              padding-left: 22px;
+            }
+
+            .cta,
+            .cta-button,
+            .checkout-btn {
+              width: 100%;
+              box-sizing: border-box;
+              text-align: center;
+            }
           }
     """
 
@@ -2335,6 +2520,22 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
           @media (max-width: 768px) {{
+            .page {{
+              padding: 16px 10px 44px;
+            }}
+            .hero {{
+              gap: 12px;
+              margin-bottom: 18px;
+            }}
+            .content-grid,
+            .section-stack {{
+              gap: 14px;
+              margin-top: 16px;
+            }}
+            .tool-frame {{
+              border-radius: 14px;
+              margin-top: 14px;
+            }}
             .conversion-trust-row {{
               align-items: flex-start;
               flex-direction: column;
@@ -2344,7 +2545,8 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
             .result-preview-card {{
               margin-top: 26px;
-              padding: 20px;
+              padding: 16px;
+              border-radius: 16px;
             }}
             .result-preview-header {{
               align-items: flex-start;
@@ -2354,7 +2556,14 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             .result-preview-score {{
               white-space: normal;
             }}
+            .final-cta {{
+              margin-top: 32px;
+              margin-bottom: 36px;
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -2586,9 +2795,36 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             color: #FFFFFF;
           }}
 
-          @media (max-width: 900px) {{
-
+          @media (max-width: 768px) {{
+            .page {{
+              padding: 16px 10px 44px;
+            }}
+            .card, .cta-card {{
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+            .summary-box,
+            .example-row {{
+              padding: 14px;
+              border-radius: 14px;
+            }}
+            .section-block + .section-block {{
+              margin-top: 18px;
+              padding-top: 18px;
+            }}
+            .final-cta {{
+              margin-top: 32px;
+              margin-bottom: 36px;
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+            .cta {{
+              width: 100%;
+              box-sizing: border-box;
+              text-align: center;
+            }}
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -2767,6 +3003,48 @@ def render_cv_checker_page() -> str:
               min-height: 1120px;
             }}
           }}
+          @media (max-width: 768px) {{
+            .page {{
+              padding: 16px 10px 44px;
+            }}
+            .topbar {{
+              margin-bottom: 18px;
+            }}
+            .hero {{
+              gap: 12px;
+              margin-bottom: 18px;
+            }}
+            .hero h1 {{
+              font-size: clamp(32px, 9vw, 44px);
+              line-height: 1.08;
+            }}
+            .layout,
+            .section-stack {{
+              gap: 14px;
+            }}
+            .section-stack {{
+              margin-top: 16px;
+            }}
+            .card {{
+              width: 100%;
+              max-width: 100%;
+              box-sizing: border-box;
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+            h2 {{
+              font-size: 20px;
+              line-height: 1.2;
+            }}
+            p, li {{
+              font-size: 15px;
+              line-height: 1.6;
+            }}
+            .tool-frame {{
+              border-radius: 14px;
+            }}
+          }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -3042,6 +3320,7 @@ def render_ats_cv_checker_page() -> str:
               min-height: 1120px;
             }}
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -3350,6 +3629,50 @@ def render_example_report_page() -> str:
               grid-template-columns: 1fr;
             }}
           }}
+          @media (max-width: 768px) {{
+            .page {{
+              padding: 16px 10px 44px;
+            }}
+            .hero-card, .card {{
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+            .hero-card {{
+              margin-bottom: 16px;
+            }}
+            .report-grid {{
+              gap: 14px;
+            }}
+            .score-block,
+            .before-after-card,
+            .priority-card {{
+              padding: 14px;
+              border-radius: 14px;
+            }}
+            .score-value {{
+              font-size: 34px;
+              line-height: 1.08;
+            }}
+            .priority-card {{
+              grid-template-columns: 1fr;
+              gap: 10px;
+            }}
+            .cta-row {{
+              flex-direction: column;
+            }}
+            .cta {{
+              width: 100%;
+              box-sizing: border-box;
+              text-align: center;
+            }}
+            .final-cta {{
+              margin-top: 32px;
+              margin-bottom: 36px;
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+          }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -3607,6 +3930,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             }}
 
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -3775,6 +4099,7 @@ def render_faq_page() -> str:
           @media (max-width: 900px) {{
 
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -3970,6 +4295,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           @media (max-width: 900px) {{
 
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -4131,6 +4457,7 @@ def render_upgrade_page() -> str:
               flex-direction: column;
             }}
           }}
+{build_mobile_layout_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -4141,7 +4468,7 @@ def render_upgrade_page() -> str:
             <p>Choose how you want to improve your CV.</p>
           </div>
 
-          <div id="upgradeLoadingState" class="upgrade-loading-state">Checking account status...</div>
+          <div id="upgradeLoadingState" class="upgrade-loading-state"></div>
 
           <div id="upgradeGrid" class="upgrade-grid hidden">
             <div id="oneTimeCard" class="upgrade-card upgrade-card-primary">
@@ -4329,7 +4656,7 @@ def render_upgrade_page() -> str:
               shouldResetButton = false;
             }} catch (error) {{
               console.error("Checkout error:", error);
-              showUpgradeInlineError(error.message || "Could not open checkout. Please try again.");
+              showUpgradeInlineError("Could not open checkout. Please try again.");
               return;
             }} finally {{
               if (shouldResetButton) {{
@@ -4680,7 +5007,7 @@ async def api_track(request: Request) -> dict[str, Any]:
         return {"ok": True}
     except Exception as e:
         print("API TRACK ERROR:", repr(e))
-        return {"error": str(e)}
+        return {"error": "tracking_unavailable"}
 
 
 @app.get("/api/admin/analytics")
@@ -4697,7 +5024,7 @@ def admin_analytics(limit: int = 100) -> dict[str, Any]:
         return {"items": result.data or []}
     except Exception as e:
         print("ADMIN ANALYTICS ERROR:", repr(e))
-        return {"error": str(e)}
+        return {"error": "analytics_unavailable"}
 
 
 @app.get("/admin-analytics", response_class=HTMLResponse)
@@ -4723,8 +5050,8 @@ def admin_analytics_page() -> str:
     """
 
 
-@app.get("/api/me")
-def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+@app.get("/api/me", response_model=None)
+def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any] | JSONResponse:
     try:
         user: Optional[dict[str, Any]] = None
         if authorization and authorization.lower().startswith("bearer "):
@@ -4738,12 +5065,15 @@ def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
             print("API_ME_USER: None")
             print("API_ME_PLAN: free")
             return {
+                "authenticated": False,
                 "signed_in": False,
                 "email": None,
                 "plan": "free",
+                "pro": False,
                 "plan_state": None,
                 "user": None,
                 "user_id": None,
+                "account_status_available": True,
             }
 
         upsert_profile(user["id"], user["email"])
@@ -4753,15 +5083,32 @@ def api_me(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         print(f"API_ME_USER: {user['email']}")
         print(f"API_ME_PLAN: {plan_name}")
         return {
+            "authenticated": True,
             "signed_in": True,
             "email": user["email"],
             "plan": plan_name,
+            "pro": plan_name == "pro",
             "plan_state": plan_state,
             "user": user,
             "user_id": user["id"],
+            "account_status_available": True,
         }
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception:
+        logger.exception("Failed to load account status")
+        return JSONResponse(
+            status_code=200,
+            content={
+                "authenticated": False,
+                "signed_in": False,
+                "email": None,
+                "plan": "free",
+                "pro": False,
+                "plan_state": None,
+                "user": None,
+                "user_id": None,
+                "account_status_available": False,
+            },
+        )
 
 
 @app.get("/api/history")
@@ -4782,7 +5129,8 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         return {"items": result.data or []}
 
     except Exception as e:
-        return {"error": str(e)}
+        print("API_HISTORY_ERROR:", repr(e))
+        return {"error": "history_unavailable"}
 
 
 @app.post("/api/create-checkout-session")
@@ -4894,7 +5242,7 @@ def create_portal_session(authorization: Optional[str] = Header(None)) -> dict[s
 
     except Exception as e:
         print("STRIPE PORTAL ERROR:", repr(e))
-        return {"error": str(e)}
+        return {"error": "Billing management is not available yet."}
 
 
 @app.post("/api/create-billing-portal-session")
@@ -4911,7 +5259,7 @@ def mark_password_ready(authorization: Optional[str] = Header(None)) -> dict[str
         return {"ok": True}
     except Exception as e:
         print("MARK PASSWORD READY ERROR:", repr(e))
-        return {"error": str(e)}
+        return {"error": "password_update_unavailable"}
 
 
 @app.post("/api/confirm-checkout-session")
@@ -5160,7 +5508,8 @@ async def optimise(
                 file_bytes = await cvFile.read()
                 extracted_text = extract_cv_text(cvFile.filename, file_bytes)
             except ValueError as exc:
-                return {"error": str(exc), "source": "error"}
+                logger.info("CV file validation failed: %s", exc)
+                return {"error": "Could not read that file. Try a different PDF, DOCX, or TXT file.", "source": "error"}
             except Exception:
                 return {"error": "Could not read that file. Try a different PDF, DOCX, or TXT file.", "source": "error"}
 
@@ -5241,7 +5590,7 @@ async def optimise(
         )
         return JSONResponse(
             status_code=500,
-            content={"error": str(e)}
+            content={"error": "We could not analyse your CV right now. Please try again."}
         )
 
 

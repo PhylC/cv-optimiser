@@ -8,6 +8,7 @@
 
   let supabaseClient = null;
   let inflightAuthState = null;
+  let cachedAccountStatus = null;
   let authState = {
     loading: true,
     user: null,
@@ -67,7 +68,9 @@
       status: state.loading ? "loading" : (!user ? "signed_out" : (state.plan || "unavailable")),
       error: state.error || null,
       token: state.token || null,
-      profile: state.profile || null
+      profile: state.profile || null,
+      accountStatusAvailable: state.accountStatusAvailable !== false,
+      account_status_available: state.accountStatusAvailable !== false
     };
   }
 
@@ -94,6 +97,17 @@
     const note = document.getElementById("headerBillingNote");
     if (!note) return;
     note.classList.add("hidden");
+  }
+
+  function publicAccountMessage(message, fallback) {
+    const text = String(message || "");
+    if (
+      /\[?Errno\s+\d+\]?/i.test(text) ||
+      /Traceback|Exception|Resource temporarily unavailable|ECONN|ENOTFOUND|EAI_AGAIN/i.test(text)
+    ) {
+      return fallback || "Account status is not available right now.";
+    }
+    return text || fallback || "Account status is not available right now.";
   }
 
   function setUpgradeVisibility(plan) {
@@ -224,7 +238,8 @@
       isPro: false,
       error: null,
       token: null,
-      profile: null
+      profile: null,
+      accountStatusAvailable: true
     }, nextState || {});
     authState.isPro = authState.plan === "pro";
     applyHeaderAccountUi(authState);
@@ -237,6 +252,11 @@
     return authState;
   }
 
+  function clearAccountStatusCache() {
+    cachedAccountStatus = null;
+    inflightAuthState = null;
+  }
+
   async function resolveAuthState() {
     const client = getSupabaseClient();
     setAuthState({
@@ -246,7 +266,8 @@
       isPro: false,
       error: null,
       token: null,
-      profile: null
+      profile: null,
+      accountStatusAvailable: true
     });
 
     if (!client) {
@@ -260,7 +281,8 @@
         isPro: false,
         error: null,
         token: null,
-        profile: null
+        profile: null,
+        accountStatusAvailable: true
       });
     }
 
@@ -281,12 +303,15 @@
         isPro: false,
         error: null,
         token: null,
-        profile: null
+        profile: null,
+        accountStatusAvailable: true
       });
     }
 
     try {
       const response = await fetch("/api/me", {
+        credentials: "include",
+        cache: "no-store",
         headers: {
           Authorization: "Bearer " + token
         }
@@ -294,16 +319,17 @@
       const profile = await response.json();
       console.log("profile response", profile);
 
-      if (!response.ok || profile.error) {
+      if (!response.ok || profile.account_status_available === false || profile.error) {
         console.log("resolved plan", null);
         return setAuthState({
           loading: false,
-          user: { id: user.id || null, email: user.email || profile.email || null },
-          plan: null,
+          user: null,
+          plan: "free",
           isPro: false,
-          error: profile.error || profile.detail || "profile_unavailable",
+          error: null,
           token: token,
-          profile: profile
+          profile: profile,
+          accountStatusAvailable: false
         });
       }
 
@@ -316,32 +342,41 @@
         isPro: plan === "pro",
         error: plan ? null : "profile_plan_unavailable",
         token: token,
-        profile: profile
+        profile: profile,
+        accountStatusAvailable: true
       });
     } catch (error) {
-      console.error("global account state error:", error);
+      console.warn("Account status check failed", error);
       console.log("profile response", null);
       console.log("resolved plan", null);
       return setAuthState({
         loading: false,
-        user: { id: user.id || null, email: user.email || null },
-        plan: null,
+        user: null,
+        plan: "free",
         isPro: false,
-        error: error,
+        error: null,
         token: token,
-        profile: null
+        profile: null,
+        accountStatusAvailable: false
       });
     }
   }
 
   async function getAccountState(options) {
     const opts = options || {};
-    if (inflightAuthState && !opts.forceRefresh) {
+    if (opts.invalidateCache) {
+      clearAccountStatusCache();
+    }
+    if (cachedAccountStatus) {
+      return cachedAccountStatus;
+    }
+    if (inflightAuthState) {
       return inflightAuthState;
     }
 
     inflightAuthState = resolveAuthState().then(function (state) {
-      return accountForConsumers(state);
+      cachedAccountStatus = accountForConsumers(state);
+      return cachedAccountStatus;
     }).finally(function () {
       inflightAuthState = null;
     });
@@ -382,7 +417,7 @@
         window.location.href = data.url;
         return;
       }
-      showHeaderBillingNote(data.detail || data.error || "Billing management is not available yet.");
+      showHeaderBillingNote(publicAccountMessage(data.detail || data.error, "Billing management is not available yet."));
     } catch (error) {
       console.error("billing portal error:", error);
       showHeaderBillingNote("Billing management is not available yet.");
@@ -393,6 +428,7 @@
     const client = getSupabaseClient();
     closeHeaderAccountMenu();
     clearAccountSnapshot();
+    clearAccountStatusCache();
     if (client) {
       await client.auth.signOut();
     }
@@ -506,15 +542,18 @@
       profile: null
     });
     closeHeaderAccountMenu();
-    await refreshGlobalAccountState({ forceRefresh: true });
+    await getAccountState({ forceRefresh: true });
     const client = getSupabaseClient();
     if (client && !window.__cvGlobalAccountAuthListenerInstalled) {
       window.__cvGlobalAccountAuthListenerInstalled = true;
       client.auth.onAuthStateChange(function (event) {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") {
+          return;
+        }
         if (event === "SIGNED_OUT") {
           clearAccountSnapshot();
         }
-        refreshGlobalAccountState({ forceRefresh: true });
+        refreshGlobalAccountState({ invalidateCache: true });
       });
     }
   }
@@ -522,6 +561,7 @@
   window.getAccountState = getAccountState;
   window.getGlobalAuthState = function () { return authState; };
   window.clearCachedAccountSnapshot = clearAccountSnapshot;
+  window.clearCachedAccountStatus = clearAccountStatusCache;
   window.refreshGlobalAccountUi = refreshGlobalAccountUi;
   window.refreshGlobalAccountState = refreshGlobalAccountState;
   window.closeGlobalAccountDropdown = closeHeaderAccountMenu;
@@ -537,6 +577,6 @@
   });
   document.addEventListener("DOMContentLoaded", bootstrapAccountUi);
   window.addEventListener("pageshow", function () {
-    refreshGlobalAccountState({ forceRefresh: true });
+    getAccountState({ forceRefresh: true });
   });
 })();

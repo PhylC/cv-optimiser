@@ -48,6 +48,48 @@
     a {
       color: #BFD0FF;
     }
+
+    @media (max-width: 768px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        padding: 16px;
+      }
+
+      .page,
+      .card {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card {
+        padding: 20px 16px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: clamp(32px, 9vw, 44px);
+        line-height: 1.08;
+      }
+
+      h2 {
+        font-size: clamp(24px, 7vw, 34px);
+        line-height: 1.15;
+      }
+
+      p,
+      li {
+        font-size: 18px;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+    }
   </style>
 </head>
 <body data-auth-state="loading">
