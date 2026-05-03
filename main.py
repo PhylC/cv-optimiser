@@ -1988,6 +1988,8 @@ def build_mobile_layout_css() -> str:
             .page-container,
             .container,
             .content-container,
+            .page-shell,
+            .content-page,
             .seo-page,
             .tool-page {
               width: 100%;
@@ -2048,6 +2050,33 @@ def build_mobile_layout_css() -> str:
               box-sizing: border-box;
               padding: 20px 16px;
               border-radius: 20px;
+            }
+
+            .nested-card,
+            .inner-card,
+            .example-inner-card,
+            .report-inner-card,
+            .content-card .content-card,
+            .tool-card .content-card,
+            .card .card {
+              border: 0;
+              box-shadow: none;
+              background: transparent;
+              padding: 0;
+            }
+
+            .content-card {
+              padding: 18px 0 !important;
+              border-radius: 0;
+            }
+
+            .tool-card.tool-shell,
+            .tool-shell {
+              border: 0;
+              box-shadow: none;
+              background: transparent;
+              padding: 0 !important;
+              border-radius: 0;
             }
 
             .tool-frame {
@@ -2271,7 +2300,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         """
     section_html = "".join(
         f"""
-        <div class="card">
+        <div class="card content-card">
           <h2>{html.escape(section["title"])}</h2>
           {f'<p>{html.escape(section["copy"])}</p>' if section.get("copy") else ""}
           {('<ul>' + ''.join(f'<li>{html.escape(item)}</li>' for item in section["bullets"]) + '</ul>') if section.get("bullets") else ""}
@@ -2315,9 +2344,11 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             color: #E8EEFC;
           }}
           .page {{
-            max-width: 1100px;
+            width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
           }}
 {build_site_header_css()}
 {build_typography_css()}
@@ -2337,6 +2368,13 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             border: 1px solid rgba(92, 112, 150, 0.22);
             border-radius: 18px;
             padding: 24px;
+          }}
+          .tool-shell {{
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            padding: 0 !important;
+            box-shadow: none;
           }}
           .tool-card h2, .card h2 {{
             margin: 0 0 10px;
@@ -2367,7 +2405,23 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .section-stack {{
             display: grid;
-            gap: 20px;
+            gap: 0;
+          }}
+          .content-card {{
+            background: transparent;
+            border: 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+            border-radius: 0;
+            padding: 24px 0;
+            box-shadow: none;
+          }}
+          .section-stack .content-card:first-child {{
+            border-top: 0;
+            padding-top: 0;
+          }}
+          .example-card {{
+            background: rgba(15, 28, 50, 0.58);
+            border-color: rgba(105, 125, 170, 0.20);
           }}
           ul {{
             margin: 12px 0 0;
@@ -2527,10 +2581,16 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               gap: 12px;
               margin-bottom: 18px;
             }}
-            .content-grid,
-            .section-stack {{
+            .content-grid {{
               gap: 14px;
               margin-top: 16px;
+            }}
+            .section-stack {{
+              gap: 0;
+              margin-top: 16px;
+            }}
+            .content-card {{
+              padding: 18px 0 !important;
             }}
             .tool-frame {{
               border-radius: 14px;
@@ -2581,7 +2641,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             <p>{html.escape(page["intro"])}</p>
             {conversion_preview_html}
           </div>
-          <div id="landing-tool" class="tool-card">
+          <div id="landing-tool" class="tool-card tool-shell">
             <h2>{html.escape(page["tool_heading"])}</h2>
             {tool_intro_html}
             <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="{html.escape(page['h1'])} tool"></iframe>
@@ -2589,7 +2649,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div class="content-grid">
             <div class="section-stack">{section_html}</div>
             <div class="section-stack">
-              <div class="card">
+              <div class="card example-card">
                 <h2>{html.escape(example_title)}</h2>
                 <div class="example-mini">
                   <strong>{html.escape(example_score)}</strong>
@@ -3418,9 +3478,11 @@ def render_example_report_page() -> str:
             color: #E8EEFC;
           }}
           .page {{
-            max-width: 1040px;
+            width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
           }}
 {build_site_header_css()}
 {build_typography_css()}
@@ -3492,6 +3554,17 @@ def render_example_report_page() -> str:
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+          }}
+          .example-improvement-section {{
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .example-improvement-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
           }}
           .before-after-card {{
             padding: 18px;
@@ -3657,6 +3730,14 @@ def render_example_report_page() -> str:
               grid-template-columns: 1fr;
               gap: 10px;
             }}
+            .example-improvement-section {{
+              margin-top: 20px;
+              padding-top: 20px;
+            }}
+            .example-improvement-grid {{
+              grid-template-columns: 1fr;
+              gap: 12px;
+            }}
             .cta-row {{
               flex-direction: column;
             }}
@@ -3749,9 +3830,9 @@ def render_example_report_page() -> str:
                 </div>
               </div>
 
-              <div class="card" style="margin-top:24px;">
+              <section class="example-improvement-section">
                 <h2>Example improvement</h2>
-                <div class="before-after">
+                <div class="example-improvement-grid">
                   <div class="before-after-card">
                     <strong>Before</strong>
                     <p>Responsible for managing customer accounts and sales targets.</p>
@@ -3761,7 +3842,7 @@ def render_example_report_page() -> str:
                     <p>Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.</p>
                   </div>
                 </div>
-              </div>
+              </section>
             </div>
 
             <div>

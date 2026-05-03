@@ -2530,7 +2530,7 @@
       grid-template-columns: 1fr;
     }
   }
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
   html,
   body {
     width: 100%;
@@ -2596,7 +2596,7 @@
   }
 
   .primary-tool-card {
-    padding: 20px 16px;
+    padding: 20px 12px;
   }
 
   .main-grid,
@@ -2632,7 +2632,7 @@
 
   .result-preview-card {
     margin-top: 26px;
-    padding: 20px 16px;
+    padding: 18px 14px;
     border-radius: 20px;
   }
 
@@ -2661,6 +2661,19 @@
   .example-preview {
     padding: 20px 16px;
     border-radius: 20px;
+  }
+
+  .card .card,
+  .content-card .content-card,
+  .tool-card .content-card,
+  .nested-card,
+  .inner-card,
+  .example-inner-card,
+  .report-inner-card {
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
   }
 
   .diagnosis-bar,
@@ -3720,23 +3733,67 @@
       fileName.textContent = "No file selected";
     }
 
+    const exampleCvText = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, improving commercial performance, and working with senior stakeholders.";
+    const exampleJobDescriptionText = "We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, customer relationship management, P&L ownership, and retailer execution.";
+
+    function setFieldValue(selectors, value) {
+      const field = selectors
+        .map(function(selector) { return document.querySelector(selector); })
+        .find(Boolean);
+
+      if (!field) {
+        console.warn("Example fill target not found", selectors);
+        return false;
+      }
+
+      field.value = value;
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+      return true;
+    }
+
     function fillExampleContent() {
-      const cvText = document.querySelector("#cvText, #cv_text, textarea[name='cv_text'], textarea[name='cv']");
-      const jobDescription = document.querySelector("#jobDescription, #job_description, textarea[name='job_description'], textarea[name='job']");
-
-      if (cvText) {
-        cvText.value = "Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, improving commercial performance, and working with senior stakeholders.";
-        cvText.dispatchEvent(new Event("input", { bubbles: true }));
-        cvText.dispatchEvent(new Event("change", { bubbles: true }));
+      if (pasteToggle) {
+        pasteToggle.open = true;
+      }
+      if (selectedFile) {
+        resetSelectedFile();
       }
 
-      if (jobDescription) {
-        jobDescription.value = "We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, customer relationship management, P&L ownership, and retailer execution.";
-        jobDescription.dispatchEvent(new Event("input", { bubbles: true }));
-        jobDescription.dispatchEvent(new Event("change", { bubbles: true }));
-      }
+      const cvUpdated = setFieldValue([
+        "#cvText",
+        "#cv-text",
+        "#cv_text",
+        "#cvInput",
+        "#cv-input",
+        "#cvTextarea",
+        "#cv-textarea",
+        "textarea[name='cv']",
+        "textarea[name='cv_text']",
+        "textarea[name='cvText']",
+        "[data-field='cv']",
+        "[data-role='cv-input']"
+      ], exampleCvText);
 
-      console.log("Sample CV filled");
+      const jdUpdated = setFieldValue([
+        "#jobDescription",
+        "#job-description",
+        "#job_description",
+        "#jdInput",
+        "#jd-input",
+        "#jdTextarea",
+        "#jd-textarea",
+        "textarea[name='job_description']",
+        "textarea[name='jobDescription']",
+        "textarea[name='jd']",
+        "textarea[name='job']",
+        "[data-field='job-description']",
+        "[data-role='job-description-input']"
+      ], exampleJobDescriptionText);
+
+      if (!cvUpdated || !jdUpdated) {
+        console.warn("Example CV fill incomplete", { cvUpdated: cvUpdated, jdUpdated: jdUpdated });
+      }
     }
 
     let loadingStageTimer = null;
