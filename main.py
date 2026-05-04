@@ -838,6 +838,304 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     },
 }
 
+CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
+    "why-is-my-cv-not-getting-interviews": {
+        "title": "Why Is My CV Not Getting Interviews? | CV Optimiser",
+        "meta_description": "Find out why your CV is not getting interviews, from weak role fit and missing evidence to poor formatting and job-description mismatch.",
+        "h1": "Why is my CV not getting interviews?",
+        "intro": "If you are applying for relevant roles and hearing nothing back, the issue is often not your whole career history. It is usually the way your CV presents relevance, evidence and fit for the specific role.",
+        "who": ["Job seekers applying regularly with little response", "People using the same CV for very different roles", "Candidates who are unsure what recruiters notice first"],
+        "looks_for": ["A clear target role in the top third", "Evidence that matches the job description", "Strong outcomes rather than duty-only bullets", "Readable formatting that works when scanned quickly"],
+        "manual": ["Read only the top third and ask what role it points to", "Highlight every line that directly supports the target job", "Check whether your strongest examples appear on page one", "Remove weak details that distract from the role"],
+        "sections": [
+            ("Common reasons CVs get ignored", "Generic positioning, unclear target roles, missing keywords, weak evidence and poor formatting can all make a good candidate look irrelevant. The first fix is to compare your CV against one job description, not against a vague idea of a good CV."),
+            ("What to fix first", "Start with target role clarity, then strengthen the top third, then rewrite bullets so they show outcomes. Formatting matters too, but clear relevance usually makes the biggest difference."),
+        ],
+        "related": [("/cv-job-description-match", "CV job description match"), ("/cv-mistakes-that-cost-interviews", "CV mistakes that cost interviews"), ("/10-second-cv-test", "10-Second CV Test")],
+    },
+    "cv-job-description-match": {
+        "title": "CV Job Description Match | CV Optimiser",
+        "meta_description": "Compare your CV against a job description and see whether your evidence, keywords and experience match the role you want.",
+        "h1": "CV job description match",
+        "intro": "A strong CV is not just well written. It is clearly matched to the job description. This page helps you understand whether your CV gives recruiters enough evidence for the role.",
+        "who": ["Anyone applying to a specific advertised role", "Candidates tailoring a CV before submitting", "Job seekers who want a focused relevance check"],
+        "looks_for": ["Skills and responsibilities from the advert", "Examples that prove you have used those skills", "Language that mirrors the job naturally", "Gaps between the role requirements and your CV evidence"],
+        "manual": ["Copy the essential requirements into a checklist", "Mark where each requirement appears in your CV", "Rewrite generic bullets around the employer's priorities", "Check whether your profile reflects this role, not every possible role"],
+        "sections": [
+            ("Why matching matters", "Recruiters usually scan for fit before they study detail. If your relevant experience is buried, vague or written in different language from the advert, it is easier to overlook."),
+            ("How to improve the match", "Use the job description to choose which achievements to lead with. Add missing evidence where truthful, remove unrelated detail, and use role language naturally rather than forcing keywords into every line."),
+        ],
+        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/ats-cv-checker", "ATS CV checker")],
+        "tool": True,
+    },
+    "free-cv-review": {
+        "title": "Free CV Review | CV Optimiser",
+        "meta_description": "Get a fast initial CV review by checking your CV against a job description for relevance, keywords, clarity and formatting.",
+        "h1": "Free CV review",
+        "intro": "Use CV Optimiser as a quick first review before you apply. It checks how clearly your CV matches a job description and shows the biggest issues to fix first.",
+        "who": ["Job seekers who want quick feedback before applying", "People who need an initial review, not a full rewrite", "Candidates checking whether a CV is too generic"],
+        "looks_for": ["Role relevance", "Keyword gaps", "Evidence of impact", "Formatting and scan readability"],
+        "manual": ["Check whether the first half page matches the role", "Look for duty-only bullets with no result", "Compare your wording with the job advert", "Paste the CV into plain text and check readability"],
+        "sections": [
+            ("What a useful CV review should cover", "A review should go beyond spelling and layout. It should ask whether the CV is relevant to the role, whether evidence is clear, and whether the most important information appears early enough."),
+            ("When to go deeper", "If your score is weak or the same issues appear across several roles, you may need a more detailed rewrite plan. Start with the free check so you know where the problem is."),
+        ],
+        "related": [("/cv-score-checker", "CV score checker"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/cv-checker", "CV checker")],
+        "tool": True,
+    },
+    "how-to-tailor-cv-to-a-job-description": {
+        "title": "How to Tailor a CV to a Job Description | CV Optimiser",
+        "meta_description": "Learn how to tailor your CV to a job description with role keywords, relevant evidence and stronger achievement bullets.",
+        "h1": "How to tailor your CV to a job description",
+        "intro": "Tailoring your CV means making your relevance obvious for one role. It does not mean inventing experience or stuffing keywords into every sentence.",
+        "who": ["Applicants adapting one CV for a specific role", "Career changers deciding what to lead with", "Candidates who want practical tailoring steps"],
+        "looks_for": ["Repeated skills and priorities in the advert", "Relevant achievements that prove those priorities", "A profile section that points to the target role", "Bullets that connect action, context and outcome"],
+        "manual": ["Underline the top 8 to 12 requirements", "Move the most relevant examples higher", "Replace generic bullets with role-matched evidence", "Check that every added keyword is truthful and supported"],
+        "sections": [
+            ("A simple tailoring process", "Start by extracting the role priorities. Then map your experience to those priorities, rewrite the profile and strongest bullets, and remove details that dilute the message."),
+            ("Example rewrite", "Generic: Responsible for managing customer accounts. Tailored: Managed a portfolio of customer accounts, improving retention through stakeholder planning, forecasting and commercial reviews."),
+        ],
+        "related": [("/cv-job-description-match", "CV job description match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/career-change-cv-checker", "Career change CV checker")],
+    },
+    "cv-mistakes-that-cost-interviews": {
+        "title": "CV Mistakes That Cost Interviews | CV Optimiser",
+        "meta_description": "Avoid CV mistakes that cost interviews, including unclear targeting, weak bullets, poor formatting and using the same CV for every job.",
+        "h1": "CV mistakes that cost interviews",
+        "intro": "Most costly CV mistakes are not dramatic. They are small signals that make your CV look less relevant, less clear or harder to trust during a fast scan.",
+        "who": ["People getting few responses despite relevant experience", "Candidates updating an old CV", "Job seekers who want a practical mistake checklist"],
+        "looks_for": ["Unclear target role", "Responsibilities without outcomes", "Relevant experience buried too low", "Poor ATS readability", "Too much old or unrelated detail"],
+        "manual": ["Check whether the profile could fit almost anyone", "Count how many bullets include outcomes", "Look for tables, icons or columns that may parse badly", "Remove old detail that competes with current relevance"],
+        "sections": [
+            ("The biggest pattern", "The most common mistake is making the recruiter work too hard. Your CV should show the role you want, the evidence you offer and the reason you match the job description quickly."),
+            ("How to recover", "Tighten the top third, rewrite weak bullets, prioritise recent and relevant evidence, and check each application against the actual advert."),
+        ],
+        "related": [("/10-second-cv-test", "10-Second CV Test"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/best-cv-format-for-ats", "Best CV format for ATS")],
+    },
+    "best-cv-format-for-ats": {
+        "title": "Best CV Format for ATS | CV Optimiser",
+        "meta_description": "Learn the best CV format for ATS readability, including simple headings, reverse chronological order and plain text checks.",
+        "h1": "Best CV format for ATS",
+        "intro": "ATS-friendly formatting is about clarity. The safest CV format is simple, readable and easy to parse, while still making a strong case for your fit.",
+        "who": ["Applicants worried their CV format is blocking them", "People using templates with columns, icons or graphics", "Candidates applying through online portals"],
+        "looks_for": ["Clear standard headings", "Reverse chronological experience", "Plain text readability", "Skills and evidence that match the advert", "No essential information hidden in images"],
+        "manual": ["Copy your CV into plain text and inspect the order", "Use headings such as Profile, Experience, Education and Skills", "Avoid tables, icons and complex columns for core content", "Check that dates, job titles and employers are easy to scan"],
+        "sections": [
+            ("Recommended structure", "Use a clear profile, key skills, reverse chronological experience, education and relevant extras. Keep design restrained so the content is easy to parse and easy for a recruiter to scan."),
+            ("Formatting to avoid", "Avoid putting essential text inside images, using decorative icons as labels, or relying on complex columns where the reading order may break."),
+        ],
+        "related": [("/ats-cv-checker", "ATS CV checker"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-mistakes-that-cost-interviews", "CV mistakes")],
+    },
+    "cv-cover-letter-match": {
+        "title": "CV Cover Letter Match | CV Optimiser",
+        "meta_description": "Check whether your CV and cover letter tell a consistent story for the role without repeating each other exactly.",
+        "h1": "CV cover letter match",
+        "intro": "Your CV and cover letter should support the same application story. The cover letter can explain motivation and fit, while the CV proves the evidence.",
+        "who": ["Applicants sending both a CV and cover letter", "Candidates unsure whether their message is consistent", "People tailoring applications for competitive roles"],
+        "looks_for": ["A consistent target role", "Cover letter examples backed by CV evidence", "No contradictions in dates, skills or focus", "Natural language from the job description"],
+        "manual": ["Check whether the cover letter claims are proved in the CV", "Remove repeated paragraphs that add no new value", "Use the cover letter to explain why this role, not to rewrite the CV", "Make sure both documents point to the same strengths"],
+        "sections": [
+            ("How the two documents should work together", "The CV should carry the evidence: roles, outcomes, skills and achievements. The cover letter should connect that evidence to the employer's priorities and explain why the role makes sense."),
+            ("Common mismatch", "A CV aimed at one role and a cover letter aimed at another makes the application feel unfocused. Align both documents before applying."),
+        ],
+        "related": [("/cv-job-description-match", "CV job description match"), ("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/marketing-cv-checker", "Marketing CV checker")],
+    },
+}
+
+ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
+    "sales-cv-checker": {
+        "role": "sales",
+        "title": "Sales CV Checker | CV Optimiser",
+        "meta_description": "Check your sales CV for revenue evidence, pipeline impact, negotiation skills, CRM keywords and role-specific relevance.",
+        "h1": "Sales CV checker",
+        "signals": ["revenue, quota and target performance", "pipeline generation and conversion", "negotiation, CRM and forecasting", "account growth and commercial outcomes"],
+        "mistakes": ["listing duties without numbers", "hiding quota performance", "using generic relationship language without commercial evidence"],
+        "keywords": ["revenue", "pipeline", "conversion", "CRM", "forecasting", "negotiation", "account growth"],
+    },
+    "account-manager-cv-checker": {
+        "role": "account manager",
+        "title": "Account Manager CV Checker | CV Optimiser",
+        "meta_description": "Check your account manager CV for retention, growth, stakeholder management, forecasting and customer relationship evidence.",
+        "h1": "Account manager CV checker",
+        "signals": ["account ownership and portfolio size", "retention, growth and renewal outcomes", "stakeholder management and forecasting", "commercial delivery and customer planning"],
+        "mistakes": ["describing accounts without ownership", "missing retention or growth evidence", "not showing senior stakeholder work"],
+        "keywords": ["retention", "growth", "stakeholder management", "forecasting", "customer relationships", "commercial planning"],
+    },
+    "customer-success-cv-checker": {
+        "role": "customer success",
+        "title": "Customer Success CV Checker | CV Optimiser",
+        "meta_description": "Check your customer success CV for retention, onboarding, adoption, renewals, churn reduction and customer outcome evidence.",
+        "h1": "Customer success CV checker",
+        "signals": ["onboarding and adoption outcomes", "retention, renewals and churn reduction", "product usage and customer health", "stakeholder management and customer outcomes"],
+        "mistakes": ["sounding like generic support", "missing adoption or renewal metrics", "not showing product or customer health work"],
+        "keywords": ["retention", "onboarding", "adoption", "churn reduction", "renewals", "customer outcomes"],
+    },
+    "project-manager-cv-checker": {
+        "role": "project manager",
+        "title": "Project Manager CV Checker | CV Optimiser",
+        "meta_description": "Check your project manager CV for delivery evidence, timelines, budgets, risk, stakeholders, dependencies and outcomes.",
+        "h1": "Project manager CV checker",
+        "signals": ["delivery against timelines and budgets", "risk, dependency and issue management", "stakeholder communication and governance", "measurable project outcomes"],
+        "mistakes": ["listing methodologies without delivery evidence", "missing budget or timeline context", "not explaining outcomes"],
+        "keywords": ["delivery", "stakeholders", "risk", "budget", "dependencies", "governance", "outcomes"],
+    },
+    "graduate-cv-checker": {
+        "role": "graduate",
+        "title": "Graduate CV Checker | CV Optimiser",
+        "meta_description": "Check your graduate CV for education, placements, projects, internships, part-time work and transferable skills.",
+        "h1": "Graduate CV checker",
+        "signals": ["target role clarity", "education, projects and placements", "internships and part-time work", "transferable skills with evidence"],
+        "mistakes": ["trying to sound senior", "burying relevant projects", "using a vague objective with no target role"],
+        "keywords": ["placement", "internship", "project", "analysis", "teamwork", "communication", "initiative"],
+    },
+    "it-helpdesk-cv-checker": {
+        "role": "IT helpdesk",
+        "title": "IT Helpdesk CV Checker | CV Optimiser",
+        "meta_description": "Check your IT helpdesk CV for troubleshooting, ticketing, Windows, Microsoft 365, SLAs, escalation and customer support evidence.",
+        "h1": "IT helpdesk CV checker",
+        "signals": ["troubleshooting and ticket resolution", "Windows, Microsoft 365 and hardware/software support", "SLAs, escalation and documentation", "customer service under pressure"],
+        "mistakes": ["listing tools without support examples", "missing ticketing or SLA context", "forgetting customer service evidence"],
+        "keywords": ["troubleshooting", "ticketing", "Windows", "Microsoft 365", "SLA", "escalation", "hardware support"],
+    },
+    "software-developer-cv-checker": {
+        "role": "software developer",
+        "title": "Software Developer CV Checker | CV Optimiser",
+        "meta_description": "Check your software developer CV for tech stack, projects, GitHub, APIs, databases, testing, shipped work and impact.",
+        "h1": "Software developer CV checker",
+        "signals": ["tech stack and role-specific tools", "shipped projects and production impact", "APIs, databases and testing", "GitHub or portfolio evidence where relevant"],
+        "mistakes": ["dumping every technology without context", "missing shipped outcomes", "not matching the stack in the advert"],
+        "keywords": ["JavaScript", "Python", "APIs", "databases", "testing", "GitHub", "CI/CD"],
+    },
+    "admin-cv-checker": {
+        "role": "admin",
+        "title": "Admin CV Checker | CV Optimiser",
+        "meta_description": "Check your admin CV for organisation, accuracy, scheduling, systems, documentation, customer service and process support.",
+        "h1": "Admin CV checker",
+        "signals": ["organisation and accuracy", "scheduling, records and documentation", "systems and office support", "customer service and process improvement"],
+        "mistakes": ["sounding too generic", "missing systems experience", "not proving accuracy or organisation"],
+        "keywords": ["scheduling", "records", "documentation", "accuracy", "office support", "customer service"],
+    },
+    "marketing-cv-checker": {
+        "role": "marketing",
+        "title": "Marketing CV Checker | CV Optimiser",
+        "meta_description": "Check your marketing CV for campaigns, content, analytics, SEO, paid media, email, CRM, reporting and conversion evidence.",
+        "h1": "Marketing CV checker",
+        "signals": ["campaign outcomes and channel ownership", "analytics, reporting and conversion", "SEO, paid media, email or CRM evidence", "content and brand relevance"],
+        "mistakes": ["listing channels without results", "missing metrics", "not matching the role's marketing mix"],
+        "keywords": ["campaigns", "content", "analytics", "SEO", "paid media", "email", "CRM", "conversion"],
+    },
+    "career-change-cv-checker": {
+        "role": "career change",
+        "title": "Career Change CV Checker | CV Optimiser",
+        "meta_description": "Check your career change CV for transferable skills, role clarity, relevant evidence and a focused explanation of your new direction.",
+        "h1": "Career change CV checker",
+        "signals": ["a clear target role", "transferable skills with evidence", "relevant projects, training or experience", "less space for unrelated detail"],
+        "mistakes": ["explaining the old career too much", "not proving the new direction", "using vague transferable skills with no evidence"],
+        "keywords": ["transferable skills", "stakeholders", "analysis", "customer service", "projects", "training", "adaptability"],
+    },
+    "nhs-admin-cv-checker": {
+        "role": "NHS admin",
+        "title": "NHS Admin CV Checker | CV Optimiser",
+        "meta_description": "Check your NHS admin CV for accuracy, confidentiality, records, scheduling, communication, systems and public-sector relevance.",
+        "h1": "NHS admin CV checker",
+        "signals": ["accuracy, confidentiality and records", "patient or customer handling", "scheduling, communication and process", "systems experience and public-sector language"],
+        "mistakes": ["not showing confidentiality or accuracy", "missing systems and records context", "using generic admin wording"],
+        "keywords": ["confidentiality", "records", "scheduling", "communication", "patient handling", "accuracy", "systems"],
+    },
+}
+
+
+def build_role_page(slug: str, spec: dict[str, Any]) -> dict[str, Any]:
+    role = spec["role"]
+    title_role = role if role.upper() == "NHS" else role
+    return {
+        "title": spec["title"],
+        "meta_description": spec["meta_description"],
+        "h1": spec["h1"],
+        "intro": f"Use this {role} CV checker guide to see whether your CV is focused on the evidence recruiters expect for this type of role. A generic CV can hide the strongest parts of your experience, even when you are a good fit.",
+        "who": [
+            f"People applying for {role} roles with a CV that feels too generic",
+            "Candidates tailoring a CV to a specific job description",
+            "Job seekers who want clearer role-specific evidence before applying",
+        ],
+        "looks_for": spec["signals"],
+        "manual": [
+            "Compare your profile with the first five requirements in the advert",
+            f"Check whether your strongest {role} evidence appears on page one",
+            "Rewrite duty-only bullets so they show context and outcome",
+            "Use job-description language naturally where it matches your real experience",
+        ],
+        "sections": [
+            (f"What recruiters look for in a {title_role} CV", "Recruiters need to see relevant evidence quickly. For this role, that means making the right skills, tools, outcomes and examples easy to scan rather than expecting the reader to infer your fit."),
+            ("Common CV mistakes for this role", "Common mistakes include " + ", ".join(spec["mistakes"]) + ". These issues make the CV feel less focused, even when the experience is useful."),
+            ("Useful keywords and evidence to include", "Look for truthful ways to include terms such as " + ", ".join(spec["keywords"]) + ". The strongest CVs support those words with examples, numbers, scope or outcomes."),
+            ("How to tailor it to a job description", "Start with the advert. Identify the repeated responsibilities and required skills, then choose the most relevant examples from your experience. Remove or shorten details that do not support this role."),
+        ],
+        "related": [("/cv-job-description-match", "CV job description match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/10-second-cv-test", "10-Second CV Test")],
+        "tool": True,
+    }
+
+
+SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
+    **CORE_SEO_PAGE_SPECS,
+    **{slug: build_role_page(slug, spec) for slug, spec in ROLE_PAGE_SPECS.items()},
+    "ats-cv-checker": {
+        "title": "ATS CV Checker | CV Optimiser",
+        "meta_description": "Check your CV for ATS readability, plain text parsing, headings, formatting, keywords and job-description match.",
+        "h1": "ATS CV checker",
+        "intro": "ATS systems vary, but most reward clear structure, readable formatting and relevant job-description language. This page helps you check the practical things that can stop a CV being understood properly.",
+        "who": ["People applying through online application systems", "Candidates using designed CV templates", "Job seekers who want to check keyword and formatting risks"],
+        "looks_for": ["Plain text readability", "Standard headings and logical order", "Relevant keywords used naturally", "Experience that matches the advert"],
+        "manual": ["Paste your CV into plain text and check the order", "Avoid tables or graphics for essential content", "Use clear headings such as Experience and Education", "Compare your skills section with the job description"],
+        "sections": [("ATS readability", "An ATS check should focus on whether your CV can be parsed and whether it contains relevant evidence. It cannot guarantee how every employer's system will rank you."), ("What to improve", "Use simple formatting, add truthful role language and make your strongest relevant examples easy to find.")],
+        "related": [("/best-cv-format-for-ats", "Best CV format for ATS"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-job-description-match", "CV job description match")],
+        "tool": True,
+    },
+    "cv-score-checker": {
+        "title": "CV Score Checker | CV Optimiser",
+        "meta_description": "Check your CV score based on clarity, relevance, evidence, formatting and role fit against a job description.",
+        "h1": "CV score checker",
+        "intro": "A CV score is useful only when it reflects role fit. CV Optimiser checks whether your CV is clear, relevant and supported by evidence for the job you want.",
+        "who": ["Applicants who want a quick quality check", "People comparing several CV versions", "Candidates trying to improve role fit before applying"],
+        "looks_for": ["Job-description relevance", "Missing keywords", "Evidence and measurable outcomes", "Readable structure"],
+        "manual": ["Score each requirement as clear, weak or missing", "Check whether bullets show outcomes", "Look for generic wording in the profile", "Make sure page one carries the strongest evidence"],
+        "sections": [("What the score should mean", "A good score should not reward keyword stuffing. It should reflect whether a recruiter can quickly see the role you want, the evidence you offer and the fit with the advert."), ("How to improve it", "Improve the score by tightening the profile, adding relevant evidence, strengthening bullets and making the CV easier to scan.")],
+        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews")],
+        "tool": True,
+    },
+    "cv-keyword-optimiser": {
+        "title": "CV Keyword Optimiser | CV Optimiser",
+        "meta_description": "Find missing CV keywords and learn how to use job-description language naturally without keyword stuffing.",
+        "h1": "CV keyword optimiser",
+        "intro": "CV keywords matter because they show relevance. The aim is not to stuff terms into your CV, but to use job-description language naturally where your experience supports it.",
+        "who": ["Applicants tailoring a CV for one role", "People who suspect their CV is missing role language", "Candidates applying through ATS-heavy processes"],
+        "looks_for": ["Repeated terms in the job advert", "Skills and tools missing from your CV", "Evidence behind each important keyword", "Natural wording, not forced repetition"],
+        "manual": ["List the advert's repeated skills and tools", "Mark which terms are already supported in your CV", "Add missing truthful evidence", "Remove keywords that you cannot honestly support"],
+        "sections": [("How to use keywords well", "Use keywords where they help explain real experience. A strong CV combines the right terms with proof, scope and outcomes."), ("What to avoid", "Do not paste a block of keywords into the CV. Recruiters still need readable, credible evidence.")],
+        "related": [("/ats-cv-checker", "ATS CV checker"), ("/cv-job-description-match", "CV job description match"), ("/best-cv-format-for-ats", "Best CV format for ATS")],
+        "tool": True,
+    },
+    "cv-cover-letter-match": CORE_SEO_PAGE_SPECS["cv-cover-letter-match"],
+}
+
+TEN_SECOND_CV_TEST_PAGE: dict[str, Any] = {
+    "title": "10-Second CV Test | CV Optimiser",
+    "meta_description": "Use the 10-second CV test to check whether your CV quickly shows the role you want, the experience you offer, and why you match the job description.",
+    "h1": "The 10-Second CV Test",
+    "intro": "Recruiters do not study your CV at first. They scan it. This quick test helps you see whether your CV makes the right impression fast.",
+    "checks": [
+        "Can someone tell the role you are targeting within 10 seconds?",
+        "Does the top third of your CV match the job description?",
+        "Are your strongest examples on page one?",
+        "Do your bullets show outcomes, not just duties?",
+        "Does your CV use the same language as the job advert naturally?",
+        "Does your CV work when copied into plain text?",
+        "Is your experience focused rather than trying to cover every possible role?",
+        "Are weak or unrelated details taking up prime space?",
+        "Is the CV easy to skim on mobile and desktop?",
+        "Would a recruiter immediately understand why you are relevant?",
+    ],
+}
+
 SITEMAP_URLS: list[dict[str, str]] = [
     {"group": "Core", "loc": f"{SITE_URL}/", "priority": "1.0"},
     {"loc": f"{SITE_URL}/cv-checker", "priority": "0.9"},
@@ -850,6 +1148,23 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": f"{SITE_URL}/privacy", "priority": "0.3"},
     {"loc": f"{SITE_URL}/terms", "priority": "0.3"},
 ]
+
+for slug in SEO_LANDING_PAGES:
+    priority = "0.85" if slug in {
+        "why-is-my-cv-not-getting-interviews",
+        "ats-cv-checker",
+        "cv-score-checker",
+        "cv-keyword-optimiser",
+        "cv-job-description-match",
+        "free-cv-review",
+    } else "0.75"
+    loc = f"{SITE_URL}/{slug}"
+    if not any(entry["loc"] == loc for entry in SITEMAP_URLS):
+        SITEMAP_URLS.append({"loc": loc, "priority": priority})
+
+test_loc = f"{SITE_URL}/10-second-cv-test"
+if not any(entry["loc"] == test_loc for entry in SITEMAP_URLS):
+    SITEMAP_URLS.append({"loc": test_loc, "priority": "0.8"})
 
 
 def require_openai() -> OpenAI:
@@ -4054,6 +4369,420 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
     """
 
 
+def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
+    page_url = f"{SITE_URL}/{slug}"
+    cta = '<a href="/#tool" class="cta cta-button">Check your CV against a job description</a>'
+    related_html = "".join(
+        f'<a href="{html.escape(href)}">{html.escape(label)}</a>'
+        for href, label in page.get("related", [])
+    )
+    sections_html = "".join(
+        f"""
+        <section class="seo-section">
+          <h2>{html.escape(title)}</h2>
+          <p>{html.escape(copy)}</p>
+        </section>
+        """
+        for title, copy in page.get("sections", [])
+    )
+    list_blocks = [
+        ("Who this is for", page.get("who", [])),
+        ("What the checker looks for", page.get("looks_for", [])),
+        ("Quick manual checks", page.get("manual", [])),
+    ]
+    list_html = "".join(
+        f"""
+        <section class="seo-card">
+          <h2>{html.escape(title)}</h2>
+          <ul>{"".join(f"<li>{html.escape(item)}</li>" for item in items)}</ul>
+        </section>
+        """
+        for title, items in list_blocks
+    )
+    tool_html = ""
+    if page.get("tool"):
+        tool_html = """
+        <section class="tool-feature" id="checker">
+          <div>
+            <p class="eyebrow">Try it now</p>
+            <h2>Check your CV against the role</h2>
+            <p>Paste your CV and a job description to see match score, missing keywords and priority fixes.</p>
+          </div>
+          <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="CV Optimiser checker"></iframe>
+        </section>
+        """
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(page["title"])}</title>
+        <meta name="description" content="{html.escape(page["meta_description"])}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(page["title"])}">
+        <meta property="og:description" content="{html.escape(page["meta_description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(page["title"])}">
+        <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
+        <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        {build_footer_assets_head()}
+        <style>
+          html, body {{
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+          }}
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page-shell {{
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+          .seo-hero {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.85fr);
+            gap: 24px;
+            align-items: end;
+            margin: 30px 0 28px;
+          }}
+          .seo-hero p {{
+            max-width: 760px;
+          }}
+          .hero-panel,
+          .seo-card,
+          .tool-feature,
+          .bottom-cta {{
+            background: rgba(15, 28, 50, 0.68);
+            border: 1px solid rgba(92, 112, 150, 0.20);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          .hero-panel {{
+            align-self: stretch;
+          }}
+          .eyebrow {{
+            margin: 0 0 8px;
+            color: #AFC0FF;
+            font-size: 12px;
+            font-weight: 780;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 820;
+            text-decoration: none;
+          }}
+          .seo-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+          }}
+          .seo-card h2,
+          .seo-section h2,
+          .tool-feature h2,
+          .bottom-cta h2 {{
+            margin-top: 0;
+          }}
+          .seo-card ul {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+          }}
+          .seo-card li {{
+            margin-bottom: 8px;
+          }}
+          .seo-section {{
+            padding: 24px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .seo-section:first-of-type {{
+            border-top: 0;
+          }}
+          .tool-feature {{
+            margin: 28px 0;
+            padding: 0;
+            background: transparent;
+            border: 0;
+          }}
+          .tool-frame {{
+            width: 100%;
+            min-height: 980px;
+            height: auto;
+            border: 0;
+            border-radius: 18px;
+            background: transparent;
+            display: block;
+            margin-top: 16px;
+          }}
+          .related-links {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+          }}
+          .related-links a {{
+            color: #C9D7FF;
+            text-decoration: none;
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            background: rgba(10, 19, 35, 0.42);
+            border-radius: 999px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-weight: 700;
+          }}
+          .bottom-cta {{
+            margin: 30px 0 44px;
+          }}
+          img, svg, canvas, video, iframe {{
+            max-width: 100%;
+            height: auto;
+          }}
+          @media (max-width: 900px) {{
+            .seo-hero,
+            .seo-grid {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+          @media (max-width: 768px) {{
+            .page-shell {{
+              max-width: 100%;
+              padding: 16px;
+            }}
+            .seo-hero {{
+              margin-top: 24px;
+              gap: 16px;
+            }}
+            .hero-panel,
+            .seo-card,
+            .bottom-cta {{
+              padding: 20px 16px;
+              border-radius: 18px;
+            }}
+            .tool-feature {{
+              padding: 0;
+            }}
+            .tool-frame {{
+              min-height: 1120px;
+              border-radius: 14px;
+            }}
+            .cta,
+            .cta-button {{
+              width: 100%;
+              box-sizing: border-box;
+              text-align: center;
+            }}
+          }}
+{build_mobile_layout_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page-shell content-page">
+          {build_site_header(None)}
+
+          <section class="seo-hero">
+            <div>
+              <p class="eyebrow">CV Optimiser guide</p>
+              <h1>{html.escape(page["h1"])}</h1>
+              <p>{html.escape(page["intro"])}</p>
+              <div class="cta-block-tight">{cta}</div>
+            </div>
+            <aside class="hero-panel">
+              <h2>Fast role-fit check</h2>
+              <p>Use this page to tighten your CV, then run the checker against a real job description before you apply.</p>
+            </aside>
+          </section>
+
+          {tool_html}
+
+          <div class="seo-grid">{list_html}</div>
+          {sections_html}
+
+          <section class="bottom-cta">
+            <h2>Check your CV before you apply</h2>
+            <p>Paste your CV and a job description into CV Optimiser to get a more detailed match report.</p>
+            <div class="cta-block-tight">{cta}</div>
+            <div class="related-links">{related_html}</div>
+          </section>
+
+          {build_site_footer()}
+        </div>
+        {build_tool_embed_script() if page.get("tool") else ""}
+      </body>
+    </html>
+    """
+
+
+def render_ten_second_cv_test_page() -> str:
+    page_url = f"{SITE_URL}/10-second-cv-test"
+    checks_html = "".join(
+        f'<div class="check-card"><span>□</span><p>{html.escape(item)}</p></div>'
+        for item in TEN_SECOND_CV_TEST_PAGE["checks"]
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}</title>
+        <meta name="description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}">
+        <meta property="og:description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        {build_footer_assets_head()}
+        <style>
+          html, body {{ width: 100%; max-width: 100%; overflow-x: hidden; }}
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page-shell {{
+            width: 100%;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+          .hero, .panel {{
+            background: rgba(15, 28, 50, 0.68);
+            border: 1px solid rgba(92, 112, 150, 0.20);
+            border-radius: 18px;
+            padding: 24px;
+          }}
+          .hero {{
+            margin: 30px 0 22px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 820;
+            text-decoration: none;
+          }}
+          .check-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+          }}
+          .check-card {{
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            align-items: start;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.44);
+            border: 1px solid rgba(92, 112, 150, 0.20);
+          }}
+          .check-card span {{
+            color: #AFC0FF;
+            font-weight: 900;
+          }}
+          .section-stack {{
+            display: grid;
+            gap: 18px;
+          }}
+          .score-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+          }}
+          .mini-card {{
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.44);
+            border: 1px solid rgba(92, 112, 150, 0.20);
+          }}
+          @media (max-width: 768px) {{
+            .page-shell {{ padding: 16px; }}
+            .hero, .panel {{ padding: 20px 16px; }}
+            .check-grid, .score-grid {{ grid-template-columns: 1fr; }}
+            .cta, .cta-button {{ width: 100%; box-sizing: border-box; text-align: center; }}
+          }}
+{build_mobile_layout_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page-shell content-page">
+          {build_site_header(None)}
+          <section class="hero">
+            <h1>{html.escape(TEN_SECOND_CV_TEST_PAGE["h1"])}</h1>
+            <p>{html.escape(TEN_SECOND_CV_TEST_PAGE["intro"])}</p>
+            <div class="cta-block-tight"><a href="/#tool" class="cta cta-button">Check your CV against a job description</a></div>
+          </section>
+          <div class="section-stack">
+            <section class="panel">
+              <h2>The test</h2>
+              <div class="check-grid">{checks_html}</div>
+            </section>
+            <section class="panel">
+              <h2>Score guide</h2>
+              <div class="score-grid">
+                <div class="mini-card"><strong>8-10 yes answers</strong><p>Strong starting point, but still check role match.</p></div>
+                <div class="mini-card"><strong>5-7 yes answers</strong><p>Likely needs clearer positioning.</p></div>
+                <div class="mini-card"><strong>0-4 yes answers</strong><p>Probably too generic or hard to scan.</p></div>
+              </div>
+            </section>
+            <section class="panel">
+              <h2>What to fix first</h2>
+              <ul>
+                <li>Target role clarity</li>
+                <li>Top-third positioning</li>
+                <li>Job-description match</li>
+                <li>Bullet strength</li>
+                <li>Formatting and ATS readability</li>
+              </ul>
+            </section>
+            <section class="panel">
+              <h2>Get a more detailed match report</h2>
+              <p>Paste your CV and a job description into CV Optimiser to get a more detailed match report.</p>
+              <div class="cta-block-tight"><a href="/#tool" class="cta cta-button">Check your CV against a job description</a></div>
+            </section>
+          </div>
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
 def render_faq_page() -> str:
     faq_html = "".join(
         f"""
@@ -4848,28 +5577,28 @@ def cv_checker_page(request: Request) -> str:
 @app.get("/cv-score-checker/", response_class=HTMLResponse, include_in_schema=False)
 def cv_score_checker_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_tool_landing_page("cv-score-checker", TOOL_LANDING_PAGES["cv-score-checker"])
+    return render_seo_landing_page("cv-score-checker", SEO_LANDING_PAGES["cv-score-checker"])
 
 
 @app.get("/job-description-cv-match", response_class=HTMLResponse)
 @app.get("/job-description-cv-match/", response_class=HTMLResponse, include_in_schema=False)
 def job_description_cv_match_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_tool_landing_page("job-description-cv-match", TOOL_LANDING_PAGES["job-description-cv-match"])
+    return render_seo_landing_page("cv-job-description-match", SEO_LANDING_PAGES["cv-job-description-match"])
 
 
 @app.get("/ats-cv-checker", response_class=HTMLResponse)
 @app.get("/ats-cv-checker/", response_class=HTMLResponse, include_in_schema=False)
 def ats_cv_checker_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_tool_landing_page("ats-cv-checker", TOOL_LANDING_PAGES["ats-cv-checker"])
+    return render_seo_landing_page("ats-cv-checker", SEO_LANDING_PAGES["ats-cv-checker"])
 
 
 @app.get("/cv-keyword-optimiser", response_class=HTMLResponse)
 @app.get("/cv-keyword-optimiser/", response_class=HTMLResponse, include_in_schema=False)
 def cv_keyword_optimiser_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_tool_landing_page("cv-keyword-optimiser", TOOL_LANDING_PAGES["cv-keyword-optimiser"])
+    return render_seo_landing_page("cv-keyword-optimiser", SEO_LANDING_PAGES["cv-keyword-optimiser"])
 
 
 @app.get("/cv-improvement-tool", response_class=HTMLResponse)
@@ -4910,6 +5639,36 @@ def sitemap() -> Response:
 </urlset>
 """
     return Response(content=xml_content, media_type="application/xml")
+
+
+def make_seo_landing_handler(slug: str):
+    def handler() -> HTMLResponse:
+        return HTMLResponse(render_seo_landing_page(slug, SEO_LANDING_PAGES[slug]))
+
+    handler.__name__ = f"seo_landing_{slug.replace('-', '_')}"
+    return handler
+
+
+for seo_slug in SEO_LANDING_PAGES:
+    app.add_api_route(
+        f"/{seo_slug}",
+        make_seo_landing_handler(seo_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+    )
+    app.add_api_route(
+        f"/{seo_slug}/",
+        make_seo_landing_handler(seo_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+        include_in_schema=False,
+    )
+
+
+@app.get("/10-second-cv-test", response_class=HTMLResponse)
+@app.get("/10-second-cv-test/", response_class=HTMLResponse, include_in_schema=False)
+def ten_second_cv_test_page() -> str:
+    return render_ten_second_cv_test_page()
 
 
 @app.get("/faq", response_class=HTMLResponse)

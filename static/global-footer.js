@@ -11,14 +11,14 @@ function renderFooter() {
           <a href="/cv-checker">CV Checker</a>
           <a href="/cv-score-checker">CV Score Checker</a>
           <a href="/ats-cv-checker">ATS CV Checker</a>
-          <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+          <a href="/cv-job-description-match">CV Job Description Match</a>
         </div>
         <div class="site-footer-links-group">
-          <div class="site-footer-title">Guides</div>
-          <a href="/why-your-cv-is-not-getting-interviews">Why your CV is not getting interviews</a>
-          <a href="/how-to-tailor-your-cv">How to tailor your CV</a>
-          <a href="/ats-cv-keywords">ATS CV keywords</a>
-          <a href="/cv-mistakes">CV mistakes</a>
+          <div class="site-footer-title">Resources</div>
+          <a href="/10-second-cv-test">10-Second CV Test</a>
+          <a href="/why-is-my-cv-not-getting-interviews">Why Is My CV Not Getting Interviews?</a>
+          <a href="/cv-mistakes-that-cost-interviews">CV Mistakes That Cost Interviews</a>
+          <a href="/best-cv-format-for-ats">Best CV Format for ATS</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Trust</div>
