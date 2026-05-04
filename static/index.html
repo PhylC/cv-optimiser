@@ -2795,6 +2795,215 @@
     box-sizing: border-box;
   }
 }
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  body {
+    padding: 10px 10px 32px;
+  }
+
+  .main-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 0 34px;
+  }
+
+  .main-grid,
+  .main-column,
+  .helper-column {
+    gap: 14px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #mainToolCard.primary-tool-card {
+    padding: 18px 14px !important;
+    border-radius: 18px !important;
+    box-shadow: none;
+  }
+
+  html.embed-tool-mode body {
+    padding: 0;
+    background: transparent;
+  }
+
+  html.embed-tool-mode #mainToolCard {
+    border: 0;
+    border-radius: 0 !important;
+    background: transparent;
+    padding: 0 !important;
+    box-shadow: none;
+  }
+
+  .tool-embed-title {
+    margin-bottom: 8px;
+  }
+
+  .homepage-hero-title.tool-hero-title {
+    max-width: none;
+    margin-bottom: 8px;
+    font-size: clamp(1.85rem, 9vw, 2.55rem) !important;
+  }
+
+  .homepage-hero-subtitle.tool-hero-support {
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .result-preview-card,
+  .example-preview,
+  .tool-step,
+  .score-hero,
+  .result-section,
+  .results-upgrade-cta,
+  .full-plan-ready,
+  .locked-preview,
+  .sidebar-card,
+  #authCard,
+  #passwordCard {
+    box-shadow: none !important;
+  }
+
+  #mainToolCard .result-preview-card,
+  #mainToolCard .example-preview,
+  .helper-column .example-preview,
+  .example-report-card .example-preview {
+    margin-top: 18px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  #mainToolCard .result-preview-card,
+  .helper-column .example-preview,
+  .example-report-card .example-preview {
+    padding-top: 16px;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+  }
+
+  .example-report-card {
+    margin-top: 14px;
+    padding: 16px 0 !important;
+    border: 0;
+    border-top: 1px solid rgba(92, 112, 150, 0.16);
+    border-radius: 0 !important;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .tool-form {
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+  }
+
+  .tool-step,
+  .result-section,
+  .score-hero,
+  .results-upgrade-cta,
+  .full-plan-ready,
+  .locked-preview {
+    padding: 16px 0 !important;
+    border: 0;
+    border-top: 1px solid rgba(92, 112, 150, 0.16);
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  .score-hero {
+    gap: 12px;
+  }
+
+  .diagnosis-item,
+  .before-after-card,
+  .locked-report-card,
+  .locked-preview-block {
+    padding: 14px !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+    background: rgba(10, 19, 35, 0.26) !important;
+    border-color: rgba(92, 112, 150, 0.16) !important;
+  }
+
+  .locked-report-grid,
+  .locked-preview-grid,
+  .diagnosis-bar,
+  .before-after,
+  .result-grid-two {
+    gap: 10px;
+  }
+
+  .dropzone {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+    box-shadow: none;
+  }
+
+  .helper-column .card,
+  .sidebar-card {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+    background: rgba(15, 28, 50, 0.46);
+    box-shadow: none;
+  }
+
+  .site-header,
+  .site-header-account-row {
+    gap: 8px;
+  }
+
+  .account-menu-wrap {
+    max-width: 100%;
+  }
+
+  .account-menu-button,
+  .account-pill {
+    min-height: 34px;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+
+  .account-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .account-chip-text {
+    gap: 5px;
+  }
+
+  .account-pill .account-plan,
+  .account-pill .plan-badge,
+  .plan-badge,
+  .pro-badge {
+    padding: 3px 7px;
+    font-size: 10px;
+  }
+
+  .auth-loading-text {
+    min-height: 32px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .card + .card {
+    margin-top: 12px;
+  }
+
+  .section {
+    margin-top: 18px;
+  }
+}
 </style>
 </head>
 <body data-auth-state="loading">
@@ -2969,7 +3178,7 @@
         <p id="status" class="small">Ready when you are.</p>
       </div>
 
-      <div class="card">
+      <div class="card example-report-card">
         <div class="section-title">How it works</div>
         <ul class="how-it-works-list">
           <li>Paste your CV</li>

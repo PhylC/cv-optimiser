@@ -2375,13 +2375,33 @@ def build_mobile_layout_css() -> str:
               border-radius: 20px;
             }
 
+            .hero-card,
+            .hero-panel,
+            .seo-card,
+            .tool-feature,
+            .bottom-cta,
+            .final-cta,
+            .result-preview-card,
+            .card,
+            .tool-card,
+            .report-card,
+            .preview-card,
+            .example-card {
+              box-shadow: none !important;
+            }
+
             .nested-card,
             .inner-card,
             .example-inner-card,
             .report-inner-card,
             .content-card .content-card,
             .tool-card .content-card,
-            .card .card {
+            .tool-card .card,
+            .card .card,
+            .report-grid .card .card,
+            .hero-card .card,
+            .seo-card .card,
+            .tool-feature .card {
               border: 0;
               box-shadow: none;
               background: transparent;
@@ -2393,6 +2413,37 @@ def build_mobile_layout_css() -> str:
               border-radius: 0;
             }
 
+            .page,
+            .page-shell {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+            }
+
+            .seo-hero,
+            .content-grid,
+            .report-grid {
+              gap: 14px !important;
+              margin-top: 18px !important;
+              margin-bottom: 18px !important;
+            }
+
+            .hero-panel {
+              padding: 16px 0 !important;
+              border: 0 !important;
+              border-top: 1px solid rgba(92, 112, 150, 0.16) !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+            }
+
+            .seo-card,
+            .bottom-cta,
+            .final-cta {
+              padding: 18px 14px !important;
+              border-radius: 16px !important;
+              background: rgba(15, 28, 50, 0.54) !important;
+            }
+
+            .tool-feature,
             .tool-card.tool-shell,
             .tool-shell {
               border: 0;
@@ -2402,12 +2453,76 @@ def build_mobile_layout_css() -> str:
               border-radius: 0;
             }
 
+            .tool-feature {
+              margin: 20px 0 !important;
+            }
+
             .tool-frame {
               width: 100%;
               max-width: 100%;
               min-width: 0;
-              border-radius: 16px;
+              border-radius: 0;
               box-sizing: border-box;
+            }
+
+            .report-grid > div > .card {
+              padding: 16px 0 !important;
+              border: 0 !important;
+              border-top: 1px solid rgba(92, 112, 150, 0.16) !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
+            }
+
+            .report-grid > div > .card:first-child {
+              border-top: 0 !important;
+              padding-top: 0 !important;
+            }
+
+            .score-block,
+            .priority-card,
+            .before-after-card {
+              padding: 14px !important;
+              border-radius: 14px !important;
+              background: rgba(10, 19, 35, 0.30) !important;
+              box-shadow: none !important;
+            }
+
+            .example-improvement-section {
+              margin-top: 18px !important;
+              padding-top: 18px !important;
+            }
+
+            .example-improvement-grid,
+            .priority-grid,
+            .keyword-chip-row {
+              gap: 10px !important;
+            }
+
+            .site-header,
+            .site-header-account-row {
+              gap: 8px !important;
+            }
+
+            .account-menu-button,
+            .account-pill {
+              min-height: 34px !important;
+              padding: 6px 8px !important;
+              border-radius: 12px !important;
+            }
+
+            .account-avatar {
+              width: 24px !important;
+              height: 24px !important;
+              font-size: 11px !important;
+            }
+
+            .account-pill .account-plan,
+            .account-pill .plan-badge,
+            .plan-badge,
+            .pro-badge {
+              padding: 3px 7px !important;
+              font-size: 10px !important;
             }
 
             img,
