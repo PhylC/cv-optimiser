@@ -950,6 +950,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["revenue, quota and target performance", "pipeline generation and conversion", "negotiation, CRM and forecasting", "account growth and commercial outcomes"],
         "mistakes": ["listing duties without numbers", "hiding quota performance", "using generic relationship language without commercial evidence"],
         "keywords": ["revenue", "pipeline", "conversion", "CRM", "forecasting", "negotiation", "account growth"],
+        "cta_support": "Check whether your sales CV proves revenue impact, pipeline ownership and account growth.",
     },
     "account-manager-cv-checker": {
         "role": "account manager",
@@ -977,6 +978,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["delivery against timelines and budgets", "risk, dependency and issue management", "stakeholder communication and governance", "measurable project outcomes"],
         "mistakes": ["listing methodologies without delivery evidence", "missing budget or timeline context", "not explaining outcomes"],
         "keywords": ["delivery", "stakeholders", "risk", "budget", "dependencies", "governance", "outcomes"],
+        "cta_support": "Check whether your project manager CV proves delivery, stakeholder control, risk management and outcomes.",
     },
     "graduate-cv-checker": {
         "role": "graduate",
@@ -995,6 +997,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["troubleshooting and ticket resolution", "Windows, Microsoft 365 and hardware/software support", "SLAs, escalation and documentation", "customer service under pressure"],
         "mistakes": ["listing tools without support examples", "missing ticketing or SLA context", "forgetting customer service evidence"],
         "keywords": ["troubleshooting", "ticketing", "Windows", "Microsoft 365", "SLA", "escalation", "hardware support"],
+        "cta_support": "Check whether your IT helpdesk CV highlights troubleshooting, ticketing, SLAs and user support.",
     },
     "software-developer-cv-checker": {
         "role": "software developer",
@@ -1072,6 +1075,7 @@ def build_role_page(slug: str, spec: dict[str, Any]) -> dict[str, Any]:
         ],
         "related": [("/cv-job-description-match", "CV job description match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/10-second-cv-test", "10-Second CV Test")],
         "tool": True,
+        "cta_support": spec.get("cta_support") or f"Check whether your {role} CV highlights " + ", ".join(spec["keywords"][:3]) + " and relevant evidence for the job description.",
     }
 
 
@@ -1165,6 +1169,10 @@ for slug in SEO_LANDING_PAGES:
 test_loc = f"{SITE_URL}/10-second-cv-test"
 if not any(entry["loc"] == test_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": test_loc, "priority": "0.8"})
+
+example_cv_report_loc = f"{SITE_URL}/example-cv-report"
+if not any(entry["loc"] == example_cv_report_loc for entry in SITEMAP_URLS):
+    SITEMAP_URLS.append({"loc": example_cv_report_loc, "priority": "0.7"})
 
 
 def require_openai() -> OpenAI:
@@ -4087,6 +4095,17 @@ def render_example_report_page() -> str:
           <div class="report-grid">
             <div>
               <div class="card">
+                <h2>Example CV snippet</h2>
+                <p><strong>Account Manager</strong> with experience managing retail customers, coordinating account plans and supporting commercial targets.</p>
+                <p class="section-helper">This is a short fictional snippet used to show the type of analysis a paid report can include.</p>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Example job description snippet</h2>
+                <p>We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&amp;L ownership experience.</p>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
                 <h2>Score overview</h2>
                 <div class="score-block">
                   <div class="score-value">Match Score: 58/100</div>
@@ -4146,18 +4165,27 @@ def render_example_report_page() -> str:
               </div>
 
               <section class="example-improvement-section">
-                <h2>Example improvement</h2>
+                <h2>Weak and improved bullet examples</h2>
                 <div class="example-improvement-grid">
                   <div class="before-after-card">
-                    <strong>Before</strong>
+                    <strong>Weak bullet</strong>
                     <p>Responsible for managing customer accounts and sales targets.</p>
                   </div>
                   <div class="before-after-card">
-                    <strong>After</strong>
+                    <strong>Improved bullet</strong>
                     <p>Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.</p>
                   </div>
                 </div>
               </section>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>ATS/readability checks</h2>
+                <ul class="section-list">
+                  <li>Core headings are readable, but the profile is too generic for the target role.</li>
+                  <li>Important role language appears in the job description but not strongly enough in the CV.</li>
+                  <li>Bullets need clearer outcomes so a recruiter can scan impact quickly.</li>
+                </ul>
+              </div>
             </div>
 
             <div>
@@ -4176,20 +4204,29 @@ def render_example_report_page() -> str:
               </div>
 
               <div class="card" style="margin-top:24px;">
-                <h2>Unlock the full report</h2>
-                <p>Get the full rewrite, deeper fixes, stronger role-specific phrasing and a more complete improvement plan tailored to your own CV.</p>
+                <h2>Priority action plan</h2>
+                <ul class="section-list">
+                  <li>Rewrite the top profile around account ownership and commercial impact.</li>
+                  <li>Add missing job-description keywords where they genuinely match experience.</li>
+                  <li>Replace duty-only bullets with measurable customer and revenue outcomes.</li>
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Get this report for your CV</h2>
+                <p>Run your own CV and job description through CV Optimiser to unlock the full analysis, keyword gaps, rewritten examples and priority fixes.</p>
                 <div class="cta-row cta-block-tight">
-                  <a href="/upgrade" class="cta cta-button" data-upgrade-link>Unlock full report</a>
+                  <a href="/#tool" class="cta cta-button">Get this report for your CV</a>
                 </div>
               </div>
             </div>
           </div>
 
           <section class="final-cta">
-            <h2>Check your CV now</h2>
-            <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
+            <h2>Get this report for your CV</h2>
+            <p>Upload your CV, paste a job description and see the report for your own application.</p>
             <div class="cta-row cta-block-tight">
-              <a href="/#tool" class="cta cta-button">Check your CV now</a>
+              <a href="/#tool" class="cta cta-button">Get this report for your CV</a>
             </div>
           </section>
 
@@ -4611,7 +4648,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             </div>
             <aside class="hero-panel">
               <h2>Fast role-fit check</h2>
-              <p>Use this page to tighten your CV, then run the checker against a real job description before you apply.</p>
+              <p>{html.escape(page.get("cta_support", "Use this page to tighten your CV, then run the checker against a real job description before you apply."))}</p>
             </aside>
           </section>
 
@@ -5290,7 +5327,7 @@ def render_upgrade_page() -> str:
                 <li>Complete keyword optimisation</li>
                 <li>Step-by-step improvement plan</li>
               </ul>
-              <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
+              <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
               <p class="upgrade-helper">No account needed for one-time checkout.</p>
             </div>
 
@@ -5347,7 +5384,7 @@ def render_upgrade_page() -> str:
           function updateOneTimeButtonState() {{
             if (!oneTimeButton) return;
             if (hasStoredCvResult()) {{
-              oneTimeButton.textContent = "Unlock full report — £7.99";
+              oneTimeButton.textContent = "Unlock my full CV report";
               return;
             }}
             oneTimeButton.textContent = "Run CV check first";
@@ -5499,6 +5536,20 @@ def render_upgrade_page() -> str:
 
 
 def render_status_page(title: str, heading: str, copy: str) -> str:
+    success_script = """
+        <script>
+          (function () {
+            if (!/payment successful/i.test(document.title)) return;
+            try {
+              fetch("/api/track", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({event_name: "payment_success_seen", metadata: {source: "success_page"}})
+              }).catch(function () {});
+            } catch (error) {}
+          })();
+        </script>
+    """ if "successful" in title.lower() else ""
     return f"""
     <!doctype html>
     <html lang="en">
@@ -5556,6 +5607,7 @@ def render_status_page(title: str, heading: str, copy: str) -> str:
           </div>
           {build_site_footer()}
         </div>
+        {success_script}
       </body>
     </html>
     """
@@ -5610,6 +5662,8 @@ def cv_improvement_tool_page(request: Request) -> str:
 
 @app.get("/example-report", response_class=HTMLResponse)
 @app.get("/example-report/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/example-cv-report", response_class=HTMLResponse)
+@app.get("/example-cv-report/", response_class=HTMLResponse, include_in_schema=False)
 def example_cv_report_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_example_report_page()
@@ -6019,6 +6073,12 @@ def create_checkout_session(
         email=user["email"] if user else None,
         metadata={"checkout_plan": checkout_plan}
     )
+    track_event(
+        event_name="checkout_started",
+        user_id=user["id"] if user else None,
+        email=user["email"] if user else None,
+        metadata={"checkout_plan": checkout_plan}
+    )
 
     if checkout_plan == "one_time":
         print("CHECKOUT_SESSION_REQUEST: one_time")
@@ -6331,6 +6391,12 @@ async def optimise(
                 email=user["email"],
                 metadata={"is_pro": bool(plan["is_pro"])}
             )
+            track_event(
+                event_name="cv_check_started",
+                user_id=user["id"],
+                email=user["email"],
+                metadata={"is_pro": bool(plan["is_pro"])}
+            )
 
             if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
                 return {
@@ -6406,6 +6472,15 @@ async def optimise(
             payload["plan"] = get_plan_state(user["id"])
             track_event(
                 event_name="optimise_succeeded",
+                user_id=user["id"],
+                email=user["email"],
+                metadata={
+                    "is_pro": bool(plan["is_pro"]),
+                    "score": payload.get("score", 0),
+                }
+            )
+            track_event(
+                event_name="cv_check_completed",
                 user_id=user["id"],
                 email=user["email"],
                 metadata={

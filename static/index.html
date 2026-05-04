@@ -2252,6 +2252,47 @@
     border: 1px solid rgba(92, 112, 150, 0.18);
   }
 
+  .locked-report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .locked-report-card {
+    position: relative;
+    padding: 16px;
+    border-radius: 16px;
+    background:
+      linear-gradient(135deg, rgba(91, 120, 255, 0.10), transparent 42%),
+      rgba(10, 19, 35, 0.42);
+    border: 1px solid rgba(92, 112, 150, 0.20);
+    overflow: hidden;
+  }
+
+  .locked-report-card::after {
+    content: "Locked";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(91, 120, 255, 0.16);
+    border: 1px solid rgba(91, 120, 255, 0.28);
+    color: #DCE6FF;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .locked-report-card p {
+    margin: 0;
+    color: #B7C6E6;
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: calc(100% - 68px);
+  }
+
   .locked-preview-label {
     display: block;
     margin-bottom: 6px;
@@ -2489,6 +2530,33 @@
   gap: 10px;
 }
 
+.checkout-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+
+.checkout-trust-strip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(10, 19, 35, 0.36);
+  border: 1px solid rgba(92, 112, 150, 0.18);
+  color: #DCE6FF;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.checkout-trust-strip span::before {
+  content: "✓";
+  color: #86efac;
+  font-weight: 900;
+}
+
 .checkout-option-secondary {
   width: 100%;
   justify-content: center;
@@ -2655,12 +2723,22 @@
   .result-section,
   .results-upgrade-cta,
   .full-plan-ready,
+  .locked-report-card,
   .before-after-card,
   .diagnosis-item,
   .dropzone,
   .example-preview {
     padding: 20px 16px;
     border-radius: 20px;
+  }
+
+  .locked-report-grid,
+  .checkout-trust-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .locked-report-card p {
+    max-width: 100%;
   }
 
   .card .card,
@@ -2885,7 +2963,7 @@
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
           <button id="clearFileBtn" class="secondary-btn" type="button">Remove uploaded file</button>
-          <button id="upgradeBtn" class="secondary-btn" data-upgrade-link type="button">Upgrade to Pro</button>
+          <button id="upgradeBtn" class="secondary-btn" data-upgrade-link type="button">Unlock my full CV report</button>
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
@@ -2944,6 +3022,12 @@
             </div>
           </div>
 
+          <div id="atsReadabilitySummaryWrap" class="result-section">
+            <div class="result-section-title">ATS/readability summary</div>
+            <div class="result-section-subtitle">A quick view of how easy this CV is to scan for the role.</div>
+            <p id="atsReadabilitySummary" class="result-paragraph"></p>
+          </div>
+
           <div class="result-section">
             <div class="result-section-title">Top 3 fixes to make first</div>
             <div class="result-section-subtitle">Focus on these first to improve your chances.</div>
@@ -2969,6 +3053,33 @@
                 <strong>After</strong>
                 <p id="resultExampleAfter">Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
               </div>
+            </div>
+          </div>
+
+          <div id="lockedReportSections" class="locked-report-grid hidden">
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Full keyword gap analysis</span>
+              <p>See the complete list of missing, weak and already-matched role keywords.</p>
+            </div>
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Role-specific improvement plan</span>
+              <p>Get a prioritised plan for improving this CV before you apply.</p>
+            </div>
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Rewritten profile suggestion</span>
+              <p>Unlock a sharper summary tailored to the job description.</p>
+            </div>
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Multiple improved bullets</span>
+              <p>See more stronger bullet examples you can adapt into your CV.</p>
+            </div>
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Detailed ATS/readability checks</span>
+              <p>Review formatting, keyword and clarity issues in more depth.</p>
+            </div>
+            <div class="locked-report-card">
+              <span class="locked-preview-label">Next-step action plan</span>
+              <p>Know exactly what to fix first, second and third.</p>
             </div>
           </div>
 
@@ -3119,30 +3230,38 @@
 </div>
 
 <div id="resultsUpgradeCta" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Get a stronger, interview-ready CV</div>
-  <div style="font-size:13px; color:#F0C674; margin-bottom:6px;">
-    Some high-impact improvements are hidden in Pro
-  </div>
+  <div class="results-upgrade-cta-title">Unlock my full CV report</div>
   <div class="results-upgrade-cta-copy">
-    See exactly how to improve your CV for this role — including the most important fixes, recruiter concerns, and stronger positioning.
+    Get the full analysis, keyword gaps, rewritten examples and priority fixes before you apply.
+  </div>
+  <div class="checkout-trust-strip" aria-label="Checkout trust points">
+    <span>One-off report available</span>
+    <span>Secure payment via Stripe</span>
+    <span>No subscription required for one report</span>
+    <span>Built for UK job seekers</span>
   </div>
   <div class="checkout-option-stack">
-    <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
-    <button id="resultsUpgradeMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
+    <button id="resultsUpgradeMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
   </div>
   <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
 </div>
 
   <div id="proUnlockPrompt" class="results-upgrade-cta upgrade-gate hidden">
-  <div class="results-upgrade-cta-title">See exactly how to fix this</div>
+  <div class="results-upgrade-cta-title">Unlock my full CV report</div>
   <div class="results-upgrade-cta-copy">
-    <p>The full report includes rewritten sections, keywords, and a step-by-step improvement plan.</p>
+    <p>Get the full analysis, keyword gaps, rewritten examples and priority fixes before you apply.</p>
+  </div>
+  <div class="checkout-trust-strip" aria-label="Checkout trust points">
+    <span>One-off report available</span>
+    <span>Secure payment via Stripe</span>
+    <span>No subscription required for one report</span>
+    <span>Built for UK job seekers</span>
   </div>
   <div class="checkout-option-stack">
-    <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock full report — £7.99</button>
-    <button id="proMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Or go Pro — £9.99/month</button>
+    <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
+    <button id="proMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
   </div>
-  <p class="small checkout-trust-line">No CV is stored. Takes less than a minute.</p>
 </div>
 
 <div id="lockedPreviewCard" class="results-upgrade-cta locked-preview hidden">
@@ -3332,6 +3451,8 @@
     const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
+    const atsReadabilitySummary = document.getElementById("atsReadabilitySummary");
+    const lockedReportSections = document.getElementById("lockedReportSections");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
     const resultKeywordPreview = document.getElementById("resultKeywordPreview");
     const resultKeywordTail = document.getElementById("resultKeywordTail");
@@ -3408,6 +3529,12 @@
       const explicitPlan = normalizeCurrentPlan(planData);
       const bodyState = getAccountStateFromBody();
 
+      if (explicitPlan === "pro") {
+        return "signed_in_pro";
+      }
+      if (explicitPlan === "free" && explicitSignedIn !== false) {
+        return "signed_in_free";
+      }
       if (explicitSignedIn === true) {
         if (!explicitPlan) return "loading";
         return explicitPlan === "pro" ? "signed_in_pro" : "signed_in_free";
@@ -3598,13 +3725,13 @@
       }
 
       if (upgradeBtn) {
-        upgradeBtn.textContent = "Upgrade to Pro";
+        upgradeBtn.textContent = "Unlock my full CV report";
       }
       if (menuUpgradeBtn) {
-        menuUpgradeBtn.textContent = "Upgrade to Pro";
+        menuUpgradeBtn.textContent = "Unlock my full CV report";
       }
       if (resultsUpgradeBtn) {
-        resultsUpgradeBtn.textContent = "Unlock full report — £7.99";
+        resultsUpgradeBtn.textContent = "Unlock my full CV report";
       }
     }
 
@@ -3655,6 +3782,7 @@
       const defaultText = button ? button.textContent : "";
       hideCheckoutError();
       setCheckoutButtonState(button, true, "Opening checkout…", defaultText);
+      trackEvent("checkout_started", { checkout_plan: plan });
 
       try {
         const requiresSignIn = plan === "pro_monthly";
@@ -3929,6 +4057,7 @@
           checkoutStatus.classList.remove("info", "error");
           checkoutStatus.classList.add("success");
           checkoutStatus.textContent = "Your Pro plan is now active.";
+          trackEvent("payment_success_seen", { checkout: checkout });
           setTimeout(function() {
             checkoutStatus.classList.add("hidden");
             checkoutStatus.classList.remove("success", "error", "info");
@@ -3992,7 +4121,7 @@
     currentPlan = null;
     if (upgradeBtn) {
       upgradeBtn.classList.remove("hidden");
-      upgradeBtn.textContent = "Upgrade to Pro";
+      upgradeBtn.textContent = "Unlock my full CV report";
     }
     applyUserUi(null, { signedIn: false, plan: null });
     return;
@@ -4008,7 +4137,7 @@
   } else {
     if (upgradeBtn) {
       upgradeBtn.classList.remove("hidden");
-      upgradeBtn.textContent = "Upgrade to Pro";
+      upgradeBtn.textContent = "Unlock my full CV report";
     }
     applyUserUi(plan, { signedIn: true, plan: "free" });
   }
@@ -4534,13 +4663,17 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (checkoutButton === resultsUpgradeBtn) {
           trackEvent("results_upgrade_clicked");
           trackEvent("unlock_full_report_clicked");
+          trackEvent("unlock_clicked", { checkout_plan: plan, source: "results_unlock" });
         } else if (checkoutButton === resultsUpgradeMonthlyBtn) {
           trackEvent("results_upgrade_clicked");
+          trackEvent("unlock_clicked", { checkout_plan: plan, source: "results_pro_secondary" });
         } else if (checkoutButton === unlockFullReportBtn) {
           trackEvent("pro_unlock_clicked");
           trackEvent("unlock_full_report_clicked");
+          trackEvent("unlock_clicked", { checkout_plan: plan, source: "locked_report" });
         } else if (checkoutButton === proMonthlyBtn) {
           trackEvent("pro_unlock_clicked");
+          trackEvent("unlock_clicked", { checkout_plan: plan, source: "locked_report_pro_secondary" });
         }
 
         logEvent("upgrade_clicked");
@@ -4556,6 +4689,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       startLoadingStages();
       loadingSteps.classList.remove("hidden");
       trackEvent("analyse_clicked", { has_file: !!selectedFile });
+      trackEvent("cv_check_started", { has_file: !!selectedFile });
 
       const token = await getSessionToken();
 
@@ -4639,7 +4773,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         const scoreNumber = getScoreNumber(data.score);
         const narrative = buildResultNarrative(scoreNumber, data);
-        const accountState = getCurrentAccountState();
+        const accountState = getCurrentAccountState(data);
         const isCurrentlyPro = accountState === "signed_in_pro";
         const isAnonymousResult = !!data.isAnonymousResult;
         const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
@@ -4780,6 +4914,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         setDiagnosisValue(resultKeywordStatus, keywordStatus);
         setDiagnosisValue(resultStructureStatus, structureStatus);
         setDiagnosisValue(resultImpactStatus, impactStatus);
+        if (atsReadabilitySummary) {
+          atsReadabilitySummary.textContent = "Keyword match: " + keywordStatus + ". Structure: " + structureStatus + ". Impact: " + impactStatus + ". The free preview shows the main scan signals; the full report expands this into detailed ATS, readability and role-fit checks.";
+        }
 
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
         const hasFullPlanContent = !!(
@@ -4831,6 +4968,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         bulletsWrap.classList.toggle("hidden", !isCurrentlyPro);
         bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
         resultDisclaimerWrap.classList.toggle("hidden", !isCurrentlyPro);
+        if (lockedReportSections) {
+          lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
+        }
         fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
         anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
@@ -4850,6 +4990,11 @@ passwordLoginBtn.addEventListener("click", async function() {
         resetToolHelperCopy(accountState, null);
         trackEvent("result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         logEvent("cv_result_generated", { anonymous_result: isAnonymousResult, account_state: accountState });
+        trackEvent("cv_check_completed", {
+          anonymous_result: isAnonymousResult,
+          account_state: accountState,
+          score: scoreNumber
+        });
         if (!isCurrentlyPro) {
           trackEvent("free_result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         }
