@@ -2294,8 +2294,13 @@
   }
 
   .email-capture-status {
-    min-height: 20px;
+    display: none;
     color: #BFD0FF;
+  }
+
+  /* Prevent the empty save-result status line from reserving space below the No spam copy. */
+  .email-capture-status.has-message {
+    display: block;
   }
 
   .locked-preview {
@@ -4462,15 +4467,17 @@
         return;
       }
       try {
-        const mainToolCard = document.getElementById("mainToolCard");
-        const resultsPanel = document.getElementById("results");
-        const toolCardHeight = mainToolCard ? mainToolCard.offsetHeight : 0;
-        const resultsHeight = resultsPanel && !resultsPanel.classList.contains("hidden") ? resultsPanel.offsetHeight : 0;
-        const pageHeight = Math.max(
-          document.body ? document.body.scrollHeight : 0,
-          document.documentElement ? document.documentElement.scrollHeight : 0,
-          toolCardHeight + resultsHeight + 80
-        );
+        const visibleContent = Array.from(document.body ? document.body.children : [])
+          .filter(function(el) {
+            const style = window.getComputedStyle(el);
+            return style.display !== "none" && style.visibility !== "hidden";
+          })
+          .reduce(function(maxBottom, el) {
+            const rect = el.getBoundingClientRect();
+            return Math.max(maxBottom, rect.bottom);
+          }, 0);
+        // Prevent oversized embedded checker iframes from reporting their own blank viewport as page content.
+        const pageHeight = Math.ceil(Math.max(visibleContent, 320));
         window.parent.postMessage({
           type: "cv-optimiser-embed-height",
           height: pageHeight
@@ -4947,19 +4954,25 @@ passwordLoginBtn.addEventListener("click", async function() {
       }, 200);
     });
 
+    function setEmailCaptureStatus(message) {
+      if (!emailCaptureStatus) return;
+      emailCaptureStatus.textContent = message || "";
+      emailCaptureStatus.classList.toggle("has-message", !!message);
+    }
+
     emailResultsBtn.addEventListener("click", async function() {
       const email = resultEmailInput.value.trim();
       if (!email) {
-        emailCaptureStatus.textContent = "Enter your email first.";
+        setEmailCaptureStatus("Enter your email first.");
         return;
       }
 
       trackEvent("save_result_clicked");
-      emailCaptureStatus.textContent = "Sending your result link...";
+      setEmailCaptureStatus("Sending your result link...");
       emailInput.value = email;
 
       if (!sbClient) {
-        emailCaptureStatus.textContent = "Email save is not available right now.";
+        setEmailCaptureStatus("Email save is not available right now.");
         return;
       }
 
@@ -4970,14 +4983,14 @@ passwordLoginBtn.addEventListener("click", async function() {
         });
 
         if (result.error) {
-          emailCaptureStatus.textContent = "Could not send your email right now. Please try again.";
+          setEmailCaptureStatus("Could not send your email right now. Please try again.");
           return;
         }
 
         sessionStorage.setItem(MAGIC_LINK_PASSWORD_SETUP_KEY, email);
-        emailCaptureStatus.textContent = "Check your inbox. We’ve emailed a secure link so you can save this result and come back to it.";
+        setEmailCaptureStatus("Check your inbox. We’ve emailed a secure link so you can save this result and come back to it.");
       } catch (error) {
-        emailCaptureStatus.textContent = "Could not send your email right now. Please try again.";
+        setEmailCaptureStatus("Could not send your email right now. Please try again.");
       }
     });
 
@@ -5380,7 +5393,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         if (isAnonymousResult) {
           resultEmailInput.value = emailInput.value || "";
-          emailCaptureStatus.textContent = "";
+          setEmailCaptureStatus("");
           trackEvent("signup_prompt_shown_after_result");
           trackEvent("save_result_prompt_shown");
         }

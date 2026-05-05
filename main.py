@@ -2775,8 +2775,10 @@ def build_tool_embed_script() -> str:
           (function () {
             function resizeToolFrame(targetFrame, nextHeight) {
               if (!targetFrame || !nextHeight) return;
-              const safeHeight = Math.max(Number(nextHeight) || 0, 960);
+              const safeHeight = Math.max(Number(nextHeight) || 0, 320);
+              targetFrame.style.minHeight = "0";
               targetFrame.style.height = safeHeight + "px";
+              targetFrame.dataset.loaded = "true";
             }
 
             window.addEventListener("message", function (event) {
