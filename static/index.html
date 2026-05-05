@@ -47,7 +47,7 @@
   <style>
   body {
     font-family: Inter, Arial, sans-serif;
-    max-width: 1160px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 28px 24px 56px;
     background:
@@ -285,9 +285,31 @@
 
   .main-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
+    grid-template-columns: minmax(0, 1fr) 360px;
     gap: 28px;
     align-items: start;
+  }
+
+  .home-main-panel,
+  .home-side-panel {
+    min-width: 0;
+  }
+
+  .home-main-panel {
+    position: relative;
+  }
+
+  .home-main-panel #tool {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .home-side-panel {
+    align-self: start;
   }
 
   html.embed-tool-mode body {
@@ -369,6 +391,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-self: start;
   }
 
   .card-kicker {
@@ -805,6 +828,7 @@
   }
 
   .primary-tool-card {
+    margin-top: 0;
     padding: 28px;
     border-color: rgba(104, 124, 168, 0.28);
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
@@ -820,14 +844,20 @@
   .tool-form {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 22px;
     margin-top: 16px;
   }
 
-  .tool-step {
+  .tool-step,
+  .form-section {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
   }
 
   .field-helper {
@@ -1017,10 +1047,11 @@
   }
 
   .paste-toggle {
-    border: 1px solid rgba(92, 112, 150, 0.22);
-    border-radius: 14px;
-    background: rgba(10, 19, 35, 0.34);
-    padding: 12px 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
   }
 
   .paste-toggle summary {
@@ -1037,6 +1068,20 @@
 
   .paste-toggle[open] summary {
     margin-bottom: 10px;
+  }
+
+  .tool-form textarea,
+  textarea.text-field,
+  textarea.cv-textarea,
+  textarea.job-description-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(160, 180, 230, 0.22);
+    background: rgba(3, 13, 31, 0.45);
+    border-radius: 18px;
+    padding: 18px;
+    color: #E8EEFC;
+    resize: vertical;
   }
 
   .tool-loading-note {
@@ -1324,6 +1369,12 @@
 
     .mobile-only {
       display: block;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .main-grid {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -1892,11 +1943,11 @@
 
   .result-preview-card {
     margin-top: 28px;
-    padding: 22px;
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(18, 31, 58, 0.84), rgba(10, 20, 38, 0.9));
-    border: 1px solid rgba(105, 125, 170, 0.24);
-    box-shadow: inset 0 1px 0 rgba(160, 180, 255, 0.06);
+    padding: 22px 0 0;
+    border-top: 1px solid rgba(105, 125, 170, 0.22);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .result-preview-header {
@@ -2593,6 +2644,26 @@
   line-height: 1.65;
 }
 
+#mainToolCard.primary-tool-card {
+  margin-top: 0;
+}
+
+/* Layout cleanup: prevent preview/report panels becoming cards inside the checker card */
+#mainToolCard .result-preview-card,
+.primary-tool-card .result-preview-card,
+.checker-card .result-preview-card,
+.tool-card .result-preview-card,
+#mainToolCard .preview-card,
+.primary-tool-card .preview-card,
+.checker-card .preview-card,
+.tool-card .preview-card {
+  border: 0;
+  border-top: 1px solid rgba(105, 125, 170, 0.22);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
   @media (max-width: 900px) {
     .result-grid-two {
       grid-template-columns: 1fr;
@@ -2906,6 +2977,32 @@
     border-top: 1px solid rgba(92, 112, 150, 0.18);
   }
 
+  .tool-form .form-section,
+  .tool-form .paste-cv-section,
+  .tool-form .job-description-section,
+  .tool-form .upload-section,
+  .checker-form .form-section,
+  .checker-form .paste-cv-section,
+  .checker-form .job-description-section {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  .tool-form .field-helper {
+    margin: 0;
+  }
+
+  .tool-form textarea,
+  textarea.text-field,
+  textarea.cv-textarea,
+  textarea.job-description-textarea {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
   .tool-step,
   .result-section,
   .score-hero,
@@ -2921,6 +3018,17 @@
 
   .score-hero {
     gap: 12px;
+  }
+
+  .tool-form .form-section,
+  .tool-form .paste-cv-section,
+  .tool-form .job-description-section,
+  .tool-form .upload-section {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
   }
 
   .diagnosis-item,
@@ -3097,8 +3205,8 @@
     </div>
   </div>
 
-  <div class="main-grid">
-    <div class="main-column">
+  <div class="main-grid home-hero-grid">
+    <div class="main-column home-main-panel">
       <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card tool-embed">
         <div class="tool-embed-title">Check your CV</div>
@@ -3127,7 +3235,7 @@
         <p class="upload-intro">Upload your CV and a job description to get your personalised score and fixes.</p>
 
         <div class="tool-form">
-          <div class="tool-step">
+          <div class="tool-step form-section upload-section">
             <label for="cvFileInput">Upload your CV</label>
             <div class="field-helper">PDF, DOCX or TXT</div>
             <div id="dropzone" class="dropzone">
@@ -3139,10 +3247,10 @@
             </div>
           </div>
 
-          <details class="paste-toggle">
+          <details class="paste-toggle form-section paste-cv-section">
             <summary>Or paste CV text instead</summary>
             <div class="field-group">
-              <textarea id="cvText" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
+              <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
             </div>
           </details>
 
@@ -3150,10 +3258,10 @@
             <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try with example CV</button>
           </div>
 
-          <div class="tool-step">
+          <div class="tool-step form-section job-description-section">
             <label for="jobDescription">Paste the job description</label>
             <div class="field-helper">Paste the job advert so we can compare your CV against the role.</div>
-            <textarea id="jobDescription" placeholder="Paste the job advert here…"></textarea>
+            <textarea id="jobDescription" class="text-field job-description-textarea" placeholder="Paste the job advert here…"></textarea>
             <div class="field-helper">Don’t have a job description? You can still run a general CV check.</div>
           </div>
 
@@ -3516,7 +3624,7 @@
 
     </div>
 
-    <div class="helper-column">
+    <div class="helper-column home-side-panel">
       <div id="authCard" class="card sidebar-card">
         <div class="section-title">Want to save your result?</div>
         <p id="authSubtitle" class="small sidebar-intro">
