@@ -2353,6 +2353,82 @@ def build_mobile_layout_css() -> str:
             box-shadow: none;
           }
 
+          /* Site-wide content layout cleanup: ordinary SEO/support sections are flat, not cards. */
+          .flat-section,
+          .content-section,
+          .seo-section,
+          .checklist-section,
+          .faq-section,
+          .plain-section,
+          .seo-card,
+          .content-card,
+          .section-card,
+          .info-card,
+          .guide-card,
+          .faq-card,
+          .feature-card,
+          .checklist-card {
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            border-radius: 0 !important;
+          }
+
+          .flat-section,
+          .content-section,
+          .seo-section,
+          .checklist-section,
+          .faq-section,
+          .plain-section,
+          .seo-card {
+            padding: 44px 0;
+            margin: 0;
+          }
+
+          .flat-section + .flat-section,
+          .content-section + .content-section,
+          .seo-section + .seo-section,
+          .checklist-section + .checklist-section,
+          .faq-section + .faq-section,
+          .plain-section + .plain-section,
+          .seo-card + .seo-card {
+            border-top: 1px solid rgba(160, 180, 230, 0.12) !important;
+          }
+
+          .seo-page .content-card,
+          .seo-page .section-card,
+          .seo-page .info-card,
+          .seo-page .guide-card,
+          .seo-page .faq-card,
+          .seo-page .feature-card,
+          .seo-page .checklist-card,
+          .content-page .content-card,
+          .content-page .section-card,
+          .content-page .info-card,
+          .content-page .guide-card,
+          .content-page .faq-card,
+          .content-page .feature-card,
+          .content-page .checklist-card {
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            border-radius: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+
+          .tool-card,
+          .checker-card,
+          .pricing-card,
+          .auth-card,
+          .cta-card,
+          .highlight-card,
+          .result-preview-card,
+          .upgrade-card,
+          .payment-card {
+            border-radius: 24px;
+          }
+
           @media (max-width: 768px) {
             html,
             body {
@@ -2532,12 +2608,26 @@ def build_mobile_layout_css() -> str:
               background: transparent !important;
             }
 
-            .seo-card,
             .bottom-cta,
             .final-cta {
               padding: 18px 14px !important;
               border-radius: 16px !important;
               background: rgba(15, 28, 50, 0.54) !important;
+            }
+
+            .flat-section,
+            .content-section,
+            .seo-section,
+            .checklist-section,
+            .faq-section,
+            .plain-section,
+            .seo-card {
+              padding: 28px 0 !important;
+              border-left: 0 !important;
+              border-right: 0 !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
             }
 
             .tool-feature,
@@ -4671,7 +4761,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
     ]
     list_html = "".join(
         f"""
-        <section class="seo-card">
+        <section class="checklist-section seo-card">
           <h2>{html.escape(title)}</h2>
           <ul>{"".join(f"<li>{html.escape(item)}</li>" for item in items)}</ul>
         </section>
@@ -4744,7 +4834,6 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             max-width: 760px;
           }}
           .hero-panel,
-          .seo-card,
           .tool-feature,
           .bottom-cta {{
             background: rgba(15, 28, 50, 0.68);
@@ -4777,7 +4866,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           .seo-grid {{
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
+            gap: 24px;
             margin: 24px 0;
           }}
           .seo-card h2,
@@ -4792,6 +4881,14 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .seo-card li {{
             margin-bottom: 8px;
+          }}
+          .seo-card,
+          .checklist-section {{
+            padding: 24px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
           }}
           .seo-section {{
             padding: 24px 0;
@@ -4855,10 +4952,14 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
               gap: 16px;
             }}
             .hero-panel,
-            .seo-card,
             .bottom-cta {{
               padding: 20px 16px;
               border-radius: 18px;
+            }}
+            .seo-card,
+            .checklist-section {{
+              padding: 22px 0;
+              border-radius: 0;
             }}
             .tool-feature {{
               padding: 0;
@@ -4955,7 +5056,7 @@ def render_ten_second_cv_test_page() -> str:
 {build_site_header_css()}
 {build_typography_css()}
 {build_cta_spacing_css()}
-          .hero, .panel {{
+          .hero {{
             background: rgba(15, 28, 50, 0.68);
             border: 1px solid rgba(92, 112, 150, 0.20);
             border-radius: 18px;
@@ -4963,6 +5064,13 @@ def render_ten_second_cv_test_page() -> str:
           }}
           .hero {{
             margin: 30px 0 22px;
+          }}
+          .panel {{
+            padding: 32px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.16);
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
           }}
           .cta {{
             display: inline-flex;
@@ -4996,7 +5104,7 @@ def render_ten_second_cv_test_page() -> str:
           }}
           .section-stack {{
             display: grid;
-            gap: 18px;
+            gap: 0;
           }}
           .score-grid {{
             display: grid;
@@ -5011,7 +5119,8 @@ def render_ten_second_cv_test_page() -> str:
           }}
           @media (max-width: 768px) {{
             .page-shell {{ padding: 16px; }}
-            .hero, .panel {{ padding: 20px 16px; }}
+            .hero {{ padding: 20px 16px; }}
+            .panel {{ padding: 26px 0; }}
             .check-grid, .score-grid {{ grid-template-columns: 1fr; }}
             .cta, .cta-button {{ width: 100%; box-sizing: border-box; text-align: center; }}
           }}
@@ -5329,9 +5438,14 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             color: #E8EEFC;
           }}
           .page {{
-            max-width: 960px;
+            width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 48px 24px 64px;
+            box-sizing: border-box;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
           }}
 {build_site_header_css()}
 {build_typography_css()}
@@ -5342,11 +5456,21 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             text-underline-offset: 2px;
             font-size: 13px;
           }}
-          .card {{
-            background: rgba(15, 28, 50, 0.72);
-            border: 1px solid rgba(92, 112, 150, 0.22);
-            border-radius: 18px;
-            padding: 24px;
+          .support-hero {{
+            padding: 0 0 28px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.16);
+          }}
+          .support-content {{
+            display: grid;
+            gap: 0;
+          }}
+          .section-block {{
+            padding: 32px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.16);
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
           }}
           .section-list {{
             margin: 12px 0 0;
@@ -5395,9 +5519,22 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             text-decoration: none;
           }}
           .section-block + .section-block {{
-            margin-top: 18px;
-            padding-top: 18px;
+            margin-top: 0;
+            padding-top: 32px;
             border-top: 1px solid rgba(80, 103, 146, 0.18);
+          }}
+          @media (max-width: 768px) {{
+            .page {{
+              max-width: 100%;
+              padding: 32px 16px 48px;
+            }}
+            .support-hero {{
+              padding-bottom: 22px;
+            }}
+            .section-block,
+            .section-block + .section-block {{
+              padding: 26px 0;
+            }}
           }}
 
           .text-link:hover {{
@@ -5413,9 +5550,11 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
       <body data-auth-state="loading">
         <div class="page">
           {build_site_header("how-it-works" if slug == "how-it-works" else None)}
-          <div class="card">
+          <section class="support-hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
+          </section>
+          <div class="support-content">
             {sections_html}
           </div>
           {build_site_footer()}
@@ -6014,6 +6153,13 @@ def cv_statistics_page(request: Request) -> str:
 def why_cv_not_getting_interviews_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_article_page("why-your-cv-is-not-getting-interviews", BLOG_ARTICLES["why-is-my-cv-not-getting-interviews"])
+
+
+@app.get("/how-to-tailor-cv-to-job-description", response_class=HTMLResponse)
+@app.get("/how-to-tailor-cv-to-job-description/", response_class=HTMLResponse, include_in_schema=False)
+def tailor_cv_to_job_description_alias_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_article_page("how-to-tailor-cv-to-job-description", BLOG_ARTICLES["how-to-tailor-cv-to-job-description"])
 
 
 @app.get("/how-to-tailor-your-cv", response_class=HTMLResponse)

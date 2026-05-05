@@ -3179,6 +3179,30 @@
     margin-top: 18px;
   }
 }
+
+/* Site-wide content cleanup: keep ordinary homepage/support sections flat, while preserving the main checker and commercial cards. */
+.home-main-panel > .example-report-card {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 28px 0 0 !important;
+  margin-top: 28px;
+  border-top: 1px solid rgba(160, 180, 230, 0.12) !important;
+}
+
+.home-main-panel > .example-report-card .example-preview {
+  border: 0;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 768px) {
+  .home-main-panel > .example-report-card {
+    padding: 22px 0 0 !important;
+    margin-top: 22px;
+  }
+}
 </style>
 </head>
 <body data-auth-state="loading">
