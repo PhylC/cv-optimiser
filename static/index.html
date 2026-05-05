@@ -57,6 +57,19 @@
     color: #E8EEFC;
   }
 
+  .site-shell,
+  .page-shell,
+  .content-shell {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .home-page-shell {
+    padding: 0;
+  }
+
   h1, h2, h3 {
     margin: 0 0 10px;
     letter-spacing: -0.02em;
@@ -866,6 +879,21 @@
     line-height: 1.5;
   }
 
+  .tool-form .field-label,
+  .checker-form .field-label {
+    display: block;
+    color: #D7E2FA;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 2px;
+  }
+
+  .tool-form .field-help,
+  .checker-form .field-help {
+    margin: 0;
+  }
+
   .action-line {
     margin-top: 14px;
     color: #e7eeff;
@@ -1052,22 +1080,6 @@
     background: transparent;
     box-shadow: none;
     padding: 0;
-  }
-
-  .paste-toggle summary {
-    cursor: pointer;
-    color: #d7e2fa;
-    font-size: 14px;
-    font-weight: 600;
-    list-style: none;
-  }
-
-  .paste-toggle summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .paste-toggle[open] summary {
-    margin-bottom: 10px;
   }
 
   .tool-form textarea,
@@ -2649,6 +2661,27 @@
 }
 
 /* Layout cleanup: prevent preview/report panels becoming cards inside the checker card */
+#mainToolCard .card,
+#mainToolCard .content-card,
+#mainToolCard .section-card,
+#mainToolCard .preview-card,
+#mainToolCard .example-card,
+#mainToolCard .report-card,
+.checker-card .card,
+.checker-card .content-card,
+.checker-card .section-card,
+.checker-card .preview-card,
+.checker-card .example-card,
+.checker-card .report-card,
+.tool-card .card,
+.tool-card .content-card,
+.tool-card .section-card,
+.tool-card .preview-card,
+.tool-card .example-card,
+.tool-card .report-card {
+  box-shadow: none;
+}
+
 #mainToolCard .result-preview-card,
 .primary-tool-card .result-preview-card,
 .checker-card .result-preview-card,
@@ -2662,6 +2695,35 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .site-shell,
+  .page-shell,
+  .content-shell {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .home-page-shell {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #mainToolCard .result-preview-card,
+  .primary-tool-card .result-preview-card,
+  .checker-card .result-preview-card,
+  .tool-card .result-preview-card,
+  #mainToolCard .preview-card,
+  .primary-tool-card .preview-card,
+  .checker-card .preview-card,
+  .tool-card .preview-card {
+    border: 0 !important;
+    border-top: 1px solid rgba(92, 112, 150, 0.18) !important;
+    box-shadow: none !important;
+    padding: 16px 0 0 !important;
+    background: transparent !important;
+  }
 }
 
   @media (max-width: 900px) {
@@ -3205,7 +3267,8 @@
     </div>
   </div>
 
-  <div class="main-grid home-hero-grid">
+  <main class="page-shell home-page-shell">
+  <section class="main-grid home-hero-grid">
     <div class="main-column home-main-panel">
       <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card tool-embed">
@@ -3247,22 +3310,20 @@
             </div>
           </div>
 
-          <details class="paste-toggle form-section paste-cv-section">
-            <summary>Or paste CV text instead</summary>
-            <div class="field-group">
-              <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
-            </div>
-          </details>
+          <div class="paste-toggle form-section paste-cv-section">
+            <label class="field-label" for="cvText">Or paste CV text instead</label>
+            <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
+          </div>
 
           <div class="tool-actions-row">
             <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try with example CV</button>
           </div>
 
           <div class="tool-step form-section job-description-section">
-            <label for="jobDescription">Paste the job description</label>
-            <div class="field-helper">Paste the job advert so we can compare your CV against the role.</div>
+            <label class="field-label" for="jobDescription">Paste the job description</label>
+            <p class="field-helper field-help">Paste the job advert so we can compare your CV against the role.</p>
             <textarea id="jobDescription" class="text-field job-description-textarea" placeholder="Paste the job advert here…"></textarea>
-            <div class="field-helper">Don’t have a job description? You can still run a general CV check.</div>
+            <p class="field-helper field-help">Don’t have a job description? You can still run a general CV check.</p>
           </div>
 
           <div>
@@ -3676,7 +3737,8 @@
         <p id="passwordStatus" class="small status-line"></p>
       </div>
     </div>
-  </div>
+  </section>
+  </main>
 
   <div id="siteFooter"></div>
   <script src="/static/global-footer.js" defer></script>
@@ -4199,7 +4261,7 @@
 
     function fillExampleContent() {
       if (pasteToggle) {
-        pasteToggle.open = true;
+        pasteToggle.classList.add("is-active");
       }
       if (selectedFile) {
         resetSelectedFile();
@@ -4877,7 +4939,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       window.setTimeout(function() {
         if (jobDescriptionInput.value.trim()) {
           jobDescriptionInput.focus();
-        } else if (pasteToggle && pasteToggle.open) {
+        } else if (cvTextInput.value.trim()) {
           cvTextInput.focus();
         } else {
           document.getElementById("cvFileInput").focus();
@@ -4940,7 +5002,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       if (file) setSelectedFile(file);
     });
 
-    if (pasteToggle) {
+    if (pasteToggle && pasteToggle.tagName === "DETAILS") {
       pasteToggle.addEventListener("toggle", function() {
         if (pasteToggle.open) {
           trackEvent("paste_cv_revealed");

@@ -3032,11 +3032,12 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .result-preview-card {{
             margin-top: 28px;
-            padding: 22px;
-            border-radius: 18px;
-            background: linear-gradient(180deg, rgba(18, 31, 58, 0.84), rgba(10, 20, 38, 0.9));
-            border: 1px solid rgba(105, 125, 170, 0.24);
-            box-shadow: inset 0 1px 0 rgba(160, 180, 255, 0.06);
+            padding: 22px 0 0;
+            border: 0;
+            border-top: 1px solid rgba(105, 125, 170, 0.22);
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
           }}
           .result-preview-header {{
             display: flex;
@@ -3152,8 +3153,8 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
             .result-preview-card {{
               margin-top: 26px;
-              padding: 16px;
-              border-radius: 16px;
+              padding: 16px 0 0;
+              border-radius: 0;
             }}
             .result-preview-header {{
               align-items: flex-start;
