@@ -2296,6 +2296,63 @@ def build_cta_spacing_css() -> str:
 
 def build_mobile_layout_css() -> str:
     return """
+          .page-shell,
+          .page.content-page,
+          .page.landing-page,
+          .page.seo-page,
+          .seo-page,
+          .content-page,
+          .landing-page {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            box-sizing: border-box;
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+          }
+
+          .seo-page > .card,
+          .content-page > .card,
+          .landing-page > .card,
+          .page-shell > .card,
+          .page.content-page > .card,
+          .page.landing-page > .card,
+          .page.seo-page > .card,
+          .seo-page > .content-card,
+          .content-page > .content-card,
+          .landing-page > .content-card,
+          .page-shell > .content-card,
+          .page.content-page > .content-card,
+          .page.landing-page > .content-card,
+          .page.seo-page > .content-card {
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+          }
+
+          .card .card,
+          .card .content-card,
+          .card .section-card,
+          .card .info-card,
+          .card .summary-box,
+          .card .quick-answers-card,
+          .content-card .card,
+          .content-card .content-card,
+          .content-card .section-card,
+          .content-card .info-card,
+          .content-card .summary-box,
+          .content-card .quick-answers-card,
+          .section-card .card,
+          .section-card .content-card,
+          .section-card .section-card,
+          .section-card .info-card,
+          .section-card .summary-box,
+          .section-card .quick-answers-card {
+            box-shadow: none;
+          }
+
           @media (max-width: 768px) {
             html,
             body {
@@ -2312,6 +2369,9 @@ def build_mobile_layout_css() -> str:
             .container,
             .content-container,
             .page-shell,
+            .page.content-page,
+            .page.landing-page,
+            .page.seo-page,
             .content-page,
             .seo-page,
             .tool-page {
@@ -2398,6 +2458,22 @@ def build_mobile_layout_css() -> str:
             .tool-card .content-card,
             .tool-card .card,
             .card .card,
+            .card .content-card,
+            .card .section-card,
+            .card .info-card,
+            .card .summary-box,
+            .card .quick-answers-card,
+            .content-card .card,
+            .content-card .section-card,
+            .content-card .info-card,
+            .content-card .summary-box,
+            .content-card .quick-answers-card,
+            .section-card .card,
+            .section-card .content-card,
+            .section-card .section-card,
+            .section-card .info-card,
+            .section-card .summary-box,
+            .section-card .quick-answers-card,
             .report-grid .card .card,
             .hero-card .card,
             .seo-card .card,
@@ -2417,6 +2493,27 @@ def build_mobile_layout_css() -> str:
             .page-shell {
               padding-left: 16px !important;
               padding-right: 16px !important;
+            }
+
+            .seo-page > .card,
+            .content-page > .card,
+            .landing-page > .card,
+            .page-shell > .card,
+            .page.content-page > .card,
+            .page.landing-page > .card,
+            .page.seo-page > .card,
+            .seo-page > .content-card,
+            .content-page > .content-card,
+            .landing-page > .content-card,
+            .page-shell > .content-card,
+            .page.content-page > .content-card,
+            .page.landing-page > .content-card,
+            .page.seo-page > .content-card {
+              border: 0 !important;
+              box-shadow: none !important;
+              background: transparent !important;
+              padding-left: 0 !important;
+              padding-right: 0 !important;
             }
 
             .seo-hero,
@@ -2486,6 +2583,18 @@ def build_mobile_layout_css() -> str:
               border-radius: 14px !important;
               background: rgba(10, 19, 35, 0.30) !important;
               box-shadow: none !important;
+            }
+
+            .faq-page .faq-item {
+              padding: 18px 0 !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+              border-bottom: 1px solid rgba(92, 112, 150, 0.18) !important;
+              box-shadow: none !important;
+            }
+
+            .faq-page .faq-item:last-child {
+              border-bottom: 0 !important;
             }
 
             .example-improvement-section {
@@ -3065,7 +3174,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page seo-page">
           {build_site_header(
               "upgrade" if slug == "cv-improvement-tool" else (
                   "cv-checker" if slug == "cv-checker" else (
@@ -3196,9 +3305,24 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             color: #E8EEFC;
           }}
           .page {{
-            max-width: 960px;
+            width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 48px 24px 64px;
+            box-sizing: border-box;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+          }}
+          .page-hero {{
+            margin-bottom: 32px;
+          }}
+          .page-hero h1 {{
+            margin-bottom: 16px;
+          }}
+          .page-hero p {{
+            max-width: 760px;
+            margin-bottom: 22px;
           }}
 {build_site_header_css()}
 {build_typography_css()}
@@ -3326,18 +3450,18 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page landing-page">
           {build_site_header()}
-          <div class="card">
+          <section class="page-hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
             {summary_html}
             <div class="cta-block-tight">
               <a href="/cv-checker" class="cta cta-button">{html.escape(page["top_cta"])}</a>
             </div>
-            {sections_html}
-            {related_html}
-          </div>
+          </section>
+          {sections_html}
+          {related_html}
           <section class="final-cta">
             <h2>Check your CV now</h2>
             <p>Use the CV checker to compare your CV against a real job description and see what to improve.</p>
@@ -3546,7 +3670,7 @@ def render_cv_checker_page() -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page seo-page">
           <div class="topbar">
             <a href="/" class="logo">
               <span class="logo-mark">CV</span>
@@ -3822,7 +3946,7 @@ def render_ats_cv_checker_page() -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page">
           <div class="topbar">
             <a href="/" class="logo">
               <span class="logo-mark">CV</span>
@@ -4195,7 +4319,7 @@ def render_example_report_page() -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page seo-page">
           {build_site_header("example-report")}
 
           <div class="hero-card">
@@ -4482,7 +4606,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page seo-page">
           {build_site_header("upgrade" if slug == "cv-improvement-tool" else None)}
 
           <div class="layout">
@@ -4975,9 +5099,32 @@ def render_faq_page() -> str:
             color: #E8EEFC;
           }}
           .page {{
-            max-width: 960px;
+            width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 48px 24px 64px;
+            box-sizing: border-box;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+          }}
+          .faq-hero {{
+            margin-bottom: 28px;
+          }}
+          .faq-hero h1 {{
+            margin-bottom: 16px;
+          }}
+          .faq-list {{
+            display: grid;
+            gap: 18px;
+            margin-top: 24px;
+          }}
+          .faq-item {{
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .faq-item:last-child {{
+            border-bottom: 0;
           }}
 {build_site_header_css()}
 {build_typography_css()}
@@ -5065,21 +5212,21 @@ def render_faq_page() -> str:
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page">
+        <div class="page content-page faq-page">
           {build_site_header()}
-          <div class="card">
+          <section class="faq-hero">
             <h1>Frequently asked questions</h1>
             <p>If your CV keeps getting ignored, these are the questions that actually matter.</p>
-            <div class="summary-box">
-              <strong>Quick answers:</strong>
-              <ul>
-                <li>ATS systems filter weak matches before recruiters see them</li>
-                <li>Keywords matter, but only when they reflect real relevance</li>
-                <li>Generic CVs lose because they make fit harder to see</li>
-              </ul>
-            </div>
-            <div class="faq-list">{faq_html}</div>
-          </div>
+          </section>
+          <section class="summary-box quick-answers-card">
+            <strong>Quick answers:</strong>
+            <ul>
+              <li>ATS systems filter weak matches before recruiters see them</li>
+              <li>Keywords matter, but only when they reflect real relevance</li>
+              <li>Generic CVs lose because they make fit harder to see</li>
+            </ul>
+          </section>
+          <div class="faq-list">{faq_html}</div>
           <section class="final-cta">
             <h2>Check your CV now</h2>
             <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
