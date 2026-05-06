@@ -1175,6 +1175,51 @@
     font-size: 13px;
   }
 
+  .checker-loading {
+    margin-top: 28px;
+    padding: 28px;
+    border: 1px solid rgba(160, 180, 230, 0.18);
+    border-radius: 24px;
+    background: rgba(5, 18, 42, 0.72);
+    color: inherit;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 16px;
+    border: 3px solid rgba(160, 180, 230, 0.25);
+    border-top-color: rgba(110, 135, 255, 0.95);
+    border-radius: 50%;
+    animation: checkerSpin 0.9s linear infinite;
+  }
+
+  .checker-loading h2 {
+    margin-bottom: 8px;
+  }
+
+  .checker-loading p {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  @keyframes checkerSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .result-container:empty,
+  .report-container:empty,
+  .analysis-output:empty,
+  .cv-report:empty,
+  .full-report:empty,
+  .results-panel:empty {
+    display: none !important;
+  }
+
   .result-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3178,6 +3223,12 @@
   .section {
     margin-top: 18px;
   }
+
+  .checker-loading {
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
 }
 
 /* Site-wide content cleanup: keep ordinary homepage/support sections flat, while preserving the main checker and commercial cards. */
@@ -3374,6 +3425,12 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
+      </div>
+
+      <div id="checkerLoading" class="checker-loading hidden" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <h2>Analysing your CV...</h2>
+        <p>Checking keywords, structure and match against the role. This usually takes around 60 seconds.</p>
       </div>
 
       <div class="card example-report-card">
@@ -3840,6 +3897,7 @@
     const supportSubmitBtn = document.getElementById("supportSubmitBtn");
     const supportStatus = document.getElementById("supportStatus");
     const historyList = document.getElementById("historyList");
+    const checkerLoading = document.getElementById("checkerLoading");
     const anonymousSummaryWrap = document.getElementById("anonymousSummaryWrap");
     const anonymousSummary = document.getElementById("anonymousSummary");
     const anonymousPriorityWrap = document.getElementById("anonymousPriorityWrap");
@@ -4076,6 +4134,20 @@
       stopLoadingStages();
       loadingSteps.classList.add("hidden");
       updateToolHelperCopy(accountState || getCurrentAccountState(), plan || null);
+    }
+
+    function setCheckerLoading(isChecking) {
+      if (checkerLoading) {
+        checkerLoading.classList.toggle("hidden", !isChecking);
+      }
+
+      // Do not render the report container until result content exists.
+      // Otherwise embedded/mobile pages reserve a large blank area while analysis is loading.
+      if (resultsPanel && isChecking) {
+        resultsPanel.classList.add("hidden");
+      }
+
+      requestAnimationFrame(reportEmbedHeight);
     }
 
     function openSupportModal() {
@@ -5117,6 +5189,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         alert("Please add a job description or CV before running optimisation.");
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
+        setCheckerLoading(false);
         resetToolHelperCopy();
         return;
       }
@@ -5125,10 +5198,12 @@ passwordLoginBtn.addEventListener("click", async function() {
         status.textContent = "Paste your CV text or upload a CV file.";
         optimiseBtn.disabled = false;
         optimiseBtn.textContent = originalText;
+        setCheckerLoading(false);
         resetToolHelperCopy();
         return;
       }
 
+      setCheckerLoading(true);
       status.textContent = "Analysing...";
       status.classList.remove("is-success", "is-error");
       trackEvent("optimise_started", { has_file: !!selectedFile });
@@ -5155,9 +5230,10 @@ passwordLoginBtn.addEventListener("click", async function() {
         try {
           data = JSON.parse(raw);
         } catch (e) {
-          status.textContent = "Server returned invalid response. Check Render logs.";
+          status.textContent = "We could not read the result. Please try again.";
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          setCheckerLoading(false);
           resetToolHelperCopy();
           return;
         }
@@ -5166,6 +5242,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = publicErrorMessage(data.error || data.detail, "Something went wrong.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          setCheckerLoading(false);
           resetToolHelperCopy();
           return;
         }
@@ -5174,6 +5251,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = publicErrorMessage(data.error, "You have reached today's free check limit.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          setCheckerLoading(false);
           await refreshAuthUi();
           resetToolHelperCopy(getCurrentAccountState(), null);
           return;
@@ -5183,6 +5261,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           status.textContent = publicErrorMessage(data.error, "Something went wrong.");
           optimiseBtn.disabled = false;
           optimiseBtn.textContent = originalText;
+          setCheckerLoading(false);
           resetToolHelperCopy();
           return;
         }
@@ -5392,8 +5471,11 @@ passwordLoginBtn.addEventListener("click", async function() {
         anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
         proUnlockPrompt.classList.toggle("hidden", isCurrentlyPro);
         lockedPreviewCard.classList.add("hidden");
+        setCheckerLoading(false);
         resultsPanel.classList.remove("hidden");
-        resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        requestAnimationFrame(function() {
+          resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
         reportEmbedHeight();
         try {
           window.localStorage.setItem("has_cv_result", "true");
@@ -5431,8 +5513,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         await refreshAuthUi();
       } catch (err) {
         console.error(err);
-        status.textContent = "Something went wrong. Check terminal or browser console for details.";
+        status.textContent = "Something went wrong. Please try again.";
         status.classList.add("is-error");
+        setCheckerLoading(false);
         resetToolHelperCopy();
       } finally {
         optimiseBtn.disabled = false;
