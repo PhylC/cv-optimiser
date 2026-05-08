@@ -1140,17 +1140,241 @@ TEN_SECOND_CV_TEST_PAGE: dict[str, Any] = {
     ],
 }
 
+
+def guide_faqs(topic: str, outcome: str) -> list[tuple[str, str]]:
+    return [
+        (
+            f"What should I check first for {topic}?",
+            "Start with relevance. Your CV should show the target role, the right evidence and the language from the job description in the first page.",
+        ),
+        (
+            "How many keywords should I add?",
+            "Add the important keywords you can honestly support with experience. A smaller number of well-evidenced terms is better than a long list that feels forced.",
+        ),
+        (
+            "Will an ATS reject my CV because of formatting?",
+            "It can happen if core content is hidden in tables, images or unusual layouts. Clear headings, plain text order and readable bullet points are safer.",
+        ),
+        (
+            "How does CV Optimiser help?",
+            f"It compares your CV with a job description, shows missing keywords and highlights the fixes most likely to improve {outcome}.",
+        ),
+    ]
+
+
+SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
+    {
+        "slug": "sales-cv-keywords",
+        "group": "Sales and management CVs",
+        "title": "Sales CV Keywords UK | Revenue, Pipeline and Account Growth Terms",
+        "meta_description": "Use the right sales CV keywords for UK roles, including revenue, pipeline, CRM, forecasting, negotiation and account growth.",
+        "h1": "Sales CV keywords",
+        "intro": "Sales CVs are screened for commercial evidence. If your CV talks about being personable but misses revenue, pipeline and target language, it can look weaker than your actual performance.",
+        "practical": "Use keywords that match the sales model in the advert: new business, account growth, CRM, forecasting, quota, negotiation, pipeline generation, conversion and retention. Pair each term with proof such as targets, deal size, territory, account value or percentage growth.",
+        "mistakes": "The common mistake is listing soft skills without commercial evidence. Avoid vague phrases such as strong communicator unless they are tied to outcomes like revenue, renewals, margin, meetings booked or pipeline created.",
+        "helps": "CV Optimiser compares your sales CV with the job description and shows which commercial keywords are missing, weak or unsupported.",
+        "related": [("/account-manager-cv-keywords", "Account manager CV keywords"), ("/cv-checker-for-sales-jobs", "Sales CV checker"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/example-cv-report", "Example CV report")],
+    },
+    {
+        "slug": "account-manager-cv-keywords",
+        "group": "Sales and management CVs",
+        "title": "Account Manager CV Keywords UK | Retention, Growth and Stakeholder Terms",
+        "meta_description": "Find account manager CV keywords for UK applications, including retention, renewals, stakeholder management, forecasting and account growth.",
+        "h1": "Account manager CV keywords",
+        "intro": "Account manager CVs need to prove ownership, retention and growth. A generic relationship-led CV can undersell you if it does not show portfolio size, stakeholders and commercial outcomes.",
+        "practical": "Look for account ownership keywords in the advert: retention, renewals, upsell, cross-sell, forecasting, QBRs, stakeholder management, customer success, portfolio growth and commercial planning. Support them with account value, retention rate, growth percentage or renewal outcomes.",
+        "mistakes": "Do not describe accounts without ownership or results. Recruiters need to see the size, complexity and outcome of your accounts, not just that you maintained relationships.",
+        "helps": "CV Optimiser highlights gaps between your account management evidence and the terms recruiters are scanning for in the specific role.",
+        "related": [("/sales-cv-keywords", "Sales CV keywords"), ("/cv-checker-for-sales-jobs", "Sales CV checker"), ("/job-description-cv-match", "Job description CV match"), ("/cv-summary-examples-uk", "CV summary examples")],
+    },
+    {
+        "slug": "sales-director-cv-example",
+        "group": "Sales and management CVs",
+        "title": "Sales Director CV Example UK | Board-Level Commercial CV Guide",
+        "meta_description": "See what a strong UK sales director CV should include, from revenue strategy and team leadership to forecasting and board reporting.",
+        "h1": "Sales director CV example",
+        "intro": "A sales director CV should read like a commercial leadership document, not a longer sales manager CV. It needs strategy, scale, numbers and leadership evidence.",
+        "practical": "Lead with revenue responsibility, market scope, team size, strategic ownership and measurable outcomes. Include board reporting, forecasting, channel strategy, enterprise sales, margin, territory design and sales transformation where relevant.",
+        "mistakes": "Avoid burying the numbers. If your CV does not quickly show revenue scale, growth, leadership scope and strategic impact, hiring managers may not see you at director level.",
+        "helps": "CV Optimiser checks whether your CV gives enough leadership and commercial evidence for the seniority of the role.",
+        "related": [("/sales-cv-keywords", "Sales CV keywords"), ("/cv-checker-for-management-jobs", "Management CV checker"), ("/best-cv-format-uk", "Best CV format UK"), ("/example-cv-report", "Example report")],
+    },
+    {
+        "slug": "retail-manager-cv-example",
+        "group": "Sales and management CVs",
+        "title": "Retail Manager CV Example UK | Store Leadership CV Guide",
+        "meta_description": "Build a stronger UK retail manager CV with examples of store performance, team leadership, stock control and customer service evidence.",
+        "h1": "Retail manager CV example",
+        "intro": "Retail manager CVs need to show operational control and people leadership. Hiring managers look for store performance, team management, standards and commercial awareness.",
+        "practical": "Use evidence around sales performance, KPIs, team size, rota planning, stock control, loss prevention, customer experience, visual standards and training. Numbers help: store turnover, team headcount, shrinkage reduction or customer scores.",
+        "mistakes": "Do not make the CV sound like a list of daily duties. Show what improved under your management and how you balanced people, standards and commercial targets.",
+        "helps": "CV Optimiser compares your retail CV with a real advert and identifies missing management, operations and customer-service signals.",
+        "related": [("/cv-checker-for-management-jobs", "Management CV checker"), ("/cv-mistakes-uk", "CV mistakes UK"), ("/cv-summary-examples-uk", "CV summary examples"), ("/job-description-cv-match", "Job description match")],
+    },
+    {
+        "slug": "ats-cv-format-uk",
+        "group": "ATS and keywords",
+        "title": "ATS CV Format UK | Safe Formatting for Applicant Tracking Systems",
+        "meta_description": "Use an ATS-friendly CV format for UK applications with clear headings, simple structure and readable keyword placement.",
+        "h1": "ATS CV format UK",
+        "intro": "ATS-friendly formatting is mostly about making your CV easy to parse. Good design is fine, but essential content must remain readable in plain text.",
+        "practical": "Use standard headings, reverse chronological experience, simple bullet points and a clear skills section. Keep job titles, employers and dates easy to scan. Save decorative elements for non-essential details.",
+        "mistakes": "Avoid putting key content inside images, icons, text boxes or complex tables. Also avoid clever headings that ATS systems and recruiters may not recognise.",
+        "helps": "CV Optimiser checks readability, structure and keyword match so you can spot formatting and relevance issues before applying.",
+        "related": [("/ats-cv-checker", "ATS CV checker"), ("/best-cv-format-uk", "Best CV format UK"), ("/cv-keywords-for-job-applications", "CV keywords"), ("/how-it-works", "How it works")],
+    },
+    {
+        "slug": "cv-keywords-for-job-applications",
+        "group": "ATS and keywords",
+        "title": "CV Keywords for Job Applications UK | How to Use Them Naturally",
+        "meta_description": "Learn how to find and use CV keywords from job descriptions without keyword stuffing or weakening your application.",
+        "h1": "CV keywords for job applications",
+        "intro": "CV keywords are not magic words. They are signals that your experience matches the role. The strongest CVs use them naturally and prove them with evidence.",
+        "practical": "Pull keywords from repeated skills, responsibilities, tools, qualifications and outcomes in the advert. Add them to your profile, skills and experience only where they match your real background.",
+        "mistakes": "Keyword stuffing makes a CV look thin and untrustworthy. Recruiters still need credible bullets, outcomes and context behind the terms.",
+        "helps": "CV Optimiser finds missing and weak keywords, then helps you focus on terms that genuinely affect role fit.",
+        "related": [("/cv-keyword-optimiser", "CV keyword optimiser"), ("/ats-cv-format-uk", "ATS CV format"), ("/sales-cv-keywords", "Sales CV keywords"), ("/job-description-cv-match", "Job description match")],
+    },
+    {
+        "slug": "cv-summary-examples-uk",
+        "group": "CV writing advice",
+        "title": "CV Summary Examples UK | Strong Profile Openings by Role",
+        "meta_description": "Write a stronger UK CV summary with practical examples for sales, account management, retail, management and career-change roles.",
+        "h1": "CV summary examples UK",
+        "intro": "Your CV summary should tell recruiters what role you fit and why. Generic profile lines waste the most valuable space on the page.",
+        "practical": "Write three to five lines covering target role, relevant experience, strongest evidence and role-specific strengths. For sales, lead with revenue and pipeline. For management, lead with team, operations and outcomes.",
+        "mistakes": "Avoid empty phrases such as hardworking, passionate and results-driven unless they are backed by specific evidence immediately after.",
+        "helps": "CV Optimiser reviews whether your summary matches the job description and suggests the strongest areas to tighten.",
+        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/how-to-tailor-cv-to-job-description", "Tailor your CV"), ("/account-manager-cv-keywords", "Account manager keywords"), ("/example-cv-report", "Example CV report")],
+    },
+    {
+        "slug": "cv-mistakes-uk",
+        "group": "CV writing advice",
+        "title": "CV Mistakes UK | Common Issues That Cost Interviews",
+        "meta_description": "Avoid common UK CV mistakes including vague profiles, weak bullets, missing keywords, poor formatting and untailored applications.",
+        "h1": "CV mistakes UK",
+        "intro": "Most CV mistakes are not dramatic. They are small relevance and clarity issues that make a good candidate look average during a fast scan.",
+        "practical": "Check your target role, top-third summary, keyword match, bullet strength, formatting and evidence. Every major section should help the recruiter understand why you fit this job.",
+        "mistakes": "The biggest mistake is using one generic CV for every application. Other costly issues include duty-only bullets, no numbers, unclear dates and weak job-description alignment.",
+        "helps": "CV Optimiser gives you a score, missing keywords and priority fixes so you know what to change first.",
+        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/best-cv-format-uk", "Best CV format UK"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example report")],
+    },
+    {
+        "slug": "best-cv-format-uk",
+        "group": "CV writing advice",
+        "title": "Best CV Format UK | Structure Your CV for Recruiters and ATS",
+        "meta_description": "Use the best CV format for UK job applications with a clear profile, skills section, reverse chronological experience and ATS-friendly structure.",
+        "h1": "Best CV format UK",
+        "intro": "The best CV format is the one that makes relevance easy to see. For most UK job applications, simple structure beats decorative templates.",
+        "practical": "Use a focused profile, key skills, reverse chronological work history, education and relevant extras. Keep the first page focused on the role you want now.",
+        "mistakes": "Avoid layouts that look impressive but hide evidence. Columns, icons and heavy design can make scanning harder and parsing less reliable.",
+        "helps": "CV Optimiser checks whether your CV structure and content support the role before you send it.",
+        "related": [("/ats-cv-format-uk", "ATS CV format UK"), ("/ats-cv-checker", "ATS CV checker"), ("/cv-mistakes-uk", "CV mistakes UK"), ("/cv-summary-examples-uk", "CV summary examples")],
+    },
+    {
+        "slug": "cv-checker-for-sales-jobs",
+        "group": "CV checking tools",
+        "title": "CV Checker for Sales Jobs | Sales CV Match and Keyword Tool",
+        "meta_description": "Check a sales CV against a job description for revenue evidence, CRM terms, pipeline ownership, targets and missing keywords.",
+        "h1": "CV checker for sales jobs",
+        "intro": "Sales recruiters want proof of performance. A sales CV checker should look for revenue, targets, pipeline, CRM and commercial outcomes, not just confident wording.",
+        "practical": "Run your CV against the advert and check whether your strongest commercial evidence is visible. Look for target achievement, deal size, sales cycle, territory, pipeline and account growth.",
+        "mistakes": "Do not rely on generic sales language. If your CV does not show numbers, ownership and customer or account context, it may look light.",
+        "helps": "CV Optimiser highlights sales-specific keyword gaps and shows the fixes most likely to improve match quality.",
+        "related": [("/sales-cv-keywords", "Sales CV keywords"), ("/account-manager-cv-keywords", "Account manager keywords"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example report")],
+        "tool": True,
+    },
+    {
+        "slug": "cv-checker-for-management-jobs",
+        "group": "CV checking tools",
+        "title": "CV Checker for Management Jobs | Leadership CV Review Tool",
+        "meta_description": "Check a management CV for leadership scope, team results, operations, stakeholder evidence and role-specific keywords.",
+        "h1": "CV checker for management jobs",
+        "intro": "Management CVs need to show scope, judgement and outcomes. If your CV only lists responsibilities, it may not prove leadership level quickly enough.",
+        "practical": "Check for team size, budget, KPIs, operational improvements, stakeholder management, hiring, coaching and delivery outcomes. Match the evidence to the management level in the advert.",
+        "mistakes": "Avoid sounding senior without proof. Management CVs need context: scale, people, process, performance and measurable change.",
+        "helps": "CV Optimiser compares your management CV with the role and shows missing leadership or operational signals.",
+        "related": [("/retail-manager-cv-example", "Retail manager CV example"), ("/sales-director-cv-example", "Sales director CV example"), ("/best-cv-format-uk", "Best CV format UK"), ("/job-description-cv-match", "Job description match")],
+        "tool": True,
+    },
+    {
+        "slug": "job-description-cv-match",
+        "group": "CV checking tools",
+        "title": "Job Description CV Match | Compare Your CV to a Role",
+        "meta_description": "Compare your CV with a job description and see whether your keywords, evidence and experience match the role.",
+        "h1": "Job description CV match",
+        "intro": "A strong CV is not just well written. It is clearly matched to the job description, with the most relevant evidence easy to find.",
+        "practical": "Turn the advert into a checklist of must-have skills, responsibilities and outcomes. Then check where each item appears in your CV and whether it is supported by real evidence.",
+        "mistakes": "Do not assume recruiters will infer relevance. If the CV uses different language or hides the strongest evidence, it can be skipped.",
+        "helps": "CV Optimiser compares both documents and shows the missing keywords, weak areas and priority fixes.",
+        "related": [("/how-to-tailor-cv-to-job-description", "How to tailor your CV"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/ats-cv-checker", "ATS CV checker"), ("/example-cv-report", "Example report")],
+        "tool": True,
+    },
+]
+
+
+for guide_page in SEO_GUIDE_PAGE_DEFINITIONS:
+    guide_page["sections"] = [
+        ("Practical advice", guide_page["practical"]),
+        ("Common mistakes", guide_page["mistakes"]),
+        ("How CV Optimiser helps", guide_page["helps"]),
+    ]
+    guide_page["who"] = guide_page.get("who", ["Job seekers preparing a targeted UK CV", "Applicants checking role fit before applying", "Candidates who want practical fixes rather than generic advice"])
+    guide_page["looks_for"] = guide_page.get("looks_for", ["Relevant job-description keywords", "Evidence that proves the main requirements", "Clear CV structure and strong first-page positioning"])
+    guide_page["manual"] = guide_page.get("manual", ["Compare the first page with the job advert", "Check whether each important keyword is supported by evidence", "Move the strongest relevant examples higher", "Remove detail that distracts from the target role"])
+    guide_page["faqs"] = guide_page.get("faqs", guide_faqs(guide_page["h1"].lower(), "your CV match"))
+    guide_page["cta_label"] = guide_page.get("cta_label", "Check your CV now")
+    guide_page["cta_support"] = guide_page.get("cta_support", "Use the guide to tighten your CV, then run a real job-description match before you apply.")
+    SEO_LANDING_PAGES[guide_page["slug"]] = guide_page
+
+SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["related"].append(("/guides", "All CV guides"))
+SEO_LANDING_PAGES["cv-score-checker"]["faqs"] = guide_faqs("a CV score checker", "your CV score")
+SEO_LANDING_PAGES["ats-cv-checker"]["faqs"] = guide_faqs("an ATS CV checker", "ATS readability and role fit")
+SEO_LANDING_PAGES["cv-keyword-optimiser"]["faqs"] = guide_faqs("a CV keyword optimiser", "keyword coverage")
+SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["faqs"] = guide_faqs("why a CV is not getting interviews", "interview response")
+SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"] = {
+    **SEO_LANDING_PAGES["how-to-tailor-cv-to-a-job-description"],
+    "slug": "how-to-tailor-cv-to-job-description",
+    "title": "How to Tailor a CV to a Job Description | CV Optimiser",
+    "meta_description": "Learn how to tailor your CV to a job description with keywords, relevant evidence and stronger achievement bullets.",
+    "faqs": guide_faqs("tailoring a CV to a job description", "job-description match"),
+    "related": [("/job-description-cv-match", "Job description CV match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example CV report")],
+}
+SEO_LANDING_PAGES["cv-improvement-tool"] = {
+    "slug": "cv-improvement-tool",
+    "group": "CV checking tools",
+    "title": "CV Improvement Tool | Practical CV Feedback for UK Applications",
+    "meta_description": "Improve your CV with a role-specific score, missing keywords, priority fixes and practical feedback before you apply.",
+    "h1": "CV improvement tool",
+    "intro": "A useful CV improvement tool should tell you what to fix first. CV Optimiser focuses on role fit, missing evidence, keywords and clear next steps.",
+    "sections": [
+        ("Practical advice", "Improve the parts recruiters notice first: the profile, key skills, recent experience and achievement bullets. Each change should make your fit for the job description clearer."),
+        ("Common mistakes", "Do not polish wording before fixing relevance. A tidy CV can still fail if it misses the role's keywords, hides strong evidence or reads like a generic career history."),
+        ("How CV Optimiser helps", "CV Optimiser checks your CV against the job description, gives you a score and shows the priority fixes likely to make the biggest difference."),
+    ],
+    "who": ["Applicants who want clear next steps", "Job seekers improving a CV before applying", "Candidates comparing CV versions"],
+    "looks_for": ["Role fit", "Keyword gaps", "Evidence strength", "CV structure and scan readability"],
+    "manual": ["Start with the job description", "Fix the first page before minor wording", "Rewrite duty-only bullets", "Check the score again after changes"],
+    "related": [("/cv-score-checker", "CV score checker"), ("/ats-cv-checker", "ATS CV checker"), ("/job-description-cv-match", "Job description match"), ("/example-cv-report", "Example report")],
+    "faqs": guide_faqs("a CV improvement tool", "your interview chances"),
+    "tool": True,
+    "cta_support": "Use CV Optimiser to move from general polish to role-specific CV fixes.",
+}
+
+SITEMAP_SITE_URL = "https://www.cv-optimiser.com"
+
 SITEMAP_URLS: list[dict[str, str]] = [
-    {"group": "Core", "loc": f"{SITE_URL}/", "priority": "1.0"},
-    {"loc": f"{SITE_URL}/cv-checker", "priority": "0.9"},
-    {"group": "Guides (SEO drivers)", "loc": f"{SITE_URL}/why-your-cv-is-not-getting-interviews", "priority": "0.8"},
-    {"loc": f"{SITE_URL}/how-to-tailor-your-cv", "priority": "0.8"},
-    {"loc": f"{SITE_URL}/ats-cv-keywords", "priority": "0.8"},
-    {"loc": f"{SITE_URL}/cv-mistakes", "priority": "0.8"},
-    {"group": "Supporting", "loc": f"{SITE_URL}/how-it-works", "priority": "0.6"},
-    {"loc": f"{SITE_URL}/faq", "priority": "0.5"},
-    {"loc": f"{SITE_URL}/privacy", "priority": "0.3"},
-    {"loc": f"{SITE_URL}/terms", "priority": "0.3"},
+    {"group": "Core", "loc": f"{SITEMAP_SITE_URL}/", "priority": "1.0"},
+    {"loc": f"{SITEMAP_SITE_URL}/cv-checker", "priority": "0.9"},
+    {"loc": f"{SITEMAP_SITE_URL}/guides", "priority": "0.8"},
+    {"group": "Guides (SEO drivers)", "loc": f"{SITEMAP_SITE_URL}/why-your-cv-is-not-getting-interviews", "priority": "0.8"},
+    {"loc": f"{SITEMAP_SITE_URL}/how-to-tailor-your-cv", "priority": "0.8"},
+    {"loc": f"{SITEMAP_SITE_URL}/ats-cv-keywords", "priority": "0.8"},
+    {"loc": f"{SITEMAP_SITE_URL}/cv-mistakes", "priority": "0.8"},
+    {"group": "Supporting", "loc": f"{SITEMAP_SITE_URL}/how-it-works", "priority": "0.6"},
+    {"loc": f"{SITEMAP_SITE_URL}/faq", "priority": "0.5"},
+    {"loc": f"{SITEMAP_SITE_URL}/privacy", "priority": "0.3"},
+    {"loc": f"{SITEMAP_SITE_URL}/terms", "priority": "0.3"},
 ]
 
 for slug in SEO_LANDING_PAGES:
@@ -1162,17 +1386,21 @@ for slug in SEO_LANDING_PAGES:
         "cv-job-description-match",
         "free-cv-review",
     } else "0.75"
-    loc = f"{SITE_URL}/{slug}"
+    loc = f"{SITEMAP_SITE_URL}/{slug}"
     if not any(entry["loc"] == loc for entry in SITEMAP_URLS):
         SITEMAP_URLS.append({"loc": loc, "priority": priority})
 
-test_loc = f"{SITE_URL}/10-second-cv-test"
+test_loc = f"{SITEMAP_SITE_URL}/10-second-cv-test"
 if not any(entry["loc"] == test_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": test_loc, "priority": "0.8"})
 
-example_cv_report_loc = f"{SITE_URL}/example-cv-report"
+example_cv_report_loc = f"{SITEMAP_SITE_URL}/example-cv-report"
 if not any(entry["loc"] == example_cv_report_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": example_cv_report_loc, "priority": "0.7"})
+
+example_report_loc = f"{SITEMAP_SITE_URL}/example-report"
+if not any(entry["loc"] == example_report_loc for entry in SITEMAP_URLS):
+    SITEMAP_URLS.append({"loc": example_report_loc, "priority": "0.6"})
 
 
 def require_openai() -> OpenAI:
@@ -1714,6 +1942,10 @@ def get_plan_state(user_id: str) -> dict[str, Any]:
 
 
 def build_faq_json_ld() -> str:
+    return build_faq_json_ld_for_entries(FAQ_ENTRIES)
+
+
+def build_faq_json_ld_for_entries(faqs: list[tuple[str, str]]) -> str:
     return json.dumps(
         {
             "@context": "https://schema.org",
@@ -1727,7 +1959,7 @@ def build_faq_json_ld() -> str:
                         "text": answer,
                     },
                 }
-                for question, answer in FAQ_ENTRIES
+                for question, answer in faqs
             ],
         }
     )
@@ -2790,6 +3022,7 @@ def build_mobile_layout_css() -> str:
 def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool") -> str:
     nav_items = [
         ("cv-checker", "/cv-checker", "CV Checker"),
+        ("guides", "/guides", "Guides"),
         ("how-it-works", "/how-it-works", "How it works"),
         ("example-report", "/example-report", "Example Report"),
         ("upgrade", "/upgrade", "Upgrade"),
@@ -4740,10 +4973,22 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
 
 def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
     page_url = f"{SITE_URL}/{slug}"
-    cta = '<a href="/#tool" class="cta cta-button">Check your CV against a job description</a>'
+    cta_label = page.get("cta_label", "Check your CV against a job description")
+    cta_href = page.get("cta_href", "/#tool")
+    cta = f'<a href="{html.escape(cta_href)}" class="cta cta-button">{html.escape(cta_label)}</a>'
     related_html = "".join(
         f'<a href="{html.escape(href)}">{html.escape(label)}</a>'
         for href, label in page.get("related", [])
+    )
+    faqs = page.get("faqs") or guide_faqs(page["h1"].lower(), "your CV match")
+    faq_html = "".join(
+        f"""
+        <div class="faq-item">
+          <strong>{html.escape(question)}</strong>
+          <p>{html.escape(answer)}</p>
+        </div>
+        """
+        for question, answer in faqs[:5]
     )
     sections_html = "".join(
         f"""
@@ -4797,6 +5042,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="twitter:title" content="{html.escape(page["title"])}">
         <meta name="twitter:description" content="{html.escape(page["meta_description"])}">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        <script type="application/ld+json">{build_faq_json_ld_for_entries(faqs[:5])}</script>
         {build_footer_assets_head()}
         <style>
           html, body {{
@@ -4932,6 +5178,28 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           .bottom-cta {{
             margin: 30px 0 44px;
           }}
+          .faq-section {{
+            padding: 28px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .faq-list {{
+            display: grid;
+            gap: 16px;
+            margin-top: 16px;
+          }}
+          .faq-item {{
+            padding: 0 0 16px;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.14);
+          }}
+          .faq-item:last-child {{
+            border-bottom: 0;
+            padding-bottom: 0;
+          }}
+          .faq-item strong {{
+            display: block;
+            color: #EEF3FF;
+            margin-bottom: 6px;
+          }}
           img, svg, canvas, video, iframe {{
             max-width: 100%;
             height: auto;
@@ -4999,6 +5267,11 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
 
           <div class="seo-grid">{list_html}</div>
           {sections_html}
+
+          <section class="faq-section">
+            <h2>Frequently asked questions</h2>
+            <div class="faq-list">{faq_html}</div>
+          </section>
 
           <section class="bottom-cta">
             <h2>Check your CV before you apply</h2>
@@ -5344,6 +5617,151 @@ def render_faq_page() -> str:
             <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
             <a href="/cv-checker" class="cta cta-button">Check your CV now</a>
           </section>
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
+def render_guides_page() -> str:
+    page_url = f"{SITE_URL}/guides"
+    groups = [
+        ("CV checking tools", [
+            ("cv-checker", "/cv-checker", TOOL_LANDING_PAGES["cv-checker"]["title"], "Run a general CV check and see your score, missing keywords and priority fixes."),
+            ("ats-cv-checker", "/ats-cv-checker", SEO_LANDING_PAGES["ats-cv-checker"]["title"], SEO_LANDING_PAGES["ats-cv-checker"]["intro"]),
+            ("cv-score-checker", "/cv-score-checker", SEO_LANDING_PAGES["cv-score-checker"]["title"], SEO_LANDING_PAGES["cv-score-checker"]["intro"]),
+            ("job-description-cv-match", "/job-description-cv-match", SEO_LANDING_PAGES["job-description-cv-match"]["title"], SEO_LANDING_PAGES["job-description-cv-match"]["intro"]),
+            ("cv-keyword-optimiser", "/cv-keyword-optimiser", SEO_LANDING_PAGES["cv-keyword-optimiser"]["title"], SEO_LANDING_PAGES["cv-keyword-optimiser"]["intro"]),
+            ("cv-improvement-tool", "/cv-improvement-tool", SEO_LANDING_PAGES["cv-improvement-tool"]["title"], SEO_LANDING_PAGES["cv-improvement-tool"]["intro"]),
+            ("cv-checker-for-sales-jobs", "/cv-checker-for-sales-jobs", SEO_LANDING_PAGES["cv-checker-for-sales-jobs"]["title"], SEO_LANDING_PAGES["cv-checker-for-sales-jobs"]["intro"]),
+            ("cv-checker-for-management-jobs", "/cv-checker-for-management-jobs", SEO_LANDING_PAGES["cv-checker-for-management-jobs"]["title"], SEO_LANDING_PAGES["cv-checker-for-management-jobs"]["intro"]),
+        ]),
+        ("ATS and keywords", [
+            ("ats-cv-format-uk", "/ats-cv-format-uk", SEO_LANDING_PAGES["ats-cv-format-uk"]["title"], SEO_LANDING_PAGES["ats-cv-format-uk"]["intro"]),
+            ("cv-keywords-for-job-applications", "/cv-keywords-for-job-applications", SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["title"], SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["intro"]),
+            ("cv-keyword-optimiser", "/cv-keyword-optimiser", SEO_LANDING_PAGES["cv-keyword-optimiser"]["title"], "Find missing role keywords and use them naturally."),
+        ]),
+        ("Sales and management CVs", [
+            ("sales-cv-keywords", "/sales-cv-keywords", SEO_LANDING_PAGES["sales-cv-keywords"]["title"], SEO_LANDING_PAGES["sales-cv-keywords"]["intro"]),
+            ("account-manager-cv-keywords", "/account-manager-cv-keywords", SEO_LANDING_PAGES["account-manager-cv-keywords"]["title"], SEO_LANDING_PAGES["account-manager-cv-keywords"]["intro"]),
+            ("sales-director-cv-example", "/sales-director-cv-example", SEO_LANDING_PAGES["sales-director-cv-example"]["title"], SEO_LANDING_PAGES["sales-director-cv-example"]["intro"]),
+            ("retail-manager-cv-example", "/retail-manager-cv-example", SEO_LANDING_PAGES["retail-manager-cv-example"]["title"], SEO_LANDING_PAGES["retail-manager-cv-example"]["intro"]),
+        ]),
+        ("CV writing advice", [
+            ("why-is-my-cv-not-getting-interviews", "/why-is-my-cv-not-getting-interviews", SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["title"], SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["intro"]),
+            ("how-to-tailor-cv-to-job-description", "/how-to-tailor-cv-to-job-description", SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"]["title"], SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"]["intro"]),
+            ("cv-summary-examples-uk", "/cv-summary-examples-uk", SEO_LANDING_PAGES["cv-summary-examples-uk"]["title"], SEO_LANDING_PAGES["cv-summary-examples-uk"]["intro"]),
+            ("cv-mistakes-uk", "/cv-mistakes-uk", SEO_LANDING_PAGES["cv-mistakes-uk"]["title"], SEO_LANDING_PAGES["cv-mistakes-uk"]["intro"]),
+            ("best-cv-format-uk", "/best-cv-format-uk", SEO_LANDING_PAGES["best-cv-format-uk"]["title"], SEO_LANDING_PAGES["best-cv-format-uk"]["intro"]),
+        ]),
+        ("Examples and reports", [
+            ("example-cv-report", "/example-cv-report", EXAMPLE_REPORT_PAGE["title"], EXAMPLE_REPORT_PAGE["intro"]),
+            ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
+        ]),
+    ]
+    groups_html = "".join(
+        f"""
+        <section class="guide-group">
+          <h2>{html.escape(group_title)}</h2>
+          <div class="guide-grid">
+            {''.join(
+                f'''
+                <article class="guide-item">
+                  <h3>{html.escape(title)}</h3>
+                  <p>{html.escape(summary)}</p>
+                  <a href="{html.escape(href)}">Read guide</a>
+                </article>
+                '''
+                for _, href, title, summary in items
+            )}
+          </div>
+        </section>
+        """
+        for group_title, items in groups
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>CV Guides and Resources | CV Optimiser</title>
+        <meta name="description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="CV Guides and Resources | CV Optimiser">
+        <meta property="og:description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        {build_footer_assets_head()}
+        <style>
+          html, body {{ width: 100%; max-width: 100%; overflow-x: hidden; }}
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page-shell {{
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+          .guides-hero {{
+            margin: 30px 0 28px;
+            max-width: 820px;
+          }}
+          .guide-group {{
+            padding: 30px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .guide-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px 26px;
+            margin-top: 16px;
+          }}
+          .guide-item {{
+            padding: 0 0 18px;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.14);
+          }}
+          .guide-item h3 {{
+            font-size: 18px;
+            margin-bottom: 8px;
+          }}
+          .guide-item a {{
+            display: inline-flex;
+            margin-top: 10px;
+            color: #AFC0FF;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }}
+          @media (max-width: 768px) {{
+            .page-shell {{ padding: 16px; }}
+            .guide-grid {{ grid-template-columns: 1fr; gap: 14px; }}
+            .guide-group {{ padding: 24px 0; }}
+          }}
+{build_mobile_layout_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page-shell content-page">
+          {build_site_header(None)}
+          <section class="guides-hero">
+            <h1>CV guides and resources</h1>
+            <p>Practical UK CV advice for checking role fit, improving ATS readability, finding keywords and making your CV more credible before you apply.</p>
+          </section>
+          {groups_html}
           {build_site_footer()}
         </div>
       </body>
@@ -6040,7 +6458,7 @@ def cv_score_checker_page(request: Request) -> str:
 @app.get("/job-description-cv-match/", response_class=HTMLResponse, include_in_schema=False)
 def job_description_cv_match_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_seo_landing_page("cv-job-description-match", SEO_LANDING_PAGES["cv-job-description-match"])
+    return render_seo_landing_page("job-description-cv-match", SEO_LANDING_PAGES["job-description-cv-match"])
 
 
 @app.get("/ats-cv-checker", response_class=HTMLResponse)
@@ -6061,7 +6479,7 @@ def cv_keyword_optimiser_page(request: Request) -> str:
 @app.get("/cv-improvement-tool/", response_class=HTMLResponse, include_in_schema=False)
 def cv_improvement_tool_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_tool_landing_page("cv-improvement-tool", TOOL_LANDING_PAGES["cv-improvement-tool"])
+    return render_seo_landing_page("cv-improvement-tool", SEO_LANDING_PAGES["cv-improvement-tool"])
 
 
 @app.get("/example-report", response_class=HTMLResponse)
@@ -6132,6 +6550,12 @@ def ten_second_cv_test_page() -> str:
 @app.get("/faq", response_class=HTMLResponse)
 def faq_page() -> str:
     return render_faq_page()
+
+
+@app.get("/guides", response_class=HTMLResponse)
+@app.get("/guides/", response_class=HTMLResponse, include_in_schema=False)
+def guides_page() -> str:
+    return render_guides_page()
 
 
 @app.get("/how-it-works", response_class=HTMLResponse)

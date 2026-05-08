@@ -3248,10 +3248,57 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
+.home-resource-section {
+  margin-top: 28px;
+  padding: 28px 0 0;
+  border-top: 1px solid rgba(160, 180, 230, 0.12);
+}
+
+.home-resource-header {
+  max-width: 680px;
+  margin-bottom: 18px;
+}
+
+.home-resource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.home-resource-link {
+  display: block;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(160, 180, 230, 0.12);
+  color: #DCE6FF;
+  text-decoration: none;
+}
+
+.home-resource-link strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #F4F7FF;
+  font-size: 15px;
+}
+
+.home-resource-link span {
+  display: block;
+  color: #AAB7D4;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.home-resource-link:hover strong {
+  color: #AFC0FF;
+}
+
 @media (max-width: 768px) {
   .home-main-panel > .example-report-card {
     padding: 22px 0 0 !important;
     margin-top: 22px;
+  }
+
+  .home-resource-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -3451,6 +3498,47 @@
           <div class="example-hint">Full report shows how to fix this →</div>
         </div>
       </div>
+
+      <section class="home-resource-section" aria-labelledby="homeResourceTitle">
+        <div class="home-resource-header">
+          <div id="homeResourceTitle" class="section-title">CV guides and tools</div>
+          <p class="small">Useful pages for checking ATS fit, improving keywords and making your CV stronger for specific roles.</p>
+        </div>
+        <div class="home-resource-grid">
+          <a class="home-resource-link" href="/ats-cv-checker">
+            <strong>ATS CV checker</strong>
+            <span>Check formatting, keywords and role fit before applying through an ATS.</span>
+          </a>
+          <a class="home-resource-link" href="/cv-score-checker">
+            <strong>CV score checker</strong>
+            <span>See how well your CV matches a job description.</span>
+          </a>
+          <a class="home-resource-link" href="/job-description-cv-match">
+            <strong>Job description CV match</strong>
+            <span>Compare your CV with an advert and find weak alignment.</span>
+          </a>
+          <a class="home-resource-link" href="/cv-keyword-optimiser">
+            <strong>CV keyword optimiser</strong>
+            <span>Find missing keywords and add them naturally.</span>
+          </a>
+          <a class="home-resource-link" href="/sales-cv-keywords">
+            <strong>Sales CV keywords</strong>
+            <span>Use revenue, pipeline and account-growth language recruiters expect.</span>
+          </a>
+          <a class="home-resource-link" href="/account-manager-cv-keywords">
+            <strong>Account manager CV keywords</strong>
+            <span>Strengthen retention, renewal and stakeholder evidence.</span>
+          </a>
+          <a class="home-resource-link" href="/best-cv-format-uk">
+            <strong>Best CV format UK</strong>
+            <span>Structure your CV clearly for recruiters and ATS screening.</span>
+          </a>
+          <a class="home-resource-link" href="/example-cv-report">
+            <strong>Example CV report</strong>
+            <span>Preview the score, keyword gaps and fixes before running your own check.</span>
+          </a>
+        </div>
+      </section>
 
       <div id="results" class="card hidden" style="margin-top:28px;">
         <div class="results-shell">

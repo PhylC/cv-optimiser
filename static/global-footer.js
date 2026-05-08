@@ -9,20 +9,21 @@ function renderFooter() {
         <div class="site-footer-links-group">
           <div class="site-footer-title">Tools</div>
           <a href="/cv-checker">CV Checker</a>
-          <a href="/cv-score-checker">CV Score Checker</a>
           <a href="/ats-cv-checker">ATS CV Checker</a>
-          <a href="/cv-job-description-match">CV Job Description Match</a>
+          <a href="/cv-score-checker">CV Score Checker</a>
+          <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
+          <a href="/job-description-cv-match">Job Description CV Match</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Resources</div>
-          <a href="/10-second-cv-test">10-Second CV Test</a>
+          <a href="/guides">Guides</a>
+          <a href="/example-cv-report">Example Report</a>
+          <a href="/how-it-works">How it works</a>
           <a href="/why-is-my-cv-not-getting-interviews">Why Is My CV Not Getting Interviews?</a>
-          <a href="/cv-mistakes-that-cost-interviews">CV Mistakes That Cost Interviews</a>
-          <a href="/best-cv-format-for-ats">Best CV Format for ATS</a>
+          <a href="/best-cv-format-uk">Best CV Format UK</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Trust</div>
-          <a href="/how-it-works">How it works</a>
           <a href="/faq">FAQ</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
