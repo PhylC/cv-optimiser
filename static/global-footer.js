@@ -9,6 +9,7 @@ function renderFooter() {
         <div class="site-footer-links-group">
           <div class="site-footer-title">Tools</div>
           <a href="/cv-checker">CV Checker</a>
+          <a href="/best-free-cv-checker-uk">Best free CV checker UK</a>
           <a href="/ats-cv-checker">ATS CV Checker</a>
           <a href="/cv-score-checker">CV Score Checker</a>
           <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>

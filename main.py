@@ -1430,11 +1430,39 @@ SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "cta_support": "Use CV Optimiser to move from general polish to role-specific CV fixes.",
 }
 
+BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
+    (
+        "Is CV Optimiser free?",
+        "You can run an initial CV check without needing to create an account. Paid options may be available for deeper guidance, saved results or additional features.",
+    ),
+    (
+        "Does a CV checker guarantee interviews?",
+        "No. A CV checker can help improve relevance, clarity and keyword match, but it cannot guarantee interviews. Hiring decisions depend on experience, competition, timing and employer preferences.",
+    ),
+    (
+        "Should I check my CV against every job description?",
+        "Yes, for important applications. A CV that works for one role may miss keywords or priorities for another.",
+    ),
+    (
+        "What is an ATS CV checker?",
+        "An ATS CV checker looks for issues that may affect how Applicant Tracking Systems and recruiters read your CV, such as missing keywords, unclear structure and poor role match.",
+    ),
+    (
+        "Can I use this for UK CVs?",
+        "Yes. The page and wording are aimed at UK job seekers, using CV rather than resume.",
+    ),
+    (
+        "Should I still get a human to review my CV?",
+        "For senior, specialist or high-value applications, a human review can still help. CV Optimiser is best for fast role-specific feedback and practical improvements.",
+    ),
+]
+
 SITEMAP_SITE_URL = "https://www.cv-optimiser.com"
 
 SITEMAP_URLS: list[dict[str, str]] = [
     {"group": "Core", "loc": f"{SITEMAP_SITE_URL}/", "priority": "1.0"},
     {"loc": f"{SITEMAP_SITE_URL}/cv-checker", "priority": "0.9"},
+    {"loc": f"{SITEMAP_SITE_URL}/best-free-cv-checker-uk", "priority": "0.9"},
     {"loc": f"{SITEMAP_SITE_URL}/guides", "priority": "0.8"},
     {"group": "Guides (SEO drivers)", "loc": f"{SITEMAP_SITE_URL}/why-your-cv-is-not-getting-interviews", "priority": "0.8"},
     {"loc": f"{SITEMAP_SITE_URL}/how-to-tailor-your-cv", "priority": "0.8"},
@@ -5548,6 +5576,425 @@ def render_ten_second_cv_test_page() -> str:
     """
 
 
+def render_best_free_cv_checker_page() -> str:
+    page_url = f"{SITE_URL}/best-free-cv-checker-uk"
+    meta_title = "Best Free CV Checker UK | Check Your CV Against a Job Description"
+    meta_description = (
+        "Use CV Optimiser to check your CV against a job description, find missing keywords, "
+        "improve weak bullet points and spot ATS issues before you apply."
+    )
+    trust_bullets = [
+        "No signup needed for your first result",
+        "Paste your CV and job description",
+        "Your CV is not stored permanently",
+        "Takes around 60 seconds",
+    ]
+    best_for = [
+        "UK job seekers applying for office, commercial, sales, marketing, finance, operations or professional roles",
+        "People who have a job description and want to tailor their CV quickly",
+        "Candidates getting few replies despite relevant experience",
+        "People who want to improve keywords, structure and measurable achievements",
+        "Anyone who wants quick feedback before paying for a full CV rewrite",
+    ]
+    not_for = [
+        "People who need a full human-written CV from scratch",
+        "Highly specialist academic, medical or legal CVs that need expert review",
+        "Anyone expecting a certain interview outcome",
+        "People who do not have enough work history or achievements to assess yet",
+    ]
+    checker_steps = [
+        "Paste your CV",
+        "Paste the job description",
+        "Run the checker",
+        "Review your score, missing keywords and suggested improvements",
+        "Use the advice to tailor your CV before applying",
+    ]
+    checker_signals = [
+        "Missing role-specific keywords",
+        "Weak or generic bullet points",
+        "Responsibilities without outcomes",
+        "Poor match between CV and job description",
+        "ATS readability issues",
+        "Missing measurable achievements",
+        "Overly broad personal summaries",
+    ]
+    comparison_rows = [
+        ("CV Optimiser", "Quick role-specific CV checks against a job description", "It is automated, so important applications may still benefit from human review"),
+        ("Generic CV templates", "Improving layout and structure", "They do not check fit against a specific role"),
+        ("Paid CV writing services", "Full rewrite and human judgement", "More expensive and slower"),
+        ("Manual self-review", "Quick final checks", "Easy to miss keyword gaps and weak evidence"),
+    ]
+    internal_links = [
+        ("/", "CV checker"),
+        ("/cv-checker", "Free CV checker"),
+        ("/ats-cv-checker", "ATS CV checker"),
+        ("/cv-score-checker", "CV score checker"),
+        ("/cv-keyword-optimiser", "CV keyword optimiser"),
+        ("/job-description-cv-match", "CV checker against job description"),
+        ("/example-cv-report", "Example CV report"),
+        ("/privacy", "Privacy Policy"),
+    ]
+    faq_html = "".join(
+        f"""
+        <div class="faq-item">
+          <h3>{html.escape(question)}</h3>
+          <p>{html.escape(answer)}</p>
+        </div>
+        """
+        for question, answer in BEST_FREE_CV_CHECKER_FAQS
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(meta_title)}</title>
+        <meta name="description" content="{html.escape(meta_description)}">
+        <link rel="canonical" href="{page_url}">
+        <meta property="og:title" content="{html.escape(meta_title)}">
+        <meta property="og:description" content="{html.escape(meta_description)}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(meta_title)}">
+        <meta name="twitter:description" content="{html.escape(meta_description)}">
+        <script type="application/ld+json">{build_faq_json_ld_for_entries(BEST_FREE_CV_CHECKER_FAQS)}</script>
+        {build_footer_assets_head()}
+        <style>
+          html,
+          body {{
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+          }}
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+          .hero {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+            gap: 28px;
+            align-items: start;
+            padding: 30px 0 34px;
+          }}
+          .hero-copy {{
+            max-width: 760px;
+          }}
+          .hero-actions,
+          .cta-actions {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 820;
+            text-decoration: none;
+          }}
+          .secondary-cta {{
+            background: rgba(10, 19, 35, 0.42);
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            color: #EAF0FF;
+          }}
+          .trust-box,
+          .cta-panel {{
+            padding: 22px;
+            border-radius: 18px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.68);
+          }}
+          .trust-box h2,
+          .cta-panel h2 {{
+            margin-top: 0;
+          }}
+          .trust-list {{
+            margin: 0;
+            padding-left: 20px;
+          }}
+          .trust-list li {{
+            margin-bottom: 8px;
+          }}
+          .content-section,
+          .flat-section,
+          .faq-section {{
+            padding: 34px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .content-section h2,
+          .flat-section h2,
+          .faq-section h2 {{
+            margin-top: 0;
+          }}
+          .split-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 28px;
+          }}
+          .section-list {{
+            margin: 14px 0 0;
+            padding-left: 20px;
+          }}
+          .section-list li {{
+            margin-bottom: 9px;
+          }}
+          .numbered-list {{
+            margin: 14px 0 0;
+            padding-left: 24px;
+          }}
+          .numbered-list li {{
+            margin-bottom: 10px;
+          }}
+          .comparison-wrap {{
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            border-radius: 18px;
+            background: rgba(15, 28, 50, 0.58);
+          }}
+          .comparison-table {{
+            width: 100%;
+            min-width: 720px;
+            border-collapse: collapse;
+          }}
+          .comparison-table th,
+          .comparison-table td {{
+            padding: 16px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.16);
+            color: #B7C6E6;
+            line-height: 1.6;
+          }}
+          .comparison-table th {{
+            color: #EEF3FF;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: rgba(10, 19, 35, 0.44);
+          }}
+          .comparison-table tr:last-child td {{
+            border-bottom: 0;
+          }}
+          .comparison-table strong {{
+            color: #F4F7FF;
+          }}
+          .privacy-box {{
+            padding: 22px;
+            border-radius: 18px;
+            border: 1px solid rgba(147, 168, 218, 0.18);
+            background: rgba(10, 19, 35, 0.36);
+          }}
+          .text-link,
+          .internal-links a {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-weight: 700;
+          }}
+          .internal-links {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            margin-top: 14px;
+          }}
+          .faq-list {{
+            display: grid;
+            gap: 18px;
+            margin-top: 18px;
+          }}
+          .faq-item {{
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.14);
+          }}
+          .faq-item:last-child {{
+            padding-bottom: 0;
+            border-bottom: 0;
+          }}
+          .faq-item h3 {{
+            margin: 0 0 8px;
+            font-size: 18px;
+          }}
+          @media (max-width: 900px) {{
+            .hero,
+            .split-grid {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+          @media (max-width: 768px) {{
+            .page {{
+              max-width: 100%;
+              padding: 16px;
+            }}
+            .hero {{
+              gap: 18px;
+              padding: 24px 0 28px;
+            }}
+            .trust-box,
+            .cta-panel,
+            .privacy-box {{
+              padding: 18px 16px;
+              border-radius: 16px;
+            }}
+            .content-section,
+            .flat-section,
+            .faq-section {{
+              padding: 28px 0;
+            }}
+            .hero-actions,
+            .cta-actions {{
+              flex-direction: column;
+            }}
+            .cta,
+            .cta-button {{
+              width: 100%;
+              box-sizing: border-box;
+              text-align: center;
+            }}
+            .comparison-wrap {{
+              border-radius: 16px;
+            }}
+            .comparison-table th,
+            .comparison-table td {{
+              padding: 14px;
+            }}
+          }}
+{build_mobile_layout_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page content-page seo-page">
+          {build_site_header(None)}
+
+          <section class="hero">
+            <div class="hero-copy">
+              <h1>Best free CV checker for UK job seekers</h1>
+              <p>CV Optimiser helps you check your CV against a real job description before you apply. It highlights missing keywords, weak bullet points, ATS issues and practical ways to improve your match.</p>
+              <div class="hero-actions">
+                <a href="/#tool" class="cta cta-button">Check my CV</a>
+                <a href="/example-cv-report" class="cta secondary-cta">See example report</a>
+              </div>
+            </div>
+            <aside class="trust-box">
+              <h2>What to expect</h2>
+              <ul class="trust-list">
+                {"".join(f"<li>{html.escape(item)}</li>" for item in trust_bullets)}
+              </ul>
+            </aside>
+          </section>
+
+          <section class="content-section">
+            <h2>Quick answer: what is the best free CV checker?</h2>
+            <p>The best free CV checker is one that compares your CV against the role you are applying for, not just against generic formatting rules. CV Optimiser is useful because it checks your CV against a job description and shows where your wording, keywords and evidence could be stronger.</p>
+            <p>It is best suited for people who want quick, practical, role-specific feedback before applying. It is not a replacement for every type of human CV review.</p>
+          </section>
+
+          <section class="flat-section split-grid">
+            <div>
+              <h2>Who CV Optimiser is best for</h2>
+              <ul class="section-list">
+                {"".join(f"<li>{html.escape(item)}</li>" for item in best_for)}
+              </ul>
+            </div>
+            <div>
+              <h2>Who it is not for</h2>
+              <ul class="section-list">
+                {"".join(f"<li>{html.escape(item)}</li>" for item in not_for)}
+              </ul>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2>How the free CV checker works</h2>
+            <ol class="numbered-list">
+              {"".join(f"<li>{html.escape(item)}</li>" for item in checker_steps)}
+            </ol>
+          </section>
+
+          <section class="content-section">
+            <h2>What the checker looks for</h2>
+            <ul class="section-list">
+              {"".join(f"<li>{html.escape(item)}</li>" for item in checker_signals)}
+            </ul>
+          </section>
+
+          <section class="content-section">
+            <h2>CV Optimiser compared with other options</h2>
+            <div class="comparison-wrap">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Option</th>
+                    <th>Best for</th>
+                    <th>Limitations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {"".join(f"<tr><td><strong>{html.escape(option)}</strong></td><td>{html.escape(best)}</td><td>{html.escape(limit)}</td></tr>" for option, best, limit in comparison_rows)}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <div class="privacy-box">
+              <h2>Is it safe to use?</h2>
+              <p>CV Optimiser is designed for quick CV feedback. You can run a check without creating an account for your first result, and the site explains how your CV text is handled. Avoid uploading sensitive personal information you do not need for a CV review.</p>
+              <p><a href="/privacy" class="text-link">Read the Privacy Policy</a></p>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <h2>Useful CV checker pages</h2>
+            <p>These related pages explain specific parts of the CV checking process.</p>
+            <div class="internal-links">
+              {"".join(f'<a href="{html.escape(href)}">{html.escape(label)}</a>' for href, label in internal_links)}
+            </div>
+          </section>
+
+          <section class="cta-panel">
+            <h2>Check your CV before you apply</h2>
+            <p>Paste your CV and the job description to see how well your CV matches the role and what to improve first.</p>
+            <div class="cta-actions">
+              <a href="/#tool" class="cta cta-button">Check my CV</a>
+            </div>
+          </section>
+
+          <section class="faq-section">
+            <h2>FAQs</h2>
+            <div class="faq-list">{faq_html}</div>
+          </section>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
 def render_faq_page() -> str:
     faq_html = "".join(
         f"""
@@ -5732,6 +6179,7 @@ def render_guides_page() -> str:
     page_url = f"{SITE_URL}/guides"
     groups = [
         ("CV checking tools", [
+            ("best-free-cv-checker-uk", "/best-free-cv-checker-uk", "Best Free CV Checker UK", "Compare your CV with a job description and see where keywords, evidence and role fit could be stronger."),
             ("cv-checker", "/cv-checker", TOOL_LANDING_PAGES["cv-checker"]["title"], "Run a general CV check and see your score, missing keywords and priority fixes."),
             ("ats-cv-checker", "/ats-cv-checker", SEO_LANDING_PAGES["ats-cv-checker"]["title"], SEO_LANDING_PAGES["ats-cv-checker"]["intro"]),
             ("cv-score-checker", "/cv-score-checker", SEO_LANDING_PAGES["cv-score-checker"]["title"], SEO_LANDING_PAGES["cv-score-checker"]["intro"]),
@@ -6552,6 +7000,13 @@ def home() -> FileResponse:
 def cv_checker_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_tool_landing_page("cv-checker", TOOL_LANDING_PAGES["cv-checker"])
+
+
+@app.get("/best-free-cv-checker-uk", response_class=HTMLResponse)
+@app.get("/best-free-cv-checker-uk/", response_class=HTMLResponse, include_in_schema=False)
+def best_free_cv_checker_uk_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_best_free_cv_checker_page()
 
 
 @app.get("/cv-score-checker", response_class=HTMLResponse)
