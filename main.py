@@ -133,8 +133,8 @@ if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
 
 FAQ_ENTRIES: list[tuple[str, str]] = [
     (
-        "Why does my CV get rejected instantly?",
-        "Most CVs are filtered by ATS systems before a recruiter sees them. If your CV doesn’t contain the right keywords or match the job description, it can be rejected automatically.",
+        "Why can a CV get overlooked quickly?",
+        "Many employers use ATS systems and fast manual review. If your CV does not contain relevant keywords or match the job description clearly, it may look less aligned with the role.",
     ),
     (
         "What is a good CV score?",
@@ -153,7 +153,7 @@ FAQ_ENTRIES: list[tuple[str, str]] = [
         "Yes. A tailored CV performs better because it shows the exact relevance recruiters and ATS systems are looking for.",
     ),
     (
-        "Can I beat ATS without keywords?",
+        "Can I check ATS-style keyword gaps without stuffing keywords?",
         "No. If your CV doesn’t reflect the language and priorities in the job description, ATS systems have less evidence that you fit the role.",
     ),
 ]
@@ -174,7 +174,7 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
         "title": "Free ATS CV Checker – Find Missing Keywords Before You Apply",
         "meta_description": "Paste a job description and check whether your CV includes the keywords, structure and relevance recruiters expect.",
         "h1": "ATS CV Checker",
-        "intro": "Check whether your CV is likely to survive ATS screening before a recruiter sees it. CV Optimiser compares your CV against a job description and highlights the missing signals that can hold you back.",
+        "intro": "Check how clearly your CV matches the job description before you apply. CV Optimiser compares your CV against a job description and highlights the missing signals that can hold you back.",
         "bullets": [
             "Find missing ATS keywords and phrases",
             "Understand whether your CV structure is helping or hurting",
@@ -196,9 +196,9 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
         "title": "CV Improvement Tool – Get Practical Fixes for Your CV",
         "meta_description": "Get practical feedback on your CV including structure, summary, keyword gaps and priority improvements.",
         "h1": "CV Improvement Tool",
-        "intro": "Get a recruiter-style diagnosis of what is holding your CV back. CV Optimiser gives you a clear score, identifies weak areas, and shows the most important improvements to make first.",
+        "intro": "Get an AI-assisted review of what may be holding your CV back. CV Optimiser gives you a clear score, identifies weak areas, and shows the most important improvements to make first.",
         "bullets": [
-            "See the top changes that will improve interview chances",
+            "See the top changes that may improve CV clarity and role match",
             "Understand structure, wording, and keyword gaps",
             "Use the free check before deciding whether to unlock the full report",
         ],
@@ -231,7 +231,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "Job application statistics",
                 "bullets": [
-                    "Most job seekers apply to multiple roles before getting interviews",
+                    "Most job seekers apply to multiple roles before receiving employer responses",
                     "Response rates usually improve when CVs are tailored to the role instead of reused unchanged",
                 ],
             },
@@ -326,34 +326,65 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
     },
     "features": {
         "title": "Features | CV Optimiser",
-        "description": "Explore the main CV Optimiser features including CV scoring, keyword gap detection, ATS checks and recruiter-style feedback.",
+        "description": "Explore the main CV Optimiser features including CV scoring, keyword gap detection, ATS checks and AI-assisted CV suggestions.",
         "h1": "CV Optimiser features",
         "intro": "CV Optimiser focuses on the parts of CV feedback that matter most when you are applying for a real job and need clear next steps.",
         "sections": [
             ("CV match score", "See how closely your CV aligns with the role before you apply."),
             ("Missing keyword detection", "Spot the role-specific terms your CV is missing or not supporting strongly enough."),
-            ("Priority fixes", "Get the top improvements most likely to raise your interview chances."),
+            ("Priority fixes", "Get priority improvements for clearer role fit."),
             ("Full report upgrade", "Unlock deeper feedback, stronger wording and a more detailed improvement plan when you need more help."),
         ],
     },
     "pricing": {
         "title": "Pricing | CV Optimiser",
-        "description": "See CV Optimiser pricing options for unlocking full CV reports and ongoing Pro access.",
+        "description": "See CV Optimiser pricing options for free checks, paid reports and Pro access.",
         "h1": "Pricing",
-        "intro": "Choose the option that fits how often you want to improve and test your CV against job descriptions.",
+        "intro": "Free checks help you review your CV match. Paid reports and Pro access unlock fuller guidance before you apply.",
         "sections": [
-            ("One-time report", "Unlock a full CV improvement report for a single result when you want deeper feedback on one application."),
-            ("Pro access", "Go Pro for ongoing CV checks, full reports and saved results while you are actively applying."),
-            ("Start with a check", "Run the CV checker first so you can see your score and decide whether the full report is useful."),
+            {
+                "title": "Free check",
+                "copy": "Use a limited CV check to compare CV content with a job description, see summary-level suggestions, and decide whether your CV needs work.",
+                "bullets": [
+                    "Run a limited CV check",
+                    "Compare CV content with a job description",
+                    "See summary-level suggestions",
+                    "Useful for deciding whether your CV needs work",
+                ],
+            },
+            {
+                "title": "Paid report",
+                "copy": "Unlock fuller report details for one CV result based on the existing product logic.",
+                "bullets": [
+                    "More detailed improvement suggestions",
+                    "Keyword gaps and role-match guidance",
+                    "Rewritten examples and priority fixes where available",
+                    "One-time report access currently shown as £7.99",
+                ],
+            },
+            {
+                "title": "Pro access",
+                "copy": "Pro access is for users who want ongoing checks and full reports while actively preparing applications.",
+                "bullets": [
+                    "Ongoing CV checks",
+                    "Full reports included with your plan",
+                    "Saved results where account history is available",
+                    "Pro access currently shown as £9.99/month",
+                ],
+            },
+            {
+                "title": "Important note",
+                "copy": "Paid access does not guarantee interviews, job offers, ATS acceptance, or employer responses.",
+            },
         ],
     },
     "contact": {
         "title": "Contact | CV Optimiser",
         "description": "Contact CV Optimiser for account, billing or support questions.",
         "h1": "Contact",
-        "intro": "Need help with your account, billing, login or CV results? Use the support option inside the product so we can see the context of your request.",
+        "intro": "For questions about CV Optimiser, payments, privacy, or account access, contact us at:",
         "sections": [
-            ("Support", "Open CV Optimiser and use the support form in the footer for account, billing or product questions."),
+            ("Email", "support@cv-optimiser.com"),
             ("Billing", "Subscription and payment management is handled through Stripe from the account menu when available."),
             ("Privacy", "Do not send sensitive personal details unless they are needed to resolve your support request."),
         ],
@@ -370,25 +401,63 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         ],
     },
     "privacy": {
-        "title": "Privacy | CV Optimiser",
-        "description": "Read how CV Optimiser handles your CV, job descriptions, account details and support messages.",
-        "h1": "Privacy",
-        "intro": "CV Optimiser processes the information you provide so it can analyse your CV, return your result, and support account and billing functions where needed.",
+        "title": "Privacy Policy | CV Optimiser",
+        "description": "Read how CV Optimiser handles CV content, job descriptions, account details, payments and analytics data.",
+        "h1": "Privacy Policy",
+        "intro": "Last updated: May 2026. CV Optimiser is a CV checking website that helps users compare a CV with a job description and receive practical improvement suggestions.",
         "sections": [
-            ("What we process", "This can include CV text, job descriptions, account details and support messages that you choose to provide."),
-            ("Payments and support", "Payments are handled by Stripe and support forms are handled by Formspree."),
-            ("Using your result responsibly", "You should review and edit generated suggestions before using them in any application."),
+            {
+                "title": "Information we collect",
+                "bullets": [
+                    "CV text or uploaded CV content provided by the user",
+                    "Job description text provided by the user",
+                    "Account information if the user signs in",
+                    "Payment status information from Stripe, but not full card details",
+                    "Basic analytics and technical data such as pages visited, browser/device information, and approximate location where analytics tools provide this",
+                ],
+            },
+            {
+                "title": "How we use this information",
+                "bullets": [
+                    "To provide CV checks and reports",
+                    "To compare CV content with job descriptions",
+                    "To manage accounts, free usage, and paid access",
+                    "To improve the website and understand usage",
+                    "To prevent abuse, errors, and misuse",
+                ],
+            },
+            ("CV uploads and sensitive information", "CVs can contain personal information. Please avoid uploading information that is not needed for a CV check, such as national insurance numbers, full home addresses, passport details, bank details, or other highly sensitive information."),
+            ("Payments", "Payments are processed by Stripe. CV Optimiser does not store full card details."),
+            ("AI processing", "CV checks may be processed using AI services to generate suggestions. Do not upload content you are not comfortable having processed for this purpose."),
+            ("Data retention", "We only keep information for as long as reasonably needed to provide the service, manage accounts, maintain records, improve reliability, and meet legal or security obligations. If the service stores report history for signed-in users, that history may remain available in the user account unless deleted or removed as part of normal account management."),
+            ("User rights", "Depending on your location, you may have rights to access, correct, delete, or restrict use of your personal information."),
+            ("Contact", "Questions about privacy can be sent through the Contact page."),
         ],
     },
     "terms": {
         "title": "Terms | CV Optimiser",
-        "description": "Read the core terms for using CV Optimiser, including your responsibility for reviewing generated CV suggestions.",
+        "description": "Read the core terms for using CV Optimiser, including guidance-only output, payments and acceptable use.",
         "h1": "Terms",
-        "intro": "CV Optimiser provides CV improvement suggestions and analysis for informational purposes. You are responsible for checking that your final CV remains truthful, accurate and appropriate for the role.",
+        "intro": "Last updated: May 2026",
         "sections": [
-            ("Using the tool", "The service is designed to help you improve your CV, but you remain responsible for all final application content."),
-            ("Subscriptions", "If you choose Pro, subscriptions renew according to your Stripe billing settings until cancelled."),
-            ("Final responsibility", "You should review all generated suggestions and make sure they accurately reflect your real experience and achievements."),
+            ("What CV Optimiser does", "CV Optimiser provides AI-assisted CV checks, CV-to-job-description comparison, keyword suggestions, and practical improvement guidance."),
+            ("Guidance only", "CV Optimiser does not guarantee interviews, job offers, ATS acceptance, recruiter responses, or employer decisions."),
+            ("User responsibility", "Users are responsible for reviewing suggestions and deciding what to include in their CV."),
+            ("No employment relationship", "CV Optimiser is not a recruitment agency, employer, ATS provider, or official hiring platform."),
+            ("No affiliation", "References to job descriptions, ATS systems, employers, sectors, or role types are for descriptive purposes only and do not imply endorsement, partnership, or affiliation."),
+            ("Payments and access", "Paid features, prices, and access levels are shown on the website before purchase. Payments are processed by Stripe."),
+            {
+                "title": "Acceptable use",
+                "copy": "Users must not:",
+                "bullets": [
+                    "Upload unlawful content",
+                    "Upload someone else's CV without permission",
+                    "Attempt to misuse, scrape, reverse engineer, or overload the service",
+                    "Use the site for fraudulent applications or misrepresentation",
+                ],
+            },
+            ("Availability", "We aim to keep the service available but cannot guarantee uninterrupted access."),
+            ("Contact", "Questions can be sent through the Contact page."),
         ],
     },
 }
@@ -404,8 +473,8 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
         "meta_description": "Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.",
-        "h1": "Beat ATS filters and get more interviews — in under 60 seconds",
-        "intro": "See exactly why your CV gets rejected and fix it instantly with tailored suggestions.",
+        "h1": "Check your CV before applying — in under 60 seconds",
+        "intro": "Compare your CV with a job description and get practical suggestions before you apply.",
         "tool_intro": [
             "Upload your CV and a job description to get your personalised score and fixes.",
         ],
@@ -417,21 +486,21 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
                 "bullets": [
                     "Your CV match score",
                     "Missing keywords for the role",
-                    "What recruiters may miss",
+                    "What may be unclear",
                     "The most important improvements to make",
                 ],
-                "helper": "It’s designed to reflect how your CV is likely to perform in real job applications.",
+                "helper": "It’s designed to reflect how your CV is aligned with the job description.",
             },
             {
-                "title": "Why most CVs get rejected",
-                "copy": "Many CVs are rejected before a recruiter reads them properly.",
+                "title": "Why many CVs are overlooked",
+                "copy": "Many CVs are overlooked when relevance is unclear.",
                 "bullets": [
                     "Important keywords from the job description are missing",
                     "Experience isn’t clearly aligned to the role",
                     "Achievements are vague or not measurable",
                     "The CV doesn’t quickly show relevance",
                 ],
-                "helper": "Fixing these issues can significantly improve your chances of getting interviews.",
+                "helper": "Fixing these issues can help you submit a clearer, more targeted application.",
             },
             {
                 "title": "How the CV check works",
@@ -455,7 +524,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             },
         ],
         "example_title": "Example CV diagnosis",
-        "example_score": "Score: 58/100 — likely to be skipped",
+        "example_score": "Score: 58/100 — needs clearer role alignment",
         "example_keywords": ["stakeholder management", "forecasting", "commercial planning"],
         "example_fixes": ["Add measurable results", "Strengthen your summary", "Match role keywords"],
         "example_link_label": "View full example report →",
@@ -531,15 +600,15 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "title": "CV Keyword Optimiser | Improve Your CV for Job Applications",
         "meta_description": "Find missing CV keywords and improve how well your CV matches a job description.",
         "h1": "CV Keyword Optimiser",
-        "intro": "Find the keywords your CV is missing and improve your chances of getting interviews.",
+        "intro": "Find missing keywords and improve how clearly your CV matches the role.",
         "tool_intro": [
-            "Recruiters and ATS systems often scan for specific terms from the job description. If those keywords are missing, your CV may not be shortlisted.",
+            "Recruiters and ATS systems often scan for specific terms from the job description. If those keywords are missing, your CV may look less aligned with the role.",
         ],
         "tool_heading": "Optimise your CV keywords",
         "sections": [
             {
                 "title": "Why keywords matter",
-                "copy": "Recruiters and ATS systems often scan for specific terms from the job description. If those keywords are missing, your CV may not be shortlisted.",
+                "copy": "Recruiters and ATS systems often scan for specific terms from the job description. If those keywords are missing, your CV may look less aligned with the role.",
             },
             {
                 "title": "What you will find",
@@ -562,7 +631,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "intro": "Check how your CV performs in Applicant Tracking Systems and identify what is missing.",
         "tool_intro": [
             "Most companies use ATS software to filter CVs before a human sees them.",
-            "If your CV doesn’t match the job description closely, it may be filtered out or ranked lower before a human reviews it.",
+            "If your CV doesn’t match the job description closely, it may look less aligned in ATS-style screening before manual review.",
         ],
         "tool_heading": "Check your CV for ATS compatibility",
         "sections": [
@@ -572,7 +641,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "title": "Why it matters",
-                "copy": "If your CV does not match the job description closely, it may be filtered out or ranked lower before a human reviews it.",
+                "copy": "If your CV does not match the job description closely, it may look less aligned in ATS-style screening before manual review.",
             },
             {
                 "title": "What this checker helps with",
@@ -585,7 +654,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             },
         ],
         "cta_title": "Check your CV for ATS compatibility",
-        "cta_copy": "Use the checker to see whether your CV is likely to survive ATS screening before you apply.",
+        "cta_copy": "Use the checker to review ATS-style readability and role match before you apply.",
         "cta_label": "Check your CV for ATS compatibility",
     },
     "cv-improvement-tool": {
@@ -614,16 +683,16 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             },
         ],
         "cta_title": "Improve your CV now",
-        "cta_copy": "Get actionable CV feedback and focus on the improvements most likely to help you win interviews.",
+        "cta_copy": "Get actionable CV feedback and focus on practical improvements for role fit and clarity.",
         "cta_label": "Improve your CV now",
     },
 }
 
 BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     "why-is-my-cv-not-getting-interviews": {
-        "title": "Why Your CV Isn’t Getting Interviews (And How to Fix It Fast)",
+        "title": "Why Your CV May Not Be Getting Responses",
         "meta_description": "Applying for jobs and hearing nothing back? See why your CV is getting ignored and what to fix first.",
-        "h1": "Why Your CV Isn’t Getting Interviews",
+        "h1": "Why Your CV May Not Be Getting Responses",
         "intro": "If you're applying for jobs and hearing nothing back, your CV isn’t working. Not because you're unqualified — but because your CV isn’t aligned with how hiring actually works.",
         "summary_title": "Quick summary:",
         "summary_bullets": [
@@ -676,7 +745,7 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         "title": "How to Tailor Your CV to a Job Description | CV Optimiser",
         "meta_description": "Learn how to tailor your CV to a job description using keywords, relevant experience and clearer achievements.",
         "h1": "How to Tailor Your CV to a Job Description",
-        "intro": "Tailoring your CV isn’t optional — it’s the difference between getting ignored and getting interviews.",
+        "intro": "Tailoring your CV isn’t optional — it’s the difference between submitting a generic CV and a clearer targeted application.",
         "summary_bullets": [
             "Match keywords from the job description",
             "Reorder your experience to match priorities",
@@ -710,7 +779,7 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
             {
                 "title": "What this changes",
                 "paragraphs": [
-                    "A tailored CV makes your fit obvious faster. That is what gets interviews.",
+                    "A tailored CV makes your fit easier to assess before you apply.",
                 ],
             },
         ],
@@ -723,8 +792,8 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
     "ats-cv-keywords": {
         "title": "ATS CV Keywords Explained | CV Optimiser",
         "meta_description": "Learn what ATS CV keywords are, why they matter and how to find missing keywords in your CV.",
-        "h1": "ATS CV Keywords: How to Get Past Filters",
-        "intro": "Most CVs fail before a human ever sees them. ATS software scans for keywords that match the job description.",
+        "h1": "ATS CV Keywords: How to Check Role Match",
+        "intro": "Many CVs are screened by software before manual review. ATS software scans for keywords that match the job description.",
         "top_cta": "Find missing keywords in your CV",
         "bottom_cta": "Find missing keywords in your CV",
         "sections": [
@@ -764,9 +833,9 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         ],
     },
     "cv-mistakes-that-cost-interviews": {
-        "title": "CV Mistakes That Cost You Interviews | CV Optimiser",
-        "meta_description": "Avoid common CV mistakes that reduce your chances of getting interviews, from vague achievements to missing keywords.",
-        "h1": "CV Mistakes That Cost You Interviews",
+        "title": "CV Mistakes That Weaken Applications | CV Optimiser",
+        "meta_description": "Avoid common CV mistakes that reduce clarity and role match, from vague achievements to missing keywords.",
+        "h1": "CV Mistakes That Weaken Applications",
         "intro": "Small CV mistakes can make strong candidates look weaker than they are.",
         "top_cta": "Fix your CV now",
         "bottom_cta": "Fix your CV now",
@@ -840,9 +909,9 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
 
 CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
     "why-is-my-cv-not-getting-interviews": {
-        "title": "Why Is My CV Not Getting Interviews? | CV Optimiser",
-        "meta_description": "Find out why your CV is not getting interviews, from weak role fit and missing evidence to poor formatting and job-description mismatch.",
-        "h1": "Why is my CV not getting interviews?",
+        "title": "Why Is My CV Not Getting Responses? | CV Optimiser",
+        "meta_description": "Find out why your CV may not be getting responses, from weak role fit and missing evidence to poor formatting and job-description mismatch.",
+        "h1": "Why is my CV not getting responses?",
         "intro": "If you are applying for relevant roles and hearing nothing back, the issue is often not your whole career history. It is usually the way your CV presents relevance, evidence and fit for the specific role.",
         "who": ["Job seekers applying regularly with little response", "People using the same CV for very different roles", "Candidates who are unsure what recruiters notice first"],
         "looks_for": ["A clear target role in the top third", "Evidence that matches the job description", "Strong outcomes rather than duty-only bullets", "Readable formatting that works when scanned quickly"],
@@ -880,7 +949,7 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
             ("What a useful CV review should cover", "A review should go beyond spelling and layout. It should ask whether the CV is relevant to the role, whether evidence is clear, and whether the most important information appears early enough."),
             ("When to go deeper", "If your score is weak or the same issues appear across several roles, you may need a more detailed rewrite plan. Start with the free check so you know where the problem is."),
         ],
-        "related": [("/cv-score-checker", "CV score checker"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/cv-checker", "CV checker")],
+        "related": [("/cv-score-checker", "CV score checker"), ("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses"), ("/cv-checker", "CV checker")],
         "tool": True,
     },
     "how-to-tailor-cv-to-a-job-description": {
@@ -909,7 +978,7 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
             ("The biggest pattern", "The most common mistake is making the recruiter work too hard. Your CV should show the role you want, the evidence you offer and the reason you match the job description quickly."),
             ("How to recover", "Tighten the top third, rewrite weak bullets, prioritise recent and relevant evidence, and check each application against the actual advert."),
         ],
-        "related": [("/10-second-cv-test", "10-Second CV Test"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/best-cv-format-for-ats", "Best CV format for ATS")],
+        "related": [("/10-second-cv-test", "10-Second CV Test"), ("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses"), ("/best-cv-format-for-ats", "Best CV format for ATS")],
     },
     "best-cv-format-for-ats": {
         "title": "Best CV Format for ATS | CV Optimiser",
@@ -1103,7 +1172,7 @@ SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "looks_for": ["Job-description relevance", "Missing keywords", "Evidence and measurable outcomes", "Readable structure"],
         "manual": ["Score each requirement as clear, weak or missing", "Check whether bullets show outcomes", "Look for generic wording in the profile", "Make sure page one carries the strongest evidence"],
         "sections": [("What the score should mean", "A good score should not reward keyword stuffing. It should reflect whether a recruiter can quickly see the role you want, the evidence you offer and the fit with the advert."), ("How to improve it", "Improve the score by tightening the profile, adding relevant evidence, strengthening bullets and making the CV easier to scan.")],
-        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews")],
+        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses")],
         "tool": True,
     },
     "cv-keyword-optimiser": {
@@ -1245,7 +1314,7 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "practical": "Write three to five lines covering target role, relevant experience, strongest evidence and role-specific strengths. For sales, lead with revenue and pipeline. For management, lead with team, operations and outcomes.",
         "mistakes": "Avoid empty phrases such as hardworking, passionate and results-driven unless they are backed by specific evidence immediately after.",
         "helps": "CV Optimiser reviews whether your summary matches the job description and suggests the strongest areas to tighten.",
-        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/how-to-tailor-cv-to-job-description", "Tailor your CV"), ("/account-manager-cv-keywords", "Account manager keywords"), ("/example-cv-report", "Example CV report")],
+        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses"), ("/how-to-tailor-cv-to-job-description", "Tailor your CV"), ("/account-manager-cv-keywords", "Account manager keywords"), ("/example-cv-report", "Example CV report")],
     },
     {
         "slug": "cv-mistakes-uk",
@@ -1257,7 +1326,7 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "practical": "Check your target role, top-third summary, keyword match, bullet strength, formatting and evidence. Every major section should help the recruiter understand why you fit this job.",
         "mistakes": "The biggest mistake is using one generic CV for every application. Other costly issues include duty-only bullets, no numbers, unclear dates and weak job-description alignment.",
         "helps": "CV Optimiser gives you a score, missing keywords and priority fixes so you know what to change first.",
-        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV is not getting interviews"), ("/best-cv-format-uk", "Best CV format UK"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example report")],
+        "related": [("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses"), ("/best-cv-format-uk", "Best CV format UK"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example report")],
     },
     {
         "slug": "best-cv-format-uk",
@@ -1331,7 +1400,7 @@ SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["related"].append(("/guide
 SEO_LANDING_PAGES["cv-score-checker"]["faqs"] = guide_faqs("a CV score checker", "your CV score")
 SEO_LANDING_PAGES["ats-cv-checker"]["faqs"] = guide_faqs("an ATS CV checker", "ATS readability and role fit")
 SEO_LANDING_PAGES["cv-keyword-optimiser"]["faqs"] = guide_faqs("a CV keyword optimiser", "keyword coverage")
-SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["faqs"] = guide_faqs("why a CV is not getting interviews", "interview response")
+SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["faqs"] = guide_faqs("why a CV is not getting responses", "employer response")
 SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"] = {
     **SEO_LANDING_PAGES["how-to-tailor-cv-to-a-job-description"],
     "slug": "how-to-tailor-cv-to-job-description",
@@ -1356,7 +1425,7 @@ SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "looks_for": ["Role fit", "Keyword gaps", "Evidence strength", "CV structure and scan readability"],
     "manual": ["Start with the job description", "Fix the first page before minor wording", "Rewrite duty-only bullets", "Check the score again after changes"],
     "related": [("/cv-score-checker", "CV score checker"), ("/ats-cv-checker", "ATS CV checker"), ("/job-description-cv-match", "Job description match"), ("/example-cv-report", "Example report")],
-    "faqs": guide_faqs("a CV improvement tool", "your interview chances"),
+    "faqs": guide_faqs("a CV improvement tool", "your CV match"),
     "tool": True,
     "cta_support": "Use CV Optimiser to move from general polish to role-specific CV fixes.",
 }
@@ -1373,8 +1442,10 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": f"{SITEMAP_SITE_URL}/cv-mistakes", "priority": "0.8"},
     {"group": "Supporting", "loc": f"{SITEMAP_SITE_URL}/how-it-works", "priority": "0.6"},
     {"loc": f"{SITEMAP_SITE_URL}/faq", "priority": "0.5"},
+    {"loc": f"{SITEMAP_SITE_URL}/pricing", "priority": "0.5"},
     {"loc": f"{SITEMAP_SITE_URL}/privacy", "priority": "0.3"},
     {"loc": f"{SITEMAP_SITE_URL}/terms", "priority": "0.3"},
+    {"loc": f"{SITEMAP_SITE_URL}/contact", "priority": "0.3"},
 ]
 
 for slug in SEO_LANDING_PAGES:
@@ -1540,7 +1611,7 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
 
 - priorityFixes:
   Exactly 3 (not more) high-impact improvements.
-  These must be the most important changes that would increase interview chances.
+  These must be the most important changes that would improve CV clarity and role match.
   Each should be specific, practical, and immediately actionable.
 
 - skillsSection:
@@ -3092,6 +3163,31 @@ def build_site_footer() -> str:
     return '<div id="siteFooter"></div><script src="/static/global-footer.js" defer></script>'
 
 
+def build_compliance_notice() -> str:
+    return (
+        '<section class="compliance-notice">'
+        "CV Optimiser provides AI-assisted CV checks and practical suggestions. "
+        "It does not guarantee interviews, job offers, ATS acceptance, or employer responses. "
+        "Results are guidance only and should be reviewed before you apply."
+        "</section>"
+    )
+
+
+def build_compliance_notice_css() -> str:
+    return """
+          .compliance-notice {
+            margin: 22px 0;
+            padding: 14px 16px;
+            border: 1px solid rgba(147, 168, 218, 0.18);
+            border-radius: 14px;
+            background: rgba(10, 19, 35, 0.34);
+            color: #AFC0E4;
+            font-size: 13px;
+            line-height: 1.6;
+          }
+    """
+
+
 def build_tool_embed_script() -> str:
     return """
         <script>
@@ -3153,7 +3249,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         conversion_preview_html = """
           <div class="conversion-trust-row" aria-label="CV check details">
             <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
-            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Your CV is not stored</span></div>
+            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
             <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
           </div>
           <div class="result-preview-card" aria-label="Example CV result preview">
@@ -3183,7 +3279,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         for section in page["sections"]
     )
     example_title = page.get("example_title", "Example CV diagnosis")
-    example_score = page.get("example_score", "Score: 58/100 — likely to be skipped")
+    example_score = page.get("example_score", "Score: 58/100 — needs clearer role alignment")
     example_keywords = page.get("example_keywords", ["stakeholder management", "forecasting", "commercial planning"])
     example_fixes = page.get("example_fixes", ["Add measurable results", "Strengthen your summary", "Match role keywords"])
     tool_intro_html = "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in page["tool_intro"])
@@ -3225,6 +3321,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
 {build_site_header_css()}
 {build_typography_css()}
 {build_cta_spacing_css()}
+{build_compliance_notice_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -3517,6 +3614,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div id="landing-tool" class="tool-card tool-shell">
             <h2>{html.escape(page["tool_heading"])}</h2>
             {tool_intro_html}
+            {build_compliance_notice()}
             <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="{html.escape(page['h1'])} tool"></iframe>
           </div>
           <div class="content-grid">
@@ -3541,6 +3639,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <section class="final-cta">
             <h2>Check your CV now</h2>
             <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
+            {build_compliance_notice()}
             <a href="/#tool" class="cta cta-button">Check your CV now</a>
           </section>
           {build_site_footer()}
@@ -3653,6 +3752,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
 {build_site_header_css()}
 {build_typography_css()}
 {build_cta_spacing_css()}
+{build_compliance_notice_css()}
 .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -4014,7 +4114,7 @@ def render_cv_checker_page() -> str:
             <div>
               <div class="card">
                 <h2>Check my CV</h2>
-                <p>Most CVs get rejected in seconds — not because of experience, but because they don’t match the job.</p>
+                <p>Many CVs are overlooked when they do not clearly match the job description.</p>
                 <p style="margin-top:12px;">Paste your CV and a job description below to get your match score and improvement suggestions.</p>
                 <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="CV checker tool"></iframe>
               </div>
@@ -4026,15 +4126,15 @@ def render_cv_checker_page() -> str:
                   <ul>
                     <li>Your CV match score</li>
                     <li>Missing keywords for the role</li>
-                    <li>What recruiters may miss</li>
+                    <li>What may be unclear</li>
                     <li>The most important improvements to make</li>
                   </ul>
-                  <p style="margin-top:12px;">It’s designed to reflect how your CV is likely to perform in real job applications.</p>
+                  <p style="margin-top:12px;">It’s designed to reflect how your CV is aligned with the job description.</p>
                 </div>
 
                 <div class="card">
-                  <h2>Why most CVs get rejected</h2>
-                  <p>Many CVs are rejected before a recruiter reads them properly.</p>
+                  <h2>Why many CVs are overlooked</h2>
+                  <p>Many CVs are overlooked when relevance is unclear.</p>
                   <p style="margin-top:12px;">This usually happens because:</p>
                   <ul>
                     <li>Important keywords from the job description are missing</li>
@@ -4042,7 +4142,7 @@ def render_cv_checker_page() -> str:
                     <li>Achievements are vague or not measurable</li>
                     <li>The CV doesn’t quickly show relevance</li>
                   </ul>
-                  <p style="margin-top:12px;">Fixing these issues can significantly improve your chances of getting interviews.</p>
+                  <p style="margin-top:12px;">Fixing these issues can help you submit a clearer, more targeted application.</p>
                 </div>
 
                 <div class="card">
@@ -4072,7 +4172,7 @@ def render_cv_checker_page() -> str:
               <div class="card">
                 <h2>Example CV diagnosis</h2>
                 <div class="example-mini">
-                  <strong>Score: 58/100 — likely to be skipped</strong>
+                  <strong>Score: 58/100 — needs clearer role alignment</strong>
                   <div>
                     <strong>Missing keywords</strong>
                     <ul>
@@ -4118,15 +4218,15 @@ def render_ats_cv_checker_page() -> str:
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>ATS CV Checker | Improve Your CV for Applicant Tracking Systems</title>
-        <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         <link rel="canonical" href="{page_url}">
         <meta property="og:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
-        <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
-        <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and increase interview chances.">
+        <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
         {build_footer_assets_head()}
         <style>
@@ -4375,6 +4475,7 @@ def render_example_report_page() -> str:
 {build_site_header_css()}
 {build_typography_css()}
 {build_cta_spacing_css()}
+{build_compliance_notice_css()}
           .header-link, .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -4652,6 +4753,7 @@ def render_example_report_page() -> str:
             <div class="eyebrow">Example report</div>
             <h1>{html.escape(EXAMPLE_REPORT_PAGE["h1"])}</h1>
             <p>{html.escape(EXAMPLE_REPORT_PAGE["intro"])}</p>
+            {build_compliance_notice()}
             <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
             </div>
@@ -4674,7 +4776,7 @@ def render_example_report_page() -> str:
                 <h2>Score overview</h2>
                 <div class="score-block">
                   <div class="score-value">Match Score: 58/100</div>
-                  <p><strong>Likely to be skipped unless improved</strong></p>
+                  <p><strong>Needs clearer role alignment</strong></p>
                   <p>This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.</p>
                 </div>
               </div>
@@ -4693,7 +4795,7 @@ def render_example_report_page() -> str:
               </div>
 
               <div class="card" style="margin-top:24px;">
-                <h2>What recruiters may miss</h2>
+                <h2>What may be unclear</h2>
                 <ul class="section-list">
                   <li>Commercial impact is not clear enough.</li>
                   <li>Summary does not closely match the target role.</li>
@@ -4780,6 +4882,7 @@ def render_example_report_page() -> str:
               <div class="card" style="margin-top:24px;">
                 <h2>Get this report for your CV</h2>
                 <p>Run your own CV and job description through CV Optimiser to unlock the full analysis, keyword gaps, rewritten examples and priority fixes.</p>
+                {build_compliance_notice()}
                 <div class="cta-row cta-block-tight">
                   <a href="/#tool" class="cta cta-button">Get this report for your CV</a>
                 </div>
@@ -4790,6 +4893,7 @@ def render_example_report_page() -> str:
           <section class="final-cta">
             <h2>Get this report for your CV</h2>
             <p>Upload your CV, paste a job description and see the report for your own application.</p>
+            {build_compliance_notice()}
             <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Get this report for your CV</a>
             </div>
@@ -5971,6 +6075,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           <section class="support-hero">
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
+            {build_compliance_notice()}
           </section>
           <div class="support-content">
             {sections_html}
@@ -6009,6 +6114,7 @@ def render_upgrade_page() -> str:
           }}
 {build_site_header_css()}
 {build_typography_css()}
+{build_compliance_notice_css()}
           .hero {{
             display: grid;
             gap: 14px;
@@ -6133,28 +6239,29 @@ def render_upgrade_page() -> str:
         <div class="page">
           {build_site_header("upgrade")}
           <div class="hero">
-            <h1>Unlock your full CV improvement plan</h1>
-            <p>Choose how you want to improve your CV.</p>
+            <h1>Pricing</h1>
+            <p>Choose a free check, paid report, or Pro access based on how much detail you need.</p>
+            {build_compliance_notice()}
           </div>
 
           <div id="upgradeLoadingState" class="upgrade-loading-state"></div>
 
           <div id="upgradeGrid" class="upgrade-grid hidden">
             <div id="oneTimeCard" class="upgrade-card upgrade-card-primary">
-              <h2>Unlock this report</h2>
+              <h2>Paid report</h2>
               <div class="price">£7.99 one-time</div>
               <ul>
-                <li>Full rewritten professional summary</li>
-                <li>Stronger bullet points tailored to the job</li>
-                <li>Complete keyword optimisation</li>
+                <li>Fuller report details for one CV result</li>
+                <li>More detailed improvement suggestions</li>
+                <li>Keyword gaps and role-match guidance</li>
                 <li>Step-by-step improvement plan</li>
               </ul>
-              <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
+              <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Buy paid report</button>
               <p class="upgrade-helper">No account needed for one-time checkout.</p>
             </div>
 
             <div id="proCard" class="upgrade-card">
-              <h2>Go Pro</h2>
+              <h2>Pro access</h2>
               <div class="price">£9.99/month</div>
               <ul>
                 <li>Unlimited CV checks</li>
@@ -6171,7 +6278,7 @@ def render_upgrade_page() -> str:
 
           <div id="alreadyProState" class="upgrade-active-state hidden">
             <h2>You're already on Pro</h2>
-            <p>Your Pro access is active. You can run unlimited CV checks and access full reports.</p>
+            <p>Your Pro access is active. You can run ongoing CV checks and access full reports.</p>
             <div class="upgrade-active-actions">
               <a href="/#tool" class="checkout-btn">Go to CV checker</a>
               <a href="/" class="upgrade-secondary-link">Manage account</a>

@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser</title>
-  <meta name="description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <title>CV Optimiser | Check Your CV Before Applying</title>
+  <meta name="description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
   <link rel="canonical" href="https://www.cv-optimiser.com/">
-  <meta property="og:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
-  <meta property="og:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <meta property="og:title" content="CV Optimiser | Check Your CV Before Applying">
+  <meta property="og:description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
   <meta property="og:url" content="https://www.cv-optimiser.com/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Free CV Checker – Get Your CV Score in 30 Seconds | CV Optimiser">
-  <meta name="twitter:description" content="Upload your CV, paste a job description and get your CV score, missing keywords and top fixes instantly. Free CV check with no signup required.">
+  <meta name="twitter:title" content="CV Optimiser | Check Your CV Before Applying">
+  <meta name="twitter:description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
   <link rel="stylesheet" href="/static/global-footer.css">
   <script>
     window.CV_OPTIMISER_SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
@@ -40,7 +40,7 @@
     "name": "CV Optimiser",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
-    "description": "Free CV checker that compares your CV against a job description and highlights score, missing keywords and top fixes.",
+    "description": "CV checker that compares your CV against a job description and highlights score, missing keywords and practical suggestions.",
     "url": "https://www.cv-optimiser.com/"
   }
   </script>
@@ -917,6 +917,30 @@
     margin-top: -2px;
     color: #9FB0D4;
     font-size: 13px;
+  }
+
+  .compliance-notice,
+  .upload-warning,
+  .result-guidance-note {
+    padding: 12px 14px;
+    border: 1px solid rgba(147, 168, 218, 0.18);
+    border-radius: 14px;
+    background: rgba(10, 19, 35, 0.34);
+    color: #AFC0E4;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .compliance-notice {
+    margin: 16px 0 0;
+  }
+
+  .upload-warning {
+    margin: 4px 0 0;
+  }
+
+  .result-guidance-note {
+    margin-top: 18px;
   }
 
   .example-preview {
@@ -3400,11 +3424,12 @@
       <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card tool-embed">
         <div class="tool-embed-title">Check your CV</div>
-        <h1 class="homepage-hero-title tool-hero-title">Beat ATS filters and get more interviews — in under 60 seconds</h1>
-        <p class="homepage-hero-subtitle tool-hero-support">See exactly why your CV gets rejected and fix it instantly with tailored suggestions.</p>
+        <h1 class="homepage-hero-title tool-hero-title">Check your CV before applying — in under 60 seconds</h1>
+        <p class="homepage-hero-subtitle tool-hero-support">Compare your CV with a job description and get practical suggestions before you apply.</p>
+        <p class="compliance-notice">Paste your CV and a job description to get AI-assisted suggestions before you apply. No job outcome is guaranteed.</p>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
-          <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Your CV is not stored</span></div>
+          <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
         </div>
 
@@ -3422,7 +3447,8 @@
           <a class="result-preview-link" href="/example-report">See full example report</a>
         </div>
 
-        <p class="upload-intro">Upload your CV and a job description to get your personalised score and fixes.</p>
+        <p class="upload-intro">Upload your CV and a job description to get your personalised score and practical suggestions.</p>
+        <p class="upload-warning">Only upload a CV you have permission to use. Avoid including national insurance numbers, bank details, passport details, or other information not needed for a CV check.</p>
 
         <div class="tool-form">
           <div class="tool-step form-section upload-section">
@@ -3548,7 +3574,7 @@
               <div id="scoreKicker" class="score-kicker">Your CV analysis</div>
               <div class="score-label">CV Match Score</div>
               <div id="score" class="score-value"></div>
-              <div id="resultStatusHeadline" class="score-headline">Unlikely to pass ATS filters</div>
+              <div id="resultStatusHeadline" class="score-headline">Needs clearer role alignment</div>
               <div id="resultStatusCopy" class="score-subtext">You’re missing key keywords and your CV isn’t aligned with this role yet.</div>
               <div id="resultPotentialCopy" class="score-potential">You could reach ~80+ with a few targeted improvements.</div>
             </div>
@@ -3582,7 +3608,7 @@
 
           <div class="result-section">
             <div class="result-section-title">Top 3 fixes to make first</div>
-            <div class="result-section-subtitle">Focus on these first to improve your chances.</div>
+            <div class="result-section-subtitle">Focus on these first to improve clarity and role fit.</div>
             <ul id="resultPriorityPreview" class="result-list"></ul>
           </div>
 
@@ -3636,7 +3662,7 @@
           </div>
 
           <div class="urgency-block hidden">
-            Most recruiters scan CVs in under 10 seconds — right now yours is easy to skip.
+            Many CVs are scanned quickly, so unclear role fit is easy to miss.
           </div>
 
           <div class="result-section hidden">
@@ -3686,7 +3712,7 @@
               <div class="result-section-title">Fix these first to increase your score fastest</div>
               <span class="pro-badge">Pro</span>
             </div>
-            <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and interview chances.</div>
+            <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and role match.</div>
             <ol id="priorityFixes" class="result-list ranked-fixes"></ol>
           </div>
 
@@ -3707,7 +3733,7 @@
           <div id="detailStrengthsWrap" class="result-grid-two">
             <div id="strongPointsWrap" class="result-section">
               <div class="result-section-title">What works</div>
-              <div class="result-section-subtitle">Strengths that support interview potential.</div>
+              <div class="result-section-subtitle">Strengths that support role fit.</div>
               <ul id="strongPoints" class="result-list"></ul>
             </div>
 
@@ -3736,7 +3762,7 @@
           <div class="result-grid-two">
             <div id="proAtsWrap" class="result-section pro-premium hidden">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                <div class="result-section-title">ATS boost suggestions</div>
+                <div class="result-section-title">ATS-style suggestions</div>
                 <span class="pro-badge">Pro</span>
               </div>
               <div class="result-section-subtitle">Keyword and phrasing upgrades to improve machine screening.</div>
@@ -3745,10 +3771,10 @@
 
             <div id="proRisksWrap" class="result-section pro-premium hidden">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                <div class="result-section-title">Interview risks</div>
+                <div class="result-section-title">Application risks</div>
                 <span class="pro-badge">Pro</span>
               </div>
-              <div class="result-section-subtitle">Areas likely to raise recruiter doubts or follow-up questions.</div>
+              <div class="result-section-subtitle">Areas likely to raise reviewer doubts or follow-up questions.</div>
               <ul id="interviewRisks" class="result-list"></ul>
             </div>
           </div>
@@ -3770,14 +3796,14 @@
 
           <div id="resultDisclaimerWrap" class="result-section" style="padding:14px 16px;">
             <p class="small">
-              Always review and edit suggestions to make sure they remain fully accurate to your real experience, responsibilities, and results.
+              These suggestions are guidance only. Review them carefully before editing your CV.
             </p>
           </div>
 
 <div id="lockedInsights" class="results-upgrade-cta hidden" style="opacity:0.85;">
   <div class="results-upgrade-cta-title">You're missing key improvements</div>
   <div class="results-upgrade-cta-copy">
-    Pro analysis identifies your highest-impact fixes, recruiter concerns, and stronger positioning for this role.
+    Pro analysis identifies priority fixes, possible reviewer concerns, and clearer positioning for this role.
   </div>
 </div>
 
@@ -4528,7 +4554,7 @@
     }
 
     function buildResultNarrative(scoreNumber, data) {
-      let headline = "This CV is likely to be skipped. Focus on the fixes below to improve your chances.";
+      let headline = "This CV needs clearer role alignment. Focus on the fixes below to improve clarity and role fit.";
       let copy = "You’re missing key keywords and your CV isn’t aligned with this role yet.";
       let potential = "You could reach ~80+ with a few targeted improvements.";
 
@@ -4537,12 +4563,12 @@
         copy = "Your CV is already in a good place, but a few targeted improvements could make it more convincing to both ATS systems and recruiters.";
         potential = "You could push this closer to a standout application with sharper evidence and tighter role alignment.";
       } else if (scoreNumber >= 60) {
-        headline = "This CV has potential but could be improved to increase interview chances.";
-        copy = "Your CV shows some fit, but recruiters may still skip past it because the alignment is not strong enough yet.";
+        headline = "This CV has potential but could be improved to improve CV clarity and role match.";
+        copy = "Your CV shows some fit, but the alignment is not strong enough yet.";
         potential = "You could reach ~80+ with a few targeted improvements.";
       } else {
-        headline = "This CV is likely to be skipped. Focus on the fixes below to improve your chances.";
-        copy = "This version is missing too many role signals, so it’s unlikely to survive ATS screening or recruiter review.";
+        headline = "This CV needs clearer role alignment. Focus on the fixes below to improve clarity and role fit.";
+        copy = "This version is missing too many role signals, so it may look weak for ATS-style screening and manual review.";
         potential = "You could reach ~70+ by fixing the biggest gaps first.";
       }
 
@@ -5550,7 +5576,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
         bulletsWrap.classList.toggle("hidden", !isCurrentlyPro);
         bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
-        resultDisclaimerWrap.classList.toggle("hidden", !isCurrentlyPro);
+        resultDisclaimerWrap.classList.remove("hidden");
         if (lockedReportSections) {
           lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
         }

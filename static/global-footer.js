@@ -19,20 +19,22 @@ function renderFooter() {
           <a href="/guides">Guides</a>
           <a href="/example-cv-report">Example Report</a>
           <a href="/how-it-works">How it works</a>
-          <a href="/why-is-my-cv-not-getting-interviews">Why Is My CV Not Getting Interviews?</a>
+          <a href="/why-is-my-cv-not-getting-interviews">Why Your CV May Not Be Getting Responses</a>
           <a href="/best-cv-format-uk">Best CV Format UK</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Trust</div>
           <a href="/faq">FAQ</a>
-          <a href="/privacy">Privacy</a>
+          <a href="/pricing">Pricing</a>
+          <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms</a>
+          <a href="/contact">Contact</a>
           <a href="/about">About</a>
         </div>
       </div>
       <div class="site-footer-bottom">
         <span>© 2026 CV Optimiser</span>
-        <span>Secure • Private • No CV storage</span>
+        <span>Secure • Private • CV handling explained</span>
       </div>
     </footer>
   `;
