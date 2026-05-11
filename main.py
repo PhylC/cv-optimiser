@@ -26,7 +26,25 @@ logger = logging.getLogger(__name__)
 
 CANONICAL_SCHEME = "https"
 CANONICAL_HOST = "www.cv-optimiser.com"
+CANONICAL_ORIGIN = f"{CANONICAL_SCHEME}://{CANONICAL_HOST}"
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "testserver"}
+
+
+def canonical_path(path: str) -> str:
+    clean_path = (path or "/").split("?", 1)[0].split("#", 1)[0].strip()
+    if not clean_path.startswith("/"):
+        clean_path = f"/{clean_path}"
+    if clean_path != "/":
+        clean_path = clean_path.rstrip("/")
+    return clean_path or "/"
+
+
+def canonical_url(path: str = "/") -> str:
+    return f"{CANONICAL_ORIGIN}{canonical_path(path)}"
+
+
+def canonical_link_tag(path: str = "/") -> str:
+    return f'<link rel="canonical" href="{html.escape(canonical_url(path))}">'
 
 
 def _split_host(host_header: str) -> tuple[str, str]:
@@ -42,7 +60,22 @@ async def canonical_redirects(request: Request, call_next):
     host_header = request.headers.get("host", "")
     host, _ = _split_host(host_header)
     is_local = host in LOCAL_HOSTS
-    if is_local or request.method not in {"GET", "HEAD"}:
+    if request.method not in {"GET", "HEAD"}:
+        return await call_next(request)
+
+    query = f"?{request.url.query}" if request.url.query else ""
+    if request.url.path != "/" and request.url.path.endswith("/"):
+        if is_local:
+            return RedirectResponse(
+                url=f"{canonical_path(request.url.path)}{query}",
+                status_code=301,
+            )
+        return RedirectResponse(
+            url=f"{canonical_url(request.url.path)}{query}",
+            status_code=301,
+        )
+
+    if is_local:
         return await call_next(request)
 
     forwarded_proto_header = request.headers.get("x-forwarded-proto", "")
@@ -63,7 +96,6 @@ async def canonical_redirects(request: Request, call_next):
     )
 
     if needs_host_redirect or needs_scheme_redirect:
-        query = f"?{request.url.query}" if request.url.query else ""
         return RedirectResponse(
             url=f"{CANONICAL_SCHEME}://{CANONICAL_HOST}{request.url.path}{query}",
             status_code=301,
@@ -103,7 +135,7 @@ async def log_requests(request: Request, call_next):
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
-SITE_URL = os.getenv("SITE_URL", "https://www.cv-optimiser.com").strip().rstrip("/")
+SITE_URL = CANONICAL_ORIGIN
 FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
 DEFAULT_SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co"
@@ -313,7 +345,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "See an example CV report",
                 "copy": "Want to see the type of feedback before you try it?",
-                "link_href": "/example-report",
+                "link_href": "/example-cv-report",
                 "link_label": "View example CV report →",
             },
             {
@@ -737,7 +769,7 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         ],
         "related_links": [
             ("/how-to-tailor-your-cv", "How to tailor your CV to a job description"),
-            ("/example-report", "See an example CV report"),
+            ("/example-cv-report", "See an example CV report"),
             ("/cv-checker", "Use the CV checker"),
         ],
     },
@@ -864,7 +896,7 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         ],
         "related_links": [
             ("/how-to-improve-cv-score", "How to improve your CV score"),
-            ("/example-report", "See an example CV report"),
+            ("/example-cv-report", "See an example CV report"),
         ],
     },
     "how-to-improve-cv-score": {
@@ -1457,23 +1489,21 @@ BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
     ),
 ]
 
-SITEMAP_SITE_URL = "https://www.cv-optimiser.com"
-
 SITEMAP_URLS: list[dict[str, str]] = [
-    {"group": "Core", "loc": f"{SITEMAP_SITE_URL}/", "priority": "1.0"},
-    {"loc": f"{SITEMAP_SITE_URL}/cv-checker", "priority": "0.9"},
-    {"loc": f"{SITEMAP_SITE_URL}/best-free-cv-checker-uk", "priority": "0.9"},
-    {"loc": f"{SITEMAP_SITE_URL}/guides", "priority": "0.8"},
-    {"group": "Guides (SEO drivers)", "loc": f"{SITEMAP_SITE_URL}/why-your-cv-is-not-getting-interviews", "priority": "0.8"},
-    {"loc": f"{SITEMAP_SITE_URL}/how-to-tailor-your-cv", "priority": "0.8"},
-    {"loc": f"{SITEMAP_SITE_URL}/ats-cv-keywords", "priority": "0.8"},
-    {"loc": f"{SITEMAP_SITE_URL}/cv-mistakes", "priority": "0.8"},
-    {"group": "Supporting", "loc": f"{SITEMAP_SITE_URL}/how-it-works", "priority": "0.6"},
-    {"loc": f"{SITEMAP_SITE_URL}/faq", "priority": "0.5"},
-    {"loc": f"{SITEMAP_SITE_URL}/pricing", "priority": "0.5"},
-    {"loc": f"{SITEMAP_SITE_URL}/privacy", "priority": "0.3"},
-    {"loc": f"{SITEMAP_SITE_URL}/terms", "priority": "0.3"},
-    {"loc": f"{SITEMAP_SITE_URL}/contact", "priority": "0.3"},
+    {"group": "Core", "loc": canonical_url("/"), "priority": "1.0"},
+    {"loc": canonical_url("/cv-checker"), "priority": "0.9"},
+    {"loc": canonical_url("/best-free-cv-checker-uk"), "priority": "0.9"},
+    {"loc": canonical_url("/guides"), "priority": "0.8"},
+    {"group": "Guides (SEO drivers)", "loc": canonical_url("/why-your-cv-is-not-getting-interviews"), "priority": "0.8"},
+    {"loc": canonical_url("/how-to-tailor-your-cv"), "priority": "0.8"},
+    {"loc": canonical_url("/ats-cv-keywords"), "priority": "0.8"},
+    {"loc": canonical_url("/cv-mistakes"), "priority": "0.8"},
+    {"group": "Supporting", "loc": canonical_url("/how-it-works"), "priority": "0.6"},
+    {"loc": canonical_url("/faq"), "priority": "0.5"},
+    {"loc": canonical_url("/pricing"), "priority": "0.5"},
+    {"loc": canonical_url("/privacy"), "priority": "0.3"},
+    {"loc": canonical_url("/terms"), "priority": "0.3"},
+    {"loc": canonical_url("/contact"), "priority": "0.3"},
 ]
 
 for slug in SEO_LANDING_PAGES:
@@ -1485,21 +1515,17 @@ for slug in SEO_LANDING_PAGES:
         "cv-job-description-match",
         "free-cv-review",
     } else "0.75"
-    loc = f"{SITEMAP_SITE_URL}/{slug}"
+    loc = canonical_url(slug)
     if not any(entry["loc"] == loc for entry in SITEMAP_URLS):
         SITEMAP_URLS.append({"loc": loc, "priority": priority})
 
-test_loc = f"{SITEMAP_SITE_URL}/10-second-cv-test"
+test_loc = canonical_url("/10-second-cv-test")
 if not any(entry["loc"] == test_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": test_loc, "priority": "0.8"})
 
-example_cv_report_loc = f"{SITEMAP_SITE_URL}/example-cv-report"
+example_cv_report_loc = canonical_url("/example-cv-report")
 if not any(entry["loc"] == example_cv_report_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": example_cv_report_loc, "priority": "0.7"})
-
-example_report_loc = f"{SITEMAP_SITE_URL}/example-report"
-if not any(entry["loc"] == example_report_loc for entry in SITEMAP_URLS):
-    SITEMAP_URLS.append({"loc": example_report_loc, "priority": "0.6"})
 
 
 def require_openai() -> OpenAI:
@@ -3123,7 +3149,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
         ("cv-checker", "/cv-checker", "CV Checker"),
         ("guides", "/guides", "Guides"),
         ("how-it-works", "/how-it-works", "How it works"),
-        ("example-report", "/example-report", "Example Report"),
+        ("example-cv-report", "/example-cv-report", "Example Report"),
         ("upgrade", "/upgrade", "Upgrade"),
     ]
     nav_html = "".join(
@@ -3249,7 +3275,7 @@ def build_tool_embed_script() -> str:
 
 
 def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
-    page_url = f"{SITE_URL}/{slug}"
+    page_url = canonical_url(slug)
     upgrade_notice_html = ""
     upgrade_notice_script = ""
     conversion_preview_html = ""
@@ -3291,7 +3317,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
               <li>Strengthen bullet points with impact verbs</li>
               <li>Optimise formatting for ATS scanning</li>
             </ul>
-            <a class="result-preview-link" href="/example-report">See full example report</a>
+            <a class="result-preview-link" href="/example-cv-report">See full example report</a>
           </div>
         """
     section_html = "".join(
@@ -3319,7 +3345,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -3680,7 +3706,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
 
 
 def render_article_page(slug: str, page: dict[str, Any]) -> str:
-    page_url = f"{SITE_URL}/{slug}"
+    page_url = canonical_url(slug)
     section_parts = []
     for section in page["sections"]:
         paragraphs_html = "".join(
@@ -3738,7 +3764,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -3929,7 +3955,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
 
 
 def render_cv_checker_page() -> str:
-    page_url = f"{SITE_URL}/cv-checker"
+    page_url = canonical_url("/cv-checker")
     return f"""
     <!doctype html>
     <html lang="en">
@@ -3938,7 +3964,7 @@ def render_cv_checker_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Free CV Checker | Compare Your CV to Any Job Description</title>
         <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/cv-checker")}
         <meta property="og:title" content="Free CV Checker | Compare Your CV to Any Job Description">
         <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
         <meta property="og:url" content="{page_url}">
@@ -4238,7 +4264,7 @@ def render_cv_checker_page() -> str:
 
 
 def render_ats_cv_checker_page() -> str:
-    page_url = f"{SITE_URL}/ats-cv-checker"
+    page_url = canonical_url("/ats-cv-checker")
     return f"""
     <!doctype html>
     <html lang="en">
@@ -4247,7 +4273,7 @@ def render_ats_cv_checker_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>ATS CV Checker | Improve Your CV for Applicant Tracking Systems</title>
         <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/ats-cv-checker")}
         <meta property="og:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
         <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         <meta property="og:url" content="{page_url}">
@@ -4464,8 +4490,8 @@ def render_ats_cv_checker_page() -> str:
     """
 
 
-def render_example_report_page() -> str:
-    page_url = f"{SITE_URL}/example-report"
+def render_example_report_page(slug: str = "example-cv-report") -> str:
+    page_url = canonical_url(slug)
     return f"""
     <!doctype html>
     <html lang="en">
@@ -4474,7 +4500,7 @@ def render_example_report_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(EXAMPLE_REPORT_PAGE["title"])}</title>
         <meta name="description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
         <meta property="og:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
         <meta property="og:url" content="{page_url}">
@@ -4775,7 +4801,7 @@ def render_example_report_page() -> str:
       </head>
       <body data-auth-state="loading">
         <div class="page content-page seo-page">
-          {build_site_header("example-report")}
+          {build_site_header("example-cv-report")}
 
           <div class="hero-card">
             <div class="eyebrow">Example report</div>
@@ -4935,7 +4961,7 @@ def render_example_report_page() -> str:
 
 
 def render_seo_page(slug: str, page: dict[str, Any]) -> str:
-    page_url = f"{SITE_URL}/{slug}"
+    page_url = canonical_url(slug)
     faq_html = "".join(
         f"""
         <div class="faq-item">
@@ -4957,7 +4983,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(page["title"])} | CV Optimiser</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(page["title"])} | CV Optimiser">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5104,7 +5130,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
 
 
 def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
-    page_url = f"{SITE_URL}/{slug}"
+    page_url = canonical_url(slug)
     cta_label = page.get("cta_label", "Check your CV against a job description")
     cta_href = page.get("cta_href", "/#tool")
     cta = f'<a href="{html.escape(cta_href)}" class="cta cta-button">{html.escape(cta_label)}</a>'
@@ -5165,7 +5191,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5421,7 +5447,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
 
 
 def render_ten_second_cv_test_page() -> str:
-    page_url = f"{SITE_URL}/10-second-cv-test"
+    page_url = canonical_url("/10-second-cv-test")
     checks_html = "".join(
         f'<div class="check-card"><span>□</span><p>{html.escape(item)}</p></div>'
         for item in TEN_SECOND_CV_TEST_PAGE["checks"]
@@ -5434,7 +5460,7 @@ def render_ten_second_cv_test_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}</title>
         <meta name="description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/10-second-cv-test")}
         <meta property="og:title" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}">
         <meta property="og:description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5577,7 +5603,7 @@ def render_ten_second_cv_test_page() -> str:
 
 
 def render_best_free_cv_checker_page() -> str:
-    page_url = f"{SITE_URL}/best-free-cv-checker-uk"
+    page_url = canonical_url("/best-free-cv-checker-uk")
     meta_title = "Best Free CV Checker UK | Check Your CV Against a Job Description"
     meta_description = (
         "Use CV Optimiser to check your CV against a job description, find missing keywords, "
@@ -5651,7 +5677,7 @@ def render_best_free_cv_checker_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(meta_title)}</title>
         <meta name="description" content="{html.escape(meta_description)}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/best-free-cv-checker-uk")}
         <meta property="og:title" content="{html.escape(meta_title)}">
         <meta property="og:description" content="{html.escape(meta_description)}">
         <meta property="og:url" content="{page_url}">
@@ -6005,7 +6031,7 @@ def render_faq_page() -> str:
         """
         for question, answer in FAQ_ENTRIES
     )
-    page_url = f"{SITE_URL}/faq"
+    page_url = canonical_url("/faq")
     return f"""
     <!doctype html>
     <html lang="en">
@@ -6014,7 +6040,7 @@ def render_faq_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored</title>
         <meta name="description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/faq")}
         <meta property="og:title" content="CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored">
         <meta property="og:description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <meta property="og:url" content="{page_url}">
@@ -6176,7 +6202,7 @@ def render_faq_page() -> str:
 
 
 def render_guides_page() -> str:
-    page_url = f"{SITE_URL}/guides"
+    page_url = canonical_url("/guides")
     groups = [
         ("CV checking tools", [
             ("best-free-cv-checker-uk", "/best-free-cv-checker-uk", "Best Free CV Checker UK", "Compare your CV with a job description and see where keywords, evidence and role fit could be stronger."),
@@ -6240,7 +6266,7 @@ def render_guides_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>CV Guides and Resources | CV Optimiser</title>
         <meta name="description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag("/guides")}
         <meta property="og:title" content="CV Guides and Resources | CV Optimiser">
         <meta property="og:description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
         <meta property="og:url" content="{page_url}">
@@ -6322,7 +6348,7 @@ def render_guides_page() -> str:
 
 
 def render_support_page(slug: str, page: dict[str, Any]) -> str:
-    page_url = f"{SITE_URL}/{slug}"
+    page_url = canonical_url(slug)
     section_parts = []
     for section in page["sections"]:
         if isinstance(section, tuple):
@@ -6388,7 +6414,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["description"])}">
-        <link rel="canonical" href="{page_url}">
+        {canonical_link_tag(slug)}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["description"])}">
         <meta property="og:url" content="{page_url}">
@@ -6536,6 +6562,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
 
 
 def render_upgrade_page() -> str:
+    page_url = canonical_url("/upgrade")
     return f"""
     <!doctype html>
     <html lang="en">
@@ -6544,6 +6571,8 @@ def render_upgrade_page() -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Upgrade | CV Optimiser</title>
         <meta name="description" content="Choose between a one-time full CV report or an ongoing Pro plan.">
+        {canonical_link_tag("/upgrade")}
+        <meta property="og:url" content="{page_url}">
         {build_footer_assets_head()}
         <style>
           body {{
@@ -6912,7 +6941,8 @@ def render_upgrade_page() -> str:
     """
 
 
-def render_status_page(title: str, heading: str, copy: str) -> str:
+def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
+    page_url = canonical_url(path)
     success_script = """
         <script>
           (function () {
@@ -6934,6 +6964,8 @@ def render_status_page(title: str, heading: str, copy: str) -> str:
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(title)}</title>
+        {canonical_link_tag(path)}
+        <meta property="og:url" content="{page_url}">
         {build_footer_assets_head()}
         <style>
           body {{
@@ -7044,13 +7076,17 @@ def cv_improvement_tool_page(request: Request) -> str:
     return render_seo_landing_page("cv-improvement-tool", SEO_LANDING_PAGES["cv-improvement-tool"])
 
 
-@app.get("/example-report", response_class=HTMLResponse)
-@app.get("/example-report/", response_class=HTMLResponse, include_in_schema=False)
 @app.get("/example-cv-report", response_class=HTMLResponse)
 @app.get("/example-cv-report/", response_class=HTMLResponse, include_in_schema=False)
 def example_cv_report_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_example_report_page()
+    return render_example_report_page("example-cv-report")
+
+
+@app.get("/example-report", include_in_schema=False)
+@app.get("/example-report/", include_in_schema=False)
+def example_report_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/example-cv-report", status_code=301)
 
 
 @app.get("/google4cffcb1da00a66a5.html")
@@ -7205,6 +7241,7 @@ def upgrade_page() -> str:
 @app.get("/success", response_class=HTMLResponse)
 def success() -> str:
     return render_status_page(
+        "/success",
         "Payment successful | CV Optimiser",
         "Payment successful",
         "Your full CV improvement plan is ready.",
@@ -7214,6 +7251,7 @@ def success() -> str:
 @app.get("/cancel", response_class=HTMLResponse)
 def cancel() -> str:
     return render_status_page(
+        "/cancel",
         "Payment cancelled | CV Optimiser",
         "Payment cancelled",
         "You can return to your CV check anytime.",
@@ -7232,10 +7270,12 @@ def terms_page() -> str:
 
 @app.get("/billing", response_class=HTMLResponse)
 def billing_page() -> str:
-    return """
+    return f"""
     <html>
       <head>
         <title>Billing & Cancellation | CV Optimiser</title>
+        <meta name="description" content="Billing and cancellation information for CV Optimiser subscriptions.">
+        {canonical_link_tag("/billing")}
         {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
@@ -7320,10 +7360,12 @@ def admin_analytics(limit: int = 100) -> dict[str, Any]:
 
 @app.get("/admin-analytics", response_class=HTMLResponse)
 def admin_analytics_page() -> str:
-    return """
+    return f"""
     <html>
       <head>
         <title>Analytics | CV Optimiser</title>
+        <meta name="description" content="Internal analytics dashboard for CV Optimiser.">
+        {canonical_link_tag("/admin-analytics")}
         {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }
