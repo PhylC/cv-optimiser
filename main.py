@@ -7150,6 +7150,22 @@ def sitemap() -> Response:
     return Response(content=xml_content, media_type="application/xml")
 
 
+@app.get("/robots.txt")
+def robots_txt() -> PlainTextResponse:
+    return PlainTextResponse(
+        "\n".join(
+            [
+                "User-agent: *",
+                "Allow: /",
+                "Disallow: /api/",
+                "Disallow: /admin-analytics",
+                "Sitemap: https://www.cv-optimiser.com/sitemap.xml",
+            ]
+        )
+        + "\n"
+    )
+
+
 def make_seo_landing_handler(slug: str):
     def handler() -> HTMLResponse:
         return HTMLResponse(render_seo_landing_page(slug, SEO_LANDING_PAGES[slug]))

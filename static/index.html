@@ -4283,6 +4283,10 @@
 
     async function trackEvent(eventName, metadata = {}) {
       try {
+        if (typeof window.gtag === "function") {
+          window.gtag("event", eventName, metadata || {});
+        }
+
         const token = await getSessionToken();
         const headers = {
           "Content-Type": "application/json"
