@@ -47,6 +47,24 @@ def canonical_link_tag(path: str = "/") -> str:
     return f'<link rel="canonical" href="{html.escape(canonical_url(path))}">'
 
 
+GA4_MEASUREMENT_ID = "G-JKMYVYF743"
+
+
+def google_tag() -> str:
+    escaped_id = html.escape(GA4_MEASUREMENT_ID)
+    return f"""
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={escaped_id}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){{dataLayer.push(arguments);}}
+          gtag('js', new Date());
+
+          gtag('config', '{escaped_id}');
+        </script>
+    """
+
+
 def _split_host(host_header: str) -> tuple[str, str]:
     host = (host_header or "").strip()
     if ":" not in host:
@@ -3346,6 +3364,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -3765,6 +3784,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -3965,6 +3985,7 @@ def render_cv_checker_page() -> str:
         <title>Free CV Checker | Compare Your CV to Any Job Description</title>
         <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
         {canonical_link_tag("/cv-checker")}
+        {google_tag()}
         <meta property="og:title" content="Free CV Checker | Compare Your CV to Any Job Description">
         <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
         <meta property="og:url" content="{page_url}">
@@ -4274,6 +4295,7 @@ def render_ats_cv_checker_page() -> str:
         <title>ATS CV Checker | Improve Your CV for Applicant Tracking Systems</title>
         <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         {canonical_link_tag("/ats-cv-checker")}
+        {google_tag()}
         <meta property="og:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
         <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
         <meta property="og:url" content="{page_url}">
@@ -4501,6 +4523,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         <title>{html.escape(EXAMPLE_REPORT_PAGE["title"])}</title>
         <meta name="description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
         <meta property="og:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
         <meta property="og:url" content="{page_url}">
@@ -4984,6 +5007,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
         <title>{html.escape(page["title"])} | CV Optimiser</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(page["title"])} | CV Optimiser">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5192,6 +5216,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["meta_description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5461,6 +5486,7 @@ def render_ten_second_cv_test_page() -> str:
         <title>{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}</title>
         <meta name="description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
         {canonical_link_tag("/10-second-cv-test")}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["title"])}">
         <meta property="og:description" content="{html.escape(TEN_SECOND_CV_TEST_PAGE["meta_description"])}">
         <meta property="og:url" content="{page_url}">
@@ -5678,6 +5704,7 @@ def render_best_free_cv_checker_page() -> str:
         <title>{html.escape(meta_title)}</title>
         <meta name="description" content="{html.escape(meta_description)}">
         {canonical_link_tag("/best-free-cv-checker-uk")}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(meta_title)}">
         <meta property="og:description" content="{html.escape(meta_description)}">
         <meta property="og:url" content="{page_url}">
@@ -6041,6 +6068,7 @@ def render_faq_page() -> str:
         <title>CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored</title>
         <meta name="description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         {canonical_link_tag("/faq")}
+        {google_tag()}
         <meta property="og:title" content="CV FAQ | ATS, CV Scores and Why Your CV Gets Ignored">
         <meta property="og:description" content="Direct answers on ATS filters, CV scores, keywords, tailoring your CV, and why strong candidates still get ignored.">
         <meta property="og:url" content="{page_url}">
@@ -6267,6 +6295,7 @@ def render_guides_page() -> str:
         <title>CV Guides and Resources | CV Optimiser</title>
         <meta name="description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
         {canonical_link_tag("/guides")}
+        {google_tag()}
         <meta property="og:title" content="CV Guides and Resources | CV Optimiser">
         <meta property="og:description" content="Browse practical UK CV guides covering CV checkers, ATS keywords, sales CVs, management CVs, CV formats and example reports.">
         <meta property="og:url" content="{page_url}">
@@ -6415,6 +6444,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
         <title>{html.escape(page["title"])}</title>
         <meta name="description" content="{html.escape(page["description"])}">
         {canonical_link_tag(slug)}
+        {google_tag()}
         <meta property="og:title" content="{html.escape(page["title"])}">
         <meta property="og:description" content="{html.escape(page["description"])}">
         <meta property="og:url" content="{page_url}">
@@ -6572,6 +6602,7 @@ def render_upgrade_page() -> str:
         <title>Upgrade | CV Optimiser</title>
         <meta name="description" content="Choose between a one-time full CV report or an ongoing Pro plan.">
         {canonical_link_tag("/upgrade")}
+        {google_tag()}
         <meta property="og:url" content="{page_url}">
         {build_footer_assets_head()}
         <style>
@@ -6965,6 +6996,7 @@ def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>{html.escape(title)}</title>
         {canonical_link_tag(path)}
+        {google_tag()}
         <meta property="og:url" content="{page_url}">
         {build_footer_assets_head()}
         <style>
@@ -7276,6 +7308,7 @@ def billing_page() -> str:
         <title>Billing & Cancellation | CV Optimiser</title>
         <meta name="description" content="Billing and cancellation information for CV Optimiser subscriptions.">
         {canonical_link_tag("/billing")}
+        {google_tag()}
         {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
@@ -7366,6 +7399,7 @@ def admin_analytics_page() -> str:
         <title>Analytics | CV Optimiser</title>
         <meta name="description" content="Internal analytics dashboard for CV Optimiser.">
         {canonical_link_tag("/admin-analytics")}
+        {google_tag()}
         {build_footer_assets_head()}
         <style>
           body { font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }
