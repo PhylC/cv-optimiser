@@ -736,6 +736,129 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
     },
 }
 
+COMPARISON_PAGES: dict[str, dict[str, Any]] = {
+    "cv-optimiser-vs-jobscan": {
+        "title": "CV Optimiser vs Jobscan | Which CV Checker Should You Use?",
+        "description": "Compare CV Optimiser and Jobscan for CV checking, ATS keywords, job-description matching, UK CV language and practical application feedback.",
+        "h1": "CV Optimiser vs Jobscan",
+        "intro": "Jobscan is a mature resume scanner focused on ATS matching and job-description keywords. CV Optimiser is built around UK CV language, fast role-specific feedback and practical report examples before you apply.",
+        "competitor": "Jobscan",
+        "best_for_competitor": "Job seekers who want a broad ATS resume scanner with detailed resume formatting checks, keyword matching and a larger job-search toolset.",
+        "best_for_us": "UK job seekers who want fast CV-to-job-description feedback, clearer missing keywords, example report pages and a simple CV-first workflow.",
+        "rows": [
+            ("Primary focus", "UK CV checks, role match, missing keywords and practical CV improvement guidance.", "Resume scanning, ATS matching, formatting checks and broader job-search tools."),
+            ("Language fit", "Uses UK CV language throughout the product and content.", "Uses resume-focused wording, which may suit US/international searches better."),
+            ("Example output", "Shows report-style examples by role so users can see likely feedback before running a check.", "Shows scanner examples and match-report concepts on its product pages."),
+            ("Best use case", "Checking whether a CV clearly fits a specific UK job description.", "Optimising a resume against ATS-style checks and job-description keywords."),
+        ],
+        "choose_us": [
+            "You write and apply with a UK CV rather than a US-style resume.",
+            "You want a fast score, missing keywords and top fixes without a heavy workflow.",
+            "You want to see role-specific example reports before trusting the tool.",
+        ],
+        "choose_competitor": [
+            "You want a larger resume/job-search platform around ATS scanning.",
+            "You prefer resume terminology and a more established scanner brand.",
+            "You want detailed formatting checks as a central part of the workflow.",
+        ],
+        "related": [
+            ("/best-free-cv-checker-uk", "Best free CV checker UK"),
+            ("/ats-cv-checker", "ATS CV checker"),
+            ("/sales-cv-example-report", "Sales CV example report"),
+        ],
+    },
+    "cv-optimiser-vs-resume-worded": {
+        "title": "CV Optimiser vs Resume Worded | CV Checker Comparison",
+        "description": "Compare CV Optimiser and Resume Worded for CV scoring, resume feedback, LinkedIn checks, keyword targeting and role-specific application support.",
+        "h1": "CV Optimiser vs Resume Worded",
+        "intro": "Resume Worded is a broad resume and LinkedIn feedback platform. CV Optimiser is narrower: it focuses on checking a CV against a job description and showing practical fixes for that application.",
+        "competitor": "Resume Worded",
+        "best_for_competitor": "Job seekers who want resume feedback, LinkedIn profile help, rewrite support and templates in one broader platform.",
+        "best_for_us": "Job seekers who want a direct CV match score against a specific job description, with missing keywords and role-specific guidance.",
+        "rows": [
+            ("Primary focus", "CV-to-job-description match, missing keywords, scoring and practical report guidance.", "Resume scoring, LinkedIn profile feedback, AI rewrites, templates and keyword targeting."),
+            ("Workflow", "Paste a CV and job description, then review the role match.", "Upload a resume or LinkedIn profile and use broader feedback features."),
+            ("UK fit", "Built around CV wording and UK-focused search pages.", "Mostly uses resume wording, with international appeal."),
+            ("Best use case", "Checking one application before you submit it.", "Improving a resume/LinkedIn profile across a wider job-search toolkit."),
+        ],
+        "choose_us": [
+            "You want job-description matching rather than general resume polish.",
+            "You want UK CV terminology and role-specific CV example reports.",
+            "You want a lightweight check before deciding whether to unlock a fuller report.",
+        ],
+        "choose_competitor": [
+            "You want LinkedIn profile feedback alongside resume feedback.",
+            "You want templates and rewrite tooling as part of a broader platform.",
+            "You are happy using resume-focused language and workflows.",
+        ],
+        "related": [
+            ("/cv-score-checker", "CV score checker"),
+            ("/cv-job-description-match", "CV job description match"),
+            ("/project-manager-cv-example-report", "Project manager CV example report"),
+        ],
+    },
+    "best-ats-cv-checker-uk": {
+        "title": "Best ATS CV Checker UK | What to Look For Before You Apply",
+        "description": "Find out what makes a useful ATS CV checker for UK job applications, including keyword match, formatting, role relevance and clear improvement steps.",
+        "h1": "Best ATS CV checker UK",
+        "intro": "The best ATS CV checker is not just a keyword counter. It should help you understand whether your CV is readable, relevant and clearly matched to the job description.",
+        "competitor": "Other ATS checkers",
+        "best_for_competitor": "Some tools are useful for broad resume scans, template checks or large job-search workflows.",
+        "best_for_us": "CV Optimiser is useful when you want a UK CV check focused on a specific job description and practical fixes before applying.",
+        "rows": [
+            ("Job-description matching", "Compares your CV with the exact advert so feedback is role-specific.", "Some tools offer this, while others focus on general CV quality."),
+            ("Keyword guidance", "Highlights missing terms and encourages truthful, natural use.", "Keyword advice varies from simple matching to deeper weighting."),
+            ("ATS readability", "Checks practical structure and readability signals without promising exact ATS outcomes.", "Tools vary widely and no checker can guarantee every employer system."),
+            ("Trust", "Shows methodology, limitations, privacy notes and example reports.", "Look for clear explanations, not magic-score promises."),
+        ],
+        "choose_us": [
+            "You want UK CV language and a simple application-focused check.",
+            "You want a score plus missing keywords and priority fixes.",
+            "You care about seeing examples before uploading your own CV.",
+        ],
+        "choose_competitor": [
+            "You need a full resume builder or template library.",
+            "You want platform-specific ATS claims for a named employer system.",
+            "You want a broader job-search suite beyond CV checking.",
+        ],
+        "related": [
+            ("/ats-cv-checker", "ATS CV checker"),
+            ("/best-cv-format-for-ats", "Best CV format for ATS"),
+            ("/how-cv-optimiser-scores-your-cv", "How scoring works"),
+        ],
+    },
+    "free-cv-checker-vs-paid-cv-review": {
+        "title": "Free CV Checker vs Paid CV Review | Which Do You Need?",
+        "description": "Compare free CV checkers and paid CV reviews, including when a quick score is enough and when a deeper human or AI-assisted review may help.",
+        "h1": "Free CV checker vs paid CV review",
+        "intro": "A free CV checker is useful for spotting obvious role-match issues quickly. A paid CV review can help when you need deeper rewrite guidance, stronger positioning or support for high-value applications.",
+        "competitor": "Paid CV review",
+        "best_for_competitor": "People who want detailed human judgement, personal career context and hands-on rewriting support.",
+        "best_for_us": "People who want quick, role-specific feedback before deciding whether a fuller report or paid review is worth it.",
+        "rows": [
+            ("Speed", "Fast score, missing keywords and priority fixes.", "Usually slower, especially if human-reviewed."),
+            ("Cost", "Starts with a free check, with paid report options for deeper guidance.", "Often higher cost because it may involve expert time."),
+            ("Personal judgement", "Useful for structured feedback, but still guidance only.", "Can add nuanced judgement for senior, complex or career-change applications."),
+            ("Best use case", "Checking each application against a job description.", "Repositioning a CV, resolving career story issues or preparing for important roles."),
+        ],
+        "choose_us": [
+            "You want to know what is missing before you spend money.",
+            "You apply to multiple roles and need repeatable checks.",
+            "You want role-specific feedback in under a minute.",
+        ],
+        "choose_competitor": [
+            "You need a human to challenge your career story.",
+            "You are applying for senior or specialist roles with high stakes.",
+            "You want someone to rewrite large parts of the CV for you.",
+        ],
+        "related": [
+            ("/free-cv-review", "Free CV review"),
+            ("/example-cv-report", "Example CV report"),
+            ("/cv-improvement-tool", "CV improvement tool"),
+        ],
+    },
+}
+
 TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
@@ -1767,6 +1890,11 @@ for role_example_slug in ROLE_EXAMPLE_REPORTS:
     role_example_loc = canonical_url(f"/{role_example_slug}")
     if not any(entry["loc"] == role_example_loc for entry in SITEMAP_URLS):
         SITEMAP_URLS.append({"loc": role_example_loc, "priority": "0.75"})
+
+for comparison_slug in COMPARISON_PAGES:
+    comparison_loc = canonical_url(f"/{comparison_slug}")
+    if not any(entry["loc"] == comparison_loc for entry in SITEMAP_URLS):
+        SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
 
 def require_openai() -> OpenAI:
@@ -5260,6 +5388,237 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
     """
 
 
+def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
+    page_url = canonical_url(slug)
+    rows_html = "".join(
+        f"""
+        <tr>
+          <th scope="row">{html.escape(label)}</th>
+          <td>{html.escape(cv_optimiser)}</td>
+          <td>{html.escape(alternative)}</td>
+        </tr>
+        """
+        for label, cv_optimiser, alternative in page["rows"]
+    )
+    choose_us_html = "".join(f"<li>{html.escape(item)}</li>" for item in page["choose_us"])
+    choose_competitor_html = "".join(f"<li>{html.escape(item)}</li>" for item in page["choose_competitor"])
+    related_html = "".join(
+        f'<li><a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a></li>'
+        for href, label in page.get("related", [])
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{html.escape(page["title"])}</title>
+        <meta name="description" content="{html.escape(page["description"])}">
+        {canonical_link_tag(slug)}
+        {google_tag()}
+        <meta property="og:title" content="{html.escape(page["title"])}">
+        <meta property="og:description" content="{html.escape(page["description"])}">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{html.escape(page["title"])}">
+        <meta name="twitter:description" content="{html.escape(page["description"])}">
+        <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
+        {build_footer_assets_head()}
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
+              #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_cta_spacing_css()}
+{build_compliance_notice_css()}
+          .comparison-hero {{
+            padding-bottom: 28px;
+            border-bottom: 1px solid rgba(92, 112, 150, 0.16);
+          }}
+          .comparison-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin: 30px 0;
+          }}
+          .comparison-card {{
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(15, 28, 50, 0.62);
+          }}
+          .comparison-card h2 {{
+            margin-top: 0;
+          }}
+          .comparison-table-wrap {{
+            overflow-x: auto;
+            border-top: 1px solid rgba(92, 112, 150, 0.18);
+            border-bottom: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .comparison-table {{
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+          }}
+          .comparison-table th,
+          .comparison-table td {{
+            padding: 18px 14px;
+            vertical-align: top;
+            border-top: 1px solid rgba(92, 112, 150, 0.16);
+            color: #B7C6E6;
+            line-height: 1.55;
+            text-align: left;
+          }}
+          .comparison-table thead th {{
+            color: #EEF3FF;
+            border-top: 0;
+            font-size: 14px;
+          }}
+          .comparison-table tbody th {{
+            width: 22%;
+            color: #E8EEFC;
+            font-size: 14px;
+          }}
+          .section-block {{
+            padding: 32px 0;
+            border-top: 1px solid rgba(92, 112, 150, 0.16);
+          }}
+          .section-list {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+            color: #B7C6E6;
+          }}
+          .section-list li {{
+            margin-bottom: 8px;
+            line-height: 1.7;
+          }}
+          .text-link {{
+            color: #AFC0FF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 14px;
+            font-weight: 700;
+          }}
+          .cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+          }}
+          .note {{
+            color: #9FB0D4;
+            font-size: 13px;
+            line-height: 1.6;
+          }}
+          @media (max-width: 768px) {{
+            .page {{
+              padding: 16px 10px 44px;
+            }}
+            .comparison-grid {{
+              grid-template-columns: 1fr;
+              gap: 14px;
+              margin: 22px 0;
+            }}
+            .comparison-card {{
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
+          }}
+{build_mobile_layout_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page content-page seo-page">
+          {build_site_header("guides")}
+          <section class="comparison-hero">
+            <h1>{html.escape(page["h1"])}</h1>
+            <p>{html.escape(page["intro"])}</p>
+            {build_compliance_notice()}
+            <div class="cta-block-tight">
+              <a href="/#tool" class="cta cta-button">Check your CV now</a>
+            </div>
+            <p class="note">This comparison is written from publicly available product positioning and is intended to help users choose the right type of tool.</p>
+          </section>
+
+          <section class="comparison-grid">
+            <div class="comparison-card">
+              <h2>CV Optimiser is best for</h2>
+              <p>{html.escape(page["best_for_us"])}</p>
+            </div>
+            <div class="comparison-card">
+              <h2>{html.escape(page["competitor"])} is best for</h2>
+              <p>{html.escape(page["best_for_competitor"])}</p>
+            </div>
+          </section>
+
+          <section class="section-block">
+            <h2>Feature comparison</h2>
+            <div class="comparison-table-wrap">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Area</th>
+                    <th>CV Optimiser</th>
+                    <th>{html.escape(page["competitor"])}</th>
+                  </tr>
+                </thead>
+                <tbody>{rows_html}</tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="comparison-grid">
+            <div class="comparison-card">
+              <h2>Choose CV Optimiser if</h2>
+              <ul class="section-list">{choose_us_html}</ul>
+            </div>
+            <div class="comparison-card">
+              <h2>Consider {html.escape(page["competitor"])} if</h2>
+              <ul class="section-list">{choose_competitor_html}</ul>
+            </div>
+          </section>
+
+          <section class="section-block">
+            <h2>Related pages</h2>
+            <ul class="section-list">{related_html}</ul>
+          </section>
+
+          <section class="section-block">
+            <h2>Try CV Optimiser</h2>
+            <p>Paste your CV and a job description to see your match score, missing keywords and top improvements.</p>
+            {build_compliance_notice()}
+            <div class="cta-block-tight">
+              <a href="/#tool" class="cta cta-button">Check your CV now</a>
+            </div>
+          </section>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
 def render_seo_page(slug: str, page: dict[str, Any]) -> str:
     page_url = canonical_url(slug)
     faq_html = "".join(
@@ -6546,6 +6905,12 @@ def render_guides_page() -> str:
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
             ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
         ]),
+        ("Comparisons", [
+            ("cv-optimiser-vs-jobscan", "/cv-optimiser-vs-jobscan", COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["title"], COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["intro"]),
+            ("cv-optimiser-vs-resume-worded", "/cv-optimiser-vs-resume-worded", COMPARISON_PAGES["cv-optimiser-vs-resume-worded"]["title"], COMPARISON_PAGES["cv-optimiser-vs-resume-worded"]["intro"]),
+            ("best-ats-cv-checker-uk", "/best-ats-cv-checker-uk", COMPARISON_PAGES["best-ats-cv-checker-uk"]["title"], COMPARISON_PAGES["best-ats-cv-checker-uk"]["intro"]),
+            ("free-cv-checker-vs-paid-cv-review", "/free-cv-checker-vs-paid-cv-review", COMPARISON_PAGES["free-cv-checker-vs-paid-cv-review"]["title"], COMPARISON_PAGES["free-cv-checker-vs-paid-cv-review"]["intro"]),
+        ]),
     ]
     groups_html = "".join(
         f"""
@@ -7415,6 +7780,31 @@ for role_example_slug in ROLE_EXAMPLE_REPORTS:
     app.add_api_route(
         f"/{role_example_slug}/",
         make_role_example_report_handler(role_example_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+        include_in_schema=False,
+    )
+
+
+def make_comparison_page_handler(slug: str):
+    def handler(request: Request) -> str:
+        log_seo_page_hit(request.url.path)
+        return render_comparison_page(slug, COMPARISON_PAGES[slug])
+
+    handler.__name__ = f"comparison_page_{slug.replace('-', '_')}"
+    return handler
+
+
+for comparison_slug in COMPARISON_PAGES:
+    app.add_api_route(
+        f"/{comparison_slug}",
+        make_comparison_page_handler(comparison_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+    )
+    app.add_api_route(
+        f"/{comparison_slug}/",
+        make_comparison_page_handler(comparison_slug),
         methods=["GET"],
         response_class=HTMLResponse,
         include_in_schema=False,

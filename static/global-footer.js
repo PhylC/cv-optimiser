@@ -24,6 +24,8 @@ function renderFooter() {
           <a href="/project-manager-cv-example-report">Project Manager Example</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
+          <a href="/cv-optimiser-vs-jobscan">CV Optimiser vs Jobscan</a>
+          <a href="/best-ats-cv-checker-uk">Best ATS CV Checker UK</a>
           <a href="/why-is-my-cv-not-getting-interviews">Why Your CV May Not Be Getting Responses</a>
           <a href="/best-cv-format-uk">Best CV Format UK</a>
         </div>
