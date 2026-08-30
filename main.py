@@ -610,6 +610,132 @@ EXAMPLE_REPORT_PAGE: dict[str, Any] = {
     "intro": "See the type of feedback CV Optimiser gives before you run your own check.",
 }
 
+ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
+    "sales-cv-example-report": {
+        "title": "Sales CV Example Report | CV Optimiser",
+        "description": "See an example sales CV report with match score, missing sales keywords, revenue evidence gaps and improved bullet examples.",
+        "h1": "Sales CV example report",
+        "intro": "See how CV Optimiser reviews a sales CV against a real sales job description.",
+        "role_label": "Sales Executive",
+        "cv_snippet": "with experience managing prospects, building relationships and supporting revenue growth across B2B accounts.",
+        "job_snippet": "We are looking for a sales executive with pipeline generation, CRM discipline, discovery calls, negotiation, forecasting and quota achievement experience.",
+        "score": "Match Score: 61/100",
+        "score_label": "Commercial evidence needs to be sharper",
+        "score_copy": "The CV shows sales experience, but target performance, pipeline ownership and CRM evidence are not strong enough for the role.",
+        "keywords": ["pipeline generation", "quota achievement", "CRM", "forecasting", "discovery calls", "negotiation", "conversion rate"],
+        "unclear": [
+            "Revenue and target performance are not visible enough.",
+            "Pipeline generation is mentioned indirectly but not evidenced.",
+            "CRM usage appears generic rather than tied to sales process.",
+            "Achievements need stronger numbers, deal context and outcomes.",
+        ],
+        "fixes": [
+            ("Lead with sales outcomes", "Show quota, revenue, meetings booked, conversion rate or pipeline value where truthful."),
+            ("Make pipeline ownership explicit", "Use job-description language around prospecting, discovery, qualification and forecasting."),
+            ("Replace generic relationship wording", "Tie customer relationships to commercial outcomes, retention, revenue or deal progress."),
+        ],
+        "weak_bullet": "Responsible for building relationships with customers and supporting sales targets.",
+        "strong_bullet": "Generated qualified pipeline through targeted outreach and discovery calls, supporting improved conversion and clearer monthly forecasting.",
+        "ats_checks": [
+            "Core sales terms are present, but several high-intent keywords from the advert are missing.",
+            "Sales achievements need clearer metrics so they can be scanned quickly.",
+            "The profile should point to the target sales role faster.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around target role, sales cycle and commercial evidence.",
+            "Add truthful metrics for revenue, quota, pipeline, conversion or account growth.",
+            "Mirror important sales terms from the job description where experience supports them.",
+        ],
+        "related": [
+            ("/sales-cv-keywords", "Sales CV keywords"),
+            ("/cv-checker-for-sales-jobs", "CV checker for sales jobs"),
+            ("/cv-keyword-optimiser", "CV keyword optimiser"),
+        ],
+    },
+    "account-manager-cv-example-report": {
+        "title": "Account Manager CV Example Report | CV Optimiser",
+        "description": "See an account manager CV example report with stakeholder, forecasting, retention, growth and commercial planning feedback.",
+        "h1": "Account manager CV example report",
+        "intro": "See how CV Optimiser reviews an account manager CV for retention, growth, stakeholders and role fit.",
+        "role_label": "Account Manager",
+        "cv_snippet": "with experience managing retail customers, coordinating account plans and supporting commercial targets.",
+        "job_snippet": "We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&L ownership experience.",
+        "score": "Match Score: 58/100",
+        "score_label": "Needs clearer role alignment",
+        "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
+        "keywords": ["stakeholder management", "forecasting", "commercial planning", "P&L", "retailer execution", "category growth"],
+        "unclear": [
+            "Commercial impact is not clear enough.",
+            "Summary does not closely match the target role.",
+            "Achievements are written as responsibilities rather than outcomes.",
+            "Important role keywords are missing or buried.",
+        ],
+        "fixes": [
+            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results."),
+            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description."),
+            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy."),
+        ],
+        "weak_bullet": "Responsible for managing customer accounts and sales targets.",
+        "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+        "ats_checks": [
+            "Core headings are readable, but the profile is too generic for the target role.",
+            "Important account management language appears in the job description but not strongly enough in the CV.",
+            "Bullets need clearer outcomes so a recruiter can scan impact quickly.",
+        ],
+        "action_plan": [
+            "Rewrite the top profile around account ownership and commercial impact.",
+            "Add missing job-description keywords where they genuinely match experience.",
+            "Replace duty-only bullets with measurable customer and revenue outcomes.",
+        ],
+        "related": [
+            ("/account-manager-cv-keywords", "Account manager CV keywords"),
+            ("/account-manager-cv-checker", "Account manager CV checker"),
+            ("/job-description-cv-match", "Job description CV match"),
+        ],
+    },
+    "project-manager-cv-example-report": {
+        "title": "Project Manager CV Example Report | CV Optimiser",
+        "description": "See a project manager CV example report with delivery, stakeholder, budget, risk, dependency and outcome feedback.",
+        "h1": "Project manager CV example report",
+        "intro": "See how CV Optimiser reviews a project manager CV for delivery evidence, governance, risk and measurable outcomes.",
+        "role_label": "Project Manager",
+        "cv_snippet": "with experience coordinating teams, managing tasks and supporting project delivery across business change initiatives.",
+        "job_snippet": "We are looking for a project manager with stakeholder governance, delivery planning, budget tracking, RAID management, dependencies and measurable implementation outcomes.",
+        "score": "Match Score: 64/100",
+        "score_label": "Delivery evidence is present but too broad",
+        "score_copy": "The CV suggests project experience, but budget, risk, dependencies and measurable delivery outcomes need to be easier to see.",
+        "keywords": ["stakeholder governance", "delivery planning", "RAID", "dependencies", "budget tracking", "implementation", "change management"],
+        "unclear": [
+            "Project scale, budget and timeline context are not specific enough.",
+            "Risk and dependency management are missing from the strongest sections.",
+            "Delivery outcomes are described too generally.",
+            "Methodologies are mentioned without proof of successful delivery.",
+        ],
+        "fixes": [
+            ("Add project scale and context", "Show budget, team size, timeline, workstream count or delivery environment where possible."),
+            ("Evidence risk and dependency control", "Include RAID, governance, escalation and stakeholder cadence if they match your experience."),
+            ("Turn delivery duties into outcomes", "Show what changed after delivery, not just what you coordinated."),
+        ],
+        "weak_bullet": "Managed project tasks and worked with stakeholders to deliver business change.",
+        "strong_bullet": "Led cross-functional delivery planning across three workstreams, tracking risks, dependencies and milestones to support on-time implementation.",
+        "ats_checks": [
+            "Project management language is present, but risk, budget and governance terms are underused.",
+            "The CV should make delivery ownership easier to identify.",
+            "Outcomes need more concrete scope so seniority is clearer.",
+        ],
+        "action_plan": [
+            "Add project scale, budget, timelines and delivery outcomes where truthful.",
+            "Strengthen stakeholder governance, risk and dependency language.",
+            "Rewrite broad coordination bullets into delivery-focused achievements.",
+        ],
+        "related": [
+            ("/project-manager-cv-checker", "Project manager CV checker"),
+            ("/cv-checker-for-management-jobs", "CV checker for management jobs"),
+            ("/best-cv-format-for-ats", "Best CV format for ATS"),
+        ],
+    },
+}
+
 TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
@@ -1636,6 +1762,11 @@ if not any(entry["loc"] == test_loc for entry in SITEMAP_URLS):
 example_cv_report_loc = canonical_url("/example-cv-report")
 if not any(entry["loc"] == example_cv_report_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": example_cv_report_loc, "priority": "0.7"})
+
+for role_example_slug in ROLE_EXAMPLE_REPORTS:
+    role_example_loc = canonical_url(f"/{role_example_slug}")
+    if not any(entry["loc"] == role_example_loc for entry in SITEMAP_URLS):
+        SITEMAP_URLS.append({"loc": role_example_loc, "priority": "0.75"})
 
 
 def require_openai() -> OpenAI:
@@ -4615,23 +4746,93 @@ def render_ats_cv_checker_page() -> str:
 
 def render_example_report_page(slug: str = "example-cv-report") -> str:
     page_url = canonical_url(slug)
+    page = ROLE_EXAMPLE_REPORTS.get(slug, {
+        **EXAMPLE_REPORT_PAGE,
+        "role_label": "Account Manager",
+        "cv_snippet": "with experience managing retail customers, coordinating account plans and supporting commercial targets.",
+        "job_snippet": "We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&L ownership experience.",
+        "score": "Match Score: 58/100",
+        "score_label": "Needs clearer role alignment",
+        "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
+        "keywords": ["stakeholder management", "forecasting", "commercial planning", "P&L", "retailer execution", "category growth"],
+        "unclear": [
+            "Commercial impact is not clear enough.",
+            "Summary does not closely match the target role.",
+            "Achievements are written as responsibilities rather than outcomes.",
+            "Important role keywords are missing or buried.",
+        ],
+        "fixes": [
+            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results."),
+            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description."),
+            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy."),
+        ],
+        "weak_bullet": "Responsible for managing customer accounts and sales targets.",
+        "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+        "ats_checks": [
+            "Core headings are readable, but the profile is too generic for the target role.",
+            "Important role language appears in the job description but not strongly enough in the CV.",
+            "Bullets need clearer outcomes so a recruiter can scan impact quickly.",
+        ],
+        "action_plan": [
+            "Rewrite the top profile around account ownership and commercial impact.",
+            "Add missing job-description keywords where they genuinely match experience.",
+            "Replace duty-only bullets with measurable customer and revenue outcomes.",
+        ],
+        "related": [
+            ("/account-manager-cv-example-report", "Account manager CV example report"),
+            ("/sales-cv-example-report", "Sales CV example report"),
+            ("/project-manager-cv-example-report", "Project manager CV example report"),
+        ],
+    })
+    keyword_html = "".join(
+        f'<span class="keyword-chip">{html.escape(keyword)}</span>'
+        for keyword in page["keywords"]
+    )
+    unclear_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in page["unclear"]
+    )
+    fixes_html = "".join(
+        f"""
+        <div class="priority-card">
+          <span class="priority-number">{index}</span>
+          <div>
+            <strong>{html.escape(title)}</strong>
+            <p>{html.escape(copy)}</p>
+          </div>
+        </div>
+        """
+        for index, (title, copy) in enumerate(page["fixes"], start=1)
+    )
+    ats_checks_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in page["ats_checks"]
+    )
+    action_plan_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in page["action_plan"]
+    )
+    related_html = "".join(
+        f'<li><a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a></li>'
+        for href, label in page.get("related", [])
+    )
     return f"""
     <!doctype html>
     <html lang="en">
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>{html.escape(EXAMPLE_REPORT_PAGE["title"])}</title>
-        <meta name="description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <title>{html.escape(page["title"])}</title>
+        <meta name="description" content="{html.escape(page["description"])}">
         {canonical_link_tag(slug)}
         {google_tag()}
-        <meta property="og:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
-        <meta property="og:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <meta property="og:title" content="{html.escape(page["title"])}">
+        <meta property="og:description" content="{html.escape(page["description"])}">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{html.escape(EXAMPLE_REPORT_PAGE["title"])}">
-        <meta name="twitter:description" content="{html.escape(EXAMPLE_REPORT_PAGE["description"])}">
+        <meta name="twitter:title" content="{html.escape(page["title"])}">
+        <meta name="twitter:description" content="{html.escape(page["description"])}">
         {build_footer_assets_head()}
         <style>
           body {{
@@ -4929,8 +5130,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
           <div class="hero-card">
             <div class="eyebrow">Example report</div>
-            <h1>{html.escape(EXAMPLE_REPORT_PAGE["h1"])}</h1>
-            <p>{html.escape(EXAMPLE_REPORT_PAGE["intro"])}</p>
+            <h1>{html.escape(page["h1"])}</h1>
+            <p>{html.escape(page["intro"])}</p>
             {build_compliance_notice()}
             <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
@@ -4941,33 +5142,28 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             <div>
               <div class="card">
                 <h2>Example CV snippet</h2>
-                <p><strong>Account Manager</strong> with experience managing retail customers, coordinating account plans and supporting commercial targets.</p>
+                <p><strong>{html.escape(page["role_label"])}</strong> {html.escape(page["cv_snippet"])}</p>
                 <p class="section-helper">This is a short fictional snippet used to show the type of analysis a paid report can include.</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
                 <h2>Example job description snippet</h2>
-                <p>We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&amp;L ownership experience.</p>
+                <p>{html.escape(page["job_snippet"])}</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
                 <h2>Score overview</h2>
                 <div class="score-block">
-                  <div class="score-value">Match Score: 58/100</div>
-                  <p><strong>Needs clearer role alignment</strong></p>
-                  <p>This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.</p>
+                  <div class="score-value">{html.escape(page["score"])}</div>
+                  <p><strong>{html.escape(page["score_label"])}</strong></p>
+                  <p>{html.escape(page["score_copy"])}</p>
                 </div>
               </div>
 
               <div class="card" style="margin-top:24px;">
                 <h2>Missing keywords</h2>
                 <div class="keyword-chip-row">
-                  <span class="keyword-chip">stakeholder management</span>
-                  <span class="keyword-chip">forecasting</span>
-                  <span class="keyword-chip">commercial planning</span>
-                  <span class="keyword-chip">P&amp;L</span>
-                  <span class="keyword-chip">retailer execution</span>
-                  <span class="keyword-chip">category growth</span>
+                  {keyword_html}
                 </div>
                 <p class="section-helper">These are examples of keywords a recruiter or ATS may expect for this type of role.</p>
               </div>
@@ -4975,37 +5171,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               <div class="card" style="margin-top:24px;">
                 <h2>What may be unclear</h2>
                 <ul class="section-list">
-                  <li>Commercial impact is not clear enough.</li>
-                  <li>Summary does not closely match the target role.</li>
-                  <li>Achievements are written as responsibilities rather than outcomes.</li>
-                  <li>Important role keywords are missing or buried.</li>
+                  {unclear_html}
                 </ul>
               </div>
 
               <div class="card" style="margin-top:24px;">
                 <h2>Top priority fixes</h2>
                 <div class="priority-grid">
-                  <div class="priority-card">
-                    <span class="priority-number">1</span>
-                    <div>
-                      <strong>Add measurable impact</strong>
-                      <p>Replace vague responsibilities with outcomes, numbers and commercial results.</p>
-                    </div>
-                  </div>
-                  <div class="priority-card">
-                    <span class="priority-number">2</span>
-                    <div>
-                      <strong>Rewrite the summary around the target role</strong>
-                      <p>The summary should immediately show why this CV fits the job description.</p>
-                    </div>
-                  </div>
-                  <div class="priority-card">
-                    <span class="priority-number">3</span>
-                    <div>
-                      <strong>Mirror important job description language</strong>
-                      <p>Use relevant role keywords naturally so the CV feels aligned to the vacancy.</p>
-                    </div>
-                  </div>
+                  {fixes_html}
                 </div>
               </div>
 
@@ -5014,11 +5187,11 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                 <div class="example-improvement-grid">
                   <div class="before-after-card">
                     <strong>Weak bullet</strong>
-                    <p>Responsible for managing customer accounts and sales targets.</p>
+                    <p>{html.escape(page["weak_bullet"])}</p>
                   </div>
                   <div class="before-after-card">
                     <strong>Improved bullet</strong>
-                    <p>Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.</p>
+                    <p>{html.escape(page["strong_bullet"])}</p>
                   </div>
                 </div>
               </section>
@@ -5026,9 +5199,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               <div class="card" style="margin-top:24px;">
                 <h2>ATS/readability checks</h2>
                 <ul class="section-list">
-                  <li>Core headings are readable, but the profile is too generic for the target role.</li>
-                  <li>Important role language appears in the job description but not strongly enough in the CV.</li>
-                  <li>Bullets need clearer outcomes so a recruiter can scan impact quickly.</li>
+                  {ats_checks_html}
                 </ul>
               </div>
             </div>
@@ -5051,9 +5222,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               <div class="card" style="margin-top:24px;">
                 <h2>Priority action plan</h2>
                 <ul class="section-list">
-                  <li>Rewrite the top profile around account ownership and commercial impact.</li>
-                  <li>Add missing job-description keywords where they genuinely match experience.</li>
-                  <li>Replace duty-only bullets with measurable customer and revenue outcomes.</li>
+                  {action_plan_html}
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Related examples and guides</h2>
+                <ul class="section-list">
+                  {related_html}
                 </ul>
               </div>
 
@@ -6364,6 +6540,9 @@ def render_guides_page() -> str:
         ]),
         ("Examples and reports", [
             ("example-cv-report", "/example-cv-report", EXAMPLE_REPORT_PAGE["title"], EXAMPLE_REPORT_PAGE["intro"]),
+            ("sales-cv-example-report", "/sales-cv-example-report", ROLE_EXAMPLE_REPORTS["sales-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["sales-cv-example-report"]["intro"]),
+            ("account-manager-cv-example-report", "/account-manager-cv-example-report", ROLE_EXAMPLE_REPORTS["account-manager-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["account-manager-cv-example-report"]["intro"]),
+            ("project-manager-cv-example-report", "/project-manager-cv-example-report", ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
             ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
         ]),
@@ -7215,6 +7394,31 @@ def cv_improvement_tool_page(request: Request) -> str:
 def example_cv_report_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_example_report_page("example-cv-report")
+
+
+def make_role_example_report_handler(slug: str):
+    def handler(request: Request) -> str:
+        log_seo_page_hit(request.url.path)
+        return render_example_report_page(slug)
+
+    handler.__name__ = f"role_example_report_{slug.replace('-', '_')}"
+    return handler
+
+
+for role_example_slug in ROLE_EXAMPLE_REPORTS:
+    app.add_api_route(
+        f"/{role_example_slug}",
+        make_role_example_report_handler(role_example_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+    )
+    app.add_api_route(
+        f"/{role_example_slug}/",
+        make_role_example_report_handler(role_example_slug),
+        methods=["GET"],
+        response_class=HTMLResponse,
+        include_in_schema=False,
+    )
 
 
 @app.get("/example-report", include_in_schema=False)

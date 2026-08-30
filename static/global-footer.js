@@ -19,6 +19,9 @@ function renderFooter() {
           <div class="site-footer-title">Resources</div>
           <a href="/guides">Guides</a>
           <a href="/example-cv-report">Example Report</a>
+          <a href="/sales-cv-example-report">Sales CV Example</a>
+          <a href="/account-manager-cv-example-report">Account Manager Example</a>
+          <a href="/project-manager-cv-example-report">Project Manager Example</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
           <a href="/why-is-my-cv-not-getting-interviews">Why Your CV May Not Be Getting Responses</a>
