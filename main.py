@@ -877,6 +877,18 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "tool_heading": "Check my CV",
         "sections": [
             {
+                "title": "Why use CV Optimiser instead of a generic CV checker?",
+                "copy": "CV Optimiser is built around one practical job-search moment: you have a CV, you have a job description, and you need to know whether the CV is strong enough before you apply.",
+                "bullets": [
+                    "Uses UK CV language rather than only resume wording",
+                    "Scores your CV against the job description, not a generic ideal CV",
+                    "Shows missing keywords, weak evidence and priority fixes",
+                    "Links to example reports so you can see the type of feedback first",
+                ],
+                "link_href": "/how-cv-optimiser-scores-your-cv",
+                "link_label": "See how the scoring works →",
+            },
+            {
                 "title": "What this CV checker does",
                 "copy": "This CV checker compares your CV against a job description to show:",
                 "bullets": [
@@ -917,6 +929,12 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
                     "Feedback on clarity and relevance",
                 ],
                 "helper": "The full report includes deeper improvements and rewrite suggestions.",
+            },
+            {
+                "title": "See the report style before you try it",
+                "copy": "The site includes fictional example reports for sales, account manager and project manager CVs, so you can understand the type of output before using your own CV.",
+                "link_href": "/example-cv-report",
+                "link_label": "View example CV reports →",
             },
         ],
         "example_title": "Example CV diagnosis",
@@ -1551,13 +1569,26 @@ SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "title": "ATS CV Checker | CV Optimiser",
         "meta_description": "Check your CV for ATS readability, plain text parsing, headings, formatting, keywords and job-description match.",
         "h1": "ATS CV checker",
-        "intro": "ATS systems vary, but most reward clear structure, readable formatting and relevant job-description language. This page helps you check the practical things that can stop a CV being understood properly.",
+        "intro": "ATS systems vary, but the practical risks are consistent: unclear structure, missing job-description language and weak evidence. CV Optimiser focuses on the things you can improve before applying.",
         "who": ["People applying through online application systems", "Candidates using designed CV templates", "Job seekers who want to check keyword and formatting risks"],
-        "looks_for": ["Plain text readability", "Standard headings and logical order", "Relevant keywords used naturally", "Experience that matches the advert"],
-        "manual": ["Paste your CV into plain text and check the order", "Avoid tables or graphics for essential content", "Use clear headings such as Experience and Education", "Compare your skills section with the job description"],
-        "sections": [("ATS readability", "An ATS check should focus on whether your CV can be parsed and whether it contains relevant evidence. It cannot guarantee how every employer's system will rank you."), ("What to improve", "Use simple formatting, add truthful role language and make your strongest relevant examples easy to find.")],
-        "related": [("/best-cv-format-for-ats", "Best CV format for ATS"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-job-description-match", "CV job description match")],
+        "looks_for": ["Plain text readability", "Standard headings and logical order", "Relevant keywords used naturally", "Experience that matches the advert", "Evidence behind important skills rather than unsupported keyword lists"],
+        "manual": ["Paste your CV into plain text and check the reading order", "Avoid tables or graphics for essential content", "Use clear headings such as Experience and Education", "Compare your skills section with the job description", "Check whether the first page clearly proves the target role"],
+        "sections": [
+            ("Why CV Optimiser is useful for ATS checks", "It does not pretend to know every employer's exact ATS setup. Instead, it checks the practical things that usually matter: readable structure, job-description match, missing keywords and whether your evidence is easy to scan."),
+            ("What makes it different", "CV Optimiser is built for UK CVs and role-specific checks. The score is tied to the job description you paste in, which makes the feedback more useful than a generic CV quality score."),
+            ("What to improve", "Use simple formatting, add truthful role language and make your strongest relevant examples easy to find. Then recheck the CV against the same job description before applying."),
+            ("Proof before you use it", "If you want to see the kind of feedback first, review the example report pages for sales, account management and project management CVs."),
+        ],
+        "related": [("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/best-cv-format-for-ats", "Best CV format for ATS"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-job-description-match", "CV job description match"), ("/how-cv-optimiser-scores-your-cv", "How scoring works")],
         "tool": True,
+        "cta_support": "Use the ATS checker to find practical risks: missing role terms, unsupported keywords, weak first-page relevance and formatting choices that make your CV harder to read.",
+        "faqs": [
+            ("Can any ATS checker guarantee my CV will pass?", "No. ATS systems and employer settings vary. CV Optimiser focuses on practical readability and role-match issues you can improve before applying."),
+            ("Is this built for UK CVs?", "Yes. CV Optimiser uses CV wording and UK-focused pages, examples and role guidance."),
+            ("Should I add every missing keyword?", "No. Add only the keywords you can honestly support with experience, evidence or achievements."),
+            ("What score should I aim for?", "There is no universal guaranteed score, but a stronger score usually means clearer role alignment, better keyword coverage and stronger evidence."),
+            ("Can I see an example first?", "Yes. The site includes example CV reports that show scores, missing keywords, unclear areas and improved bullet examples."),
+        ],
     },
     "cv-score-checker": {
         "title": "CV Score Checker | CV Optimiser",
@@ -1794,7 +1825,7 @@ for guide_page in SEO_GUIDE_PAGE_DEFINITIONS:
 
 SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["related"].append(("/guides", "All CV guides"))
 SEO_LANDING_PAGES["cv-score-checker"]["faqs"] = guide_faqs("a CV score checker", "your CV score")
-SEO_LANDING_PAGES["ats-cv-checker"]["faqs"] = guide_faqs("an ATS CV checker", "ATS readability and role fit")
+SEO_LANDING_PAGES["ats-cv-checker"]["faqs"] = SEO_LANDING_PAGES["ats-cv-checker"].get("faqs") or guide_faqs("an ATS CV checker", "ATS readability and role fit")
 SEO_LANDING_PAGES["cv-keyword-optimiser"]["faqs"] = guide_faqs("a CV keyword optimiser", "keyword coverage")
 SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["faqs"] = guide_faqs("why a CV is not getting responses", "employer response")
 SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"] = {
@@ -6359,8 +6390,15 @@ def render_best_free_cv_checker_page() -> str:
         "Missing measurable achievements",
         "Overly broad personal summaries",
     ]
+    strength_points = [
+        "Built around UK CV wording and job-search intent",
+        "Checks the CV against the exact job description instead of only giving generic advice",
+        "Shows practical missing keywords, weak evidence and priority fixes",
+        "Includes example reports so you can see the output before using your own CV",
+        "Keeps the first check fast, with no signup needed for the first result",
+    ]
     comparison_rows = [
-        ("CV Optimiser", "Quick role-specific CV checks against a job description", "It is automated, so important applications may still benefit from human review"),
+        ("CV Optimiser", "Quick UK CV checks against a real job description, with score, missing keywords and practical next fixes", "It is automated, so important applications may still benefit from human review"),
         ("Generic CV templates", "Improving layout and structure", "They do not check fit against a specific role"),
         ("Paid CV writing services", "Full rewrite and human judgement", "More expensive and slower"),
         ("Manual self-review", "Quick final checks", "Easy to miss keyword gaps and weak evidence"),
@@ -6373,6 +6411,10 @@ def render_best_free_cv_checker_page() -> str:
         ("/cv-keyword-optimiser", "CV keyword optimiser"),
         ("/job-description-cv-match", "CV checker against job description"),
         ("/example-cv-report", "Example CV report"),
+        ("/sales-cv-example-report", "Sales CV example report"),
+        ("/account-manager-cv-example-report", "Account manager example report"),
+        ("/cv-optimiser-vs-jobscan", "CV Optimiser vs Jobscan"),
+        ("/cv-optimiser-vs-resume-worded", "CV Optimiser vs Resume Worded"),
         ("/privacy", "Privacy Policy"),
     ]
     faq_html = "".join(
@@ -6652,6 +6694,14 @@ def render_best_free_cv_checker_page() -> str:
             <h2>Quick answer: what is the best free CV checker?</h2>
             <p>The best free CV checker is one that compares your CV against the role you are applying for, not just against generic formatting rules. CV Optimiser is useful because it checks your CV against a job description and shows where your wording, keywords and evidence could be stronger.</p>
             <p>It is best suited for people who want quick, practical, role-specific feedback before applying. It is not a replacement for every type of human CV review.</p>
+          </section>
+
+          <section class="content-section">
+            <h2>Why choose CV Optimiser?</h2>
+            <p>CV Optimiser is intentionally focused. It is not trying to be a full job board, template library or career-management suite. It is built to answer the question that matters right before you apply: does this CV clearly match this job?</p>
+            <ul class="section-list">
+              {"".join(f"<li>{html.escape(item)}</li>" for item in strength_points)}
+            </ul>
           </section>
 
           <section class="flat-section split-grid">
