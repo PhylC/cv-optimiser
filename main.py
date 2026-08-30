@@ -9,6 +9,7 @@ import os
 import re
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Optional
 
 from docx import Document
@@ -20,6 +21,26 @@ from openai import OpenAI
 from pypdf import PdfReader
 import stripe
 from supabase import Client, create_client
+
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_INDEX_PATH = BASE_DIR / "static" / "index.html"
+
+
+def load_dotenv_file(path: Path = BASE_DIR / ".env") -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+load_dotenv_file()
 
 app = FastAPI(title="CV Optimiser V2")
 logger = logging.getLogger(__name__)
@@ -126,7 +147,11 @@ async def canonical_redirects(request: Request, call_next):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        CANONICAL_ORIGIN,
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -159,15 +184,8 @@ APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000").strip().rstrip
 SITE_URL = CANONICAL_ORIGIN
 FREE_ANALYSES_PER_DAY = int(os.getenv("FREE_ANALYSES_PER_DAY", "3").strip())
 
-DEFAULT_SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co"
-DEFAULT_SUPABASE_ANON_KEY = (
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
-    "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30."
-    "m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY"
-)
-
-SUPABASE_URL = os.getenv("SUPABASE_URL", DEFAULT_SUPABASE_URL).strip()
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", DEFAULT_SUPABASE_ANON_KEY).strip()
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
@@ -182,7 +200,11 @@ openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 supabase_admin: Optional[Client] = None
 
 if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
-    supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    try:
+        supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    except Exception:
+        logger.exception("Supabase admin client could not be initialized")
+        supabase_admin = None
 
 FAQ_ENTRIES: list[tuple[str, str]] = [
     (
@@ -1515,7 +1537,7 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": canonical_url("/cv-checker"), "priority": "0.9"},
     {"loc": canonical_url("/best-free-cv-checker-uk"), "priority": "0.9"},
     {"loc": canonical_url("/guides"), "priority": "0.8"},
-    {"group": "Guides (SEO drivers)", "loc": canonical_url("/why-your-cv-is-not-getting-interviews"), "priority": "0.8"},
+    {"group": "Guides (SEO drivers)", "loc": canonical_url("/why-is-my-cv-not-getting-interviews"), "priority": "0.8"},
     {"loc": canonical_url("/how-to-tailor-your-cv"), "priority": "0.8"},
     {"loc": canonical_url("/ats-cv-keywords"), "priority": "0.8"},
     {"loc": canonical_url("/cv-mistakes"), "priority": "0.8"},
@@ -3231,6 +3253,15 @@ def build_footer_assets_head() -> str:
         f"<script>window.CV_OPTIMISER_SUPABASE_URL = {json.dumps(SUPABASE_URL)};"
         f"window.CV_OPTIMISER_SUPABASE_ANON_KEY = {json.dumps(SUPABASE_ANON_KEY)};</script>"
         '<script src="/static/global-account.js"></script>'
+    )
+
+
+def render_static_index() -> str:
+    html_content = STATIC_INDEX_PATH.read_text(encoding="utf-8")
+    return (
+        html_content
+        .replace('"__SUPABASE_URL__"', json.dumps(SUPABASE_URL))
+        .replace('"__SUPABASE_ANON_KEY__"', json.dumps(SUPABASE_ANON_KEY))
     )
 
 
@@ -7057,9 +7088,9 @@ def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
     """
 
 
-@app.get("/")
-def home() -> FileResponse:
-    return FileResponse("static/index.html")
+@app.get("/", response_class=HTMLResponse)
+def home() -> str:
+    return render_static_index()
 
 
 @app.get("/cv-checker", response_class=HTMLResponse)
@@ -7221,11 +7252,10 @@ def cv_statistics_page(request: Request) -> str:
     return render_support_page("cv-statistics", SUPPORT_PAGES["cv-statistics"])
 
 
-@app.get("/why-your-cv-is-not-getting-interviews", response_class=HTMLResponse)
-@app.get("/why-your-cv-is-not-getting-interviews/", response_class=HTMLResponse, include_in_schema=False)
-def why_cv_not_getting_interviews_page(request: Request) -> str:
-    log_seo_page_hit(request.url.path)
-    return render_article_page("why-your-cv-is-not-getting-interviews", BLOG_ARTICLES["why-is-my-cv-not-getting-interviews"])
+@app.get("/why-your-cv-is-not-getting-interviews", include_in_schema=False)
+@app.get("/why-your-cv-is-not-getting-interviews/", include_in_schema=False)
+def why_cv_not_getting_interviews_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/why-is-my-cv-not-getting-interviews", status_code=301)
 
 
 @app.get("/how-to-tailor-cv-to-job-description", response_class=HTMLResponse)
@@ -7330,10 +7360,10 @@ def billing_page() -> str:
         {google_tag()}
         {build_footer_assets_head()}
         <style>
-          body { font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }
-          h1,h2 { color: #FFFFFF; }
-          a { color: #9AB0FF; }
-          p, li { color: #C7D3EE; }
+          body {{ font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }}
+          h1,h2 {{ color: #FFFFFF; }}
+          a {{ color: #9AB0FF; }}
+          p, li {{ color: #C7D3EE; }}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -7351,8 +7381,12 @@ def health() -> dict[str, str]:
     return {
         "status": "ok",
         "openai_configured": "yes" if OPENAI_API_KEY else "no",
-        "supabase_configured": "yes" if (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY) else "no",
+        "supabase_public_configured": "yes" if (SUPABASE_URL and SUPABASE_ANON_KEY) else "no",
+        "supabase_admin_configured": "yes" if supabase_admin else "no",
         "stripe_configured": "yes" if STRIPE_SECRET_KEY else "no",
+        "stripe_one_time_price_configured": "yes" if STRIPE_PRICE_ONE_TIME else "no",
+        "stripe_monthly_price_configured": "yes" if STRIPE_PRICE_PRO_MONTHLY else "no",
+        "stripe_webhook_configured": "yes" if STRIPE_WEBHOOK_SECRET else "no",
     }
 
 
@@ -7421,10 +7455,10 @@ def admin_analytics_page() -> str:
         {google_tag()}
         {build_footer_assets_head()}
         <style>
-          body { font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }
-          h1 { margin-bottom: 18px; }
-          iframe { width: 100%; height: 80vh; border: 1px solid rgba(80,103,146,0.35); border-radius: 16px; background: white; }
-          p, a { color: #C7D3EE; }
+          body {{ font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }}
+          h1 {{ margin-bottom: 18px; }}
+          iframe {{ width: 100%; height: 80vh; border: 1px solid rgba(80,103,146,0.35); border-radius: 16px; background: white; }}
+          p, a {{ color: #C7D3EE; }}
         </style>
       </head>
       <body data-auth-state="loading">

@@ -20,7 +20,15 @@
 
   function getSupabaseClient() {
     if (supabaseClient) return supabaseClient;
-    if (!window.supabase || !supabaseUrl || !supabaseAnonKey) return null;
+    if (
+      !window.supabase ||
+      !supabaseUrl ||
+      !supabaseAnonKey ||
+      supabaseUrl.indexOf("__") === 0 ||
+      supabaseAnonKey.indexOf("__") === 0
+    ) {
+      return null;
+    }
     supabaseClient = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
     return supabaseClient;
   }
@@ -559,6 +567,7 @@
   }
 
   window.getAccountState = getAccountState;
+  window.getCvOptimiserSupabaseClient = getSupabaseClient;
   window.getGlobalAuthState = function () { return authState; };
   window.clearCachedAccountSnapshot = clearAccountSnapshot;
   window.clearCachedAccountStatus = clearAccountStatusCache;

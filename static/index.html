@@ -25,8 +25,8 @@
     gtag('config', 'G-JKMYVYF743');
   </script>
   <script>
-    window.CV_OPTIMISER_SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
-    window.CV_OPTIMISER_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
+    window.CV_OPTIMISER_SUPABASE_URL = "__SUPABASE_URL__";
+    window.CV_OPTIMISER_SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/static/global-account.js"></script>
@@ -1151,6 +1151,20 @@
     justify-content: flex-start;
     gap: 12px;
     flex-wrap: wrap;
+  }
+
+  .hero-start-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(91, 120, 255, 0.22);
   }
 
   .text-link-btn {
@@ -3442,40 +3456,16 @@
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
         </div>
-
-        <div class="result-preview-card" aria-label="Example CV result preview">
-          <div class="result-preview-header">
-            <div class="result-preview-title">Example CV Result</div>
-            <div class="result-preview-score">CV Score: <span>74</span> → <strong>89</strong></div>
-          </div>
-          <div class="result-preview-label">Top improvements</div>
-          <ul class="result-preview-list">
-            <li>Add missing keywords: stakeholder, revenue, pipeline</li>
-            <li>Strengthen bullet points with impact verbs</li>
-            <li>Optimise formatting for ATS scanning</li>
-          </ul>
-          <a class="result-preview-link" href="/example-cv-report">See full example report</a>
+        <div class="tool-actions-row hero-start-row">
+          <a class="hero-start-link" href="#cvText">Start free check</a>
         </div>
 
-        <p class="upload-intro">Upload your CV and a job description to get your personalised score and practical suggestions.</p>
-        <p class="upload-warning">Only upload a CV you have permission to use. Avoid including national insurance numbers, bank details, passport details, or other information not needed for a CV check.</p>
+        <p class="upload-intro">Paste your CV and a job description to get your personalised score and practical suggestions.</p>
 
         <div class="tool-form">
-          <div class="tool-step form-section upload-section">
-            <label for="cvFileInput">Upload your CV</label>
-            <div class="field-helper">PDF, DOCX or TXT</div>
-            <div id="dropzone" class="dropzone">
-              <p><strong>Upload your CV</strong></p>
-              <p class="small">PDF, DOCX or TXT</p>
-              <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
-              <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
-              <div id="fileName" class="file-note">No file selected</div>
-            </div>
-          </div>
-
           <div class="paste-toggle form-section paste-cv-section">
-            <label class="field-label" for="cvText">Or paste CV text instead</label>
-            <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here if you prefer not to upload a file..."></textarea>
+            <label class="field-label" for="cvText">Paste your CV</label>
+            <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here..."></textarea>
           </div>
 
           <div class="tool-actions-row">
@@ -3500,6 +3490,18 @@
             <div class="loading-step">Matching to job description…</div>
             <div class="loading-step">Finding missing keywords…</div>
           </div>
+
+          <div class="tool-step form-section upload-section">
+            <label for="cvFileInput">Or upload your CV</label>
+            <div class="field-helper">PDF, DOCX or TXT. Avoid national insurance numbers, bank details, passport details, or other information not needed for a CV check.</div>
+            <div id="dropzone" class="dropzone">
+              <p><strong>Upload your CV</strong></p>
+              <p class="small">PDF, DOCX or TXT</p>
+              <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
+              <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+              <div id="fileName" class="file-note">No file selected</div>
+            </div>
+          </div>
         </div>
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -3508,6 +3510,20 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
+
+        <div class="result-preview-card" aria-label="Example CV result preview">
+          <div class="result-preview-header">
+            <div class="result-preview-title">Example CV Result</div>
+            <div class="result-preview-score">CV Score: <span>74</span> → <strong>89</strong></div>
+          </div>
+          <div class="result-preview-label">Top improvements</div>
+          <ul class="result-preview-list">
+            <li>Add missing keywords: stakeholder, revenue, pipeline</li>
+            <li>Strengthen bullet points with impact verbs</li>
+            <li>Optimise formatting for ATS scanning</li>
+          </ul>
+          <a class="result-preview-link" href="/example-cv-report">See full example report</a>
+        </div>
       </div>
 
       <div id="checkerLoading" class="checker-loading hidden" role="status" aria-live="polite">
@@ -3576,7 +3592,7 @@
         </div>
       </section>
 
-      <div id="results" class="card hidden" style="margin-top:28px;">
+      <div id="results" class="card hidden" style="margin-top:28px;" aria-hidden="true" data-nosnippet>
         <div class="results-shell">
 
           <div class="score-hero">
@@ -3584,9 +3600,9 @@
               <div id="scoreKicker" class="score-kicker">Your CV analysis</div>
               <div class="score-label">CV Match Score</div>
               <div id="score" class="score-value"></div>
-              <div id="resultStatusHeadline" class="score-headline">Needs clearer role alignment</div>
-              <div id="resultStatusCopy" class="score-subtext">You’re missing key keywords and your CV isn’t aligned with this role yet.</div>
-              <div id="resultPotentialCopy" class="score-potential">You could reach ~80+ with a few targeted improvements.</div>
+              <div id="resultStatusHeadline" class="score-headline"></div>
+              <div id="resultStatusCopy" class="score-subtext"></div>
+              <div id="resultPotentialCopy" class="score-potential"></div>
             </div>
 
           <div class="score-meta">
@@ -3624,7 +3640,7 @@
 
           <div class="result-section">
             <div id="resultKeywordTitle" class="result-section-title">Missing keywords</div>
-            <div id="resultKeywordSubtitle" class="result-section-subtitle">These missing terms make your CV look less aligned with the role.</div>
+            <div id="resultKeywordSubtitle" class="result-section-subtitle"></div>
             <ul id="resultKeywordPreview" class="result-list"></ul>
             <p id="resultKeywordTail" class="keyword-tail-note hidden">…and more in the full report</p>
           </div>
@@ -3635,11 +3651,11 @@
             <div class="before-after rewrite-block">
               <div class="before-after-card">
                 <strong>Before</strong>
-                <p id="resultExampleBefore">Responsible for managing customer accounts.</p>
+                <p id="resultExampleBefore"></p>
               </div>
               <div class="before-after-card">
                 <strong>After</strong>
-                <p id="resultExampleAfter">Managed key customer accounts and turned plans into measurable commercial opportunities.</p>
+                <p id="resultExampleAfter"></p>
               </div>
             </div>
           </div>
@@ -3953,13 +3969,9 @@
   <div id="siteFooter"></div>
   <script src="/static/global-footer.js" defer></script>
   <script>
-    const SUPABASE_URL = "https://zsooelsnjplxnqjvzuab.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzb29lbHNuanBseG5xanZ6dWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTg1MjMsImV4cCI6MjA5MTQ3NDUyM30.m3ego7yz2vHwoeM7Uj3EmNOXTZZx7Ca7VCmeW5DQmgY";
-
-    let sbClient = null;
-    if (window.supabase && !SUPABASE_URL.startsWith("PASTE_")) {
-      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
+    const sbClient = typeof window.getCvOptimiserSupabaseClient === "function"
+      ? window.getCvOptimiserSupabaseClient()
+      : null;
 
     let accessToken = null;
     let selectedFile = null;
@@ -4269,6 +4281,7 @@
       // Otherwise embedded/mobile pages reserve a large blank area while analysis is loading.
       if (resultsPanel && isChecking) {
         resultsPanel.classList.add("hidden");
+        resultsPanel.setAttribute("aria-hidden", "true");
       }
 
       requestAnimationFrame(reportEmbedHeight);
@@ -4837,7 +4850,7 @@
 
       try {
         if (typeof window.getAccountState !== "function") {
-          authStatus.textContent = "Add your Supabase URL and anon key in static/index.html to enable login.";
+          authStatus.textContent = "Add your Supabase URL and anon key to the environment to enable login.";
           updateToolHelperCopy("signed_out", null);
           return;
         }
@@ -5601,6 +5614,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         lockedPreviewCard.classList.add("hidden");
         setCheckerLoading(false);
         resultsPanel.classList.remove("hidden");
+        resultsPanel.setAttribute("aria-hidden", "false");
         requestAnimationFrame(function() {
           resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
         });
