@@ -741,20 +741,22 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "title": "CV Optimiser vs Jobscan | Which CV Checker Should You Use?",
         "description": "Compare CV Optimiser and Jobscan for CV checking, ATS keywords, job-description matching, UK CV language and practical application feedback.",
         "h1": "CV Optimiser vs Jobscan",
-        "intro": "Jobscan is a mature resume scanner focused on ATS matching and job-description keywords. CV Optimiser is built around UK CV language, fast role-specific feedback and practical report examples before you apply.",
+        "intro": "If you want a broad resume-scanning platform, Jobscan is well known. If you want a focused UK CV checker that compares your CV with the exact job description and tells you what to fix before applying, CV Optimiser is built for that narrower job.",
+        "positioning": "Our niche: UK CVs, job-description match, missing keywords, practical fixes and transparent example reports.",
         "competitor": "Jobscan",
         "best_for_competitor": "Job seekers who want a broad ATS resume scanner with detailed resume formatting checks, keyword matching and a larger job-search toolset.",
-        "best_for_us": "UK job seekers who want fast CV-to-job-description feedback, clearer missing keywords, example report pages and a simple CV-first workflow.",
+        "best_for_us": "UK job seekers who want fast CV-to-job-description feedback, clearer missing keywords, example report pages and a simple CV-first workflow without turning the task into a whole job-search platform.",
         "rows": [
-            ("Primary focus", "UK CV checks, role match, missing keywords and practical CV improvement guidance.", "Resume scanning, ATS matching, formatting checks and broader job-search tools."),
-            ("Language fit", "Uses UK CV language throughout the product and content.", "Uses resume-focused wording, which may suit US/international searches better."),
-            ("Example output", "Shows report-style examples by role so users can see likely feedback before running a check.", "Shows scanner examples and match-report concepts on its product pages."),
-            ("Best use case", "Checking whether a CV clearly fits a specific UK job description.", "Optimising a resume against ATS-style checks and job-description keywords."),
+            ("Primary focus", "Sharper for one task: check this CV against this job description and show the fixes.", "Broader resume scanning, ATS matching, formatting checks and job-search tools."),
+            ("UK CV fit", "Uses CV language, UK application framing and role examples written for CV users.", "Uses resume-focused wording, which may suit US/international searches better."),
+            ("Proof before upload", "Shows report-style examples by role so users can see the kind of feedback before trusting the tool.", "Shows scanner examples and match-report concepts on its product pages."),
+            ("Best use case", "Quickly deciding whether your CV is ready for a specific UK role.", "Optimising a resume within a broader ATS and job-search workflow."),
         ],
         "choose_us": [
             "You write and apply with a UK CV rather than a US-style resume.",
             "You want a fast score, missing keywords and top fixes without a heavy workflow.",
             "You want to see role-specific example reports before trusting the tool.",
+            "You want direct application feedback rather than another large job-search dashboard.",
         ],
         "choose_competitor": [
             "You want a larger resume/job-search platform around ATS scanning.",
@@ -771,20 +773,22 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "title": "CV Optimiser vs Resume Worded | CV Checker Comparison",
         "description": "Compare CV Optimiser and Resume Worded for CV scoring, resume feedback, LinkedIn checks, keyword targeting and role-specific application support.",
         "h1": "CV Optimiser vs Resume Worded",
-        "intro": "Resume Worded is a broad resume and LinkedIn feedback platform. CV Optimiser is narrower: it focuses on checking a CV against a job description and showing practical fixes for that application.",
+        "intro": "Resume Worded is a broad resume and LinkedIn feedback platform. CV Optimiser is deliberately narrower: it is for checking a UK CV against a specific job description and turning the result into practical fixes for that application.",
+        "positioning": "Our niche: less general career tooling, more focused CV-to-job matching before you press apply.",
         "competitor": "Resume Worded",
         "best_for_competitor": "Job seekers who want resume feedback, LinkedIn profile help, rewrite support and templates in one broader platform.",
         "best_for_us": "Job seekers who want a direct CV match score against a specific job description, with missing keywords and role-specific guidance.",
         "rows": [
             ("Primary focus", "CV-to-job-description match, missing keywords, scoring and practical report guidance.", "Resume scoring, LinkedIn profile feedback, AI rewrites, templates and keyword targeting."),
-            ("Workflow", "Paste a CV and job description, then review the role match.", "Upload a resume or LinkedIn profile and use broader feedback features."),
-            ("UK fit", "Built around CV wording and UK-focused search pages.", "Mostly uses resume wording, with international appeal."),
+            ("Workflow", "Paste a CV and job description, then review the role match quickly.", "Upload a resume or LinkedIn profile and use broader feedback features."),
+            ("UK fit", "Built around CV wording and UK-focused examples, pages and user intent.", "Mostly uses resume wording, with international appeal."),
             ("Best use case", "Checking one application before you submit it.", "Improving a resume/LinkedIn profile across a wider job-search toolkit."),
         ],
         "choose_us": [
             "You want job-description matching rather than general resume polish.",
             "You want UK CV terminology and role-specific CV example reports.",
             "You want a lightweight check before deciding whether to unlock a fuller report.",
+            "You want to improve the CV for the vacancy in front of you, not manage your whole career profile.",
         ],
         "choose_competitor": [
             "You want LinkedIn profile feedback alongside resume feedback.",
@@ -801,15 +805,16 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "title": "Best ATS CV Checker UK | What to Look For Before You Apply",
         "description": "Find out what makes a useful ATS CV checker for UK job applications, including keyword match, formatting, role relevance and clear improvement steps.",
         "h1": "Best ATS CV checker UK",
-        "intro": "The best ATS CV checker is not just a keyword counter. It should help you understand whether your CV is readable, relevant and clearly matched to the job description.",
+        "intro": "The best ATS CV checker for a UK job seeker should not behave like a magic keyword counter. It should show whether your CV is readable, relevant, honest and clearly matched to the job description you actually want.",
+        "positioning": "CV Optimiser is built for the practical middle ground: not a generic spelling check, not a scary ATS promise, but a clear CV match score with next fixes.",
         "competitor": "Other ATS checkers",
         "best_for_competitor": "Some tools are useful for broad resume scans, template checks or large job-search workflows.",
         "best_for_us": "CV Optimiser is useful when you want a UK CV check focused on a specific job description and practical fixes before applying.",
         "rows": [
-            ("Job-description matching", "Compares your CV with the exact advert so feedback is role-specific.", "Some tools offer this, while others focus on general CV quality."),
-            ("Keyword guidance", "Highlights missing terms and encourages truthful, natural use.", "Keyword advice varies from simple matching to deeper weighting."),
-            ("ATS readability", "Checks practical structure and readability signals without promising exact ATS outcomes.", "Tools vary widely and no checker can guarantee every employer system."),
-            ("Trust", "Shows methodology, limitations, privacy notes and example reports.", "Look for clear explanations, not magic-score promises."),
+            ("Job-description matching", "Compares your CV with the exact advert so feedback is role-specific from the start.", "Some tools offer this, while others focus on general CV quality."),
+            ("Keyword guidance", "Highlights missing terms and explains how to use them naturally rather than stuffing the CV.", "Keyword advice varies from simple matching to deeper weighting."),
+            ("ATS readability", "Checks practical structure and readability signals while being honest that no tool can guarantee every ATS outcome.", "Tools vary widely and no checker can guarantee every employer system."),
+            ("Trust", "Shows methodology, limitations, privacy notes and example reports so users know what they are getting.", "Look for clear explanations, not magic-score promises."),
         ],
         "choose_us": [
             "You want UK CV language and a simple application-focused check.",
@@ -831,13 +836,14 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "title": "Free CV Checker vs Paid CV Review | Which Do You Need?",
         "description": "Compare free CV checkers and paid CV reviews, including when a quick score is enough and when a deeper human or AI-assisted review may help.",
         "h1": "Free CV checker vs paid CV review",
-        "intro": "A free CV checker is useful for spotting obvious role-match issues quickly. A paid CV review can help when you need deeper rewrite guidance, stronger positioning or support for high-value applications.",
+        "intro": "A free CV checker should help you answer one urgent question: is this CV good enough for this job description? CV Optimiser starts there, then gives you the option to go deeper only if the gaps are worth fixing.",
+        "positioning": "Use CV Optimiser first when you want quick evidence before spending money on a full review.",
         "competitor": "Paid CV review",
         "best_for_competitor": "People who want detailed human judgement, personal career context and hands-on rewriting support.",
         "best_for_us": "People who want quick, role-specific feedback before deciding whether a fuller report or paid review is worth it.",
         "rows": [
-            ("Speed", "Fast score, missing keywords and priority fixes.", "Usually slower, especially if human-reviewed."),
-            ("Cost", "Starts with a free check, with paid report options for deeper guidance.", "Often higher cost because it may involve expert time."),
+            ("Speed", "Fast score, missing keywords and priority fixes for the role in front of you.", "Usually slower, especially if human-reviewed."),
+            ("Cost", "Starts with a free check, so you can see whether the CV has real gaps before paying.", "Often higher cost because it may involve expert time."),
             ("Personal judgement", "Useful for structured feedback, but still guidance only.", "Can add nuanced judgement for senior, complex or career-change applications."),
             ("Best use case", "Checking each application against a job description.", "Repositioning a CV, resolving career story issues or preparing for important roles."),
         ],
@@ -5456,6 +5462,34 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             gap: 22px;
             margin: 30px 0;
           }}
+          .strength-strip {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+            gap: 22px;
+            margin: 30px 0;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(91, 120, 255, 0.28);
+            background: linear-gradient(135deg, rgba(91, 120, 255, 0.16), rgba(15, 28, 50, 0.66));
+          }}
+          .strength-strip h2 {{
+            margin-top: 0;
+          }}
+          .strength-points {{
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+          }}
+          .strength-points li {{
+            padding: 10px 0;
+            border-top: 1px solid rgba(180, 197, 245, 0.14);
+            color: #DCE6FF;
+          }}
+          .strength-points li:first-child {{
+            border-top: 0;
+          }}
           .comparison-card {{
             padding: 24px;
             border-radius: 18px;
@@ -5539,6 +5573,13 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
               gap: 14px;
               margin: 22px 0;
             }}
+            .strength-strip {{
+              grid-template-columns: 1fr;
+              gap: 14px;
+              margin: 22px 0;
+              padding: 18px 14px;
+              border-radius: 16px;
+            }}
             .comparison-card {{
               padding: 18px 14px;
               border-radius: 16px;
@@ -5558,6 +5599,18 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
             </div>
             <p class="note">This comparison is written from publicly available product positioning and is intended to help users choose the right type of tool.</p>
+          </section>
+
+          <section class="strength-strip">
+            <div>
+              <h2>Why CV Optimiser stands out</h2>
+              <p>{html.escape(page["positioning"])}</p>
+            </div>
+            <ul class="strength-points">
+              <li>Built around UK CV wording, not only resume wording.</li>
+              <li>Starts with the job description, so the feedback is tied to the role.</li>
+              <li>Shows example reports and scoring methodology before users commit.</li>
+            </ul>
           </section>
 
           <section class="comparison-grid">
