@@ -48,11 +48,14 @@ def canonical_link_tag(path: str = "/") -> str:
 
 
 GA4_MEASUREMENT_ID = "G-JKMYVYF743"
+BING_WEBMASTER_VERIFICATION = "7FEC7FC5C79BA53B96B487318D777AE3"
 
 
 def google_tag() -> str:
     escaped_id = html.escape(GA4_MEASUREMENT_ID)
+    escaped_bing_verification = html.escape(BING_WEBMASTER_VERIFICATION)
     return f"""
+        <meta name="msvalidate.01" content="{escaped_bing_verification}">
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id={escaped_id}"></script>
         <script>
