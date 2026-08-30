@@ -20,6 +20,7 @@ function renderFooter() {
           <a href="/guides">Guides</a>
           <a href="/example-cv-report">Example Report</a>
           <a href="/how-it-works">How it works</a>
+          <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
           <a href="/why-is-my-cv-not-getting-interviews">Why Your CV May Not Be Getting Responses</a>
           <a href="/best-cv-format-uk">Best CV Format UK</a>
         </div>

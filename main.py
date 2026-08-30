@@ -399,6 +399,72 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    "how-cv-optimiser-scores-your-cv": {
+        "title": "How CV Optimiser Scores Your CV | CV Match Score Methodology",
+        "description": "See how CV Optimiser calculates your CV match score using job description relevance, keywords, clarity, evidence and ATS-friendly structure.",
+        "h1": "How CV Optimiser scores your CV",
+        "intro": "CV Optimiser scores your CV by comparing it with a specific job description, then looking for the signals that help recruiters and applicant tracking systems understand your fit.",
+        "sections": [
+            {
+                "title": "The score is role-specific",
+                "copy": "A strong CV for one job can be weak for another. CV Optimiser does not give a generic CV grade. It checks how clearly your CV matches the job description you paste in.",
+                "bullets": [
+                    "Role title and responsibility alignment",
+                    "Relevant skills, tools and experience",
+                    "Evidence that your previous work fits the target role",
+                ],
+            },
+            {
+                "title": "What the score looks at",
+                "copy": "The score combines several signals rather than relying on one keyword count.",
+                "bullets": [
+                    "Keyword coverage: whether important role terms appear naturally in your CV",
+                    "Relevance: whether your experience maps to the job requirements",
+                    "Evidence: whether your bullet points show outcomes, scope and impact",
+                    "Structure: whether the CV is easy to scan and understand",
+                    "ATS readability: whether the content is likely to be parsed cleanly",
+                ],
+            },
+            {
+                "title": "Why missing keywords matter",
+                "copy": "Recruiters and ATS systems often look for the same language used in the job description. Missing keywords can make a relevant candidate look less suitable than they are.",
+                "helper": "CV Optimiser highlights missing terms so you can decide which ones honestly belong in your CV.",
+            },
+            {
+                "title": "What the score does not mean",
+                "copy": "The score is a practical guide, not a promise of interviews or job offers. Hiring decisions also depend on experience level, location, salary, competition, timing and employer judgement.",
+                "bullets": [
+                    "It does not guarantee ATS acceptance",
+                    "It does not replace human judgement",
+                    "It should not be used to add skills or experience you do not have",
+                ],
+            },
+            {
+                "title": "How to use your result",
+                "copy": "Start with the priority fixes before rewriting the whole CV. The best improvements usually come from clearer role alignment, stronger evidence and natural keyword coverage.",
+                "bullets": [
+                    "Add relevant missing keywords where they truthfully fit",
+                    "Rewrite vague bullets into measurable achievements",
+                    "Move the most relevant experience closer to the top",
+                    "Recheck the CV against the same job description after editing",
+                ],
+            },
+            {
+                "title": "Privacy and CV handling",
+                "copy": "CVs can contain personal information, so the tool asks only for the content needed to compare your CV with a job description.",
+                "links": [
+                    ("/privacy", "Read the privacy policy"),
+                    ("/terms", "Read the terms"),
+                ],
+            },
+            {
+                "title": "Try the scoring tool",
+                "copy": "Paste your CV and a job description to see your match score, missing keywords and top improvements.",
+                "cta_href": "/#tool",
+                "cta_label": "Check your CV score",
+            },
+        ],
+    },
     "features": {
         "title": "Features | CV Optimiser",
         "description": "Explore the main CV Optimiser features including CV scoring, keyword gap detection, ATS checks and AI-assisted CV suggestions.",
@@ -1542,6 +1608,7 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": canonical_url("/ats-cv-keywords"), "priority": "0.8"},
     {"loc": canonical_url("/cv-mistakes"), "priority": "0.8"},
     {"group": "Supporting", "loc": canonical_url("/how-it-works"), "priority": "0.6"},
+    {"loc": canonical_url("/how-cv-optimiser-scores-your-cv"), "priority": "0.7"},
     {"loc": canonical_url("/faq"), "priority": "0.5"},
     {"loc": canonical_url("/pricing"), "priority": "0.5"},
     {"loc": canonical_url("/privacy"), "priority": "0.3"},
@@ -6298,6 +6365,7 @@ def render_guides_page() -> str:
         ("Examples and reports", [
             ("example-cv-report", "/example-cv-report", EXAMPLE_REPORT_PAGE["title"], EXAMPLE_REPORT_PAGE["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
+            ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
         ]),
     ]
     groups_html = "".join(
@@ -7243,6 +7311,13 @@ def guides_page() -> str:
 def how_it_works_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_support_page("how-it-works", SUPPORT_PAGES["how-it-works"])
+
+
+@app.get("/how-cv-optimiser-scores-your-cv", response_class=HTMLResponse)
+@app.get("/how-cv-optimiser-scores-your-cv/", response_class=HTMLResponse, include_in_schema=False)
+def cv_score_methodology_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"])
 
 
 @app.get("/cv-statistics", response_class=HTMLResponse)
