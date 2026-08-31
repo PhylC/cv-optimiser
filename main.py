@@ -5632,10 +5632,10 @@ def build_compliance_notice_css() -> str:
           .compliance-notice {
             margin: 22px 0;
             padding: 14px 16px;
-            border: 1px solid rgba(147, 168, 218, 0.18);
+            border: 1px solid #C7D2FE;
             border-radius: 14px;
-            background: rgba(10, 19, 35, 0.34);
-            color: #AFC0E4;
+            background: #EEF2FF;
+            color: #2D3B66;
             font-size: 13px;
             line-height: 1.6;
           }
