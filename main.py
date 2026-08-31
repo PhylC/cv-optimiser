@@ -5436,6 +5436,8 @@ def build_public_content_surface_css() -> str:
           .content-page .pro-proof-section,
           .content-page .example-link-panel,
           .content-page .bottom-cta,
+          .content-page .final-cta,
+          .content-page .lead-capture-panel,
           .content-page .panel,
           .content-page .check-card,
           .content-page .score-card,
@@ -5461,6 +5463,8 @@ def build_public_content_surface_css() -> str:
           .content-page .pro-proof-section,
           .content-page .example-link-panel,
           .content-page .bottom-cta,
+          .content-page .final-cta,
+          .content-page .lead-capture-panel,
           .content-page .panel,
           .content-page .check-card,
           .content-page .score-card,
@@ -5519,6 +5523,12 @@ def build_public_content_surface_css() -> str:
           .content-page .bottom-cta h1,
           .content-page .bottom-cta h2,
           .content-page .bottom-cta h3,
+          .content-page .final-cta h1,
+          .content-page .final-cta h2,
+          .content-page .final-cta h3,
+          .content-page .lead-capture-panel h1,
+          .content-page .lead-capture-panel h2,
+          .content-page .lead-capture-panel h3,
           .content-page .panel h1,
           .content-page .panel h2,
           .content-page .panel h3,
@@ -5564,6 +5574,10 @@ def build_public_content_surface_css() -> str:
           .content-page .pro-proof-section li,
           .content-page .example-link-panel p,
           .content-page .bottom-cta p,
+          .content-page .final-cta p,
+          .content-page .final-cta li,
+          .content-page .lead-capture-panel p,
+          .content-page .lead-capture-panel li,
           .content-page .panel p,
           .content-page .panel li,
           .content-page .check-card p,
@@ -5597,6 +5611,7 @@ def build_public_content_surface_css() -> str:
 
           .faq-page .final-cta .compliance-notice,
           .content-page .bottom-cta .compliance-notice,
+          .content-page .final-cta .compliance-notice,
           .landing-page .final-cta .compliance-notice {
             background: #EEF2FF !important;
             border-color: #C7D2FE !important;
@@ -5610,8 +5625,33 @@ def build_public_content_surface_css() -> str:
           .content-page .trust-box a,
           .content-page .cta-panel a,
           .content-page .privacy-box a,
+          .content-page .final-cta a:not(.cta),
+          .content-page .lead-capture-panel a,
           .guides-page .guide-item a {
             color: #1D4ED8 !important;
+          }
+
+          .content-page .lead-capture-panel .eyebrow {
+            color: #3758D8 !important;
+          }
+
+          .content-page .lead-capture-form input {
+            background: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            color: #101B33 !important;
+          }
+
+          .content-page .lead-capture-form input::placeholder {
+            color: #64748B !important;
+          }
+
+          .content-page .lead-capture-form button {
+            background: #38D996 !important;
+            color: #061322 !important;
+          }
+
+          .content-page .lead-capture-status {
+            color: #3758D8 !important;
           }
 
           @media (max-width: 768px) {
@@ -5630,6 +5670,8 @@ def build_public_content_surface_css() -> str:
             .content-page .pro-proof-section,
             .content-page .example-link-panel,
             .content-page .bottom-cta,
+            .content-page .final-cta,
+            .content-page .lead-capture-panel,
             .content-page .panel,
             .content-page .check-card,
             .content-page .score-card,
