@@ -2409,6 +2409,15 @@ def track_event(
         print("TRACK EVENT ERROR:", repr(e))
 
 
+def get_report_type(payload: dict[str, Any]) -> str:
+    report_access = coerce_string(payload.get("reportAccess"))
+    if report_access == "one_time" or payload.get("oneTimeReportConsumed"):
+        return "One-time report"
+    if report_access == "subscription" or payload.get("fullReportUnlocked") or payload.get("professionalSummary"):
+        return "Pro report"
+    return "Free check"
+
+
 def parse_openai_json_output(raw: str) -> dict[str, Any]:
     text = (raw or "").strip()
     if not text:
@@ -8666,18 +8675,69 @@ def api_history(authorization: Optional[str] = Header(None)) -> dict[str, Any]:
         result = (
             require_supabase()
             .table("analysis_history")
-            .select("id, job_title, score, created_at")
+            .select("id, job_title, score, created_at, result_json")
             .eq("user_id", user["id"])
             .order("created_at", desc=True)
             .limit(20)
             .execute()
         )
 
-        return {"items": result.data or []}
+        items = []
+        for row in result.data or []:
+            payload = row.get("result_json") if isinstance(row.get("result_json"), dict) else {}
+            items.append({
+                "id": row.get("id"),
+                "job_title": row.get("job_title"),
+                "score": row.get("score"),
+                "created_at": row.get("created_at"),
+                "report_type": get_report_type(payload),
+                "full_report": bool(payload.get("fullReportUnlocked") or payload.get("professionalSummary")),
+            })
+
+        return {"items": items}
 
     except Exception as e:
         print("API_HISTORY_ERROR:", repr(e))
         return {"error": "history_unavailable"}
+
+
+@app.get("/api/history/{analysis_id}")
+def api_history_detail(analysis_id: int, authorization: Optional[str] = Header(None)) -> dict[str, Any]:
+    try:
+        user = get_user_from_token(authorization)
+
+        result = (
+            require_supabase()
+            .table("analysis_history")
+            .select("id, job_title, score, created_at, result_json")
+            .eq("user_id", user["id"])
+            .eq("id", analysis_id)
+            .limit(1)
+            .execute()
+        )
+        rows = result.data or []
+        if not rows:
+            raise HTTPException(status_code=404, detail="Saved report not found.")
+
+        row = rows[0]
+        payload = row.get("result_json") if isinstance(row.get("result_json"), dict) else {}
+        return {
+            "item": {
+                "id": row.get("id"),
+                "job_title": row.get("job_title"),
+                "score": row.get("score"),
+                "created_at": row.get("created_at"),
+                "report_type": get_report_type(payload),
+                "full_report": bool(payload.get("fullReportUnlocked") or payload.get("professionalSummary")),
+                "result": payload,
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("API_HISTORY_DETAIL_ERROR:", repr(e))
+        return {"error": "history_detail_unavailable"}
 
 
 @app.post("/api/create-checkout-session")
@@ -9179,17 +9239,17 @@ async def optimise(
 
         if user:
             save_usage_event(user["id"])
-            save_analysis_history(user["id"], job_description, payload)
             consumed_report_session_id = None
             if should_generate_full_report and plan and not plan["is_pro"] and plan.get("report_credits", 0) > 0:
                 consumed_report_session_id = consume_report_purchase(user["id"])
                 payload["oneTimeReportConsumed"] = True
                 payload["consumedReportSessionId"] = consumed_report_session_id
                 payload["fullReportUnlocked"] = True
-            payload["plan"] = get_plan_state(user["id"])
             if should_generate_full_report:
                 payload["fullReportUnlocked"] = True
                 payload["reportAccess"] = "subscription" if bool(plan and plan["is_pro"]) else "one_time"
+            save_analysis_history(user["id"], job_description, payload)
+            payload["plan"] = get_plan_state(user["id"])
             track_event(
                 event_name="optimise_succeeded",
                 user_id=user["id"],

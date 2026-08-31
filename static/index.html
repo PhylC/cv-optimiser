@@ -737,6 +737,67 @@
     margin-top: 14px;
   }
 
+  .history-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .history-item strong {
+    display: block;
+    color: #EEF3FF;
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+
+  .history-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    color: #9FB0D4;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .history-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(91, 120, 255, 0.28);
+    background: rgba(91, 120, 255, 0.14);
+    color: #DCE6FF;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .history-badge.is-full {
+    border-color: rgba(88, 214, 141, 0.28);
+    background: rgba(88, 214, 141, 0.12);
+    color: #C8F8D5;
+  }
+
+  .history-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .history-actions button {
+    min-height: 32px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(160, 180, 230, 0.22);
+    background: rgba(3, 13, 31, 0.34);
+    color: #EEF3FF;
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: none;
+  }
+
   .price-box {
     background: rgba(11, 21, 40, 0.52);
     border: 1px solid rgba(92, 112, 150, 0.22);
@@ -4246,6 +4307,12 @@
 
         <p id="passwordStatus" class="small status-line"></p>
       </div>
+
+      <div id="historyCard" class="card sidebar-card hidden">
+        <div class="section-title">My reports</div>
+        <p class="small sidebar-intro">Reopen saved CV checks and download paid reports again.</p>
+        <div id="historyList" class="history-list small">Sign in to view saved reports.</div>
+      </div>
     </div>
   </section>
   </main>
@@ -4318,6 +4385,7 @@
     const supportMessageInput = document.getElementById("supportMessageInput");
     const supportSubmitBtn = document.getElementById("supportSubmitBtn");
     const supportStatus = document.getElementById("supportStatus");
+    const historyCard = document.getElementById("historyCard");
     const historyList = document.getElementById("historyList");
     const checkerLoading = document.getElementById("checkerLoading");
     const anonymousSummaryWrap = document.getElementById("anonymousSummaryWrap");
@@ -4951,6 +5019,8 @@
 
     function buildReportHtml(data) {
       const score = getScoreNumber(data && data.score);
+      const isFullReport = !!(data && (data.fullReportUnlocked || data.professionalSummary || data.reportAccess));
+      const reportTitle = isFullReport ? "CV Optimiser Full Report" : "CV Optimiser Saved Check";
       const keywordGroups = data.keywordImportance || {};
       const rewrite = data.freeBulletRewrite || {};
       const generatedAt = new Date().toLocaleString("en-GB", {
@@ -4965,7 +5035,7 @@
       const supporting = keywordGroups.supportingKeywords || (data.missingKeywords || []).slice(3, 8);
       const covered = keywordGroups.coveredKeywords || (data.matchedKeywords || []).slice(0, 6);
 
-      return "<!doctype html><html><head><meta charset=\"utf-8\"><title>CV Optimiser Report</title>" +
+      return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
         "body{font-family:Inter,Arial,sans-serif;margin:0;background:#f5f7fb;color:#142033;line-height:1.55;}" +
         "main{max-width:900px;margin:0 auto;padding:36px 22px 56px;}" +
@@ -4982,7 +5052,7 @@
         "@media print{body{background:#fff;}main{max-width:none;padding:0;}header,section{break-inside:avoid;box-shadow:none;}}" +
         "@media(max-width:760px){.breakdown,.rewrite{grid-template-columns:1fr;}}" +
         "</style></head><body><main>" +
-        "<header><h1>CV Optimiser Full Report</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        "<header><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
         (scoreBreakdown.length ? "<section><h2>Score breakdown</h2><div class=\"breakdown\">" + scoreBreakdown.map(function(item) {
           return "<div class=\"mini\"><strong>" + escapeReportHtml(item.label || item.name || "CV signal") + "</strong><b>" + escapeReportHtml(item.score || 0) + "</b><p>" + escapeReportHtml(item.detail || item.reason || "") + "</p></div>";
         }).join("") + "</div></section>" : "") +
@@ -5437,6 +5507,53 @@
   }
 }
 
+    function openReportDocument(data) {
+      const reportWindow = window.open("", "_blank");
+      if (!reportWindow) {
+        status.textContent = "Pop-up blocked. Use Download instead.";
+        return;
+      }
+      reportWindow.document.open();
+      reportWindow.document.write(buildReportHtml(data));
+      reportWindow.document.close();
+      reportWindow.focus();
+    }
+
+    async function loadSavedReport(analysisId) {
+      const token = await getSessionToken();
+      if (!token) {
+        authStatus.textContent = "Sign in to open saved reports.";
+        return null;
+      }
+
+      const response = await fetch("/api/history/" + encodeURIComponent(analysisId), {
+        headers: { Authorization: "Bearer " + token }
+      });
+      const data = await response.json();
+      if (!response.ok || data.error || !data.item || !data.item.result) {
+        authStatus.textContent = "Could not open that saved report.";
+        return null;
+      }
+
+      return data.item;
+    }
+
+    async function openSavedReport(analysisId) {
+      const item = await loadSavedReport(analysisId);
+      if (!item) return;
+      currentResultData = item.result;
+      openReportDocument(item.result);
+      trackEvent("saved_report_opened", { report_type: item.report_type || "Saved report" });
+    }
+
+    async function downloadSavedReport(analysisId) {
+      const item = await loadSavedReport(analysisId);
+      if (!item) return;
+      currentResultData = item.result;
+      downloadCurrentReport();
+      trackEvent("saved_report_downloaded", { report_type: item.report_type || "Saved report" });
+    }
+
     function renderHistory(items) {
       if (!historyList) {
         return;
@@ -5451,7 +5568,34 @@
         const div = document.createElement("div");
         div.className = "history-item";
         const when = new Date(item.created_at).toLocaleString();
-        div.innerHTML = "<strong>" + (item.job_title || "Untitled role") + "</strong><br><span class='muted'>Score: " + (item.score ?? "") + " | " + when + "</span>";
+        const title = document.createElement("strong");
+        title.textContent = item.job_title || "Untitled role";
+        const meta = document.createElement("div");
+        meta.className = "history-meta";
+        const badge = document.createElement("span");
+        badge.className = "history-badge" + (item.full_report ? " is-full" : "");
+        badge.textContent = item.report_type || "Saved check";
+        const details = document.createElement("span");
+        details.textContent = "Score: " + (item.score ?? "") + " | " + when;
+        meta.appendChild(badge);
+        meta.appendChild(details);
+
+        const actions = document.createElement("div");
+        actions.className = "history-actions";
+        const openBtn = document.createElement("button");
+        openBtn.type = "button";
+        openBtn.textContent = "Open";
+        openBtn.dataset.historyOpen = String(item.id);
+        const downloadBtn = document.createElement("button");
+        downloadBtn.type = "button";
+        downloadBtn.textContent = "Download";
+        downloadBtn.dataset.historyDownload = String(item.id);
+        actions.appendChild(openBtn);
+        actions.appendChild(downloadBtn);
+
+        div.appendChild(title);
+        div.appendChild(meta);
+        div.appendChild(actions);
         historyList.appendChild(div);
       });
     }
@@ -5507,6 +5651,12 @@
       loginPasswordInput.value = "";
       sessionStorage.removeItem(MAGIC_LINK_PASSWORD_SETUP_KEY);
       historyLoadedForUserId = null;
+      if (historyCard) {
+        historyCard.classList.add("hidden");
+      }
+      if (historyList) {
+        historyList.textContent = "Sign in to view saved reports.";
+      }
       lastPlanJson = "";
       accountMenuWrap.classList.add("hidden");
       headerSignInBtn.classList.remove("hidden");
@@ -5607,8 +5757,14 @@ if (shouldPromptPasswordSetup) {
         }
 
         if (!accessToken) {
-          historyList.textContent = "Sign in to view saved analyses.";
+          if (historyCard) {
+            historyCard.classList.add("hidden");
+          }
+          historyList.textContent = "Sign in to view saved reports.";
           return;
+        }
+        if (historyCard) {
+          historyCard.classList.remove("hidden");
         }
         const historyRes = await fetch("/api/history", {
           headers: { Authorization: "Bearer " + accessToken }
@@ -5951,6 +6107,21 @@ passwordLoginBtn.addEventListener("click", async function() {
         window.scrollTo({ top: currentScrollY, left: 0, behavior: "auto" });
       });
       trackEvent("sample_cv_clicked");
+    });
+
+    document.addEventListener("click", function(event) {
+      const openButton = event.target.closest("[data-history-open]");
+      const downloadButton = event.target.closest("[data-history-download]");
+
+      if (openButton) {
+        event.preventDefault();
+        openSavedReport(openButton.dataset.historyOpen);
+      }
+
+      if (downloadButton) {
+        event.preventDefault();
+        downloadSavedReport(downloadButton.dataset.historyDownload);
+      }
     });
 
     (function () {
