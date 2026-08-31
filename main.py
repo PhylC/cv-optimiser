@@ -5461,6 +5461,7 @@ def build_public_content_surface_css() -> str:
           .content-page .trust-box,
           .content-page .cta-panel,
           .content-page .privacy-box,
+          .content-page .comparison-card,
           .content-page .comparison-wrap,
           .content-page .pro-proof-section,
           .content-page .example-link-panel,
@@ -5521,6 +5522,7 @@ def build_public_content_surface_css() -> str:
           .content-page .trust-box,
           .content-page .cta-panel,
           .content-page .privacy-box,
+          .content-page .comparison-card,
           .content-page .pro-proof-section,
           .content-page .example-link-panel,
           .content-page .bottom-cta,
@@ -5572,6 +5574,9 @@ def build_public_content_surface_css() -> str:
           .content-page .privacy-box h1,
           .content-page .privacy-box h2,
           .content-page .privacy-box h3,
+          .content-page .comparison-card h1,
+          .content-page .comparison-card h2,
+          .content-page .comparison-card h3,
           .content-page .comparison-wrap th,
           .content-page .comparison-wrap strong,
           .content-page .pro-proof-section h1,
@@ -5618,6 +5623,7 @@ def build_public_content_surface_css() -> str:
           .content-page .trust-box h2,
           .content-page .cta-panel h2,
           .content-page .privacy-box h2,
+          .content-page .comparison-card h2,
           .content-page .pro-proof-section h2,
           .content-page .example-link-panel h2,
           .content-page .bottom-cta h2,
@@ -5644,6 +5650,7 @@ def build_public_content_surface_css() -> str:
           .content-page .trust-box h3,
           .content-page .cta-panel h3,
           .content-page .privacy-box h3,
+          .content-page .comparison-card h3,
           .content-page .pro-proof-section h3,
           .content-page .example-link-panel h3,
           .content-page .bottom-cta h3,
@@ -5681,6 +5688,8 @@ def build_public_content_surface_css() -> str:
           .content-page .cta-panel li,
           .content-page .privacy-box p,
           .content-page .privacy-box li,
+          .content-page .comparison-card p,
+          .content-page .comparison-card li,
           .content-page .comparison-wrap td,
           .content-page .comparison-wrap li,
           .content-page .pro-proof-section p,
@@ -5767,6 +5776,24 @@ def build_public_content_surface_css() -> str:
 
           .content-page .lead-capture-status {
             color: #3758D8 !important;
+          }
+
+          .content-page .comparison-card h2,
+          .content-page .comparison-card h3 {
+            font-size: 20px !important;
+            line-height: 1.22 !important;
+            margin-bottom: 10px !important;
+          }
+
+          .content-page .comparison-card p,
+          .content-page .comparison-card li {
+            font-size: 16px !important;
+            line-height: 1.56 !important;
+          }
+
+          .content-page .comparison-card .section-list {
+            margin-top: 12px !important;
+            padding-left: 20px !important;
           }
 
           .content-page .section-stack,
@@ -5935,6 +5962,8 @@ def build_public_content_surface_css() -> str:
           .content-page .cta-panel li,
           .content-page .privacy-box p,
           .content-page .privacy-box li,
+          .content-page .comparison-card p,
+          .content-page .comparison-card li,
           .content-page .final-cta p,
           .content-page .final-cta li,
           .content-page .bottom-cta p,
@@ -5979,6 +6008,9 @@ def build_public_content_surface_css() -> str:
           .content-page .privacy-box h1,
           .content-page .privacy-box h2,
           .content-page .privacy-box h3,
+          .content-page .comparison-card h1,
+          .content-page .comparison-card h2,
+          .content-page .comparison-card h3,
           .content-page .final-cta h1,
           .content-page .final-cta h2,
           .content-page .final-cta h3,
@@ -6034,6 +6066,7 @@ def build_public_content_surface_css() -> str:
             .content-page .trust-box,
             .content-page .cta-panel,
             .content-page .privacy-box,
+            .content-page .comparison-card,
             .content-page .comparison-wrap,
             .content-page .pro-proof-section,
             .content-page .example-link-panel,
@@ -6080,6 +6113,7 @@ def build_public_content_surface_css() -> str:
             .content-page .trust-box h2,
             .content-page .cta-panel h2,
             .content-page .privacy-box h2,
+            .content-page .comparison-card h2,
             .content-page .pro-proof-section h2,
             .content-page .example-link-panel h2,
             .content-page .bottom-cta h2,
@@ -6104,6 +6138,7 @@ def build_public_content_surface_css() -> str:
             .content-page .trust-box h3,
             .content-page .cta-panel h3,
             .content-page .privacy-box h3,
+            .content-page .comparison-card h3,
             .content-page .pro-proof-section h3,
             .content-page .example-link-panel h3,
             .content-page .bottom-cta h3,
@@ -6139,6 +6174,8 @@ def build_public_content_surface_css() -> str:
             .content-page .cta-panel li,
             .content-page .privacy-box p,
             .content-page .privacy-box li,
+            .content-page .comparison-card p,
+            .content-page .comparison-card li,
             .content-page .comparison-wrap td,
             .content-page .comparison-wrap li,
             .content-page .pro-proof-section p,
@@ -6159,6 +6196,24 @@ def build_public_content_surface_css() -> str:
             .guides-page .guide-group li {
               font-size: 16px !important;
               line-height: 1.6 !important;
+            }
+
+            .content-page .comparison-card h2,
+            .content-page .comparison-card h3 {
+              font-size: 20px !important;
+              line-height: 1.2 !important;
+              margin: 0 0 10px !important;
+            }
+
+            .content-page .comparison-card p,
+            .content-page .comparison-card li {
+              font-size: 16px !important;
+              line-height: 1.56 !important;
+            }
+
+            .content-page .comparison-card .section-list {
+              margin-top: 12px !important;
+              padding-left: 20px !important;
             }
           }
     """
@@ -9317,11 +9372,11 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
 
           <section class="comparison-grid">
             <div class="comparison-card">
-              <h2>CV Optimiser is best for</h2>
+              <h2>Best fit: CV Optimiser</h2>
               <p>{html.escape(page["best_for_us"])}</p>
             </div>
             <div class="comparison-card">
-              <h2>{html.escape(page["competitor"])} is best for</h2>
+              <h2>Best fit: {html.escape(page["competitor"])}</h2>
               <p>{html.escape(page["best_for_competitor"])}</p>
             </div>
           </section>
