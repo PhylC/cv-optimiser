@@ -1433,15 +1433,23 @@
     gap: 10px 14px;
     margin-top: 14px;
     padding-top: 13px;
-    border-top: 1px solid rgba(92, 112, 150, 0.16);
+    border-top: 1px solid #D8E1EF;
   }
 
   .homepage-proof-links a {
-    color: #B7F7C4;
+    color: #1D4ED8;
     font-size: 13px;
     font-weight: 800;
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration-color: rgba(29, 78, 216, 0.45);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .homepage-proof-links a:hover,
+  .homepage-proof-links a:focus-visible {
+    color: #0F2F83;
+    text-decoration-color: currentColor;
   }
 
   .paste-toggle {
