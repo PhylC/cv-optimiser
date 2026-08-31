@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CV Optimiser | Check Your CV Before Applying</title>
-  <meta name="description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
+  <title>CV Optimiser | UK CV Checker for Serious Job Applications</title>
+  <meta name="description" content="Check your CV against a real job description and get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes.">
   <link rel="canonical" href="https://www.cv-optimiser.com/">
-  <meta property="og:title" content="CV Optimiser | Check Your CV Before Applying">
-  <meta property="og:description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
+  <meta property="og:title" content="CV Optimiser | UK CV Checker for Serious Job Applications">
+  <meta property="og:description" content="Check your CV against a real job description and get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes.">
   <meta property="og:url" content="https://www.cv-optimiser.com/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CV Optimiser | Check Your CV Before Applying">
-  <meta name="twitter:description" content="Compare your CV with a job description, find missing keywords, and get practical AI-assisted suggestions before you apply.">
+  <meta name="twitter:title" content="CV Optimiser | UK CV Checker for Serious Job Applications">
+  <meta name="twitter:description" content="Check your CV against a real job description and get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes.">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/static/site.webmanifest">
   <meta name="theme-color" content="#172B4A">
@@ -53,7 +53,7 @@
     "name": "CV Optimiser",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
-    "description": "CV checker that compares your CV against a job description and highlights score, missing keywords and practical suggestions.",
+    "description": "UK-focused CV checker that compares your CV against a job description and highlights role-fit score, missing keywords and practical suggestions.",
     "url": "https://www.cv-optimiser.com/"
   }
   </script>
@@ -5634,12 +5634,12 @@
         <div class="tool-embed-title">Check your CV</div>
         <div class="home-product-kicker tool-hero-support">UK CV checker</div>
         <h1 class="homepage-hero-title tool-hero-title">Check your CV against the job</h1>
-        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes before you apply.</p>
+        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes for serious job applications.</p>
         <p class="compliance-notice">UK-focused, AI-assisted guidance. Your first check does not need an account, and no job outcome is guaranteed.</p>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
-          <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
+          <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Built for real applications</span></div>
         </div>
         <div class="journey-preview-strip" aria-label="What the CV check returns">
           <div class="journey-preview-item">
@@ -5656,7 +5656,7 @@
           </div>
         </div>
 
-        <p class="upload-intro">Start with paste. It is fastest and avoids uploading anything you do not need to share.</p>
+        <p class="upload-intro">Start with paste. It keeps the check focused and avoids uploading anything you do not need to share.</p>
 
         <div class="tool-form">
           <div class="paste-toggle form-section paste-cv-section">
@@ -6207,7 +6207,7 @@
 
           <div id="proPriorityWrap" class="result-section pro-premium hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-              <div class="result-section-title">Fix these first to increase your score fastest</div>
+              <div class="result-section-title">Fix these first to make the strongest role-fit improvement</div>
               <span class="pro-badge">Pro</span>
             </div>
             <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and role match.</div>
@@ -6913,7 +6913,7 @@
         return;
       }
 
-      toolTrustCopy.textContent = "No signup required. Takes 30 seconds.";
+      toolTrustCopy.textContent = "No signup required. Built for real applications.";
       toolFreeCopy.textContent = "1 free CV check available — no card required";
       if (!loadingStageTimer) {
         toolLoadingNote.textContent = "No signup needed for your first result";
@@ -7014,7 +7014,7 @@
       const missingCount = (data.missingKeywords || []).length;
       const weakCount = (data.weakPoints || []).length;
       const headline = scoreNumber < 60
-        ? "Unlock the fastest route to a stronger CV"
+        ? "Unlock the full improvement plan"
         : "Unlock the fixes behind this score";
       const detailParts = [];
       if (missingCount) detailParts.push(missingCount + " keyword gap" + (missingCount === 1 ? "" : "s"));

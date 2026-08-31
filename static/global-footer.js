@@ -4,7 +4,7 @@ function renderFooter() {
       <div class="site-footer-grid">
         <div class="site-footer-brand">
           <div class="site-footer-title">CV Optimiser</div>
-          <p>Fast, practical CV feedback for job applications</p>
+          <p>UK-focused CV feedback for serious job applications</p>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Tools</div>

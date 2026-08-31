@@ -419,7 +419,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "title": "Check your own CV",
-                "copy": "Upload your CV, paste a job description and get your score in under 60 seconds.",
+                "copy": "Paste your CV and a job description to get a role-specific score, recruiter-style verdict and practical improvement plan.",
                 "cta_href": "/#tool",
                 "cta_label": "Get my CV score",
             },
@@ -561,13 +561,13 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "title": "CV Optimiser vs Human CV Review | Which Should You Use?",
         "description": "Compare CV Optimiser with a human CV review and see when AI-assisted role-fit feedback is useful for UK job applications.",
         "h1": "CV Optimiser vs human CV review",
-        "intro": "CV Optimiser and a human CV review solve different problems. The tool is built for fast, role-specific feedback before you apply; a human reviewer can still help with judgement, positioning and specialist career context.",
+        "intro": "CV Optimiser and a human CV review solve different problems. The tool is built for role-specific CV feedback before you apply; a human reviewer can still help with judgement, positioning and specialist career context.",
         "sections": [
             {
                 "title": "Where CV Optimiser is strongest",
-                "copy": "Use CV Optimiser when you want to quickly check one CV against one job description and see what to improve first.",
+                "copy": "Use CV Optimiser when you want to check one CV against one job description and see what to improve first.",
                 "bullets": [
-                    "Fast role-fit score for a specific advert",
+                    "Role-fit score for a specific advert",
                     "Missing keyword and evidence-gap checks",
                     "Recruiter-style shortlisting risks",
                     "Before/after wording examples and a practical action plan in the full report",
@@ -598,7 +598,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                 "copy": "No CV tool or reviewer can guarantee interviews, ATS acceptance, job offers or employer responses. Hiring depends on competition, timing, location, salary, experience level and employer judgement.",
             },
             {
-                "title": "Try the faster first step",
+                "title": "Try the focused first step",
                 "copy": "Paste your CV and a job description to see whether the core role-fit problems are obvious.",
                 "cta_href": "/#tool",
                 "cta_label": "Check my CV",
@@ -719,7 +719,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
     },
     "about": {
         "title": "About | CV Optimiser",
-        "description": "Learn what CV Optimiser is built for and why it focuses on fast, practical CV feedback for real job applications.",
+        "description": "Learn what CV Optimiser is built for and why it focuses on UK CV feedback for serious job applications.",
         "h1": "About CV Optimiser",
         "intro": "CV Optimiser was built for job seekers who want quick, useful CV feedback before applying. Instead of generic advice, the goal is to help you compare your CV against a specific role and see what needs to improve first.",
         "sections": [
@@ -1553,7 +1553,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "positioning": "Our niche: UK CVs, job-description match, missing keywords, practical fixes and transparent example reports.",
         "competitor": "Jobscan",
         "best_for_competitor": "Job seekers who want a broad ATS resume scanner with detailed resume formatting checks, keyword matching and a larger job-search toolset.",
-        "best_for_us": "UK job seekers who want fast CV-to-job-description feedback, clearer missing keywords, example report pages and a simple CV-first workflow without turning the task into a whole job-search platform.",
+        "best_for_us": "UK job seekers who want serious CV-to-job-description feedback, clearer missing keywords, example report pages and a focused CV-first workflow without turning the task into a whole job-search platform.",
         "rows": [
             ("Primary focus", "Sharper for one task: check this CV against this job description and show the fixes.", "Broader resume scanning, ATS matching, formatting checks and job-search tools."),
             ("UK CV fit", "Uses CV language, UK application framing and role examples written for CV users.", "Uses resume-focused wording, which may suit US/international searches better."),
@@ -1562,7 +1562,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         ],
         "choose_us": [
             "You write and apply with a UK CV rather than a US-style resume.",
-            "You want a fast score, missing keywords and top fixes without a heavy workflow.",
+            "You want a role-specific score, missing keywords and top fixes without a heavy workflow.",
             "You want to see role-specific example reports before trusting the tool.",
             "You want direct application feedback rather than another large job-search dashboard.",
         ],
@@ -1652,7 +1652,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "best_for_competitor": "People who want detailed human judgement, personal career context and hands-on rewriting support.",
         "best_for_us": "People who want quick, role-specific feedback before deciding whether a fuller report or paid review is worth it.",
         "rows": [
-            ("Speed", "Fast score, missing keywords and priority fixes for the role in front of you.", "Usually slower, especially if human-reviewed."),
+            ("Focused workflow", "Role-specific score, missing keywords and priority fixes for the role in front of you.", "Usually slower, especially if human-reviewed."),
             ("Cost", "Starts with a free check, so you can see whether the CV has real gaps before paying.", "Often higher cost because it may involve expert time."),
             ("Personal judgement", "Useful for structured feedback, but still guidance only.", "Can add nuanced judgement for senior, complex or career-change applications."),
             ("Best use case", "Checking each application against a job description.", "Repositioning a CV, resolving career story issues or preparing for important roles."),
@@ -1678,9 +1678,9 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
 TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
-        "meta_description": "Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.",
-        "h1": "Check your CV before applying — in under 60 seconds",
-        "intro": "Compare your CV with a job description and get practical suggestions before you apply.",
+        "meta_description": "Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements before you apply.",
+        "h1": "Check your CV against the job before you apply",
+        "intro": "Compare your CV with a job description and get practical, UK-focused suggestions for serious applications.",
         "tool_intro": [
             "Upload your CV and a job description to get your personalised score and fixes.",
         ],
@@ -1753,7 +1753,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "example_fixes": ["Add measurable results", "Strengthen your summary", "Match role keywords"],
         "example_link_label": "View full example report →",
         "cta_title": "Check your CV now",
-        "cta_copy": "Upload your CV, paste a job description and get your score in under 60 seconds.",
+        "cta_copy": "Paste your CV and a job description to get a role-specific score, missing keywords and priority fixes.",
         "cta_label": "Get my CV score",
     },
     "cv-score-checker": {
@@ -2929,7 +2929,7 @@ BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
     ),
     (
         "Should I still get a human to review my CV?",
-        "For senior, specialist or high-value applications, a human review can still help. CV Optimiser is best for fast role-specific feedback and practical improvements.",
+        "For senior, specialist or high-value applications, a human review can still help. CV Optimiser is best for role-specific feedback, missing keyword checks and practical improvements.",
     ),
 ]
 
@@ -7751,7 +7751,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div class="conversion-trust-row" aria-label="CV check details">
             <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
             <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
-            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
+            <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Built for real applications</span></div>
           </div>
           <div class="result-preview-card" aria-label="Example CV result preview">
             <div class="result-preview-header">
@@ -8143,7 +8143,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           </div>
           <section class="final-cta">
             <h2>Check your CV now</h2>
-            <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
+            <p>Paste your CV and a job description to get a role-specific score, missing keywords and priority fixes.</p>
             {build_compliance_notice()}
             <a href="/#tool" class="cta cta-button">Check your CV now</a>
           </section>
@@ -8417,16 +8417,16 @@ def render_cv_checker_page() -> str:
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Free CV Checker | Compare Your CV to Any Job Description</title>
-        <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
+        <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements before you apply.">
         {canonical_link_tag("/cv-checker")}
         {google_tag()}
         <meta property="og:title" content="Free CV Checker | Compare Your CV to Any Job Description">
-        <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
+        <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements before you apply.">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Free CV Checker | Compare Your CV to Any Job Description">
-        <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
+        <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements before you apply.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
         {build_footer_assets_head()}
         <style>
@@ -8707,7 +8707,7 @@ def render_cv_checker_page() -> str:
 
               <div class="card cta-block">
                 <h2>Check your CV now</h2>
-                <p>Upload your CV, paste a job description and get your score in under 60 seconds.</p>
+                <p>Paste your CV and a job description to get a role-specific score, missing keywords and priority fixes.</p>
                 <a href="/#tool" class="cta">Check your CV now</a>
                 <div class="helper-note">Prefer the homepage flow? The same tool is available there too.</div>
               </div>
@@ -10657,7 +10657,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
                 <li>Top priority fixes</li>
                 <li>Improvement suggestions</li>
               </ul>
-              <p class="helper">Built for job seekers who want fast, practical CV feedback.</p>
+              <p class="helper">Built for job seekers who want UK-focused CV feedback for serious applications.</p>
             </div>
           </div>
 
@@ -11064,7 +11064,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
               <div class="cta-block-tight">{cta}</div>
             </div>
             <aside class="hero-panel">
-              <h2>Fast role-fit check</h2>
+              <h2>Focused role-fit check</h2>
               <p>{html.escape(page.get("cta_support", "Use this page to tighten your CV, then run the checker against a real job description before you apply."))}</p>
             </aside>
           </section>
@@ -11305,10 +11305,10 @@ def render_best_free_cv_checker_page() -> str:
         "Checks the CV against the exact job description instead of only giving generic advice",
         "Shows practical missing keywords, weak evidence and priority fixes",
         "Includes example reports so you can see the output before using your own CV",
-        "Keeps the first check fast, with no signup needed for the first result",
+        "Keeps the first check focused, with no signup needed for the first result",
     ]
     comparison_rows = [
-        ("CV Optimiser", "Quick UK CV checks against a real job description, with score, missing keywords and practical next fixes", "It is automated, so important applications may still benefit from human review"),
+        ("CV Optimiser", "UK CV checks against a real job description, with score, missing keywords and practical next fixes", "It is automated, so important applications may still benefit from human review"),
         ("Generic CV templates", "Improving layout and structure", "They do not check fit against a specific role"),
         ("Paid CV writing services", "Full rewrite and human judgement", "More expensive and slower"),
         ("Manual self-review", "Quick final checks", "Easy to miss keyword gaps and weak evidence"),
@@ -11946,7 +11946,7 @@ def render_faq_page() -> str:
           <div class="faq-list">{faq_html}</div>
           <section class="final-cta">
             <h2>Check your CV now</h2>
-            <p>Upload your CV, paste a job description, and get your score in under 60 seconds.</p>
+            <p>Paste your CV and a job description to get a role-specific score, missing keywords and priority fixes.</p>
             <a href="/cv-checker" class="cta cta-button">Check your CV now</a>
           </section>
           {build_site_footer()}
@@ -12803,14 +12803,14 @@ def render_pricing_page() -> str:
               <div>
                 <span class="pricing-proof-kicker">Which option fits?</span>
                 <h2>Free tells you what is wrong. The full report tells you what to edit.</h2>
-                <p>Use the free check for a fast role-fit read. Use a paid report or Pro when you want a practical, UK-focused workflow for improving the CV before applying.</p>
+                <p>Use the free check for a focused role-fit read. Use a paid report or Pro when you want a practical, UK-focused workflow for improving the CV before applying.</p>
               </div>
               <a class="pricing-proof-link" href="/example-cv-report">View example report</a>
             </div>
             <div class="pricing-proof-grid">
               <div class="pricing-proof-card">
                 <strong>Free check</strong>
-                <span>Best for quickly checking whether the CV and advert are aligned before spending time on edits.</span>
+                <span>Best for checking whether the CV and advert are aligned before spending time on edits.</span>
               </div>
               <div class="pricing-proof-card">
                 <strong>Paid report</strong>
