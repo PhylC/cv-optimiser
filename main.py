@@ -2663,8 +2663,15 @@ Detected UK role lens:
   "bulletRewriteDetails": [],
   "nextStep": "",
   "professionalSummary": "",
+  "firstPageDiagnosis": {
+    "profile": "",
+    "recentRole": "",
+    "evidence": "",
+    "verdict": ""
+  },
   "priorityFixes": [],
   "priorityFixDetails": [],
+  "sectionRewritePlan": [],
   "skillsSection": [],
   "atsTips": [],
   "interviewRisks": []
@@ -2715,6 +2722,14 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
   Write a tight, high-quality CV summary tailored to this specific job.
   It should position the candidate strongly for THIS role, not generic roles.
   Make it 3-4 sentences and useful enough for the user to adapt into the top third of their CV.
+  Use natural UK CV language and avoid empty adjectives such as dynamic, passionate, results-driven or proven unless the CV evidence supports them.
+
+- firstPageDiagnosis:
+  Return an object with profile, recentRole, evidence, and verdict.
+  profile must say whether the opening profile makes the target role obvious quickly.
+  recentRole must say whether the most recent/relevant role carries enough matching evidence.
+  evidence must say whether achievements, scale, tools, outcomes or responsibilities are proven clearly enough.
+  verdict must be a direct UK recruiter-style judgement on whether the first page earns further reading.
 
 - priorityFixes:
   Exactly 3 (not more) high-impact improvements.
@@ -2728,6 +2743,15 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
   The why should explain recruiter/ATS impact.
   The change should be a concrete edit the user can make.
   whereToPutIt should name the CV section where the edit belongs.
+
+- sectionRewritePlan:
+  Exactly 4 structured section edits.
+  Each item must include section, problem, rewriteDirection, exampleLine, and whyItHelps.
+  section should be one of: Professional profile, Key skills, Recent experience, Earlier experience, Education, Projects, Tools and systems, Certifications, Additional information.
+  problem must name what is weak or missing in that section now.
+  rewriteDirection must tell the user how to rewrite that section.
+  exampleLine must be one paste-ready line or bullet, using only facts supported by the CV.
+  whyItHelps must explain the role-fit, shortlisting, ATS or evidence benefit.
 
 - skillsSection:
   6–10 role-aligned skills phrased the way recruiters expect to see them.
@@ -2797,9 +2821,11 @@ Quality rules:
 - keywordImportance must separate critical missing keywords, useful supporting keywords, and keywords already covered
 - strongPoints must explain what already helps this CV for this role
 - weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
+- for Pro checks, firstPageDiagnosis must judge the opening profile, recent/relevant role, evidence quality, and whether the first page earns further reading
 - priorityFixDetails must include issue, why, change, and whereToPutIt when available
 - priorityFixDetails.change must be a concrete edit, not generic advice
 - priorityFixDetails.whereToPutIt must say where in the CV to make the change, such as profile, key skills, recent role bullets, or education
+- for Pro checks, sectionRewritePlan must give 4 section-specific edits with section, problem, rewriteDirection, exampleLine, and whyItHelps
 - bulletPoints must be improved CV bullet points, not advice bullets
 - bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
 - freeBulletRewrite must rewrite one weak original CV bullet or sentence where possible
@@ -3554,6 +3580,45 @@ def coerce_bullet_rewrite_details(value: Any, max_items: int = 5) -> list[dict[s
     return items
 
 
+def coerce_first_page_diagnosis(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        value = {}
+    return {
+        "profile": coerce_string(value.get("profile") or value.get("openingProfile")),
+        "recentRole": coerce_string(value.get("recentRole") or value.get("latestRole") or value.get("experience")),
+        "evidence": coerce_string(value.get("evidence") or value.get("proof") or value.get("achievements")),
+        "verdict": coerce_string(value.get("verdict") or value.get("summary")),
+    }
+
+
+def coerce_section_rewrite_plan(value: Any, max_items: int = 4) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, str]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        section = coerce_string(item.get("section") or item.get("cvSection") or item.get("area"))
+        problem = coerce_string(item.get("problem") or item.get("issue") or item.get("currentWeakness"))
+        rewrite_direction = coerce_string(
+            item.get("rewriteDirection") or item.get("direction") or item.get("whatToChange") or item.get("change")
+        )
+        example_line = coerce_string(item.get("exampleLine") or item.get("example") or item.get("rewrite") or item.get("bullet"))
+        why_it_helps = coerce_string(item.get("whyItHelps") or item.get("why") or item.get("benefit"))
+        if section and (rewrite_direction or example_line):
+            items.append({
+                "section": section,
+                "problem": problem,
+                "rewriteDirection": rewrite_direction,
+                "exampleLine": example_line,
+                "whyItHelps": why_it_helps,
+            })
+        if len(items) >= max_items:
+            break
+    return items
+
+
 def clamp_score(value: int) -> int:
     return max(0, min(100, value))
 
@@ -3787,6 +3852,81 @@ def build_bullet_rewrite_details(data: dict[str, Any], is_pro: bool) -> list[dic
     return fallback_items[:5 if is_pro else 1]
 
 
+def build_first_page_diagnosis(data: dict[str, Any]) -> dict[str, str]:
+    existing = coerce_first_page_diagnosis(data.get("firstPageDiagnosis"))
+    verdict = build_recruiter_verdict(data)
+    weak_points = data.get("weakPoints", [])
+    strong_points = data.get("strongPoints", [])
+    first_weak = coerce_string(weak_points[0]) if weak_points else ""
+    first_strong = coerce_string(strong_points[0]) if strong_points else ""
+
+    return {
+        "profile": existing["profile"] or (
+            "The opening profile needs to make the target role, strongest matching skills and most relevant proof obvious in the first few lines."
+        ),
+        "recentRole": existing["recentRole"] or (
+            first_strong or "The most recent or most relevant role should carry clearer evidence that maps directly to the advert."
+        ),
+        "evidence": existing["evidence"] or (
+            first_weak or "The first page needs more specific evidence of scope, tools, outcomes or responsibility, using only truthful detail from the CV."
+        ),
+        "verdict": existing["verdict"] or (
+            f"{verdict['shortlistLikelihood']} for shortlist based on the current first-page evidence. Fix first: {verdict['fixFirst']}"
+        ),
+    }
+
+
+def build_section_rewrite_plan(data: dict[str, Any]) -> list[dict[str, str]]:
+    existing = coerce_section_rewrite_plan(data.get("sectionRewritePlan"))
+    if len(existing) >= 4:
+        return existing[:4]
+
+    plan = existing[:]
+    priority_fixes = build_priority_fix_details(data)
+    rewrites = build_bullet_rewrite_details(data, is_pro=True)
+    professional_summary = coerce_string(data.get("professionalSummary"))
+    missing_keywords = data.get("missingKeywords", [])
+
+    fallback_items = [
+        {
+            "section": "Professional profile",
+            "problem": "The target role and strongest evidence are not visible quickly enough.",
+            "rewriteDirection": "Open with the target role, strongest relevant strengths and one proof point that matches the advert.",
+            "exampleLine": professional_summary or "Profile: UK candidate with relevant experience in the advertised responsibilities, combining role-specific skills with clear evidence of delivery.",
+            "whyItHelps": "Recruiters can understand the application story before reading the rest of the CV.",
+        },
+        {
+            "section": "Key skills",
+            "problem": "Important job-description language is missing or too scattered.",
+            "rewriteDirection": "Group the strongest truthful keywords into a concise skills section, then prove the same skills in experience bullets.",
+            "exampleLine": "Key skills: " + ", ".join(missing_keywords[:5]) if missing_keywords else "Key skills: role-specific tools, stakeholder communication, delivery ownership and measurable outcomes.",
+            "whyItHelps": "This improves scanability without keyword stuffing.",
+        },
+        {
+            "section": "Recent experience",
+            "problem": priority_fixes[0]["issue"] if priority_fixes else "Recent bullets sound too duty-led.",
+            "rewriteDirection": priority_fixes[0]["change"] if priority_fixes else "Rewrite bullets around action, context and outcome.",
+            "exampleLine": rewrites[0]["after"] if rewrites else "Improved a relevant process by taking ownership, coordinating stakeholders and delivering a clearer outcome.",
+            "whyItHelps": priority_fixes[0]["why"] if priority_fixes else "The recent role usually carries the most weight in shortlisting.",
+        },
+        {
+            "section": "Evidence and achievements",
+            "problem": "Achievements need clearer proof of scale, tools, standards or outcomes.",
+            "rewriteDirection": "Add specific context to each claim and only quantify where the CV supports it.",
+            "exampleLine": rewrites[1]["after"] if len(rewrites) > 1 else "Delivered relevant work by applying the required skills, improving clarity, speed, quality or stakeholder confidence.",
+            "whyItHelps": "Specific evidence makes the CV more credible and easier to compare against the role requirements.",
+        },
+    ]
+
+    for item in fallback_items:
+        if len(plan) >= 4:
+            break
+        if not any(existing_item["section"].lower() == item["section"].lower() for existing_item in plan):
+            plan.append(item)
+
+    return plan[:4]
+
+
 def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Optional[dict[str, Any]] = None) -> dict[str, Any]:
     try:
         score = int(data.get("score", 0))
@@ -3813,8 +3953,10 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Opti
     if is_pro:
         normalized.update({
             "professionalSummary": coerce_string(data.get("professionalSummary")),
+            "firstPageDiagnosis": build_first_page_diagnosis(data),
             "priorityFixes": coerce_string_list(data.get("priorityFixes")),
             "priorityFixDetails": build_priority_fix_details(data),
+            "sectionRewritePlan": build_section_rewrite_plan(data),
             "skillsSection": coerce_string_list(data.get("skillsSection")),
             "atsTips": coerce_string_list(data.get("atsTips")),
             "interviewRisks": coerce_string_list(data.get("interviewRisks")),
@@ -3823,8 +3965,10 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Opti
     else:
         normalized.update({
             "professionalSummary": "",
+            "firstPageDiagnosis": {},
             "priorityFixes": [],
             "priorityFixDetails": build_priority_fix_details(data),
+            "sectionRewritePlan": [],
             "skillsSection": [],
             "atsTips": [],
             "interviewRisks": [],
@@ -11024,7 +11168,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report, role_focus=role_focus),
-            max_output_tokens=3600 if should_generate_full_report else 1800,
+            max_output_tokens=4600 if should_generate_full_report else 1800,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -11061,8 +11205,10 @@ async def optimise(
             "bulletRewriteDetails": data.get("bulletRewriteDetails", []),
             "nextStep": data.get("nextStep", ""),
             "professionalSummary": data.get("professionalSummary", ""),
+            "firstPageDiagnosis": data.get("firstPageDiagnosis", {}),
             "priorityFixes": data.get("priorityFixes", []),
             "priorityFixDetails": data.get("priorityFixDetails", []),
+            "sectionRewritePlan": data.get("sectionRewritePlan", []),
             "skillsSection": data.get("skillsSection", []),
             "atsTips": data.get("atsTips", []),
             "interviewRisks": data.get("interviewRisks", []),

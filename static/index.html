@@ -2393,76 +2393,84 @@
     order: 6;
   }
 
-  #proSnapshotWrap {
+  #proFirstPageWrap {
     order: 7;
   }
 
-  #proPriorityWrap {
+  #proSnapshotWrap {
     order: 8;
   }
 
-  #proRewriteWrap {
+  #proPriorityWrap {
     order: 9;
   }
 
-  #proSummaryWrap {
+  #proSectionRewriteWrap {
     order: 10;
   }
 
-  #recruiterVerdictWrap {
+  #proRewriteWrap {
     order: 11;
   }
 
-  #atsReadabilitySummaryWrap {
+  #proSummaryWrap {
     order: 12;
   }
 
-  #resultScoreBreakdownWrap {
+  #recruiterVerdictWrap {
     order: 13;
   }
 
-  #resultPriorityPreviewWrap {
+  #atsReadabilitySummaryWrap {
     order: 14;
   }
 
-  #resultKeywordPreviewWrap {
+  #resultScoreBreakdownWrap {
     order: 15;
   }
 
-  #resultKeywordImportanceWrap {
+  #resultPriorityPreviewWrap {
     order: 16;
   }
 
-  #resultExampleWrap {
+  #resultKeywordPreviewWrap {
     order: 17;
   }
 
-  #lockedReportSections {
+  #resultKeywordImportanceWrap {
     order: 18;
   }
 
-  #detailKeywordsWrap {
+  #resultExampleWrap {
     order: 19;
   }
 
-  #detailStrengthsWrap {
+  #lockedReportSections {
     order: 20;
   }
 
-  #proSkillsWrap {
+  #detailKeywordsWrap {
     order: 21;
   }
 
-  #proAtsRisksGrid {
+  #detailStrengthsWrap {
     order: 22;
   }
 
-  #bestNextStepWrap {
+  #proSkillsWrap {
     order: 23;
   }
 
-  #proActionPlanWrap {
+  #proAtsRisksGrid {
     order: 24;
+  }
+
+  #bestNextStepWrap {
+    order: 25;
+  }
+
+  #proActionPlanWrap {
+    order: 26;
   }
 
   #resultDisclaimerWrap {
@@ -2998,6 +3006,59 @@
     color: #AFC0E4;
     font-size: 12px;
     line-height: 1.45;
+  }
+
+  .first-page-diagnosis-grid,
+  .section-rewrite-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .first-page-diagnosis-card,
+  .section-rewrite-card {
+    padding: 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.30);
+    background: rgba(3, 13, 31, 0.34);
+  }
+
+  .first-page-diagnosis-card span,
+  .section-rewrite-card span {
+    display: block;
+    margin-bottom: 7px;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  .first-page-diagnosis-card strong,
+  .section-rewrite-card strong {
+    display: block;
+    margin-bottom: 7px;
+    color: #F4F7FF;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .first-page-diagnosis-card p,
+  .section-rewrite-card p {
+    color: #B7C6E6;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .section-rewrite-card em {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(91, 120, 255, 0.12);
+    color: #E9EEFF;
+    font-size: 13px;
+    font-style: normal;
+    line-height: 1.55;
   }
 
   .pro-report-status {
@@ -3786,6 +3847,8 @@
   .score-breakdown-grid,
   .keyword-importance-grid,
   .pro-impact-grid,
+  .first-page-diagnosis-grid,
+  .section-rewrite-grid,
   .pro-workflow-steps,
   .pro-snapshot-grid {
     grid-template-columns: 1fr;
@@ -4691,6 +4754,15 @@
             <div id="proReportStatus" class="pro-report-status" aria-live="polite"></div>
           </div>
 
+          <div id="proFirstPageWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">First-page diagnosis</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Whether the opening profile, recent role and evidence are strong enough to earn a closer read.</div>
+            <div id="proFirstPageGrid" class="first-page-diagnosis-grid"></div>
+          </div>
+
           <div id="proSnapshotWrap" class="result-section pro-premium hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div class="result-section-title">Executive snapshot</div>
@@ -4717,6 +4789,15 @@
             <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and role match.</div>
             <div id="proPriorityDetails" class="fix-detail-grid"></div>
             <ol id="priorityFixes" class="result-list ranked-fixes hidden"></ol>
+          </div>
+
+          <div id="proSectionRewriteWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Rewrite plan by CV section</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Exactly where to improve the CV, how to rewrite it, and why that helps this application.</div>
+            <div id="proSectionRewriteGrid" class="section-rewrite-grid"></div>
           </div>
 
           <div id="proRewriteWrap" class="result-section pro-premium hidden">
@@ -5058,8 +5139,12 @@
     const copyChecklistBtn = document.getElementById("copyChecklistBtn");
     const printReportBtn = document.getElementById("printReportBtn");
     const proReportStatus = document.getElementById("proReportStatus");
+    const proFirstPageWrap = document.getElementById("proFirstPageWrap");
+    const proFirstPageGrid = document.getElementById("proFirstPageGrid");
     const proSnapshotWrap = document.getElementById("proSnapshotWrap");
     const proSnapshotGrid = document.getElementById("proSnapshotGrid");
+    const proSectionRewriteWrap = document.getElementById("proSectionRewriteWrap");
+    const proSectionRewriteGrid = document.getElementById("proSectionRewriteGrid");
     const proRewriteWrap = document.getElementById("proRewriteWrap");
     const proRewriteDetails = document.getElementById("proRewriteDetails");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
@@ -5980,6 +6065,65 @@
       proCommandWrap.classList.remove("hidden");
     }
 
+    function renderFirstPageDiagnosis(data) {
+      if (!proFirstPageWrap || !proFirstPageGrid) return;
+      const diagnosis = data && data.firstPageDiagnosis ? data.firstPageDiagnosis : {};
+      const cards = [
+        ["Opening profile", diagnosis.profile || "Make the target role, strongest matching skills and proof point obvious in the first few lines."],
+        ["Recent role", diagnosis.recentRole || "Use the most recent or most relevant role to prove the experience the advert asks for."],
+        ["Evidence quality", diagnosis.evidence || "Add clearer proof of scope, tools, outcomes or responsibility where the CV supports it."],
+        ["Recruiter read", diagnosis.verdict || "The first page should give a recruiter enough role-fit evidence to keep reading."]
+      ].filter(function(item) {
+        return item[1];
+      });
+      proFirstPageGrid.innerHTML = "";
+      cards.forEach(function(item) {
+        const card = document.createElement("div");
+        card.className = "first-page-diagnosis-card";
+        const label = document.createElement("span");
+        label.textContent = item[0];
+        const copy = document.createElement("strong");
+        copy.textContent = item[1];
+        card.appendChild(label);
+        card.appendChild(copy);
+        proFirstPageGrid.appendChild(card);
+      });
+      proFirstPageWrap.classList.toggle("hidden", !cards.length);
+    }
+
+    function renderSectionRewritePlan(data) {
+      if (!proSectionRewriteWrap || !proSectionRewriteGrid) return;
+      const items = Array.isArray(data && data.sectionRewritePlan) ? data.sectionRewritePlan.slice(0, 4) : [];
+      proSectionRewriteGrid.innerHTML = "";
+      items.forEach(function(item) {
+        const card = document.createElement("div");
+        card.className = "section-rewrite-card";
+        const label = document.createElement("span");
+        label.textContent = item.section || "CV section";
+        const direction = document.createElement("strong");
+        direction.textContent = item.rewriteDirection || item.change || "Rewrite this section around role-fit evidence.";
+        card.appendChild(label);
+        card.appendChild(direction);
+        if (item.problem || item.issue) {
+          const problem = document.createElement("p");
+          problem.textContent = "Problem: " + (item.problem || item.issue);
+          card.appendChild(problem);
+        }
+        if (item.whyItHelps || item.why) {
+          const why = document.createElement("p");
+          why.textContent = "Why it helps: " + (item.whyItHelps || item.why);
+          card.appendChild(why);
+        }
+        if (item.exampleLine || item.example) {
+          const example = document.createElement("em");
+          example.textContent = item.exampleLine || item.example;
+          card.appendChild(example);
+        }
+        proSectionRewriteGrid.appendChild(card);
+      });
+      proSectionRewriteWrap.classList.toggle("hidden", !items.length);
+    }
+
     function escapeReportHtml(value) {
       return String(value || "")
         .replace(/&/g, "&amp;")
@@ -6039,6 +6183,42 @@
         "</div></section>";
     }
 
+    function firstPageReportSection(diagnosis) {
+      const data = diagnosis || {};
+      const cards = [
+        ["Opening profile", data.profile],
+        ["Recent role", data.recentRole],
+        ["Evidence quality", data.evidence],
+        ["Recruiter read", data.verdict]
+      ].filter(function(item) {
+        return item[1];
+      });
+      if (!cards.length) return "";
+      return "<section><h2>First-page diagnosis</h2><div class=\"cards\">" + cards.map(function(item, index) {
+        return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>" + escapeReportHtml(item[0]) + "</h3><p>" + escapeReportHtml(item[1]) + "</p></article>";
+      }).join("") + "</div></section>";
+    }
+
+    function sectionRewriteReportItems(items) {
+      const safeItems = Array.isArray(items) ? items.filter(Boolean).slice(0, 4) : [];
+      if (!safeItems.length) return "";
+      return "<section><h2>Rewrite plan by CV section</h2><div class=\"cards\">" +
+        safeItems.map(function(item, index) {
+          const section = item.section || item.cvSection || "CV section";
+          const problem = item.problem || item.issue || "";
+          const direction = item.rewriteDirection || item.change || "";
+          const example = item.exampleLine || item.example || "";
+          const why = item.whyItHelps || item.why || "";
+          return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>" + escapeReportHtml(section) + "</h3>" +
+            (problem ? "<p><strong>Problem:</strong> " + escapeReportHtml(problem) + "</p>" : "") +
+            (direction ? "<p><strong>Rewrite direction:</strong> " + escapeReportHtml(direction) + "</p>" : "") +
+            (example ? "<p><strong>Example line:</strong> " + escapeReportHtml(example) + "</p>" : "") +
+            (why ? "<p><strong>Why it helps:</strong> " + escapeReportHtml(why) + "</p>" : "") +
+            "</article>";
+        }).join("") +
+        "</div></section>";
+    }
+
     function buildReportHtml(data) {
       const score = getScoreNumber(data && data.score);
       const isFullReport = !!(data && (data.fullReportUnlocked || data.professionalSummary || data.reportAccess));
@@ -6090,6 +6270,7 @@
         (isFullReport ? "<section><h2>Executive summary</h2><p>" + escapeReportHtml(executiveSummary) + "</p><div class=\"impact\">" + impactCards.map(function(item) {
           return "<article><span>" + escapeReportHtml(item[0]) + "</span><strong>" + escapeReportHtml(item[1]) + "</strong><p>" + escapeReportHtml(item[2]) + "</p></article>";
         }).join("") + "</div></section>" : "") +
+        (isFullReport ? firstPageReportSection(data.firstPageDiagnosis || {}) : "") +
         "<section><h2>Role lens</h2><p><strong>" + escapeReportHtml(roleFocus.label || "General UK CV") + "</strong></p>" +
         (roleKeywords ? "<p><strong>Keywords weighed:</strong> " + escapeReportHtml(roleKeywords) + "</p>" : "") +
         (roleProof ? "<p><strong>Proof points checked:</strong> " + escapeReportHtml(roleProof) + "</p>" : "") +
@@ -6102,6 +6283,7 @@
           return "<div class=\"mini\"><strong>" + escapeReportHtml(item.label || item.name || "CV signal") + "</strong><b>" + escapeReportHtml(item.score || 0) + "</b><p>" + escapeReportHtml(item.detail || item.reason || "") + "</p></div>";
         }).join("") + "</div></section>" : "") +
         cardReportItems("Top priority fixes", data.priorityFixDetails || []) +
+        (isFullReport ? sectionRewriteReportItems(data.sectionRewritePlan || []) : "") +
         (data.professionalSummary ? "<section><h2>Professional summary</h2><p>" + escapeReportHtml(data.professionalSummary) + "</p></section>" : "") +
         "<section><h2>Keyword importance</h2><h3>Critical missing</h3><p class=\"chips\">" + critical.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Useful supporting</h3><p class=\"chips\">" + supporting.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Already covered</h3><p class=\"chips\">" + covered.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p></section>" +
         ((rewrite.before || rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
@@ -6143,12 +6325,35 @@
         "",
         "Executive summary:",
         buildExecutiveSummary(data, score, actionPlanItems),
-        "",
-        "Fix first:"
       ];
+      const diagnosis = data.firstPageDiagnosis || {};
+      const diagnosisItems = [
+        ["Opening profile", diagnosis.profile],
+        ["Recent role", diagnosis.recentRole],
+        ["Evidence quality", diagnosis.evidence],
+        ["Recruiter read", diagnosis.verdict]
+      ].filter(function(item) {
+        return item[1];
+      });
+      if (diagnosisItems.length) {
+        lines.push("", "First-page diagnosis:");
+        diagnosisItems.forEach(function(item) {
+          lines.push("- " + item[0] + ": " + item[1]);
+        });
+      }
+      lines.push("", "Fix first:");
       actionPlanItems.forEach(function(item, index) {
         lines.push((index + 1) + ". " + item);
       });
+      if (Array.isArray(data.sectionRewritePlan) && data.sectionRewritePlan.length) {
+        lines.push("", "Rewrite by CV section:");
+        data.sectionRewritePlan.slice(0, 4).forEach(function(item, index) {
+          lines.push((index + 1) + ". " + (item.section || "CV section") + ": " + (item.rewriteDirection || item.change || ""));
+          if (item.exampleLine || item.example) {
+            lines.push("   Example: " + (item.exampleLine || item.example));
+          }
+        });
+      }
       const rewrites = normaliseRewriteDetails(data, 3);
       if (rewrites.length) {
         lines.push("", "Rewrite into your CV:");
@@ -7520,8 +7725,10 @@ passwordLoginBtn.addEventListener("click", async function() {
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
         const hasFullPlanContent = !!(
           hasProfessionalSummary ||
+          (data.firstPageDiagnosis && Object.keys(data.firstPageDiagnosis).length) ||
           (data.priorityFixes && data.priorityFixes.length) ||
           (data.bulletRewriteDetails && data.bulletRewriteDetails.length) ||
+          (data.sectionRewritePlan && data.sectionRewritePlan.length) ||
           (data.skillsSection && data.skillsSection.length) ||
           (data.atsTips && data.atsTips.length) ||
           (data.interviewRisks && data.interviewRisks.length)
@@ -7532,8 +7739,10 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         if (isCurrentlyPro && hasFullPlanContent) {
           renderProCommandCentre(data, scoreNumber, actionPlanItems);
+          renderFirstPageDiagnosis(data);
           renderProSnapshot(data, actionPlanItems);
           renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
+          renderSectionRewritePlan(data);
           const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
           if (proRewriteWrap) {
             proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
@@ -7542,8 +7751,14 @@ passwordLoginBtn.addEventListener("click", async function() {
           if (proCommandWrap) {
             proCommandWrap.classList.add("hidden");
           }
+          if (proFirstPageWrap) {
+            proFirstPageWrap.classList.add("hidden");
+          }
           if (proSnapshotWrap) {
             proSnapshotWrap.classList.add("hidden");
+          }
+          if (proSectionRewriteWrap) {
+            proSectionRewriteWrap.classList.add("hidden");
           }
           if (proRewriteWrap) {
             proRewriteWrap.classList.add("hidden");
