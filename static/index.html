@@ -57,13 +57,14 @@
   <style>
   body {
     font-family: Inter, Arial, sans-serif;
-    max-width: 1180px;
+    max-width: 1240px;
     margin: 0 auto;
     padding: 28px 24px 56px;
     background:
-      radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-      radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-      #07142D;
+      linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+      radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+      radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+      #08111F;
     color: #E8EEFC;
   }
 
@@ -308,8 +309,8 @@
 
   .main-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
-    gap: 28px;
+    grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
+    gap: 24px;
     align-items: start;
   }
 
@@ -913,9 +914,49 @@
 
   .primary-tool-card {
     margin-top: 0;
-    padding: 28px;
-    border-color: rgba(104, 124, 168, 0.28);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-color: rgba(210, 220, 238, 0.86);
+    background: #F8FAFC;
+    color: #14213D;
+    box-shadow: 0 24px 60px rgba(3, 9, 23, 0.28);
+    backdrop-filter: none;
+  }
+
+  .primary-tool-card h1,
+  .primary-tool-card h2,
+  .primary-tool-card h3,
+  .primary-tool-card .field-label,
+  .primary-tool-card .section-title {
+    color: #101B33;
+  }
+
+  .primary-tool-card p,
+  .primary-tool-card li,
+  .primary-tool-card .small,
+  .primary-tool-card .field-helper,
+  .primary-tool-card .tool-free-copy,
+  .primary-tool-card .tool-trust-copy {
+    color: #53627A;
+  }
+
+  .primary-tool-card input,
+  .primary-tool-card textarea {
+    background: #FFFFFF;
+    border-color: #CBD5E1;
+    color: #102033;
+  }
+
+  .primary-tool-card input::placeholder,
+  .primary-tool-card textarea::placeholder {
+    color: #8C9AAF;
+  }
+
+  .primary-tool-card .compliance-notice,
+  .primary-tool-card .upload-warning,
+  .primary-tool-card .result-guidance-note {
+    background: #EEF5FF;
+    border-color: #D7E4F5;
+    color: #43536B;
   }
 
   .primary-tool-card button#optimiseBtn {
@@ -925,11 +966,19 @@
     box-shadow: 0 14px 30px rgba(91, 120, 255, 0.28);
   }
 
+  .primary-tool-card button {
+    margin-right: 0;
+  }
+
+  .primary-tool-card textarea {
+    min-height: 116px;
+  }
+
   .tool-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 16px;
+    gap: 14px;
+    margin-top: 18px;
   }
 
   .tool-step,
@@ -939,7 +988,7 @@
     flex-direction: column;
     gap: 8px;
     border: 0;
-    border-top: 1px solid rgba(92, 112, 150, 0.18);
+    border-top: 1px solid rgba(148, 163, 184, 0.24);
     border-radius: 0;
     background: transparent;
     box-shadow: none;
@@ -957,7 +1006,7 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 2px;
-    color: #9FB0D4;
+    color: #64748B;
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.04em;
@@ -971,9 +1020,9 @@
     width: 23px;
     height: 23px;
     border-radius: 999px;
-    background: rgba(56, 217, 150, 0.12);
-    border: 1px solid rgba(56, 217, 150, 0.28);
-    color: #B7F7C4;
+    background: #DCFCE7;
+    border: 1px solid #BBF7D0;
+    color: #15803D;
     font-size: 11px;
   }
 
@@ -1008,7 +1057,7 @@
 
   .primary-action-panel {
     padding: 16px 0 0;
-    border-top: 1px solid rgba(92, 112, 150, 0.18);
+    border-top: 1px solid rgba(148, 163, 184, 0.24);
   }
 
   .primary-action-helper {
@@ -1032,7 +1081,7 @@
 
   .upload-details {
     border: 0;
-    border-top: 1px solid rgba(92, 112, 150, 0.18);
+    border-top: 1px solid rgba(148, 163, 184, 0.24);
     border-radius: 0;
     background: transparent;
     padding: 14px 0 0;
@@ -1040,7 +1089,7 @@
 
   .upload-details summary {
     cursor: pointer;
-    color: #DCE6FF;
+    color: #24324B;
     font-size: 14px;
     font-weight: 800;
   }
@@ -2285,20 +2334,66 @@
 
   .homepage-hero-title {
     margin: 0 0 10px;
-    font-size: clamp(2.35rem, 5vw, 3rem);
+    font-size: clamp(2.05rem, 4vw, 2.8rem);
     font-weight: 820;
     line-height: 1.04;
-    letter-spacing: -0.05em;
-    color: #F4F7FF;
-    max-width: 18ch;
+    letter-spacing: -0.045em;
+    color: #101B33;
+    max-width: 17ch;
   }
 
   .homepage-hero-subtitle {
     margin: 0 0 14px;
-    max-width: 44ch;
-    color: #C2D1EE;
-    font-size: 17px;
-    line-height: 1.65;
+    max-width: 47ch;
+    color: #46556C;
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .home-product-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #ECFDF5;
+    border: 1px solid #BBF7D0;
+    color: #166534;
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .hero-proof-line {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .hero-proof-chip {
+    min-height: 68px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+  }
+
+  .hero-proof-chip strong {
+    display: block;
+    color: #101B33;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+
+  .hero-proof-chip span {
+    display: block;
+    margin-top: 4px;
+    color: #64748B;
+    font-size: 12px;
+    line-height: 1.35;
   }
 
   .conversion-trust-row {
@@ -2306,8 +2401,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin: 24px 0 0;
-    color: rgba(211, 221, 244, 0.78);
+    margin: 18px 0 0;
+    color: #526179;
     font-size: 13px;
     font-weight: 650;
   }
@@ -2399,11 +2494,175 @@
   }
 
   .upload-intro {
-    margin: 30px 0 18px;
-    color: #F4F7FF;
-    font-size: 16px;
+    margin: 18px 0 12px;
+    color: #18243A;
+    font-size: 15px;
     font-weight: 720;
+    line-height: 1.45;
+  }
+
+  .report-demo-panel {
+    padding: 0;
+    overflow: hidden;
+    background: #F8FAFC;
+    border: 1px solid rgba(226, 232, 240, 0.92);
+    color: #101B33;
+    box-shadow: 0 24px 64px rgba(3, 9, 23, 0.28);
+  }
+
+  .report-demo-header {
+    padding: 22px 22px 18px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .report-demo-kicker {
+    display: inline-flex;
+    margin-bottom: 10px;
+    color: #3157D5;
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .report-demo-header h2 {
+    color: #101B33;
+    font-size: 26px;
+    line-height: 1.12;
+  }
+
+  .report-demo-header p {
+    color: #53627A;
+    font-size: 14px;
     line-height: 1.55;
+  }
+
+  .report-score-row {
+    display: grid;
+    grid-template-columns: 116px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 22px;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .report-score-dial {
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    background: conic-gradient(#38D996 0 74%, #E2E8F0 74% 100%);
+  }
+
+  .report-score-dial span {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: #101B33;
+    font-size: 28px;
+    font-weight: 900;
+  }
+
+  .report-verdict strong {
+    display: block;
+    color: #101B33;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .report-verdict span {
+    display: block;
+    margin-top: 6px;
+    color: #64748B;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .report-demo-body {
+    display: grid;
+    gap: 14px;
+    padding: 20px 22px 22px;
+  }
+
+  .report-demo-section {
+    padding: 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    background: #FFFFFF;
+  }
+
+  .report-demo-section span {
+    display: block;
+    margin-bottom: 8px;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .report-demo-section p {
+    color: #25324A;
+    font-size: 14px;
+    line-height: 1.52;
+  }
+
+  .keyword-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .keyword-row b {
+    display: inline-flex;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #EEF2FF;
+    color: #3348A4;
+    font-size: 12px;
+  }
+
+  .rewrite-preview {
+    display: grid;
+    gap: 8px;
+  }
+
+  .rewrite-preview del,
+  .rewrite-preview ins {
+    display: block;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .rewrite-preview del {
+    background: #FFF1F2;
+    color: #9F1239;
+  }
+
+  .rewrite-preview ins {
+    background: #ECFDF5;
+    color: #166534;
+  }
+
+  .report-demo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: 14px;
+    background: #101B33;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 850;
+    text-decoration: none;
   }
 
   .card + .card {
@@ -3653,6 +3912,27 @@
   margin-top: 0;
 }
 
+#mainToolCard.primary-tool-card .tool-form textarea,
+#mainToolCard.primary-tool-card textarea.text-field,
+#mainToolCard.primary-tool-card textarea.cv-textarea,
+#mainToolCard.primary-tool-card textarea.job-description-textarea {
+  min-height: 116px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #102033;
+}
+
+#mainToolCard.primary-tool-card .tool-form textarea::placeholder,
+#mainToolCard.primary-tool-card textarea.text-field::placeholder,
+#mainToolCard.primary-tool-card textarea.cv-textarea::placeholder,
+#mainToolCard.primary-tool-card textarea.job-description-textarea::placeholder {
+  color: #8C9AAF;
+}
+
+#mainToolCard.primary-tool-card .field-label {
+  color: #101B33;
+}
+
 /* Layout cleanup: prevent preview/report panels becoming cards inside the checker card */
 #mainToolCard .card,
 #mainToolCard .content-card,
@@ -3819,8 +4099,8 @@
   .conversion-trust-row {
     align-items: flex-start;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 22px;
+    gap: 8px;
+    margin-top: 16px;
     font-size: 13px;
   }
 
@@ -3853,7 +4133,7 @@
   }
 
   .upload-intro {
-    margin-top: 26px;
+    margin-top: 18px;
     font-size: 15px;
   }
 
@@ -3999,6 +4279,39 @@
     padding: 18px 14px !important;
     border-radius: 18px !important;
     box-shadow: none;
+  }
+
+  .hero-proof-line,
+  .report-score-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-proof-line {
+    gap: 8px;
+  }
+
+  .report-demo-panel {
+    border-radius: 18px;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .report-demo-header,
+  .report-score-row,
+  .report-demo-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .report-score-dial {
+    width: 92px;
+    height: 92px;
+  }
+
+  .report-score-dial span {
+    width: 68px;
+    height: 68px;
+    font-size: 24px;
   }
 
   html.embed-tool-mode body {
@@ -4391,19 +4704,17 @@
       <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card tool-embed">
         <div class="tool-embed-title">Check your CV</div>
-        <h1 class="homepage-hero-title tool-hero-title">The UK CV checker for a real job application</h1>
-        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the job advert to see what a recruiter or ATS may miss, what matches, and what to fix before you apply.</p>
+        <div class="home-product-kicker tool-hero-support">UK CV checker</div>
+        <h1 class="homepage-hero-title tool-hero-title">Check your CV against the job</h1>
+        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused match score, missing keywords, recruiter-style verdict and priority fixes before you apply.</p>
         <p class="compliance-notice">UK-focused, AI-assisted guidance. Your first check does not need an account, and no job outcome is guaranteed.</p>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
         </div>
-        <div class="tool-actions-row hero-start-row">
-          <a class="hero-start-link" href="#cvText">Start free check</a>
-        </div>
 
-        <p class="upload-intro">Start with paste. It is fastest, easiest to review, and avoids uploading anything you do not need to share.</p>
+        <p class="upload-intro">Start with paste. It is fastest and avoids uploading anything you do not need to share.</p>
 
         <div class="tool-form">
           <div class="paste-toggle form-section paste-cv-section">
@@ -4521,20 +4832,6 @@
         </div>
 
         <p id="status" class="small">Ready when you are.</p>
-
-        <div class="result-preview-card" aria-label="Example CV result preview">
-          <div class="result-preview-header">
-            <div class="result-preview-title">Example CV Result</div>
-            <div class="result-preview-score">CV Score: <span>74</span> → <strong>89</strong></div>
-          </div>
-          <div class="result-preview-label">Top improvements</div>
-          <ul class="result-preview-list">
-            <li>Add missing keywords: stakeholder, revenue, pipeline</li>
-            <li>Strengthen bullet points with impact verbs</li>
-            <li>Optimise formatting for ATS scanning</li>
-          </ul>
-          <a class="result-preview-link" href="/example-cv-report">See full example report</a>
-        </div>
       </div>
 
       <div id="checkerLoading" class="checker-loading hidden" role="status" aria-live="polite">
@@ -5062,6 +5359,43 @@
     </div>
 
     <div class="helper-column home-side-panel">
+      <aside class="card report-demo-panel" aria-label="Example CV report preview">
+        <div class="report-demo-header">
+          <span class="report-demo-kicker">Example output</span>
+          <h2>See what needs fixing before a recruiter does</h2>
+          <p>A realistic preview of the report style: specific, role-led and built around UK CV wording.</p>
+        </div>
+        <div class="report-score-row">
+          <div class="report-score-dial"><span>74</span></div>
+          <div class="report-verdict">
+            <strong>Possible shortlist, but evidence is buried</strong>
+            <span>The CV has relevant experience, but the first page does not make the strongest role match obvious enough.</span>
+          </div>
+        </div>
+        <div class="report-demo-body">
+          <div class="report-demo-section">
+            <span>Missing keywords</span>
+            <div class="keyword-row">
+              <b>stakeholder</b>
+              <b>forecasting</b>
+              <b>commercial planning</b>
+            </div>
+          </div>
+          <div class="report-demo-section">
+            <span>Priority fix</span>
+            <p>Rewrite the profile around the target role, then move the strongest measurable evidence into the first half of page one.</p>
+          </div>
+          <div class="report-demo-section">
+            <span>Before and after</span>
+            <div class="rewrite-preview">
+              <del>Responsible for managing customer accounts and sales targets.</del>
+              <ins>Drove account growth by turning customer plans into measurable revenue opportunities.</ins>
+            </div>
+          </div>
+          <a class="report-demo-link" href="/example-cv-report">View full example report</a>
+        </div>
+      </aside>
+
       <div id="authCard" class="card sidebar-card">
         <div class="section-title">Want to save your result?</div>
         <p id="authSubtitle" class="small sidebar-intro">
