@@ -581,6 +581,31 @@
     flex-wrap: wrap;
   }
 
+  .mobile-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 7px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(199, 210, 254, 0.34);
+    background: rgba(255, 255, 255, 0.06);
+    color: #E8EEFC;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  .mobile-menu-toggle:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-nav-panel {
+    display: none;
+  }
+
   .site-header-account-row {
     display: flex;
     align-items: center;
@@ -2314,6 +2339,51 @@
       width: auto;
       min-height: 0;
       justify-content: flex-end;
+    }
+
+    .mobile-menu-toggle {
+      display: inline-flex;
+    }
+
+    .mobile-nav-panel {
+      display: none;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(92, 112, 150, 0.28);
+      background: rgba(15, 28, 50, 0.96);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+    }
+
+    .mobile-nav-panel.is-open {
+      display: grid;
+    }
+
+    .mobile-nav-panel a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 9px 11px;
+      border-radius: 12px;
+      color: #E8EEFC;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .mobile-nav-panel a:hover,
+    .mobile-nav-panel a:focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      outline: none;
+    }
+
+    .mobile-nav-panel a::after {
+      content: ">";
+      color: #AFC0FF;
+      font-size: 13px;
     }
 
     .account-menu-wrap {
@@ -4890,6 +4960,7 @@
       </div>
 
       <div class="site-header-account-row">
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileNavPanel">Menu</button>
         <span id="authLoadingPlaceholder" class="auth-placeholder"></span>
         <span id="authLoadingText" class="auth-loading-text">Checking account...</span>
         <a id="signInLink" href="#authCard" class="header-signin-link hidden">Sign in</a>
@@ -4914,8 +4985,51 @@
         </div>
       </div>
       </div>
+      <nav id="mobileNavPanel" class="mobile-nav-panel" aria-label="Mobile primary navigation">
+        <a href="/#tool">Check CV</a>
+        <a href="/upgrade" data-upgrade-link>Pricing / Upgrade</a>
+        <a href="/example-cv-report">Example Report</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="/contact">Contact</a>
+      </nav>
     </div>
   </header>
+
+  <script>
+    (function() {
+      var mobileMenuToggle = document.getElementById("mobileMenuToggle");
+      var mobileNavPanel = document.getElementById("mobileNavPanel");
+      if (!mobileMenuToggle || !mobileNavPanel) return;
+
+      function setMobileMenu(open) {
+        mobileNavPanel.classList.toggle("is-open", open);
+        mobileMenuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      mobileMenuToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        setMobileMenu(!mobileNavPanel.classList.contains("is-open"));
+      });
+
+      mobileNavPanel.addEventListener("click", function(event) {
+        if (event.target.closest("a")) {
+          setMobileMenu(false);
+        }
+      });
+
+      document.addEventListener("click", function(event) {
+        if (!event.target.closest("#mobileMenuToggle") && !event.target.closest("#mobileNavPanel")) {
+          setMobileMenu(false);
+        }
+      });
+
+      document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+          setMobileMenu(false);
+        }
+      });
+    })();
+  </script>
 
   <div id="checkoutStatus" class="status-banner info hidden"></div>
 
