@@ -5418,6 +5418,230 @@ def build_mobile_layout_css() -> str:
     """
 
 
+def build_public_content_surface_css() -> str:
+    return """
+          .faq-page .summary-box,
+          .faq-page > .faq-list,
+          .faq-page .final-cta,
+          .seo-page > .card,
+          .seo-page .layout > .card,
+          .landing-page .summary-box,
+          .landing-page .example-row,
+          .landing-page .final-cta,
+          .content-page .hero-panel,
+          .content-page .trust-box,
+          .content-page .cta-panel,
+          .content-page .privacy-box,
+          .content-page .comparison-wrap,
+          .content-page .pro-proof-section,
+          .content-page .example-link-panel,
+          .content-page .bottom-cta,
+          .content-page .panel,
+          .content-page .check-card,
+          .content-page .score-card,
+          .guides-page .guide-group {
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 24px !important;
+            color: #14213D !important;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22) !important;
+          }
+
+          .faq-page .summary-box,
+          .faq-page > .faq-list,
+          .faq-page .final-cta,
+          .seo-page > .card,
+          .seo-page .layout > .card,
+          .landing-page .summary-box,
+          .landing-page .final-cta,
+          .content-page .hero-panel,
+          .content-page .trust-box,
+          .content-page .cta-panel,
+          .content-page .privacy-box,
+          .content-page .pro-proof-section,
+          .content-page .example-link-panel,
+          .content-page .bottom-cta,
+          .content-page .panel,
+          .content-page .check-card,
+          .content-page .score-card,
+          .guides-page .guide-group {
+            padding: 28px !important;
+          }
+
+          .faq-page .summary-box h1,
+          .faq-page .summary-box h2,
+          .faq-page .summary-box h3,
+          .faq-page .summary-box strong,
+          .faq-page > .faq-list h1,
+          .faq-page > .faq-list h2,
+          .faq-page > .faq-list h3,
+          .faq-page > .faq-list strong,
+          .faq-page .final-cta h1,
+          .faq-page .final-cta h2,
+          .faq-page .final-cta h3,
+          .seo-page > .card h1,
+          .seo-page > .card h2,
+          .seo-page > .card h3,
+          .seo-page > .card strong,
+          .seo-page .layout > .card h1,
+          .seo-page .layout > .card h2,
+          .seo-page .layout > .card h3,
+          .seo-page .layout > .card strong,
+          .landing-page .summary-box h1,
+          .landing-page .summary-box h2,
+          .landing-page .summary-box h3,
+          .landing-page .summary-box strong,
+          .landing-page .example-row strong,
+          .landing-page .final-cta h1,
+          .landing-page .final-cta h2,
+          .landing-page .final-cta h3,
+          .content-page .hero-panel h1,
+          .content-page .hero-panel h2,
+          .content-page .hero-panel h3,
+          .content-page .trust-box h1,
+          .content-page .trust-box h2,
+          .content-page .trust-box h3,
+          .content-page .cta-panel h1,
+          .content-page .cta-panel h2,
+          .content-page .cta-panel h3,
+          .content-page .privacy-box h1,
+          .content-page .privacy-box h2,
+          .content-page .privacy-box h3,
+          .content-page .comparison-wrap th,
+          .content-page .comparison-wrap strong,
+          .content-page .pro-proof-section h1,
+          .content-page .pro-proof-section h2,
+          .content-page .pro-proof-section h3,
+          .content-page .pro-proof-section strong,
+          .content-page .example-link-panel h1,
+          .content-page .example-link-panel h2,
+          .content-page .example-link-panel h3,
+          .content-page .bottom-cta h1,
+          .content-page .bottom-cta h2,
+          .content-page .bottom-cta h3,
+          .content-page .panel h1,
+          .content-page .panel h2,
+          .content-page .panel h3,
+          .content-page .check-card h1,
+          .content-page .check-card h2,
+          .content-page .check-card h3,
+          .content-page .check-card strong,
+          .content-page .score-card h1,
+          .content-page .score-card h2,
+          .content-page .score-card h3,
+          .content-page .score-card strong,
+          .guides-page .guide-group h1,
+          .guides-page .guide-group h2,
+          .guides-page .guide-group h3 {
+            color: #101B33 !important;
+          }
+
+          .faq-page .summary-box p,
+          .faq-page .summary-box li,
+          .faq-page > .faq-list p,
+          .faq-page > .faq-list li,
+          .faq-page .final-cta p,
+          .seo-page > .card p,
+          .seo-page > .card li,
+          .seo-page .layout > .card p,
+          .seo-page .layout > .card li,
+          .landing-page .summary-box p,
+          .landing-page .summary-box li,
+          .landing-page .example-row span,
+          .landing-page .example-row p,
+          .landing-page .final-cta p,
+          .content-page .hero-panel p,
+          .content-page .hero-panel li,
+          .content-page .trust-box p,
+          .content-page .trust-box li,
+          .content-page .cta-panel p,
+          .content-page .cta-panel li,
+          .content-page .privacy-box p,
+          .content-page .privacy-box li,
+          .content-page .comparison-wrap td,
+          .content-page .comparison-wrap li,
+          .content-page .pro-proof-section p,
+          .content-page .pro-proof-section li,
+          .content-page .example-link-panel p,
+          .content-page .bottom-cta p,
+          .content-page .panel p,
+          .content-page .panel li,
+          .content-page .check-card p,
+          .content-page .check-card li,
+          .content-page .score-card p,
+          .content-page .score-card li,
+          .guides-page .guide-group p,
+          .guides-page .guide-group li {
+            color: #53627A !important;
+          }
+
+          .content-page .comparison-table th {
+            background: #F1F5F9 !important;
+          }
+
+          .content-page .comparison-table td,
+          .content-page .comparison-table th,
+          .faq-page .faq-item,
+          .guides-page .guide-item {
+            border-color: #E2E8F0 !important;
+          }
+
+          .faq-page .summary-box .section-list,
+          .faq-page .summary-box ul,
+          .faq-page > .faq-list,
+          .faq-page > .faq-list .faq-item,
+          .content-page .trust-list,
+          .content-page .section-list {
+            color: #53627A !important;
+          }
+
+          .faq-page .final-cta .compliance-notice,
+          .content-page .bottom-cta .compliance-notice,
+          .landing-page .final-cta .compliance-notice {
+            background: #EEF2FF !important;
+            border-color: #C7D2FE !important;
+            color: #2D3B66 !important;
+          }
+
+          .faq-page .text-link,
+          .seo-page > .card .text-link,
+          .seo-page .layout > .card .text-link,
+          .landing-page .text-link,
+          .content-page .trust-box a,
+          .content-page .cta-panel a,
+          .content-page .privacy-box a,
+          .guides-page .guide-item a {
+            color: #1D4ED8 !important;
+          }
+
+          @media (max-width: 768px) {
+            .faq-page .summary-box,
+            .faq-page > .faq-list,
+            .faq-page .final-cta,
+            .seo-page > .card,
+            .seo-page .layout > .card,
+            .landing-page .summary-box,
+            .landing-page .final-cta,
+            .content-page .hero-panel,
+            .content-page .trust-box,
+            .content-page .cta-panel,
+            .content-page .privacy-box,
+            .content-page .comparison-wrap,
+            .content-page .pro-proof-section,
+            .content-page .example-link-panel,
+            .content-page .bottom-cta,
+            .content-page .panel,
+            .content-page .check-card,
+            .content-page .score-card,
+            .guides-page .guide-group {
+              padding: 20px 16px !important;
+              border-radius: 20px !important;
+              box-shadow: 0 18px 42px rgba(3, 9, 23, 0.22) !important;
+            }
+          }
+    """
+
+
 def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool") -> str:
     nav_items = [
         ("cv-checker", "/cv-checker", "CV Checker"),
@@ -6301,6 +6525,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
 {build_mini_tool_consistency_css()}
         </style>
       </head>
@@ -6583,6 +6808,7 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -6815,6 +7041,7 @@ def render_cv_checker_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
 {build_mini_tool_consistency_css()}
         </style>
       </head>
@@ -7094,6 +7321,7 @@ def render_ats_cv_checker_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
 {build_mini_tool_consistency_css()}
         </style>
       </head>
@@ -7706,6 +7934,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
           @media (max-width: 768px) {{
             .example-report-page .hero-card,
             .example-report-page .report-grid > div > .card,
@@ -8108,6 +8337,7 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -8323,6 +8553,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
 
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -8741,6 +8972,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
 {build_mini_tool_consistency_css()}
         </style>
       </head>
@@ -8903,6 +9135,7 @@ def render_ten_second_cv_test_page() -> str:
             .cta, .cta-button {{ width: 100%; box-sizing: border-box; text-align: center; }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -9273,6 +9506,7 @@ def render_best_free_cv_checker_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -9545,6 +9779,7 @@ def render_faq_page() -> str:
 
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -9731,10 +9966,11 @@ def render_guides_page() -> str:
             .guide-group {{ padding: 24px 0; }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page-shell content-page">
+        <div class="page-shell content-page guides-page">
           {build_site_header(None)}
           <section class="guides-hero">
             <h1>CV guides and resources</h1>
@@ -9964,6 +10200,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
 
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -10162,6 +10399,7 @@ def render_upgrade_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_public_content_surface_css()}
           @media (max-width: 768px) {{
             .upgrade-card,
             .upgrade-active-state,
