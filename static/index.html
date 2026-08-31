@@ -6869,6 +6869,11 @@
         prompt: "Assess this CV through a UK NHS administrator lens. Prioritise patient communication, confidentiality, accurate records, appointment scheduling, systems and public-sector relevance.",
         hint: "NHS admin lens: confidentiality, patient contact, records and systems matter most."
       },
+      civil_service: {
+        label: "Civil Service",
+        prompt: "Assess this CV through a UK Civil Service lens. Prioritise behaviour-style evidence, stakeholder communication, delivery, accuracy, policy or operational relevance and public-service context.",
+        hint: "Civil Service lens: behaviours, public-service evidence, delivery and stakeholder clarity matter most."
+      },
       admin: {
         label: "Office / operations admin",
         prompt: "Assess this CV through a UK office or operations administration lens. Prioritise organisation, records, systems, scheduling, stakeholder support, accuracy and process improvement.",
@@ -6888,6 +6893,11 @@
         label: "Customer success",
         prompt: "Assess this CV through a UK customer success lens. Prioritise onboarding, adoption, customer health, renewals, churn reduction, QBRs, stakeholder management and customer outcomes.",
         hint: "Customer success lens: onboarding, adoption, retention and customer outcomes matter most."
+      },
+      customer_service: {
+        label: "Customer service",
+        prompt: "Assess this CV through a UK customer service lens. Prioritise query handling, complaints, service recovery, communication, KPIs, systems, escalation and customer outcomes.",
+        hint: "Customer service lens: service quality, complaints, communication and practical outcomes matter most."
       },
       project_manager: {
         label: "Project manager",
@@ -7210,15 +7220,20 @@
     const ROLE_LANDING_PATHS = {
       "/graduate-cv-checker": "graduate",
       "/nhs-admin-cv-checker": "nhs_admin",
+      "/civil-service-cv-checker": "civil_service",
       "/software-developer-cv-checker": "software_developer",
       "/marketing-cv-checker": "marketing",
       "/sales-cv-checker": "sales",
       "/account-manager-cv-checker": "account_manager",
+      "/sales-manager-cv-checker": "sales",
       "/customer-success-cv-checker": "customer_success",
+      "/customer-service-cv-checker": "customer_service",
       "/project-manager-cv-checker": "project_manager",
+      "/project-coordinator-cv-checker": "project_manager",
       "/it-helpdesk-cv-checker": "it_helpdesk",
       "/retail-manager-cv-checker": "retail_manager",
       "/admin-cv-checker": "admin",
+      "/admin-assistant-cv-checker": "admin",
       "/career-change-cv-checker": "career_change"
     };
 

@@ -16,11 +16,16 @@ function renderFooter() {
           <a href="/job-description-cv-match">Job Description CV Match</a>
           <a href="/graduate-cv-checker">Graduate CV Checker</a>
           <a href="/sales-cv-checker">Sales CV Checker</a>
+          <a href="/sales-manager-cv-checker">Sales Manager CV Checker</a>
           <a href="/project-manager-cv-checker">Project Manager CV Checker</a>
+          <a href="/project-coordinator-cv-checker">Project Coordinator CV Checker</a>
           <a href="/retail-manager-cv-checker">Retail Manager CV Checker</a>
           <a href="/nhs-admin-cv-checker">NHS Admin CV Checker</a>
+          <a href="/civil-service-cv-checker">Civil Service CV Checker</a>
           <a href="/admin-cv-checker">Admin CV Checker</a>
+          <a href="/admin-assistant-cv-checker">Admin Assistant CV Checker</a>
           <a href="/it-helpdesk-cv-checker">IT Helpdesk CV Checker</a>
+          <a href="/customer-service-cv-checker">Customer Service CV Checker</a>
           <a href="/customer-success-cv-checker">Customer Success CV Checker</a>
           <a href="/career-change-cv-checker">Career Change CV Checker</a>
         </div>
@@ -40,6 +45,9 @@ function renderFooter() {
           <a href="/uk-cv-examples-by-role">UK CV Examples by Role</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
+          <a href="/best-cv-checker-for-uk-job-applications">Best CV Checker for UK Applications</a>
+          <a href="/is-it-safe-to-upload-your-cv-to-an-ai-checker">Safe AI CV Checker Use</a>
+          <a href="/cv-optimiser-vs-chatgpt">CV Optimiser vs ChatGPT</a>
           <a href="/cv-optimiser-vs-jobscan">CV Optimiser vs Jobscan</a>
           <a href="/best-ats-cv-checker-uk">Best ATS CV Checker UK</a>
           <a href="/why-is-my-cv-not-getting-interviews">Why Your CV May Not Be Getting Responses</a>

@@ -1696,6 +1696,37 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
 }
 
 COMPARISON_PAGES: dict[str, dict[str, Any]] = {
+    "cv-optimiser-vs-chatgpt": {
+        "title": "CV Optimiser vs ChatGPT | Which Should You Use for a CV Check?",
+        "description": "Compare CV Optimiser and ChatGPT for UK CV checks, job-description matching, score breakdowns, recruiter verdicts and practical rewrite guidance.",
+        "h1": "CV Optimiser vs ChatGPT",
+        "intro": "ChatGPT can be useful for open-ended CV ideas, but it depends heavily on the prompt you write. CV Optimiser is built for one repeatable workflow: check a UK CV against a specific job description, score the match and show the fixes before you apply.",
+        "positioning": "Our niche: structured UK CV feedback, role-fit scoring, missing keywords, recruiter-style verdicts and proof pages without needing to invent the prompt yourself.",
+        "competitor": "ChatGPT",
+        "best_for_competitor": "Users who want a flexible AI assistant for brainstorming, rewriting, interview prep or wider career questions.",
+        "best_for_us": "UK job seekers who want a purpose-built CV checker with a clear role-fit score, score breakdown, priority fixes and example reports.",
+        "rows": [
+            ("Workflow", "Guided CV-to-job-description check with score, verdict, missing terms and next fixes.", "Open-ended conversation where quality depends on the prompt and follow-up questions."),
+            ("UK CV focus", "Uses UK CV language, role-specific examples and application-focused scoring.", "Can adapt to UK CVs if prompted clearly, but is not a dedicated CV checker by default."),
+            ("Score clarity", "Shows a structured readiness judgement and breakdown across role alignment, keywords, evidence and readability.", "Can create scoring ideas, but the scale and criteria may vary between prompts."),
+            ("Proof before use", "Includes methodology, limitations, privacy notes and realistic example reports.", "You need to decide the method, privacy approach and output structure yourself."),
+        ],
+        "choose_us": [
+            "You want a repeatable score and clear readiness label for a specific job advert.",
+            "You want UK recruiter-style feedback without building your own prompt.",
+            "You want missing keywords, priority fixes and report-style output in one place.",
+        ],
+        "choose_competitor": [
+            "You want broad career brainstorming rather than a fixed CV checker workflow.",
+            "You already know how to prompt and evaluate CV feedback critically.",
+            "You want to explore many versions of wording in a chat format.",
+        ],
+        "related": [
+            ("/what-cv-optimiser-checks-that-free-ai-prompts-miss", "What free AI prompts miss"),
+            ("/how-cv-optimiser-scores-your-cv", "How scoring works"),
+            ("/cv-checker", "Try the CV checker"),
+        ],
+    },
     "cv-optimiser-vs-jobscan": {
         "title": "CV Optimiser vs Jobscan | Which CV Checker Should You Use?",
         "description": "Compare CV Optimiser and Jobscan for CV checking, ATS keywords, job-description matching, UK CV language and practical application feedback.",
@@ -2283,6 +2314,35 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
 }
 
 CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
+    "best-cv-checker-for-uk-job-applications": {
+        "title": "Best CV Checker for UK Job Applications | CV Optimiser",
+        "meta_description": "Learn what to look for in a UK CV checker, including job-description matching, recruiter-style feedback, ATS readability and practical rewrite guidance.",
+        "h1": "Best CV checker for UK job applications",
+        "intro": "The best CV checker for a UK job application should do more than spot spelling issues. It should compare your CV with the actual advert, explain the score and show what to improve before you apply.",
+        "who": ["UK job seekers applying to specific roles", "Candidates who want focused feedback before submitting", "People comparing free CV checkers, ATS tools and AI prompts"],
+        "looks_for": ["Role-fit against the job description", "Missing keywords used naturally", "Evidence strength and first-page clarity", "ATS-readable structure and honest limitations"],
+        "manual": ["Check whether the tool asks for the job description", "Look for score criteria, not just a single number", "Make sure examples show the real type of output", "Avoid tools that promise guaranteed interviews or guaranteed ATS success"],
+        "sections": [
+            ("What a strong UK CV checker should include", "Look for a clear role-fit score, role-specific missing keywords, recruiter-style verdicts, practical rewrite guidance and transparent guidance on what the tool can and cannot know."),
+            ("Why CV Optimiser is focused", "CV Optimiser is built around the job application moment: paste your CV, paste the advert, see whether the CV is ready and know what to fix first."),
+        ],
+        "related": [("/cv-checker", "CV checker"), ("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/cv-optimiser-vs-chatgpt", "CV Optimiser vs ChatGPT")],
+        "tool": True,
+    },
+    "is-it-safe-to-upload-your-cv-to-an-ai-checker": {
+        "title": "Is It Safe to Upload Your CV to an AI Checker? | CV Optimiser",
+        "meta_description": "Understand how to think about CV privacy, personal data, AI-assisted checks and safer ways to use a CV checker before applying.",
+        "h1": "Is it safe to upload your CV to an AI checker?",
+        "intro": "A CV can contain personal data, work history, contact details and employer names, so safety matters. A useful AI CV checker should be clear about how your CV is handled and should avoid pretending that AI feedback is a guaranteed job outcome.",
+        "who": ["Job seekers comparing AI CV tools", "Users worried about personal data in a CV", "Candidates deciding whether to paste or upload a CV"],
+        "looks_for": ["Clear privacy and CV handling pages", "A paste option if you do not want to upload a file", "Plain-language limitations", "No unrealistic promises about interviews or ATS acceptance"],
+        "manual": ["Remove details you do not need checked if you are cautious", "Read the privacy and CV handling pages before uploading", "Use paste mode when you want more control", "Review all AI suggestions before applying"],
+        "sections": [
+            ("What to check before using any AI CV tool", "Check whether the site explains data handling, whether it asks only for information needed for the CV check, and whether it presents results as guidance rather than certainty."),
+            ("How to use a CV checker more safely", "Paste the CV text if you prefer, remove unnecessary contact details for early testing, and review suggestions before using them in a live job application."),
+        ],
+        "related": [("/how-cv-optimiser-handles-your-cv", "How CV Optimiser handles your CV"), ("/privacy", "Privacy policy"), ("/can-an-ats-checker-guarantee-interviews", "ATS checker limits")],
+    },
     "why-is-my-cv-not-getting-interviews": {
         "title": "Why Is My CV Not Getting Responses? | CV Optimiser",
         "meta_description": "Find out why your CV may not be getting responses, from weak role fit and missing evidence to poor formatting and job-description mismatch.",
@@ -2407,6 +2467,17 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "keywords": ["retention", "growth", "stakeholder management", "forecasting", "customer relationships", "commercial planning"],
         "example_report": ("/account-manager-cv-example-report", "Account manager CV example report"),
     },
+    "sales-manager-cv-checker": {
+        "role": "sales manager",
+        "title": "Sales Manager CV Checker | CV Optimiser",
+        "meta_description": "Check your sales manager CV for team leadership, revenue ownership, pipeline management, forecasting, coaching, CRM and commercial outcomes.",
+        "h1": "Sales manager CV checker",
+        "signals": ["team leadership and coaching", "revenue, targets and forecast ownership", "pipeline management and CRM discipline", "commercial outcomes and account growth"],
+        "mistakes": ["only showing individual sales activity", "missing team size or coaching evidence", "not proving forecast, pipeline or target ownership"],
+        "keywords": ["sales management", "team leadership", "pipeline", "forecasting", "CRM", "targets", "coaching", "revenue"],
+        "search_terms": ["sales manager CV checker", "sales manager CV review UK", "sales manager CV keywords"],
+        "cta_support": "Check whether your sales manager CV proves team leadership, target ownership, forecasting and commercial impact.",
+    },
     "customer-success-cv-checker": {
         "role": "customer success",
         "title": "Customer Success CV Checker | CV Optimiser",
@@ -2428,6 +2499,17 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "example_report": ("/project-manager-cv-example-report", "Project manager CV example report"),
         "cta_support": "Check whether your project manager CV proves delivery, stakeholder control, risk management and outcomes.",
     },
+    "project-coordinator-cv-checker": {
+        "role": "project coordinator",
+        "title": "Project Coordinator CV Checker | CV Optimiser",
+        "meta_description": "Check your project coordinator CV for planning support, milestones, RAID logs, stakeholder updates, governance, documentation and delivery evidence.",
+        "h1": "Project coordinator CV checker",
+        "signals": ["project planning and coordination", "milestones, actions, risks and dependencies", "stakeholder updates and meeting support", "documentation, governance and delivery evidence"],
+        "mistakes": ["sounding like general admin rather than project support", "missing tools, trackers or governance evidence", "not showing contribution to delivery outcomes"],
+        "keywords": ["project coordination", "RAID", "stakeholders", "milestones", "actions", "governance", "documentation", "delivery"],
+        "search_terms": ["project coordinator CV checker", "project coordinator CV review UK", "project coordinator CV keywords"],
+        "cta_support": "Check whether your project coordinator CV shows practical delivery support, governance and stakeholder control.",
+    },
     "retail-manager-cv-checker": {
         "role": "retail manager",
         "title": "Retail Manager CV Checker | CV Optimiser",
@@ -2439,6 +2521,17 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "example_report": ("/retail-manager-cv-example-report", "Retail manager CV example report"),
         "search_terms": ["retail manager CV checker", "retail manager CV review UK", "store manager CV keywords"],
         "cta_support": "Check whether your retail manager CV proves store performance, team leadership, standards and customer experience.",
+    },
+    "customer-service-cv-checker": {
+        "role": "customer service",
+        "title": "Customer Service CV Checker | CV Optimiser",
+        "meta_description": "Check your customer service CV for customer handling, complaints, service recovery, KPIs, communication, systems and role-specific evidence.",
+        "h1": "Customer service CV checker",
+        "signals": ["customer query handling and service recovery", "complaints, escalation and communication", "KPIs, SLAs or service standards", "systems, records and teamwork"],
+        "mistakes": ["using generic people-skills language", "missing complaint or escalation evidence", "not proving service quality with context or outcomes"],
+        "keywords": ["customer service", "complaints", "service recovery", "communication", "KPIs", "SLA", "CRM", "escalation"],
+        "search_terms": ["customer service CV checker", "customer service CV review UK", "customer advisor CV keywords"],
+        "cta_support": "Check whether your customer service CV proves service quality, communication and problem-solving for the role.",
     },
     "graduate-cv-checker": {
         "role": "graduate",
@@ -2483,6 +2576,18 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "keywords": ["scheduling", "records", "documentation", "accuracy", "office support", "customer service"],
         "example_report": ("/admin-cv-example-report", "Admin CV example report"),
     },
+    "admin-assistant-cv-checker": {
+        "role": "admin assistant",
+        "title": "Admin Assistant CV Checker | CV Optimiser",
+        "meta_description": "Check your admin assistant CV for organisation, scheduling, inbox support, records, documents, systems, accuracy and office support.",
+        "h1": "Admin assistant CV checker",
+        "signals": ["organisation, scheduling and inbox support", "records, documents and data accuracy", "systems and office processes", "stakeholder, customer or team support"],
+        "mistakes": ["describing duties without accuracy or volume", "missing systems and document examples", "not showing how you support a busy team"],
+        "keywords": ["admin assistant", "scheduling", "records", "documents", "accuracy", "office support", "systems", "inbox"],
+        "example_report": ("/admin-cv-example-report", "Admin CV example report"),
+        "search_terms": ["admin assistant CV checker", "admin assistant CV review UK", "office assistant CV keywords"],
+        "cta_support": "Check whether your admin assistant CV proves accuracy, organisation, systems experience and team support.",
+    },
     "marketing-cv-checker": {
         "role": "marketing",
         "title": "Marketing CV Checker | CV Optimiser",
@@ -2514,6 +2619,17 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "keywords": ["confidentiality", "records", "scheduling", "communication", "patient handling", "accuracy", "systems"],
         "example_report": ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
         "search_terms": ["NHS admin CV help", "NHS admin CV checker", "NHS administrator CV keywords"],
+    },
+    "civil-service-cv-checker": {
+        "role": "Civil Service",
+        "title": "Civil Service CV Checker | CV Optimiser",
+        "meta_description": "Check your Civil Service CV for behaviours, STAR-style evidence, stakeholder communication, delivery, accuracy, policy and public-service relevance.",
+        "h1": "Civil Service CV checker",
+        "signals": ["behaviour-style evidence and examples", "stakeholder communication and public-service context", "delivery, accuracy and process ownership", "policy, administration or operational relevance"],
+        "mistakes": ["using broad public-sector claims without examples", "missing STAR-style evidence", "not connecting achievements to behaviours or role criteria"],
+        "keywords": ["Civil Service", "behaviours", "stakeholder management", "policy", "public service", "delivery", "accuracy", "communication"],
+        "search_terms": ["Civil Service CV checker", "Civil Service CV review UK", "Civil Service behaviours CV"],
+        "cta_support": "Check whether your Civil Service CV makes behaviours, public-service evidence and role fit easy to see.",
     },
 }
 
@@ -2649,15 +2765,20 @@ ROLE_FOCUS_KEYWORDS: dict[str, list[str]] = {
 ROLE_PAGE_FOCUS_KEYS: dict[str, str] = {
     "sales-cv-checker": "sales_account",
     "account-manager-cv-checker": "sales_account",
+    "sales-manager-cv-checker": "sales_account",
     "customer-success-cv-checker": "customer_success",
     "project-manager-cv-checker": "project_programme",
+    "project-coordinator-cv-checker": "project_programme",
     "retail-manager-cv-checker": "retail_customer",
+    "customer-service-cv-checker": "retail_customer",
     "graduate-cv-checker": "graduate_early",
     "it-helpdesk-cv-checker": "it_helpdesk",
     "software-developer-cv-checker": "tech_product",
     "admin-cv-checker": "operations_admin",
+    "admin-assistant-cv-checker": "operations_admin",
     "career-change-cv-checker": "career_change",
     "nhs-admin-cv-checker": "public_nhs",
+    "civil-service-cv-checker": "public_nhs",
 }
 
 
@@ -3945,15 +4066,20 @@ def analytics_dimension_value(metadata: dict[str, Any], keys: list[str], fallbac
 ROLE_ANALYTICS_LABELS = {
     "/graduate-cv-checker": "Graduate CV checker",
     "/nhs-admin-cv-checker": "NHS admin CV checker",
+    "/civil-service-cv-checker": "Civil Service CV checker",
     "/software-developer-cv-checker": "Software developer CV checker",
     "/marketing-cv-checker": "Marketing CV checker",
     "/sales-cv-checker": "Sales CV checker",
     "/account-manager-cv-checker": "Account manager CV checker",
+    "/sales-manager-cv-checker": "Sales manager CV checker",
     "/customer-success-cv-checker": "Customer success CV checker",
     "/project-manager-cv-checker": "Project manager CV checker",
+    "/project-coordinator-cv-checker": "Project coordinator CV checker",
     "/retail-manager-cv-checker": "Retail manager CV checker",
+    "/customer-service-cv-checker": "Customer service CV checker",
     "/it-helpdesk-cv-checker": "IT helpdesk CV checker",
     "/admin-cv-checker": "Admin CV checker",
+    "/admin-assistant-cv-checker": "Admin assistant CV checker",
     "/career-change-cv-checker": "Career change CV checker",
 }
 
@@ -12172,6 +12298,7 @@ def render_guides_page() -> str:
     page_url = canonical_url("/guides")
     groups = [
         ("CV checking tools", [
+            ("best-cv-checker-for-uk-job-applications", "/best-cv-checker-for-uk-job-applications", SEO_LANDING_PAGES["best-cv-checker-for-uk-job-applications"]["title"], SEO_LANDING_PAGES["best-cv-checker-for-uk-job-applications"]["intro"]),
             ("best-free-cv-checker-uk", "/best-free-cv-checker-uk", "Best Free CV Checker UK", "Compare your CV with a job description and see where keywords, evidence and role fit could be stronger."),
             ("cv-checker", "/cv-checker", TOOL_LANDING_PAGES["cv-checker"]["title"], "Run a general CV check and see your score, missing keywords and priority fixes."),
             ("ats-cv-checker", "/ats-cv-checker", SEO_LANDING_PAGES["ats-cv-checker"]["title"], SEO_LANDING_PAGES["ats-cv-checker"]["intro"]),
@@ -12192,7 +12319,9 @@ def render_guides_page() -> str:
             ("account-manager-cv-keywords", "/account-manager-cv-keywords", SEO_LANDING_PAGES["account-manager-cv-keywords"]["title"], SEO_LANDING_PAGES["account-manager-cv-keywords"]["intro"]),
             ("sales-cv-checker", "/sales-cv-checker", SEO_LANDING_PAGES["sales-cv-checker"]["title"], SEO_LANDING_PAGES["sales-cv-checker"]["intro"]),
             ("account-manager-cv-checker", "/account-manager-cv-checker", SEO_LANDING_PAGES["account-manager-cv-checker"]["title"], SEO_LANDING_PAGES["account-manager-cv-checker"]["intro"]),
+            ("sales-manager-cv-checker", "/sales-manager-cv-checker", SEO_LANDING_PAGES["sales-manager-cv-checker"]["title"], SEO_LANDING_PAGES["sales-manager-cv-checker"]["intro"]),
             ("project-manager-cv-checker", "/project-manager-cv-checker", SEO_LANDING_PAGES["project-manager-cv-checker"]["title"], SEO_LANDING_PAGES["project-manager-cv-checker"]["intro"]),
+            ("project-coordinator-cv-checker", "/project-coordinator-cv-checker", SEO_LANDING_PAGES["project-coordinator-cv-checker"]["title"], SEO_LANDING_PAGES["project-coordinator-cv-checker"]["intro"]),
             ("retail-manager-cv-checker", "/retail-manager-cv-checker", SEO_LANDING_PAGES["retail-manager-cv-checker"]["title"], SEO_LANDING_PAGES["retail-manager-cv-checker"]["intro"]),
             ("sales-director-cv-example", "/sales-director-cv-example", SEO_LANDING_PAGES["sales-director-cv-example"]["title"], SEO_LANDING_PAGES["sales-director-cv-example"]["intro"]),
             ("retail-manager-cv-example", "/retail-manager-cv-example", SEO_LANDING_PAGES["retail-manager-cv-example"]["title"], SEO_LANDING_PAGES["retail-manager-cv-example"]["intro"]),
@@ -12200,14 +12329,18 @@ def render_guides_page() -> str:
         ("Role-specific CV checkers", [
             ("graduate-cv-checker", "/graduate-cv-checker", SEO_LANDING_PAGES["graduate-cv-checker"]["title"], SEO_LANDING_PAGES["graduate-cv-checker"]["intro"]),
             ("nhs-admin-cv-checker", "/nhs-admin-cv-checker", SEO_LANDING_PAGES["nhs-admin-cv-checker"]["title"], SEO_LANDING_PAGES["nhs-admin-cv-checker"]["intro"]),
+            ("civil-service-cv-checker", "/civil-service-cv-checker", SEO_LANDING_PAGES["civil-service-cv-checker"]["title"], SEO_LANDING_PAGES["civil-service-cv-checker"]["intro"]),
             ("marketing-cv-checker", "/marketing-cv-checker", SEO_LANDING_PAGES["marketing-cv-checker"]["title"], SEO_LANDING_PAGES["marketing-cv-checker"]["intro"]),
             ("software-developer-cv-checker", "/software-developer-cv-checker", SEO_LANDING_PAGES["software-developer-cv-checker"]["title"], SEO_LANDING_PAGES["software-developer-cv-checker"]["intro"]),
             ("it-helpdesk-cv-checker", "/it-helpdesk-cv-checker", SEO_LANDING_PAGES["it-helpdesk-cv-checker"]["title"], SEO_LANDING_PAGES["it-helpdesk-cv-checker"]["intro"]),
             ("customer-success-cv-checker", "/customer-success-cv-checker", SEO_LANDING_PAGES["customer-success-cv-checker"]["title"], SEO_LANDING_PAGES["customer-success-cv-checker"]["intro"]),
+            ("customer-service-cv-checker", "/customer-service-cv-checker", SEO_LANDING_PAGES["customer-service-cv-checker"]["title"], SEO_LANDING_PAGES["customer-service-cv-checker"]["intro"]),
             ("admin-cv-checker", "/admin-cv-checker", SEO_LANDING_PAGES["admin-cv-checker"]["title"], SEO_LANDING_PAGES["admin-cv-checker"]["intro"]),
+            ("admin-assistant-cv-checker", "/admin-assistant-cv-checker", SEO_LANDING_PAGES["admin-assistant-cv-checker"]["title"], SEO_LANDING_PAGES["admin-assistant-cv-checker"]["intro"]),
             ("career-change-cv-checker", "/career-change-cv-checker", SEO_LANDING_PAGES["career-change-cv-checker"]["title"], SEO_LANDING_PAGES["career-change-cv-checker"]["intro"]),
         ]),
         ("CV writing advice", [
+            ("is-it-safe-to-upload-your-cv-to-an-ai-checker", "/is-it-safe-to-upload-your-cv-to-an-ai-checker", SEO_LANDING_PAGES["is-it-safe-to-upload-your-cv-to-an-ai-checker"]["title"], SEO_LANDING_PAGES["is-it-safe-to-upload-your-cv-to-an-ai-checker"]["intro"]),
             ("why-is-my-cv-not-getting-interviews", "/why-is-my-cv-not-getting-interviews", SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["title"], SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["intro"]),
             ("how-to-tailor-cv-to-job-description", "/how-to-tailor-cv-to-job-description", SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"]["title"], SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"]["intro"]),
             ("cv-summary-examples-uk", "/cv-summary-examples-uk", SEO_LANDING_PAGES["cv-summary-examples-uk"]["title"], SEO_LANDING_PAGES["cv-summary-examples-uk"]["intro"]),
@@ -12238,6 +12371,7 @@ def render_guides_page() -> str:
             ("what-cv-optimiser-checks-that-free-ai-prompts-miss", "/what-cv-optimiser-checks-that-free-ai-prompts-miss", SUPPORT_PAGES["what-cv-optimiser-checks-that-free-ai-prompts-miss"]["title"], SUPPORT_PAGES["what-cv-optimiser-checks-that-free-ai-prompts-miss"]["intro"]),
         ]),
         ("Comparisons", [
+            ("cv-optimiser-vs-chatgpt", "/cv-optimiser-vs-chatgpt", COMPARISON_PAGES["cv-optimiser-vs-chatgpt"]["title"], COMPARISON_PAGES["cv-optimiser-vs-chatgpt"]["intro"]),
             ("cv-optimiser-vs-jobscan", "/cv-optimiser-vs-jobscan", COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["title"], COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["intro"]),
             ("cv-optimiser-vs-resume-worded", "/cv-optimiser-vs-resume-worded", COMPARISON_PAGES["cv-optimiser-vs-resume-worded"]["title"], COMPARISON_PAGES["cv-optimiser-vs-resume-worded"]["intro"]),
             ("best-ats-cv-checker-uk", "/best-ats-cv-checker-uk", COMPARISON_PAGES["best-ats-cv-checker-uk"]["title"], COMPARISON_PAGES["best-ats-cv-checker-uk"]["intro"]),
@@ -13752,17 +13886,29 @@ SEO_ROLE_ALIASES = {
     "marketing-cv-review": "marketing-cv-checker",
     "marketing-cv-keywords": "marketing-cv-checker",
     "sales-cv-review": "sales-cv-checker",
+    "sales-manager-cv-review": "sales-manager-cv-checker",
+    "sales-manager-cv-keywords": "sales-manager-cv-checker",
     "retail-manager-cv-review": "retail-manager-cv-checker",
     "store-manager-cv-checker": "retail-manager-cv-checker",
     "store-manager-cv-keywords": "retail-manager-cv-checker",
+    "customer-service-cv-review": "customer-service-cv-checker",
+    "customer-advisor-cv-checker": "customer-service-cv-checker",
+    "customer-service-cv-keywords": "customer-service-cv-checker",
     "admin-cv-review": "admin-cv-checker",
     "administrator-cv-checker": "admin-cv-checker",
+    "admin-assistant-cv-review": "admin-assistant-cv-checker",
+    "office-assistant-cv-checker": "admin-assistant-cv-checker",
     "career-change-cv-review": "career-change-cv-checker",
     "change-career-cv-checker": "career-change-cv-checker",
     "it-helpdesk-cv-review": "it-helpdesk-cv-checker",
     "service-desk-cv-checker": "it-helpdesk-cv-checker",
     "customer-success-cv-review": "customer-success-cv-checker",
     "csm-cv-checker": "customer-success-cv-checker",
+    "project-coordinator-cv-review": "project-coordinator-cv-checker",
+    "project-coordinator-cv-keywords": "project-coordinator-cv-checker",
+    "civil-service-cv-review": "civil-service-cv-checker",
+    "civil-service-cv-keywords": "civil-service-cv-checker",
+    "civil-service-behaviours-cv": "civil-service-cv-checker",
 }
 
 
