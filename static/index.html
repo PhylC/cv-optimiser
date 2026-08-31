@@ -949,6 +949,8 @@
   }
 
   .primary-tool-card {
+    position: relative;
+    overflow: hidden;
     margin-top: 0;
     padding: 30px;
     border-color: rgba(210, 220, 238, 0.86);
@@ -956,6 +958,15 @@
     color: #14213D;
     box-shadow: 0 24px 60px rgba(3, 9, 23, 0.28);
     backdrop-filter: none;
+  }
+
+  .primary-tool-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, #5B78FF, #22C55E);
+    pointer-events: none;
   }
 
   .primary-tool-card h1,

@@ -5480,6 +5480,36 @@ def build_public_content_surface_css() -> str:
             box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
           }
 
+          .faq-page .final-cta,
+          .landing-page .final-cta,
+          .content-page .cta-panel,
+          .content-page .pro-proof-section,
+          .content-page .example-link-panel,
+          .content-page .bottom-cta,
+          .content-page .final-cta,
+          .content-page .lead-capture-panel,
+          .content-page .strength-strip {
+            position: relative !important;
+            overflow: hidden !important;
+          }
+
+          .faq-page .final-cta::before,
+          .landing-page .final-cta::before,
+          .content-page .cta-panel::before,
+          .content-page .pro-proof-section::before,
+          .content-page .example-link-panel::before,
+          .content-page .bottom-cta::before,
+          .content-page .final-cta::before,
+          .content-page .lead-capture-panel::before,
+          .content-page .strength-strip::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 0 auto !important;
+            height: 4px !important;
+            background: linear-gradient(90deg, #5B78FF, #22C55E) !important;
+            pointer-events: none !important;
+          }
+
           .faq-page .summary-box,
           .faq-page > .faq-list,
           .faq-page .final-cta,
@@ -9048,17 +9078,25 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             margin: 30px 0;
           }}
           .strength-strip {{
+            position: relative;
+            overflow: hidden;
             display: grid;
             grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
             gap: 22px;
             margin: 30px 0;
             padding: 24px;
             border-radius: 20px;
-            border: 1px solid rgba(91, 120, 255, 0.28);
-            background: linear-gradient(135deg, rgba(91, 120, 255, 0.16), rgba(15, 28, 50, 0.66));
+            border: 1px solid #D8E1EF;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14);
           }}
           .strength-strip h2 {{
             margin-top: 0;
+            color: #101B33;
+          }}
+          .strength-strip p {{
+            color: #334155;
           }}
           .strength-points {{
             display: grid;
@@ -9069,8 +9107,8 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .strength-points li {{
             padding: 10px 0;
-            border-top: 1px solid rgba(180, 197, 245, 0.14);
-            color: #DCE6FF;
+            border-top: 1px solid #E2E8F0;
+            color: #334155;
           }}
           .strength-points li:first-child {{
             border-top: 0;
@@ -11270,9 +11308,6 @@ def render_upgrade_page() -> str:
             position: absolute;
             inset: 0 0 auto;
             height: 4px;
-            background: #D8E1EF;
-          }}
-          .upgrade-card-primary::before {{
             background: linear-gradient(90deg, #5B78FF, #22C55E);
           }}
           .upgrade-card h2 {{
