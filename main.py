@@ -10034,19 +10034,35 @@ def render_upgrade_page() -> str:
             gap: 24px;
           }}
           .upgrade-card {{
-            background: rgba(15, 28, 50, 0.72);
-            border: 1px solid rgba(92, 112, 150, 0.22);
-            border-radius: 18px;
-            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            background: #FFFFFF;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
+            padding: 28px 24px 24px;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22);
           }}
           .upgrade-card-primary {{
-            border-color: rgba(91, 120, 255, 0.34);
-            box-shadow: 0 14px 30px rgba(91, 120, 255, 0.14);
+            border-color: #C7D2FE;
+          }}
+          .upgrade-card::before {{
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: #D8E1EF;
+          }}
+          .upgrade-card-primary::before {{
+            background: linear-gradient(90deg, #5B78FF, #22C55E);
+          }}
+          .upgrade-card h2 {{
+            color: #101B33;
           }}
           .price {{
             font-size: 34px;
             line-height: 1;
-            color: #FFFFFF;
+            color: #101B33;
             font-weight: 820;
             margin: 8px 0 18px;
           }}
@@ -10056,6 +10072,7 @@ def render_upgrade_page() -> str:
           }}
           .upgrade-card li {{
             margin-bottom: 8px;
+            color: #53627A;
           }}
           .checkout-btn {{
             display: inline-flex;
@@ -10073,13 +10090,13 @@ def render_upgrade_page() -> str:
             cursor: pointer;
           }}
           .checkout-btn.secondary {{
-            background: rgba(10, 19, 35, 0.34);
-            border: 1px solid rgba(92, 112, 150, 0.24);
-            color: #EAF0FF;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            color: #1E3A8A;
           }}
           .upgrade-helper {{
             margin-top: 12px;
-            color: #9FB0D4;
+            color: #64748B;
             font-size: 13px;
           }}
           .hidden {{
@@ -10096,10 +10113,17 @@ def render_upgrade_page() -> str:
           }}
           .upgrade-active-state {{
             padding: 28px;
-            border-radius: 20px;
-            border: 1px solid rgba(91, 120, 255, 0.26);
-            background: linear-gradient(180deg, rgba(17, 31, 58, 0.94), rgba(11, 23, 43, 0.96));
-            box-shadow: 0 14px 30px rgba(91, 120, 255, 0.1);
+            border-radius: 24px;
+            border: 1px solid #D8E1EF;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22);
+          }}
+          .upgrade-active-state h2 {{
+            color: #101B33;
+          }}
+          .upgrade-active-state p {{
+            color: #53627A;
           }}
           .upgrade-active-actions {{
             display: flex;
@@ -10113,20 +10137,21 @@ def render_upgrade_page() -> str:
             justify-content: center;
             padding: 14px 18px;
             border-radius: 14px;
-            border: 1px solid rgba(92, 112, 150, 0.24);
-            background: rgba(10, 19, 35, 0.34);
-            color: #EAF0FF;
+            border: 1px solid #C7D2FE;
+            background: #EEF2FF;
+            color: #1E3A8A;
             font-size: 15px;
             font-weight: 700;
             text-decoration: none;
           }}
           .upgrade-loading-state {{
             padding: 24px;
-            border-radius: 18px;
-            border: 1px solid rgba(92, 112, 150, 0.24);
-            background: rgba(15, 28, 50, 0.72);
-            color: #DCE6FF;
+            border-radius: 24px;
+            border: 1px solid #D8E1EF;
+            background: #FFFFFF;
+            color: #53627A;
             font-weight: 700;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22);
           }}
           @media (max-width: 900px) {{
             .upgrade-grid {{
@@ -10137,6 +10162,29 @@ def render_upgrade_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+          @media (max-width: 768px) {{
+            .upgrade-card,
+            .upgrade-active-state,
+            .upgrade-loading-state {{
+              border: 1px solid #D8E1EF !important;
+              background: #FFFFFF !important;
+              color: #14213D !important;
+              box-shadow: 0 18px 42px rgba(3, 9, 23, 0.22) !important;
+            }}
+
+            .upgrade-card h2,
+            .upgrade-active-state h2,
+            .price {{
+              color: #101B33 !important;
+            }}
+
+            .upgrade-card li,
+            .upgrade-active-state p,
+            .upgrade-helper,
+            .upgrade-loading-state {{
+              color: #53627A !important;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
