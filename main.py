@@ -7602,10 +7602,59 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             }}
           }}
 {build_mobile_layout_css()}
+          @media (max-width: 768px) {{
+            .example-report-page .hero-card,
+            .example-report-page .report-grid > div > .card,
+            .example-report-page .card {{
+              padding: 18px 14px !important;
+              border: 1px solid #D8E1EF !important;
+              border-radius: 18px !important;
+              background: #FFFFFF !important;
+              box-shadow: 0 12px 28px rgba(3, 9, 23, 0.16) !important;
+            }}
+            .example-report-page .report-grid > div > .card:first-child {{
+              border-top: 1px solid #D8E1EF !important;
+              padding-top: 18px !important;
+            }}
+            .example-report-page .score-block {{
+              padding: 16px !important;
+              border: 1px solid #D8E1EF !important;
+              border-radius: 16px !important;
+              background:
+                radial-gradient(circle at 12% 14%, rgba(91, 120, 255, 0.14), transparent 32%),
+                linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 54%, #EEF7F2 100%) !important;
+              box-shadow: none !important;
+            }}
+            .example-report-page .priority-card,
+            .example-report-page .before-after-card,
+            .example-report-page .diagnosis-card {{
+              padding: 14px !important;
+              border: 1px solid #D8E1EF !important;
+              border-radius: 14px !important;
+              background: #F8FAFC !important;
+              box-shadow: none !important;
+            }}
+            .example-report-page h1,
+            .example-report-page h2,
+            .example-report-page h3,
+            .example-report-page .score-value,
+            .example-report-page .priority-card strong,
+            .example-report-page .diagnosis-card strong {{
+              color: #101B33 !important;
+            }}
+            .example-report-page p,
+            .example-report-page li,
+            .example-report-page .section-helper,
+            .example-report-page .priority-card p,
+            .example-report-page .card p,
+            .example-report-page .card li {{
+              color: #334155 !important;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page content-page seo-page">
+        <div class="page content-page seo-page example-report-page">
           {build_site_header("example-cv-report")}
 
           <div class="hero-card">
