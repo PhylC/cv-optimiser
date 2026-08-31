@@ -3170,6 +3170,78 @@ def analytics_dimension_value(metadata: dict[str, Any], keys: list[str], fallbac
     return fallback
 
 
+ROLE_ANALYTICS_LABELS = {
+    "/graduate-cv-checker": "Graduate CV checker",
+    "/nhs-admin-cv-checker": "NHS admin CV checker",
+    "/software-developer-cv-checker": "Software developer CV checker",
+    "/marketing-cv-checker": "Marketing CV checker",
+    "/sales-cv-checker": "Sales CV checker",
+    "/account-manager-cv-checker": "Account manager CV checker",
+    "/project-manager-cv-checker": "Project manager CV checker",
+    "/admin-cv-checker": "Admin CV checker",
+    "/career-change-cv-checker": "Career change CV checker",
+}
+
+
+def normalise_analytics_path(value: Any) -> str:
+    path = coerce_string(value).split("?", 1)[0].split("#", 1)[0].rstrip("/")
+    return path or "/"
+
+
+def role_landing_label(metadata: dict[str, Any]) -> str:
+    for key in ["first_role_landing_path", "role_landing_path", "current_role_landing_path", "first_landing_path", "landing_path", "current_path"]:
+        path = normalise_analytics_path(metadata.get(key))
+        if path in ROLE_ANALYTICS_LABELS:
+            return ROLE_ANALYTICS_LABELS[path]
+    role_page = coerce_string(
+        metadata.get("first_role_page") or metadata.get("role_page") or metadata.get("current_role_page")
+    )
+    if role_page:
+        path = normalise_analytics_path(f"/{role_page}")
+        return ROLE_ANALYTICS_LABELS.get(path, role_page.replace("-", " ").title())
+    return "none"
+
+
+def sanitize_attribution_metadata(value: Any) -> dict[str, Any]:
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except Exception:
+            value = {}
+    if not isinstance(value, dict):
+        return {}
+    allowed = {
+        "source",
+        "first_source",
+        "first_medium",
+        "first_campaign",
+        "first_term",
+        "first_content",
+        "first_landing_path",
+        "first_landing_query",
+        "first_referrer",
+        "first_page_type",
+        "first_role_page",
+        "first_role_landing_path",
+        "current_source",
+        "current_medium",
+        "current_campaign",
+        "current_path",
+        "current_query",
+        "current_page_type",
+        "current_role_page",
+        "current_role_landing_path",
+        "page_type",
+        "role_page",
+        "role_landing_path",
+    }
+    sanitized: dict[str, Any] = {}
+    for key in allowed:
+        if key in value:
+            sanitized[key] = coerce_string(value.get(key))[:240]
+    return sanitized
+
+
 def analytics_date_key(value: Any) -> str:
     raw = coerce_string(value)
     if not raw:
@@ -3248,6 +3320,7 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     dimension_counts: dict[str, dict[str, dict[str, int]]] = {
         "sources": {},
         "landing_pages": {},
+        "role_pages": {},
         "campaigns": {},
     }
     trend_counts: dict[str, dict[str, int]] = {}
@@ -3289,6 +3362,7 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         dimensions = {
             "sources": analytics_dimension_value(metadata, ["source", "first_source", "current_source"], "direct"),
             "landing_pages": analytics_dimension_value(metadata, ["first_landing_path", "landing_path", "current_path"], "unknown"),
+            "role_pages": role_landing_label(metadata),
             "campaigns": analytics_dimension_value(metadata, ["first_campaign", "campaign", "current_campaign"], "none"),
         }
         for dimension_name, dimension_label in dimensions.items():
@@ -5223,6 +5297,17 @@ def build_attribution_script() -> str:
           (function() {
             if (window.location.pathname.indexOf("/admin") === 0) return;
             var storageKey = "cv_optimiser_attribution";
+            var roleLandingPaths = {
+              "/graduate-cv-checker": "graduate",
+              "/nhs-admin-cv-checker": "nhs_admin",
+              "/software-developer-cv-checker": "software_developer",
+              "/marketing-cv-checker": "marketing",
+              "/sales-cv-checker": "sales",
+              "/account-manager-cv-checker": "account_manager",
+              "/project-manager-cv-checker": "project_manager",
+              "/admin-cv-checker": "admin",
+              "/career-change-cv-checker": "career_change"
+            };
 
             function parseStored(value) {
               try { return JSON.parse(value); } catch (error) { return null; }
@@ -5239,9 +5324,25 @@ def build_attribution_script() -> str:
               }
             }
 
+            function normalisePath(value) {
+              var path = String(value || "").split("?")[0].split("#")[0].replace(/\\/+$/, "");
+              return path || "/";
+            }
+
+            function roleInfo(pathname) {
+              var cleanPath = normalisePath(pathname);
+              var role = roleLandingPaths[cleanPath] || "";
+              return {
+                page_type: role ? "seo_role" : "content",
+                role_page: role,
+                role_landing_path: role ? cleanPath : ""
+              };
+            }
+
             function currentAttribution() {
               var params = new URLSearchParams(window.location.search);
               var source = params.get("utm_source") || referrerSource() || "direct";
+              var info = roleInfo(window.location.pathname);
               return {
                 source: source,
                 medium: params.get("utm_medium") || "",
@@ -5251,6 +5352,9 @@ def build_attribution_script() -> str:
                 referrer: document.referrer || "",
                 landing_path: window.location.pathname,
                 landing_query: window.location.search || "",
+                page_type: info.page_type,
+                role_page: info.role_page,
+                role_landing_path: info.role_landing_path,
                 captured_at: new Date().toISOString()
               };
             }
@@ -5287,12 +5391,20 @@ def build_attribution_script() -> str:
                 first_landing_path: first.landing_path || "",
                 first_landing_query: first.landing_query || "",
                 first_referrer: first.referrer || "",
+                first_page_type: first.page_type || roleInfo(first.landing_path).page_type,
+                first_role_page: first.role_page || roleInfo(first.landing_path).role_page,
+                first_role_landing_path: first.role_landing_path || roleInfo(first.landing_path).role_landing_path,
                 current_source: current.source || "direct",
                 current_medium: current.medium || "",
                 current_campaign: current.campaign || "",
                 current_path: window.location.pathname,
                 current_query: window.location.search || "",
-                page_type: "content"
+                current_page_type: current.page_type || "content",
+                current_role_page: current.role_page || "",
+                current_role_landing_path: current.role_landing_path || "",
+                page_type: current.page_type || "content",
+                role_page: current.role_page || "",
+                role_landing_path: current.role_landing_path || ""
               };
             }
 
@@ -7760,6 +7872,9 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
     cta_label = page.get("cta_label", "Check your CV against a job description")
     cta_href = page.get("cta_href", "/#tool")
     cta = f'<a href="{html.escape(cta_href)}" class="cta cta-button">{html.escape(cta_label)}</a>'
+    iframe_query = f"?embed_tool=1&compact=1&parent_landing_path=/{html.escape(slug)}"
+    if page.get("pro_checks"):
+        iframe_query += f"&parent_page_type=seo_role&parent_role_page={html.escape(slug)}"
     related_html = "".join(
         f'<a href="{html.escape(href)}">{html.escape(label)}</a>'
         for href, label in page.get("related", [])
@@ -7836,14 +7951,14 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         """
     tool_html = ""
     if page.get("tool"):
-        tool_html = """
+        tool_html = f"""
         <section class="tool-feature" id="checker">
           <div>
             <p class="eyebrow">Try it now</p>
             <h2>Check your CV against the role</h2>
             <p>Paste your CV and a job description to see match score, missing keywords and priority fixes.</p>
           </div>
-          <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="CV Optimiser checker"></iframe>
+          <iframe class="tool-frame tool-embed compact" src="/{iframe_query}" title="CV Optimiser checker"></iframe>
         </section>
         """
     return f"""
@@ -10618,6 +10733,12 @@ def admin_analytics_page(request: Request) -> str:
                 <div id="landingConversion"></div>
               </div>
               <div class="panel">
+                <h2>Role Page Conversion</h2>
+                <div id="rolePageConversion"></div>
+              </div>
+            </div>
+            <div class="grid conversion-grid">
+              <div class="panel">
                 <h2>Campaign Conversion</h2>
                 <div id="campaignConversion"></div>
               </div>
@@ -10650,6 +10771,7 @@ def admin_analytics_page(request: Request) -> str:
           const trendChart = document.getElementById("trendChart");
           const sourceConversion = document.getElementById("sourceConversion");
           const landingConversion = document.getElementById("landingConversion");
+          const rolePageConversion = document.getElementById("rolePageConversion");
           const campaignConversion = document.getElementById("campaignConversion");
           const scoreBands = document.getElementById("scoreBands");
           const commonGaps = document.getElementById("commonGaps");
@@ -10800,6 +10922,7 @@ def admin_analytics_page(request: Request) -> str:
             renderTrendChart(trendChart, summary.daily_trends || []);
             renderDimensionTable(sourceConversion, (summary.dimension_tables || {{}}).sources || []);
             renderDimensionTable(landingConversion, (summary.dimension_tables || {{}}).landing_pages || []);
+            renderDimensionTable(rolePageConversion, (summary.dimension_tables || {{}}).role_pages || []);
             renderDimensionTable(campaignConversion, (summary.dimension_tables || {{}}).campaigns || []);
             const quality = summary.quality_audit || {{}};
             renderScoreBands(scoreBands, quality.score_bands || {{}});
@@ -10987,6 +11110,7 @@ def create_checkout_session(
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
     raw_checkout_type = (payload or {}).get("plan") or (payload or {}).get("type") or "pro_monthly"
+    attribution_metadata = sanitize_attribution_metadata((payload or {}).get("attribution"))
     checkout_plan = {
         "one_time": "one_time",
         "one-time": "one_time",
@@ -11027,13 +11151,13 @@ def create_checkout_session(
         event_name="upgrade_clicked",
         user_id=user["id"] if user else None,
         email=user["email"] if user else None,
-        metadata={"checkout_plan": checkout_plan}
+        metadata={**attribution_metadata, "checkout_plan": checkout_plan}
     )
     track_event(
         event_name="checkout_started",
         user_id=user["id"] if user else None,
         email=user["email"] if user else None,
-        metadata={"checkout_plan": checkout_plan}
+        metadata={**attribution_metadata, "checkout_plan": checkout_plan}
     )
 
     if checkout_plan == "one_time":
@@ -11058,6 +11182,9 @@ def create_checkout_session(
         metadata={
             "user_id": user["id"] if user else "",
             "checkout_plan": checkout_plan,
+            "role_landing_path": attribution_metadata.get("first_role_landing_path", "") or attribution_metadata.get("role_landing_path", ""),
+            "landing_path": attribution_metadata.get("first_landing_path", ""),
+            "source": attribution_metadata.get("source", "direct"),
         },
     )
     return {"url": session.url}
@@ -11316,10 +11443,12 @@ async def optimise(
     request: Request,
     jobDescription: str = Form(""),
     cvText: str = Form(""),
+    attribution: str = Form(""),
     cvFile: Optional[UploadFile] = File(None),
     authorization: Optional[str] = Header(None),
 ) -> dict[str, Any]:
     try:
+        attribution_metadata = sanitize_attribution_metadata(attribution)
         job_description_preview = jobDescription.strip()
         cv_text_preview = cvText.strip()
         has_cv_file = bool(cvFile is not None and cvFile.filename)
@@ -11387,6 +11516,7 @@ async def optimise(
                 user_id=user["id"],
                 email=user["email"],
                 metadata={
+                    **attribution_metadata,
                     "is_pro": has_subscription_access,
                     "has_one_time_report_credit": has_one_time_report_credit,
                 }
@@ -11396,6 +11526,7 @@ async def optimise(
                 user_id=user["id"],
                 email=user["email"],
                 metadata={
+                    **attribution_metadata,
                     "is_pro": has_subscription_access,
                     "has_one_time_report_credit": has_one_time_report_credit,
                 }
@@ -11503,6 +11634,7 @@ async def optimise(
                 user_id=user["id"],
                 email=user["email"],
                 metadata={
+                    **attribution_metadata,
                     "is_pro": bool(plan["is_pro"]),
                     "report_access": payload.get("reportAccess", "free"),
                     "one_time_report_consumed": bool(consumed_report_session_id),
@@ -11514,6 +11646,7 @@ async def optimise(
                 user_id=user["id"],
                 email=user["email"],
                 metadata={
+                    **attribution_metadata,
                     "is_pro": bool(plan["is_pro"]),
                     "report_access": payload.get("reportAccess", "free"),
                     "score": payload.get("score", 0),
