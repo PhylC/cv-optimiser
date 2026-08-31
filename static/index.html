@@ -2882,68 +2882,76 @@
     order: 10;
   }
 
-  #proRewriteWrap {
+  #proLineFeedbackWrap {
     order: 11;
   }
 
-  #proSummaryWrap {
+  #proWorkflowWrap {
     order: 12;
   }
 
-  #recruiterVerdictWrap {
+  #proRewriteWrap {
     order: 13;
   }
 
-  #atsReadabilitySummaryWrap {
+  #proSummaryWrap {
     order: 14;
   }
 
-  #resultScoreBreakdownWrap {
+  #recruiterVerdictWrap {
     order: 15;
   }
 
-  #resultPriorityPreviewWrap {
+  #atsReadabilitySummaryWrap {
     order: 16;
   }
 
-  #resultKeywordPreviewWrap {
+  #resultScoreBreakdownWrap {
     order: 17;
   }
 
-  #resultKeywordImportanceWrap {
+  #resultPriorityPreviewWrap {
     order: 18;
   }
 
-  #resultExampleWrap {
+  #resultKeywordPreviewWrap {
     order: 19;
   }
 
-  #lockedReportSections {
+  #resultKeywordImportanceWrap {
     order: 20;
   }
 
-  #detailKeywordsWrap {
+  #resultExampleWrap {
     order: 21;
   }
 
-  #detailStrengthsWrap {
+  #lockedReportSections {
     order: 22;
   }
 
-  #proSkillsWrap {
+  #detailKeywordsWrap {
     order: 23;
   }
 
-  #proAtsRisksGrid {
+  #detailStrengthsWrap {
     order: 24;
   }
 
-  #bestNextStepWrap {
+  #proSkillsWrap {
     order: 25;
   }
 
-  #proActionPlanWrap {
+  #proAtsRisksGrid {
     order: 26;
+  }
+
+  #bestNextStepWrap {
+    order: 27;
+  }
+
+  #proActionPlanWrap {
+    order: 28;
   }
 
   #resultDisclaimerWrap {
@@ -3288,13 +3296,17 @@
 
   .fix-detail-grid,
   .keyword-importance-grid,
-  .rewrite-detail-grid {
+  .rewrite-detail-grid,
+  .line-feedback-grid,
+  .guided-workflow-grid {
     display: grid;
     gap: 12px;
   }
 
   .fix-detail-card,
-  .rewrite-detail-card {
+  .rewrite-detail-card,
+  .line-feedback-card,
+  .guided-workflow-card {
     display: grid;
     grid-template-columns: 34px minmax(0, 1fr);
     gap: 12px;
@@ -3304,6 +3316,13 @@
   .fix-detail-card {
     background: linear-gradient(180deg, #FFFFFF, #F8FAFC);
     box-shadow: 0 10px 24px rgba(16, 27, 51, 0.05);
+  }
+
+  .line-feedback-card,
+  .guided-workflow-card {
+    border-radius: 14px;
+    border: 1px solid #D8E1EF;
+    background: #F8FAFC;
   }
 
   .fix-detail-number {
@@ -3322,6 +3341,8 @@
 
   .fix-detail-card strong,
   .rewrite-detail-card strong,
+  .line-feedback-card strong,
+  .guided-workflow-card strong,
   .keyword-group strong,
   .rewrite-note strong {
     display: block;
@@ -3332,6 +3353,8 @@
 
   .fix-detail-card p,
   .rewrite-detail-card p,
+  .line-feedback-card p,
+  .guided-workflow-card p,
   .keyword-group p,
   .rewrite-note p {
     color: #4B5870;
@@ -3340,7 +3363,9 @@
   }
 
   .fix-detail-card p + p,
-  .rewrite-detail-card p + p {
+  .rewrite-detail-card p + p,
+  .line-feedback-card p + p,
+  .guided-workflow-card p + p {
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid #E2E8F0;
@@ -3352,6 +3377,21 @@
 
   .rewrite-detail-after {
     color: #17623B !important;
+  }
+
+  .line-feedback-before,
+  .line-feedback-after {
+    padding-left: 10px;
+    color: #4B5870 !important;
+    border-left: 3px solid #E2E8F0;
+  }
+
+  .line-feedback-before {
+    border-left-color: #FCA5A5;
+  }
+
+  .line-feedback-after {
+    border-left-color: #86EFAC;
   }
 
   .keyword-importance-grid {
@@ -3628,6 +3668,31 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .guided-workflow-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .guided-workflow-card {
+    grid-template-columns: 30px minmax(0, 1fr);
+    padding: 13px;
+  }
+
+  .guided-workflow-card .fix-detail-number {
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #17623B;
+  }
+
+  .guided-workflow-card strong {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .line-feedback-card strong {
+    font-size: 15px;
+    line-height: 1.35;
   }
 
   .pro-snapshot-card {
@@ -4446,6 +4511,8 @@
   .pro-impact-grid,
   .first-page-diagnosis-grid,
   .section-rewrite-grid,
+  .line-feedback-grid,
+  .guided-workflow-grid,
   .pro-workflow-steps,
   .pro-snapshot-grid {
     grid-template-columns: 1fr;
@@ -5247,8 +5314,8 @@
               <div class="homepage-plan-name">Full report <span class="homepage-plan-tag">Upgrade</span></div>
               <ul class="homepage-plan-list">
                 <li>UK recruiter verdict and first-page diagnosis</li>
-                <li>Rewrite plan by CV section with example lines</li>
-                <li>Before/after rewrites, export options and checklist</li>
+                <li>Section rewrite plan plus line-by-line fixes</li>
+                <li>Guided edit workflow, exports and checklist</li>
               </ul>
             </div>
           </div>
@@ -5266,8 +5333,8 @@
               <span>Tells you what to change in the profile, skills and experience sections, with safe example lines.</span>
             </div>
             <div class="homepage-proof-card">
-              <strong>Before/after rewrites</strong>
-              <span>Shows how to turn duty-led wording into clearer role-fit evidence without inventing claims.</span>
+              <strong>Line-by-line fixes</strong>
+              <span>Shows weak lines, stronger alternatives and the recruiter signal each rewrite improves.</span>
             </div>
             <div class="homepage-proof-card">
               <strong>Keyword and ATS checks</strong>
@@ -5275,7 +5342,7 @@
             </div>
             <div class="homepage-proof-card">
               <strong>Exportable checklist</strong>
-              <span>Download, print or copy the action plan before editing and re-running the CV.</span>
+              <span>Download, print or copy the guided workflow before editing and re-running the CV.</span>
             </div>
           </div>
           <div class="homepage-proof-links">
@@ -5498,16 +5565,16 @@
               <p>Unlock a sharper summary tailored to the job description.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Multiple improved bullets</span>
-              <p>See more stronger bullet examples you can adapt into your CV.</p>
+              <span class="locked-preview-label">Line-by-line fixes</span>
+              <p>See weak lines, stronger alternatives and the recruiter signal each rewrite improves.</p>
             </div>
             <div class="locked-report-card">
               <span class="locked-preview-label">Detailed ATS/readability checks</span>
               <p>Review formatting, keyword and clarity issues in more depth.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Next-step action plan</span>
-              <p>Know exactly what to fix first, second and third.</p>
+              <span class="locked-preview-label">Guided edit workflow</span>
+              <p>Know exactly what to fix, where to fix it and when to re-check.</p>
             </div>
           </div>
 
@@ -5638,6 +5705,24 @@
             </div>
             <div class="result-section-subtitle">Exactly where to improve the CV, how to rewrite it, and why that helps this application.</div>
             <div id="proSectionRewriteGrid" class="section-rewrite-grid"></div>
+          </div>
+
+          <div id="proLineFeedbackWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Line-by-line fixes</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Specific weak lines, stronger alternatives, and the recruiter signal each rewrite improves.</div>
+            <div id="proLineFeedbackGrid" class="line-feedback-grid"></div>
+          </div>
+
+          <div id="proWorkflowWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Guided edit workflow</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Work through these steps in order, then re-run the CV once the edits are in.</div>
+            <div id="proWorkflowGrid" class="guided-workflow-grid"></div>
           </div>
 
           <div id="proRewriteWrap" class="result-section pro-premium hidden">
@@ -6022,6 +6107,10 @@
     const proSnapshotGrid = document.getElementById("proSnapshotGrid");
     const proSectionRewriteWrap = document.getElementById("proSectionRewriteWrap");
     const proSectionRewriteGrid = document.getElementById("proSectionRewriteGrid");
+    const proLineFeedbackWrap = document.getElementById("proLineFeedbackWrap");
+    const proLineFeedbackGrid = document.getElementById("proLineFeedbackGrid");
+    const proWorkflowWrap = document.getElementById("proWorkflowWrap");
+    const proWorkflowGrid = document.getElementById("proWorkflowGrid");
     const proRewriteWrap = document.getElementById("proRewriteWrap");
     const proRewriteDetails = document.getElementById("proRewriteDetails");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
@@ -6281,8 +6370,20 @@
       if (isChecking && proRewriteDetails) {
         proRewriteDetails.innerHTML = "";
       }
+      if (isChecking && proLineFeedbackGrid) {
+        proLineFeedbackGrid.innerHTML = "";
+      }
+      if (isChecking && proWorkflowGrid) {
+        proWorkflowGrid.innerHTML = "";
+      }
       if (isChecking && proRewriteWrap) {
         proRewriteWrap.classList.add("hidden");
+      }
+      if (isChecking && proLineFeedbackWrap) {
+        proLineFeedbackWrap.classList.add("hidden");
+      }
+      if (isChecking && proWorkflowWrap) {
+        proWorkflowWrap.classList.add("hidden");
       }
 
       requestAnimationFrame(reportEmbedHeight);
@@ -7045,6 +7146,158 @@
       proSectionRewriteWrap.classList.toggle("hidden", !items.length);
     }
 
+    function normaliseLineFeedback(data, maxItems) {
+      const source = data && Array.isArray(data.lineFeedback) ? data.lineFeedback : [];
+      const items = [];
+      source.forEach(function(item) {
+        if (!item || typeof item !== "object") return;
+        const improvedLine = item.improvedLine || item.after || item.rewrite || "";
+        if (!improvedLine) return;
+        items.push({
+          section: item.section || item.cvSection || item.whereToUse || "Relevant CV section",
+          originalLine: item.originalLine || item.before || item.original || "A vague or duty-led line from the current CV.",
+          issue: item.issue || item.problem || item.whyWeak || "The current wording does not make role fit or evidence clear enough.",
+          improvedLine: improvedLine,
+          whyBetter: item.whyBetter || item.why || item.reason || "This version makes the action, context and relevance easier to scan.",
+          recruiterSignal: item.recruiterSignal || item.signal || item.strengthens || "Role fit and evidence strength."
+        });
+      });
+
+      if (!items.length) {
+        normaliseRewriteDetails(data || {}, maxItems || 4).forEach(function(item) {
+          items.push({
+            section: item.whereToUse || "Recent experience",
+            originalLine: item.before || "A vague or duty-led line from the current CV.",
+            issue: item.whyBetter || "The line needs clearer action, context and role relevance.",
+            improvedLine: item.after,
+            whyBetter: item.whyBetter || "It turns a broad duty into clearer role-fit evidence.",
+            recruiterSignal: item.strengthens || "Evidence strength and role alignment."
+          });
+        });
+      }
+
+      return items.slice(0, maxItems || 4);
+    }
+
+    function renderLineFeedback(data) {
+      if (!proLineFeedbackWrap || !proLineFeedbackGrid) return;
+      const items = normaliseLineFeedback(data, 4);
+      proLineFeedbackGrid.innerHTML = "";
+      items.forEach(function(item, index) {
+        const card = document.createElement("div");
+        card.className = "line-feedback-card";
+
+        const number = document.createElement("span");
+        number.className = "fix-detail-number";
+        number.textContent = String(index + 1);
+
+        const body = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = item.section || "CV line";
+        body.appendChild(title);
+
+        const before = document.createElement("p");
+        before.className = "line-feedback-before";
+        before.textContent = "Current line: " + item.originalLine;
+        body.appendChild(before);
+
+        const issue = document.createElement("p");
+        issue.textContent = "Issue: " + item.issue;
+        body.appendChild(issue);
+
+        const after = document.createElement("p");
+        after.className = "line-feedback-after";
+        after.textContent = "Stronger line: " + item.improvedLine;
+        body.appendChild(after);
+
+        const why = document.createElement("p");
+        why.textContent = "Why better: " + item.whyBetter;
+        body.appendChild(why);
+
+        const signal = document.createElement("p");
+        signal.textContent = "Recruiter signal: " + item.recruiterSignal;
+        body.appendChild(signal);
+
+        card.appendChild(number);
+        card.appendChild(body);
+        proLineFeedbackGrid.appendChild(card);
+      });
+      proLineFeedbackWrap.classList.toggle("hidden", !items.length);
+      return items;
+    }
+
+    function normaliseGuidedWorkflow(data, actionPlanItems) {
+      const source = data && Array.isArray(data.guidedWorkflow) ? data.guidedWorkflow : [];
+      const items = [];
+      source.forEach(function(item, index) {
+        if (!item || typeof item !== "object") return;
+        const title = item.title || item.label || "";
+        const action = item.action || item.change || item.instruction || "";
+        if (!title && !action) return;
+        items.push({
+          step: item.step || item.order || String(index + 1),
+          title: title || "Step " + String(index + 1),
+          action: action || "Make the recommended edit before moving to the next step.",
+          section: item.section || item.where || item.cvSection || "Relevant CV section",
+          successCheck: item.successCheck || item.check || item.doneWhen || "The change is visible, truthful and clearly matched to the job description."
+        });
+      });
+
+      if (!items.length) {
+        const verdict = (data && data.recruiterVerdict) || {};
+        const roleFocus = (data && data.roleFocus) || {};
+        const roleLabel = roleFocus.label || "the target UK role";
+        const firstFix = actionPlanItems && actionPlanItems[0] ? actionPlanItems[0] : (data && data.nextStep) || "Clarify the strongest role-fit evidence.";
+        const secondFix = actionPlanItems && actionPlanItems[1] ? actionPlanItems[1] : "Rewrite recent role bullets around action, context and outcome.";
+        const keywords = data && data.missingKeywords && data.missingKeywords.length ? data.missingKeywords.slice(0, 4).join(", ") : "the most important missing role terms";
+        items.push(
+          { step: "1", title: "Read the shortlist risk", action: verdict.mainConcern || "Check the main reason the CV may not shortlist yet.", section: "Whole CV", successCheck: "You know what the report says is holding the CV back." },
+          { step: "2", title: "Fix the profile", action: firstFix, section: "Professional profile", successCheck: "The opening lines clearly point at " + roleLabel + "." },
+          { step: "3", title: "Strengthen recent evidence", action: secondFix, section: "Recent experience", successCheck: "The most relevant bullets prove the job requirements." },
+          { step: "4", title: "Add truthful keywords", action: "Work in " + keywords + " only where your experience supports them.", section: "Key skills and recent experience", successCheck: "Keywords are visible and backed by evidence." },
+          { step: "5", title: "Re-check and export", action: "Re-run the CV after edits, then download or copy the checklist.", section: "Final review", successCheck: "The score and first-page clarity have improved without unsupported claims." }
+        );
+      }
+      return items.slice(0, 5);
+    }
+
+    function renderGuidedWorkflow(data, actionPlanItems) {
+      if (!proWorkflowWrap || !proWorkflowGrid) return;
+      const items = normaliseGuidedWorkflow(data, actionPlanItems);
+      proWorkflowGrid.innerHTML = "";
+      items.forEach(function(item, index) {
+        const card = document.createElement("div");
+        card.className = "guided-workflow-card";
+
+        const number = document.createElement("span");
+        number.className = "fix-detail-number";
+        number.textContent = item.step || String(index + 1);
+
+        const body = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = item.title;
+        body.appendChild(title);
+
+        const action = document.createElement("p");
+        action.textContent = "Action: " + item.action;
+        body.appendChild(action);
+
+        const section = document.createElement("p");
+        section.textContent = "Where: " + item.section;
+        body.appendChild(section);
+
+        const check = document.createElement("p");
+        check.textContent = "Done when: " + item.successCheck;
+        body.appendChild(check);
+
+        card.appendChild(number);
+        card.appendChild(body);
+        proWorkflowGrid.appendChild(card);
+      });
+      proWorkflowWrap.classList.toggle("hidden", !items.length);
+      return items;
+    }
+
     function escapeReportHtml(value) {
       return String(value || "")
         .replace(/&/g, "&amp;")
@@ -7140,6 +7393,36 @@
         "</div></section>";
     }
 
+    function lineFeedbackReportItems(data) {
+      const safeItems = normaliseLineFeedback(data, 4);
+      if (!safeItems.length) return "";
+      return "<section><h2>Line-by-line fixes</h2><div class=\"cards\">" +
+        safeItems.map(function(item, index) {
+          return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>" + escapeReportHtml(item.section) + "</h3>" +
+            "<p><strong>Current line:</strong> " + escapeReportHtml(item.originalLine) + "</p>" +
+            "<p><strong>Issue:</strong> " + escapeReportHtml(item.issue) + "</p>" +
+            "<p><strong>Stronger line:</strong> " + escapeReportHtml(item.improvedLine) + "</p>" +
+            "<p><strong>Why better:</strong> " + escapeReportHtml(item.whyBetter) + "</p>" +
+            "<p><strong>Recruiter signal:</strong> " + escapeReportHtml(item.recruiterSignal) + "</p>" +
+            "</article>";
+        }).join("") +
+        "</div></section>";
+    }
+
+    function guidedWorkflowReportItems(data, actionPlanItems) {
+      const safeItems = normaliseGuidedWorkflow(data, actionPlanItems);
+      if (!safeItems.length) return "";
+      return "<section><h2>Guided edit workflow</h2><div class=\"cards\">" +
+        safeItems.map(function(item, index) {
+          return "<article class=\"card\"><span>" + escapeReportHtml(item.step || String(index + 1)) + "</span><h3>" + escapeReportHtml(item.title) + "</h3>" +
+            "<p><strong>Action:</strong> " + escapeReportHtml(item.action) + "</p>" +
+            "<p><strong>Where:</strong> " + escapeReportHtml(item.section) + "</p>" +
+            "<p><strong>Done when:</strong> " + escapeReportHtml(item.successCheck) + "</p>" +
+            "</article>";
+        }).join("") +
+        "</div></section>";
+    }
+
     function buildReportHtml(data) {
       const score = getScoreNumber(data && data.score);
       const isFullReport = !!(data && (data.fullReportUnlocked || data.professionalSummary || data.reportAccess));
@@ -7205,6 +7488,8 @@
         }).join("") + "</div></section>" : "") +
         cardReportItems("Top priority fixes", data.priorityFixDetails || []) +
         (isFullReport ? sectionRewriteReportItems(data.sectionRewritePlan || []) : "") +
+        (isFullReport ? lineFeedbackReportItems(data) : "") +
+        (isFullReport ? guidedWorkflowReportItems(data, actionPlanItems) : "") +
         (data.professionalSummary ? "<section><h2>Professional summary</h2><p>" + escapeReportHtml(data.professionalSummary) + "</p></section>" : "") +
         "<section><h2>Keyword importance</h2><h3>Critical missing</h3><p class=\"chips\">" + critical.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Useful supporting</h3><p class=\"chips\">" + supporting.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Already covered</h3><p class=\"chips\">" + covered.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p></section>" +
         ((rewrite.before || rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
@@ -7273,6 +7558,25 @@
           if (item.exampleLine || item.example) {
             lines.push("   Example: " + (item.exampleLine || item.example));
           }
+        });
+      }
+      const lineFeedback = normaliseLineFeedback(data, 4);
+      if (lineFeedback.length) {
+        lines.push("", "Line-by-line fixes:");
+        lineFeedback.forEach(function(item, index) {
+          lines.push((index + 1) + ". " + item.section);
+          lines.push("   Current: " + item.originalLine);
+          lines.push("   Stronger: " + item.improvedLine);
+          lines.push("   Signal: " + item.recruiterSignal);
+        });
+      }
+      const workflow = normaliseGuidedWorkflow(data, actionPlanItems);
+      if (workflow.length) {
+        lines.push("", "Guided edit workflow:");
+        workflow.forEach(function(item, index) {
+          lines.push((item.step || String(index + 1)) + ". " + item.title + " — " + item.action);
+          lines.push("   Where: " + item.section);
+          lines.push("   Done when: " + item.successCheck);
         });
       }
       const rewrites = normaliseRewriteDetails(data, 3);
@@ -8651,6 +8955,8 @@ passwordLoginBtn.addEventListener("click", async function() {
           (data.priorityFixes && data.priorityFixes.length) ||
           (data.bulletRewriteDetails && data.bulletRewriteDetails.length) ||
           (data.sectionRewritePlan && data.sectionRewritePlan.length) ||
+          (data.lineFeedback && data.lineFeedback.length) ||
+          (data.guidedWorkflow && data.guidedWorkflow.length) ||
           (data.skillsSection && data.skillsSection.length) ||
           (data.atsTips && data.atsTips.length) ||
           (data.interviewRisks && data.interviewRisks.length)
@@ -8665,6 +8971,8 @@ passwordLoginBtn.addEventListener("click", async function() {
           renderProSnapshot(data, actionPlanItems);
           renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
           renderSectionRewritePlan(data);
+          renderLineFeedback(data);
+          renderGuidedWorkflow(data, actionPlanItems);
           const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
           if (proRewriteWrap) {
             proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
@@ -8681,6 +8989,12 @@ passwordLoginBtn.addEventListener("click", async function() {
           }
           if (proSectionRewriteWrap) {
             proSectionRewriteWrap.classList.add("hidden");
+          }
+          if (proLineFeedbackWrap) {
+            proLineFeedbackWrap.classList.add("hidden");
+          }
+          if (proWorkflowWrap) {
+            proWorkflowWrap.classList.add("hidden");
           }
           if (proRewriteWrap) {
             proRewriteWrap.classList.add("hidden");

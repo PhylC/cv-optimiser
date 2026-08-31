@@ -2706,6 +2706,8 @@ Detected UK role lens:
   "priorityFixes": [],
   "priorityFixDetails": [],
   "sectionRewritePlan": [],
+  "lineFeedback": [],
+  "guidedWorkflow": [],
   "skillsSection": [],
   "atsTips": [],
   "interviewRisks": []
@@ -2787,6 +2789,20 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
   exampleLine must be one paste-ready line or bullet, using only facts supported by the CV.
   whyItHelps must explain the role-fit, shortlisting, ATS or evidence benefit.
 
+- lineFeedback:
+  Exactly 4 line-level CV fixes.
+  Each item must include section, originalLine, issue, improvedLine, whyBetter, and recruiterSignal.
+  originalLine should quote or closely paraphrase a weak line from the CV where possible.
+  improvedLine must be paste-ready but must not invent numbers, employers, tools or outcomes.
+  whyBetter must explain why the line is stronger for this exact job description.
+  recruiterSignal must name the signal improved, such as role fit, evidence, seniority, ATS keyword, sector relevance, or measurable impact.
+
+- guidedWorkflow:
+  Exactly 5 ordered workflow steps.
+  Each item must include step, title, action, section, and successCheck.
+  The workflow should tell the user how to edit the CV in order: read verdict, fix top profile, strengthen recent evidence, add truthful keywords, re-check/export.
+  Make it specific to the detected UK role lens and this job description.
+
 - skillsSection:
   6–10 role-aligned skills phrased the way recruiters expect to see them.
 
@@ -2860,6 +2876,8 @@ Quality rules:
 - priorityFixDetails.change must be a concrete edit, not generic advice
 - priorityFixDetails.whereToPutIt must say where in the CV to make the change, such as profile, key skills, recent role bullets, or education
 - for Pro checks, sectionRewritePlan must give 4 section-specific edits with section, problem, rewriteDirection, exampleLine, and whyItHelps
+- for Pro checks, lineFeedback must give 4 line-level fixes with section, originalLine, issue, improvedLine, whyBetter, and recruiterSignal
+- for Pro checks, guidedWorkflow must give 5 ordered workflow steps with step, title, action, section, and successCheck
 - bulletPoints must be improved CV bullet points, not advice bullets
 - bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
 - freeBulletRewrite must rewrite one weak original CV bullet or sentence where possible
@@ -3771,6 +3789,56 @@ def coerce_section_rewrite_plan(value: Any, max_items: int = 4) -> list[dict[str
     return items
 
 
+def coerce_line_feedback(value: Any, max_items: int = 4) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, str]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        original_line = coerce_string(item.get("originalLine") or item.get("before") or item.get("original"))
+        improved_line = coerce_string(item.get("improvedLine") or item.get("after") or item.get("rewrite"))
+        issue = coerce_string(item.get("issue") or item.get("problem") or item.get("whyWeak"))
+        if not improved_line:
+            continue
+        items.append({
+            "section": coerce_string(item.get("section") or item.get("cvSection") or item.get("whereToUse")),
+            "originalLine": original_line or "A vague or duty-led line from the current CV.",
+            "issue": issue or "The current wording does not make role fit or evidence clear enough.",
+            "improvedLine": improved_line,
+            "whyBetter": coerce_string(item.get("whyBetter") or item.get("why") or item.get("reason")) or "This version makes the action, context and relevance easier to scan.",
+            "recruiterSignal": coerce_string(item.get("recruiterSignal") or item.get("signal") or item.get("strengthens")) or "Role fit and evidence strength.",
+        })
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def coerce_guided_workflow(value: Any, max_items: int = 5) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, str]] = []
+    for index, item in enumerate(value):
+        if not isinstance(item, dict):
+            continue
+        title = coerce_string(item.get("title") or item.get("label"))
+        action = coerce_string(item.get("action") or item.get("change") or item.get("instruction"))
+        if not title and not action:
+            continue
+        items.append({
+            "step": coerce_string(item.get("step") or item.get("order")) or str(index + 1),
+            "title": title or f"Step {index + 1}",
+            "action": action or "Make the recommended edit before moving to the next step.",
+            "section": coerce_string(item.get("section") or item.get("where") or item.get("cvSection")) or "Relevant CV section",
+            "successCheck": coerce_string(item.get("successCheck") or item.get("check") or item.get("doneWhen")) or "The change is visible, truthful and clearly matched to the job description.",
+        })
+        if len(items) >= max_items:
+            break
+    return items
+
+
 def clamp_score(value: int) -> int:
     return max(0, min(100, value))
 
@@ -4079,6 +4147,103 @@ def build_section_rewrite_plan(data: dict[str, Any]) -> list[dict[str, str]]:
     return plan[:4]
 
 
+def build_line_feedback(data: dict[str, Any], is_pro: bool) -> list[dict[str, str]]:
+    max_items = 4 if is_pro else 1
+    existing = coerce_line_feedback(data.get("lineFeedback"), max_items=max_items)
+    if len(existing) >= max_items:
+        return existing[:max_items]
+
+    items = existing[:]
+    rewrites = build_bullet_rewrite_details(data, is_pro=is_pro)
+    priority_fixes = build_priority_fix_details(data)
+
+    for index, rewrite in enumerate(rewrites):
+        section = rewrite.get("whereToUse") or "Recent experience"
+        items.append({
+            "section": section,
+            "originalLine": rewrite.get("before") or "A vague or duty-led line from the current CV.",
+            "issue": rewrite.get("whyBetter") or "The line needs clearer action, context and role relevance.",
+            "improvedLine": rewrite.get("after") or "",
+            "whyBetter": rewrite.get("whyBetter") or "It turns a broad duty into a clearer piece of role-fit evidence.",
+            "recruiterSignal": rewrite.get("strengthens") or "Evidence strength and role alignment.",
+        })
+        if len(items) >= max_items:
+            return items[:max_items]
+
+    for fix in priority_fixes:
+        items.append({
+            "section": fix.get("whereToPutIt") or "Profile or recent experience",
+            "originalLine": "Current wording is too broad or hidden in the CV.",
+            "issue": fix.get("issue") or "The evidence is not obvious enough for this role.",
+            "improvedLine": fix.get("change") or "Rewrite the line so it names the skill, context and relevant outcome.",
+            "whyBetter": fix.get("why") or "This helps a recruiter understand the fit faster.",
+            "recruiterSignal": "Shortlisting clarity.",
+        })
+        if len(items) >= max_items:
+            break
+
+    return items[:max_items]
+
+
+def build_guided_workflow(data: dict[str, Any]) -> list[dict[str, str]]:
+    existing = coerce_guided_workflow(data.get("guidedWorkflow"), max_items=5)
+    if len(existing) >= 5:
+        return existing[:5]
+
+    verdict = build_recruiter_verdict(data)
+    role_focus = data.get("roleFocus") if isinstance(data.get("roleFocus"), dict) else {}
+    role_label = coerce_string(role_focus.get("label")) or "the target UK role"
+    priority_fixes = build_priority_fix_details(data)
+    missing_keywords = coerce_string_list(data.get("missingKeywords"), max_items=5)
+    top_fix = priority_fixes[0] if priority_fixes else {}
+    second_fix = priority_fixes[1] if len(priority_fixes) > 1 else {}
+
+    fallback = [
+        {
+            "step": "1",
+            "title": "Read the shortlist risk",
+            "action": f"Start with the recruiter verdict: {verdict['mainConcern']}",
+            "section": "Whole CV",
+            "successCheck": "You can explain in one sentence why the CV may or may not shortlist for this role.",
+        },
+        {
+            "step": "2",
+            "title": "Fix the top profile",
+            "action": top_fix.get("change") or f"Rewrite the profile so it clearly positions the candidate for {role_label}.",
+            "section": top_fix.get("whereToPutIt") or "Professional profile",
+            "successCheck": "The opening lines name the target role, strongest matching evidence and relevant UK wording.",
+        },
+        {
+            "step": "3",
+            "title": "Strengthen recent evidence",
+            "action": second_fix.get("change") or "Rewrite recent role bullets around action, context and outcome.",
+            "section": second_fix.get("whereToPutIt") or "Recent experience",
+            "successCheck": "The most relevant recent bullets prove the role requirements rather than only listing duties.",
+        },
+        {
+            "step": "4",
+            "title": "Add truthful role keywords",
+            "action": "Work in " + (", ".join(missing_keywords[:4]) if missing_keywords else "the most important missing job-description terms") + " only where they match real experience.",
+            "section": "Key skills and recent experience",
+            "successCheck": "Important role terms appear naturally and are backed by evidence.",
+        },
+        {
+            "step": "5",
+            "title": "Re-check and export",
+            "action": "Re-run the CV after editing, then download or copy the checklist for the final application pass.",
+            "section": "Final review",
+            "successCheck": "The score, keyword coverage and first-page clarity have improved without adding unsupported claims.",
+        },
+    ]
+
+    combined = existing[:]
+    for item in fallback:
+        if len(combined) >= 5:
+            break
+        combined.append(item)
+    return combined[:5]
+
+
 def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Optional[dict[str, Any]] = None) -> dict[str, Any]:
     try:
         score = int(data.get("score", 0))
@@ -4109,6 +4274,8 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Opti
             "priorityFixes": coerce_string_list(data.get("priorityFixes")),
             "priorityFixDetails": build_priority_fix_details(data),
             "sectionRewritePlan": build_section_rewrite_plan(data),
+            "lineFeedback": build_line_feedback(data, is_pro=True),
+            "guidedWorkflow": build_guided_workflow(data),
             "skillsSection": coerce_string_list(data.get("skillsSection")),
             "atsTips": coerce_string_list(data.get("atsTips")),
             "interviewRisks": coerce_string_list(data.get("interviewRisks")),
@@ -4121,6 +4288,8 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Opti
             "priorityFixes": [],
             "priorityFixDetails": build_priority_fix_details(data),
             "sectionRewritePlan": [],
+            "lineFeedback": build_line_feedback(data, is_pro=False),
+            "guidedWorkflow": [],
             "skillsSection": [],
             "atsTips": [],
             "interviewRisks": [],
@@ -8146,6 +8315,60 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         """
         for index, item in enumerate(section_rewrite_plan[:4], start=1)
     )
+    line_feedback = page.get("line_feedback") or [
+        {
+            "section": rewrite.get("where_to_use", "Recent experience"),
+            "original_line": rewrite.get("before", page.get("weak_bullet", "")),
+            "issue": rewrite.get("why_better", "The current wording is too broad for the role."),
+            "improved_line": rewrite.get("after", page.get("strong_bullet", "")),
+            "why_better": rewrite.get("why_better", "It makes the action, context and role relevance easier to scan."),
+            "recruiter_signal": rewrite.get("strengthens", "Evidence strength and role alignment."),
+        }
+        for rewrite in rewrite_examples[:4]
+    ]
+    while len(line_feedback) < 4:
+        line_feedback.append({
+            "section": "Professional profile" if len(line_feedback) == 2 else "Key skills",
+            "original_line": "General wording that does not clearly point to the target role.",
+            "issue": "The line needs more role-specific UK CV language and clearer evidence.",
+            "improved_line": page.get("score_copy", "Relevant experience is present, but the CV needs clearer role-fit evidence."),
+            "why_better": "It makes the application story easier to understand before a recruiter reads the detail.",
+            "recruiter_signal": "Shortlisting clarity and sector relevance.",
+        })
+    line_feedback_html = "".join(
+        f"""
+        <div class="priority-card">
+          <span class="priority-number">{index}</span>
+          <div>
+            <strong>{html.escape(item.get("section", "CV line"))}</strong>
+            <p><strong>Current line:</strong> {html.escape(item.get("original_line", ""))}</p>
+            <p><strong>Issue:</strong> {html.escape(item.get("issue", ""))}</p>
+            <p><strong>Stronger line:</strong> {html.escape(item.get("improved_line", ""))}</p>
+            <p><strong>Why better:</strong> {html.escape(item.get("why_better", ""))}</p>
+            <p><strong>Recruiter signal:</strong> {html.escape(item.get("recruiter_signal", ""))}</p>
+          </div>
+        </div>
+        """
+        for index, item in enumerate(line_feedback[:4], start=1)
+    )
+    guided_workflow = page.get("guided_workflow") or [
+        ("Read the shortlist risk", recruiter_verdict.get("main_concern", "Check the main reason this CV may not shortlist yet."), "Whole CV", "You know the single biggest risk before editing."),
+        ("Fix the profile", recruiter_verdict.get("fix_first", "Rewrite the profile around the target role."), "Professional profile", "The opening lines show the target role and strongest matching proof."),
+        ("Strengthen recent evidence", page.get("fixes", [("Recent evidence", "Rewrite recent bullets around action, context and outcome.")])[0][1], "Recent experience", "The most relevant bullets prove the role requirements."),
+        ("Add truthful role keywords", "Work in " + ", ".join(page["keywords"][:4]) + " only where the evidence supports them.", "Key skills and recent experience", "Important terms are visible and backed by examples."),
+        ("Re-check and export", "Run the CV again after editing, then save the checklist for the final application pass.", "Final review", "The score and first-page clarity improve without unsupported claims."),
+    ]
+    guided_workflow_html = "".join(
+        f"""
+        <div class="report-action-card">
+          <strong>{index}. {html.escape(title)}</strong>
+          <p><strong>Action:</strong> {html.escape(action)}</p>
+          <p><strong>Where:</strong> {html.escape(section)}</p>
+          <p><strong>Done when:</strong> {html.escape(success_check)}</p>
+        </div>
+        """
+        for index, (title, action, section, success_check) in enumerate(guided_workflow[:5], start=1)
+    )
     score_number_match = re.search(r"(\d+)", page.get("score", ""))
     score_number = int(score_number_match.group(1)) if score_number_match else 58
     critical_keywords = page["keywords"][:3]
@@ -8967,6 +9190,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                 </div>
               </div>
 
+              <div class="card" style="margin-top:24px;">
+                <h2>Line-by-line fixes</h2>
+                <p class="section-helper">A Pro report highlights weak lines, gives stronger alternatives and explains the recruiter signal each rewrite improves.</p>
+                <div class="priority-grid">
+                  {line_feedback_html}
+                </div>
+              </div>
+
               <section class="example-improvement-section">
                 <h2>Before and after rewrite plan</h2>
                 <p class="section-helper">The full report can show multiple rewrites, why each one is stronger, where it belongs, and which role signal it improves.</p>
@@ -8990,18 +9221,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                   <span class="pro-badge">PRO</span>
                 </div>
                 <div class="priority-grid">
-                  <div class="report-action-card">
-                    <strong>1. Read the verdict</strong>
-                    <p>Start with the executive summary, score, shortlist risk and first-page diagnosis.</p>
-                  </div>
-                  <div class="report-action-card">
-                    <strong>2. Edit by priority</strong>
-                    <p>Use the section rewrite plan, keyword groups and before/after examples to improve the CV safely.</p>
-                  </div>
-                  <div class="report-action-card">
-                    <strong>3. Export and re-test</strong>
-                    <p>Download, copy the checklist or print the report, then re-run the CV after edits.</p>
-                  </div>
+                  {guided_workflow_html}
                 </div>
               </div>
 
@@ -13507,7 +13727,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report, role_focus=role_focus),
-            max_output_tokens=4600 if should_generate_full_report else 1800,
+            max_output_tokens=5600 if should_generate_full_report else 1800,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -13548,6 +13768,8 @@ async def optimise(
             "priorityFixes": data.get("priorityFixes", []),
             "priorityFixDetails": data.get("priorityFixDetails", []),
             "sectionRewritePlan": data.get("sectionRewritePlan", []),
+            "lineFeedback": data.get("lineFeedback", []),
+            "guidedWorkflow": data.get("guidedWorkflow", []),
             "skillsSection": data.get("skillsSection", []),
             "atsTips": data.get("atsTips", []),
             "interviewRisks": data.get("interviewRisks", []),
