@@ -648,6 +648,11 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "score": "Match Score: 61/100",
         "score_label": "Commercial evidence needs to be sharper",
         "score_copy": "The CV shows sales experience, but target performance, pipeline ownership and CRM evidence are not strong enough for the role.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may see sales experience, but not enough proof of quota ownership, pipeline generation or measurable performance.",
+            "fix_first": "Rewrite the profile and most recent sales bullets around target role, sales cycle and commercial outcomes.",
+        },
         "keywords": ["pipeline generation", "quota achievement", "CRM", "forecasting", "discovery calls", "negotiation", "conversion rate"],
         "unclear": [
             "Revenue and target performance are not visible enough.",
@@ -656,9 +661,9 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             "Achievements need stronger numbers, deal context and outcomes.",
         ],
         "fixes": [
-            ("Lead with sales outcomes", "Show quota, revenue, meetings booked, conversion rate or pipeline value where truthful."),
-            ("Make pipeline ownership explicit", "Use job-description language around prospecting, discovery, qualification and forecasting."),
-            ("Replace generic relationship wording", "Tie customer relationships to commercial outcomes, retention, revenue or deal progress."),
+            ("Lead with sales outcomes", "Show quota, revenue, meetings booked, conversion rate or pipeline value where truthful.", "Profile and the first two recent sales bullets."),
+            ("Make pipeline ownership explicit", "Use job-description language around prospecting, discovery, qualification and forecasting.", "Key skills and recent role responsibilities."),
+            ("Replace generic relationship wording", "Tie customer relationships to commercial outcomes, retention, revenue or deal progress.", "Account/customer-facing experience bullets."),
         ],
         "weak_bullet": "Responsible for building relationships with customers and supporting sales targets.",
         "strong_bullet": "Generated qualified pipeline through targeted outreach and discovery calls, supporting improved conversion and clearer monthly forecasting.",
@@ -689,6 +694,11 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "score": "Match Score: 58/100",
         "score_label": "Needs clearer role alignment",
         "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "The CV suggests account management experience, but commercial ownership, forecasting and stakeholder impact are not visible quickly enough.",
+            "fix_first": "Strengthen the top profile and recent account management bullets with commercial evidence and job-description language.",
+        },
         "keywords": ["stakeholder management", "forecasting", "commercial planning", "P&L", "retailer execution", "category growth"],
         "unclear": [
             "Commercial impact is not clear enough.",
@@ -697,9 +707,9 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             "Important role keywords are missing or buried.",
         ],
         "fixes": [
-            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results."),
-            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description."),
-            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy."),
+            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results.", "Recent account manager role bullets."),
+            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description.", "Professional profile at the top of the CV."),
+            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy.", "Key skills and the most relevant experience entry."),
         ],
         "weak_bullet": "Responsible for managing customer accounts and sales targets.",
         "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
@@ -730,6 +740,11 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "score": "Match Score: 64/100",
         "score_label": "Delivery evidence is present but too broad",
         "score_copy": "The CV suggests project experience, but budget, risk, dependencies and measurable delivery outcomes need to be easier to see.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter can see delivery exposure, but may struggle to judge ownership level, project scale and measurable outcomes.",
+            "fix_first": "Add project scale, governance and delivery outcomes to the profile and strongest recent project bullets.",
+        },
         "keywords": ["stakeholder governance", "delivery planning", "RAID", "dependencies", "budget tracking", "implementation", "change management"],
         "unclear": [
             "Project scale, budget and timeline context are not specific enough.",
@@ -738,9 +753,9 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             "Methodologies are mentioned without proof of successful delivery.",
         ],
         "fixes": [
-            ("Add project scale and context", "Show budget, team size, timeline, workstream count or delivery environment where possible."),
-            ("Evidence risk and dependency control", "Include RAID, governance, escalation and stakeholder cadence if they match your experience."),
-            ("Turn delivery duties into outcomes", "Show what changed after delivery, not just what you coordinated."),
+            ("Add project scale and context", "Show budget, team size, timeline, workstream count or delivery environment where possible.", "Project summary line and recent delivery bullets."),
+            ("Evidence risk and dependency control", "Include RAID, governance, escalation and stakeholder cadence if they match your experience.", "Key skills and project management responsibilities."),
+            ("Turn delivery duties into outcomes", "Show what changed after delivery, not just what you coordinated.", "Achievement bullets under each relevant project role."),
         ],
         "weak_bullet": "Managed project tasks and worked with stakeholders to deliver business change.",
         "strong_bullet": "Led cross-functional delivery planning across three workstreams, tracking risks, dependencies and milestones to support on-time implementation.",
@@ -2188,6 +2203,11 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
 {
   "score": 0,
   "scoreBreakdown": [],
+  "recruiterVerdict": {
+    "shortlistLikelihood": "",
+    "mainConcern": "",
+    "fixFirst": ""
+  },
   "matchedKeywords": [],
   "missingKeywords": [],
   "keywordImportance": {
@@ -2217,6 +2237,11 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
 {
   "score": 0,
   "scoreBreakdown": [],
+  "recruiterVerdict": {
+    "shortlistLikelihood": "",
+    "mainConcern": "",
+    "fixFirst": ""
+  },
   "matchedKeywords": [],
   "missingKeywords": [],
   "keywordImportance": {
@@ -2251,10 +2276,11 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
 
 - priorityFixDetails:
   Exactly 3 structured fixes.
-  Each item must include issue, why, and change.
+  Each item must include issue, why, change, and whereToPutIt.
   The issue should name the actual weakness.
   The why should explain recruiter/ATS impact.
   The change should be a concrete edit the user can make.
+  whereToPutIt should name the CV section where the edit belongs.
 
 - skillsSection:
   6–10 role-aligned skills phrased the way recruiters expect to see them.
@@ -2300,12 +2326,19 @@ Use this exact JSON structure:
 
 Quality rules:
 - score must be realistic, not inflated
+- recruiterVerdict must sound like a concise UK recruiter verdict on this application
+- recruiterVerdict.shortlistLikelihood must be one of: "Likely", "Possible", "Unlikely", or "Unclear"
+- recruiterVerdict.mainConcern must state the main reason this CV may not be shortlisted for this specific role
+- recruiterVerdict.fixFirst must state the first section or evidence gap to fix before applying
 - matchedKeywords must be short phrases clearly supported by the CV
 - missingKeywords must be genuinely important role terms missing or weak in the CV
 - scoreBreakdown must include role alignment, keyword coverage, evidence strength, ATS readability, and structure and clarity
 - keywordImportance must separate critical missing keywords, useful supporting keywords, and keywords already covered
 - strongPoints must explain what already helps this CV for this role
 - weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
+- priorityFixDetails must include issue, why, change, and whereToPutIt when available
+- priorityFixDetails.change must be a concrete edit, not generic advice
+- priorityFixDetails.whereToPutIt must say where in the CV to make the change, such as profile, key skills, recent role bullets, or education
 - bulletPoints must be improved CV bullet points, not advice bullets
 - bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
 - freeBulletRewrite must rewrite one weak original CV bullet or sentence where possible
@@ -2954,15 +2987,41 @@ def coerce_priority_fix_details(value: Any, max_items: int = 3) -> list[dict[str
             issue = coerce_string(item.get("issue") or item.get("title"))
             why = coerce_string(item.get("why") or item.get("whyItMatters") or item.get("reason"))
             change = coerce_string(item.get("change") or item.get("whatToChange") or item.get("fix"))
+            where_to_put_it = coerce_string(
+                item.get("whereToPutIt") or item.get("where") or item.get("section")
+            )
         else:
             issue = coerce_string(item)
             why = ""
             change = ""
+            where_to_put_it = ""
         if issue:
-            items.append({"issue": issue, "why": why, "change": change})
+            items.append({
+                "issue": issue,
+                "why": why,
+                "change": change,
+                "whereToPutIt": where_to_put_it,
+            })
         if len(items) >= max_items:
             break
     return items
+
+
+def coerce_recruiter_verdict(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        value = {}
+
+    likelihood = coerce_string(
+        value.get("shortlistLikelihood") or value.get("likelihood") or value.get("verdict")
+    )
+    allowed = {"likely": "Likely", "possible": "Possible", "unlikely": "Unlikely", "unclear": "Unclear"}
+    shortlist_likelihood = allowed.get(likelihood.lower(), "")
+
+    return {
+        "shortlistLikelihood": shortlist_likelihood,
+        "mainConcern": coerce_string(value.get("mainConcern") or value.get("concern")),
+        "fixFirst": coerce_string(value.get("fixFirst") or value.get("firstFix") or value.get("nextStep")),
+    }
 
 
 def coerce_keyword_importance(value: Any) -> dict[str, list[str]]:
@@ -3032,12 +3091,59 @@ def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def build_recruiter_verdict(data: dict[str, Any]) -> dict[str, str]:
+    existing = coerce_recruiter_verdict(data.get("recruiterVerdict"))
+    score = int(data.get("score", 0) or 0)
+    weak_points = data.get("weakPoints", [])
+    missing_keywords = data.get("missingKeywords", [])
+    next_step = coerce_string(data.get("nextStep"))
+
+    if score >= 75:
+        fallback_likelihood = "Likely"
+    elif score >= 55:
+        fallback_likelihood = "Possible"
+    elif score > 0:
+        fallback_likelihood = "Unlikely"
+    else:
+        fallback_likelihood = "Unclear"
+
+    main_concern = existing["mainConcern"]
+    if not main_concern:
+        if weak_points:
+            main_concern = coerce_string(weak_points[0])
+        elif missing_keywords:
+            main_concern = f"Key role language is missing or weak, especially {', '.join(missing_keywords[:3])}."
+        else:
+            main_concern = "The CV needs clearer evidence that matches the role before a recruiter can judge fit quickly."
+
+    fix_first = existing["fixFirst"] or next_step
+    if not fix_first:
+        if missing_keywords:
+            fix_first = "Update the profile, key skills and recent role bullets with the most important missing role terms where they are truthful."
+        else:
+            fix_first = "Strengthen the top third of the CV so the target role, strongest evidence and relevant outcomes are immediately visible."
+
+    return {
+        "shortlistLikelihood": existing["shortlistLikelihood"] or fallback_likelihood,
+        "mainConcern": main_concern,
+        "fixFirst": fix_first,
+    }
+
+
 def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
     existing = coerce_priority_fix_details(data.get("priorityFixDetails"))
-    if len(existing) >= 3:
-        return existing[:3]
+    polished_existing: list[dict[str, str]] = []
+    for item in existing:
+        polished_existing.append({
+            "issue": item["issue"],
+            "why": item["why"] or "This makes the CV harder to shortlist because the role fit is not obvious quickly.",
+            "change": item["change"] or "Rewrite it so the role fit, evidence, and outcome are easier to see.",
+            "whereToPutIt": item["whereToPutIt"] or "Profile, key skills, or the most relevant recent role bullet.",
+        })
+    if len(polished_existing) >= 3:
+        return polished_existing[:3]
 
-    fixes: list[dict[str, str]] = []
+    fixes: list[dict[str, str]] = polished_existing[:]
     missing_keywords = data.get("missingKeywords", [])
 
     if missing_keywords:
@@ -3046,6 +3152,7 @@ def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
             "issue": f"Important role keywords are missing or too weak: {joined}.",
             "why": "Recruiters and ATS-style screening can miss relevant experience if the same language is not visible.",
             "change": "Add these terms only where they are true, then back them up with a concrete example or outcome.",
+            "whereToPutIt": "Key skills section first, then the most relevant recent role bullets.",
         })
 
     for weak_point in data.get("weakPoints", []):
@@ -3055,6 +3162,7 @@ def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
                 "issue": text,
                 "why": "This makes the CV harder to shortlist because the role fit is not obvious quickly.",
                 "change": "Rewrite the affected section so it names the skill, context, and result more directly.",
+                "whereToPutIt": "The profile summary or the role bullet where this evidence belongs.",
             })
         if len(fixes) >= 3:
             break
@@ -3065,6 +3173,7 @@ def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
             "issue": "The highest-value next improvement is not yet reflected strongly enough.",
             "why": "Fixing the main gap first usually improves the whole application more than small wording edits.",
             "change": next_step,
+            "whereToPutIt": "Start in the top third of the CV, then reinforce it in recent experience.",
         })
 
     fallback_fixes = [
@@ -3072,16 +3181,19 @@ def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
             "issue": "The top third of the CV needs sharper role positioning.",
             "why": "Recruiters often decide quickly whether the CV is worth reading in full.",
             "change": "Open with the target role, strongest relevant skills, and one or two proof points from your experience.",
+            "whereToPutIt": "Professional profile and key skills section.",
         },
         {
             "issue": "Some bullets read like responsibilities rather than evidence.",
             "why": "Duty-only wording makes it harder to see what you personally changed, improved, or delivered.",
             "change": "Rewrite bullets with action, context, and outcome, using numbers only when they are true.",
+            "whereToPutIt": "Recent role bullet points.",
         },
         {
             "issue": "The CV needs more natural job-description language.",
             "why": "Relevant wording helps both human review and keyword-based screening.",
             "change": "Mirror the advert's important terms across your profile, skills, and recent experience sections.",
+            "whereToPutIt": "Profile, key skills, and the most relevant experience entry.",
         },
     ]
 
@@ -3135,6 +3247,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
     normalized = {
         "score": score,
         "scoreBreakdown": build_score_breakdown(data),
+        "recruiterVerdict": build_recruiter_verdict(data),
         "matchedKeywords": coerce_string_list(data.get("matchedKeywords")),
         "missingKeywords": coerce_string_list(data.get("missingKeywords")),
         "keywordImportance": build_keyword_importance(data),
@@ -5800,6 +5913,11 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         "score": "Match Score: 58/100",
         "score_label": "Needs clearer role alignment",
         "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may not immediately see the strongest role fit because the most relevant evidence is too vague or buried.",
+            "fix_first": "Rewrite the top profile and recent role bullets around the target job description before applying.",
+        },
         "keywords": ["stakeholder management", "forecasting", "commercial planning", "P&L", "retailer execution", "category growth"],
         "unclear": [
             "Commercial impact is not clear enough.",
@@ -5808,9 +5926,9 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             "Important role keywords are missing or buried.",
         ],
         "fixes": [
-            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results."),
-            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description."),
-            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy."),
+            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results.", "Recent role bullets."),
+            ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description.", "Professional profile."),
+            ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy.", "Key skills and recent experience."),
         ],
         "weak_bullet": "Responsible for managing customer accounts and sales targets.",
         "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
@@ -5838,18 +5956,22 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         f"<li>{html.escape(item)}</li>"
         for item in page["unclear"]
     )
-    fixes_html = "".join(
-        f"""
+    fixes_html = ""
+    for index, fix in enumerate(page["fixes"], start=1):
+        title = fix[0] if len(fix) > 0 else "Priority fix"
+        copy = fix[1] if len(fix) > 1 else ""
+        where = fix[2] if len(fix) > 2 else ""
+        fixes_html += f"""
         <div class="priority-card">
           <span class="priority-number">{index}</span>
           <div>
             <strong>{html.escape(title)}</strong>
             <p>{html.escape(copy)}</p>
+            {f'<p><strong>Where to put it:</strong> {html.escape(where)}</p>' if where else ''}
           </div>
         </div>
         """
-        for index, (title, copy) in enumerate(page["fixes"], start=1)
-    )
+    recruiter_verdict = page.get("recruiter_verdict", {})
     ats_checks_html = "".join(
         f"<li>{html.escape(item)}</li>"
         for item in page["ats_checks"]
@@ -6203,6 +6325,15 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                   <div class="score-value">{html.escape(page["score"])}</div>
                   <p><strong>{html.escape(page["score_label"])}</strong></p>
                   <p>{html.escape(page["score_copy"])}</p>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>UK recruiter verdict</h2>
+                <div class="score-block">
+                  <p><strong>Shortlist likelihood:</strong> {html.escape(recruiter_verdict.get("shortlist_likelihood", "Possible"))}</p>
+                  <p><strong>Main concern:</strong> {html.escape(recruiter_verdict.get("main_concern", "The CV needs clearer role-specific evidence before a recruiter can judge fit quickly."))}</p>
+                  <p><strong>Fix first:</strong> {html.escape(recruiter_verdict.get("fix_first", "Strengthen the profile and most relevant recent role bullets before applying."))}</p>
                 </div>
               </div>
 
@@ -10284,7 +10415,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report),
-            max_output_tokens=2200 if should_generate_full_report else 1300,
+            max_output_tokens=2800 if should_generate_full_report else 1600,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -10309,6 +10440,7 @@ async def optimise(
         payload = {
             "score": data.get("score", 0),
             "scoreBreakdown": data.get("scoreBreakdown", []),
+            "recruiterVerdict": data.get("recruiterVerdict", {}),
             "matchedKeywords": data.get("matchedKeywords", []),
             "missingKeywords": data.get("missingKeywords", []),
             "keywordImportance": data.get("keywordImportance", {}),

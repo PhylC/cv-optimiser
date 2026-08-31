@@ -2561,6 +2561,49 @@
     padding-left: 0;
   }
 
+  .recruiter-verdict-grid {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.55fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .recruiter-verdict-badge,
+  .recruiter-verdict-copy {
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.28);
+    background: rgba(3, 13, 31, 0.34);
+    padding: 14px;
+  }
+
+  .recruiter-verdict-badge span,
+  .recruiter-verdict-copy span {
+    display: block;
+    margin-bottom: 7px;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .recruiter-verdict-badge strong {
+    display: block;
+    color: #F4F7FF;
+    font-size: 26px;
+    line-height: 1.1;
+  }
+
+  .recruiter-verdict-copy p {
+    margin: 0;
+    color: #C6D3EC;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .recruiter-verdict-copy p + p {
+    margin-top: 10px;
+  }
+
   .ranked-fixes li {
     position: relative;
     padding-left: 38px;
@@ -3523,6 +3566,10 @@
     grid-template-columns: 1fr;
   }
 
+  .recruiter-verdict-grid {
+    grid-template-columns: 1fr;
+  }
+
   .fix-detail-card {
     grid-template-columns: 30px minmax(0, 1fr);
   }
@@ -4222,6 +4269,23 @@
             <p id="atsReadabilitySummary" class="result-paragraph"></p>
           </div>
 
+          <div id="recruiterVerdictWrap" class="result-section">
+            <div class="result-section-title">UK recruiter verdict</div>
+            <div class="result-section-subtitle">The shortlist read before you edit the CV.</div>
+            <div class="recruiter-verdict-grid">
+              <div class="recruiter-verdict-badge">
+                <span>Shortlist likelihood</span>
+                <strong id="recruiterVerdictLikelihood">Checking</strong>
+              </div>
+              <div class="recruiter-verdict-copy">
+                <span>Main concern</span>
+                <p id="recruiterVerdictConcern"></p>
+                <span>Fix first</span>
+                <p id="recruiterVerdictFixFirst"></p>
+              </div>
+            </div>
+          </div>
+
           <div class="result-section">
             <div class="result-section-title">Score breakdown</div>
             <div class="result-section-subtitle">The five checks behind your headline score.</div>
@@ -4230,7 +4294,7 @@
 
           <div class="result-section">
             <div class="result-section-title">Top 3 fixes to make first</div>
-            <div class="result-section-subtitle">The issue, why it matters, and what to change next.</div>
+            <div class="result-section-subtitle">The issue, why it matters, what to change, and where to put it.</div>
             <div id="resultPriorityPreview" class="fix-detail-grid"></div>
           </div>
 
@@ -4708,6 +4772,10 @@
     const auditEvidenceCopy = document.getElementById("auditEvidenceCopy");
     const auditBestAction = document.getElementById("auditBestAction");
     const auditBestActionCopy = document.getElementById("auditBestActionCopy");
+    const recruiterVerdictWrap = document.getElementById("recruiterVerdictWrap");
+    const recruiterVerdictLikelihood = document.getElementById("recruiterVerdictLikelihood");
+    const recruiterVerdictConcern = document.getElementById("recruiterVerdictConcern");
+    const recruiterVerdictFixFirst = document.getElementById("recruiterVerdictFixFirst");
     const resultScoreBreakdown = document.getElementById("resultScoreBreakdown");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
     const resultKeywordImportance = document.getElementById("resultKeywordImportance");
@@ -5337,11 +5405,32 @@
           change.textContent = "What to change: " + (item.change || item.whatToChange || item.fix);
           body.appendChild(change);
         }
+        if (item.whereToPutIt || item.where || item.section) {
+          const where = document.createElement("p");
+          where.textContent = "Where to put it: " + (item.whereToPutIt || item.where || item.section);
+          body.appendChild(where);
+        }
 
         card.appendChild(number);
         card.appendChild(body);
         targetEl.appendChild(card);
       });
+    }
+
+    function renderRecruiterVerdict(data, scoreNumber) {
+      if (!recruiterVerdictWrap) return;
+      const verdict = data && data.recruiterVerdict ? data.recruiterVerdict : {};
+      let likelihood = verdict.shortlistLikelihood || verdict.likelihood || "";
+      if (!likelihood) {
+        likelihood = scoreNumber >= 75 ? "Likely" : (scoreNumber >= 55 ? "Possible" : (scoreNumber > 0 ? "Unlikely" : "Unclear"));
+      }
+      const concern = verdict.mainConcern || verdict.concern || (data.weakPoints && data.weakPoints[0]) || "The CV needs clearer evidence that matches the role before a recruiter can judge fit quickly.";
+      const fixFirst = verdict.fixFirst || verdict.firstFix || data.nextStep || "Strengthen the top third of the CV, then reinforce the same evidence in the most relevant recent role.";
+
+      if (recruiterVerdictLikelihood) recruiterVerdictLikelihood.textContent = likelihood;
+      if (recruiterVerdictConcern) recruiterVerdictConcern.textContent = concern;
+      if (recruiterVerdictFixFirst) recruiterVerdictFixFirst.textContent = fixFirst;
+      recruiterVerdictWrap.classList.toggle("hidden", false);
     }
 
     function renderKeywordImportance(groups, fallbackMissing, fallbackMatched) {
@@ -5446,10 +5535,12 @@
           const issue = item.issue || item.title || String(item || "");
           const why = item.why || item.whyItMatters || "";
           const change = item.change || item.whatToChange || item.fix || "";
+          const where = item.whereToPutIt || item.where || item.section || "";
           return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>" +
             escapeReportHtml(issue) + "</h3>" +
             (why ? "<p><strong>Why it matters:</strong> " + escapeReportHtml(why) + "</p>" : "") +
             (change ? "<p><strong>What to change:</strong> " + escapeReportHtml(change) + "</p>" : "") +
+            (where ? "<p><strong>Where to put it:</strong> " + escapeReportHtml(where) + "</p>" : "") +
             "</article>";
         }).join("") +
         "</div></section>";
@@ -5472,6 +5563,10 @@
       const critical = keywordGroups.criticalMissing || (data.missingKeywords || []).slice(0, 3);
       const supporting = keywordGroups.supportingKeywords || (data.missingKeywords || []).slice(3, 8);
       const covered = keywordGroups.coveredKeywords || (data.matchedKeywords || []).slice(0, 6);
+      const recruiterVerdict = data.recruiterVerdict || {};
+      const shortlistLikelihood = recruiterVerdict.shortlistLikelihood || recruiterVerdict.likelihood || (score >= 75 ? "Likely" : (score >= 55 ? "Possible" : (score > 0 ? "Unlikely" : "Unclear")));
+      const mainConcern = recruiterVerdict.mainConcern || recruiterVerdict.concern || (data.weakPoints && data.weakPoints[0]) || "";
+      const fixFirst = recruiterVerdict.fixFirst || recruiterVerdict.firstFix || data.nextStep || "";
 
       return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
@@ -5491,6 +5586,10 @@
         "@media(max-width:760px){.breakdown,.rewrite{grid-template-columns:1fr;}}" +
         "</style></head><body><main>" +
         "<header><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        "<section><h2>UK recruiter verdict</h2><p><strong>Shortlist likelihood:</strong> " + escapeReportHtml(shortlistLikelihood) + "</p>" +
+        (mainConcern ? "<p><strong>Main concern:</strong> " + escapeReportHtml(mainConcern) + "</p>" : "") +
+        (fixFirst ? "<p><strong>Fix first:</strong> " + escapeReportHtml(fixFirst) + "</p>" : "") +
+        "</section>" +
         (scoreBreakdown.length ? "<section><h2>Score breakdown</h2><div class=\"breakdown\">" + scoreBreakdown.map(function(item) {
           return "<div class=\"mini\"><strong>" + escapeReportHtml(item.label || item.name || "CV signal") + "</strong><b>" + escapeReportHtml(item.score || 0) + "</b><p>" + escapeReportHtml(item.detail || item.reason || "") + "</p></div>";
         }).join("") + "</div></section>" : "") +
@@ -6779,6 +6878,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           ]
         );
 
+        renderRecruiterVerdict(data, scoreNumber);
         renderScoreBreakdown(data.scoreBreakdown || [], scoreNumber);
         renderKeywordImportance(data.keywordImportance || {}, data.missingKeywords || [], data.matchedKeywords || []);
 
