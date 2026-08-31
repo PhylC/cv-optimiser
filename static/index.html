@@ -2370,6 +2370,109 @@
   }
 
   .score-hero {
+    order: 1;
+  }
+
+  .diagnosis-bar {
+    order: 2;
+  }
+
+  .audit-summary-grid {
+    order: 3;
+  }
+
+  #fullPlanReadyBanner {
+    order: 4;
+  }
+
+  #proReportActions {
+    order: 5;
+  }
+
+  #proSnapshotWrap {
+    order: 6;
+  }
+
+  #proPriorityWrap {
+    order: 7;
+  }
+
+  #proRewriteWrap {
+    order: 8;
+  }
+
+  #proSummaryWrap {
+    order: 9;
+  }
+
+  #recruiterVerdictWrap {
+    order: 10;
+  }
+
+  #atsReadabilitySummaryWrap {
+    order: 11;
+  }
+
+  #resultScoreBreakdownWrap {
+    order: 12;
+  }
+
+  #resultPriorityPreviewWrap {
+    order: 13;
+  }
+
+  #resultKeywordPreviewWrap {
+    order: 14;
+  }
+
+  #resultKeywordImportanceWrap {
+    order: 15;
+  }
+
+  #resultExampleWrap {
+    order: 16;
+  }
+
+  #lockedReportSections {
+    order: 17;
+  }
+
+  #detailKeywordsWrap {
+    order: 18;
+  }
+
+  #detailStrengthsWrap {
+    order: 19;
+  }
+
+  #proSkillsWrap {
+    order: 20;
+  }
+
+  #proAtsRisksGrid {
+    order: 21;
+  }
+
+  #bestNextStepWrap {
+    order: 22;
+  }
+
+  #proActionPlanWrap {
+    order: 23;
+  }
+
+  #resultDisclaimerWrap {
+    order: 30;
+  }
+
+  #resultsUpgradeCta,
+  #proUnlockPrompt,
+  #lockedPreviewCard,
+  #anonymousSignupPrompt {
+    order: 40;
+  }
+
+  .score-hero {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -2823,6 +2926,50 @@
     color: #B7C6E6;
     font-size: 14px;
     line-height: 1.55;
+  }
+
+  .pro-workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .pro-workflow-step {
+    min-height: 88px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.28);
+    background: rgba(3, 13, 31, 0.34);
+  }
+
+  .pro-workflow-step span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(56, 217, 150, 0.14);
+    border: 1px solid rgba(56, 217, 150, 0.30);
+    color: #B7F7C4;
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .pro-workflow-step strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #F4F7FF;
+    font-size: 13px;
+  }
+
+  .pro-workflow-step p {
+    margin: 0;
+    color: #AFC0E4;
+    font-size: 12px;
+    line-height: 1.45;
   }
 
   .pro-report-button-row {
@@ -3558,6 +3705,7 @@
   .before-after,
   .score-breakdown-grid,
   .keyword-importance-grid,
+  .pro-workflow-steps,
   .pro-snapshot-grid {
     grid-template-columns: 1fr;
   }
@@ -4308,32 +4456,32 @@
             </div>
           </div>
 
-          <div class="result-section">
+          <div id="resultScoreBreakdownWrap" class="result-section">
             <div class="result-section-title">Score breakdown</div>
             <div class="result-section-subtitle">The five checks behind your headline score.</div>
             <div id="resultScoreBreakdown" class="score-breakdown-grid"></div>
           </div>
 
-          <div class="result-section">
+          <div id="resultPriorityPreviewWrap" class="result-section">
             <div class="result-section-title">Top 3 fixes to make first</div>
             <div class="result-section-subtitle">The issue, why it matters, what to change, and where to put it.</div>
             <div id="resultPriorityPreview" class="fix-detail-grid"></div>
           </div>
 
-          <div class="result-section">
+          <div id="resultKeywordPreviewWrap" class="result-section">
             <div id="resultKeywordTitle" class="result-section-title">Missing keywords</div>
             <div id="resultKeywordSubtitle" class="result-section-subtitle"></div>
             <ul id="resultKeywordPreview" class="result-list"></ul>
             <p id="resultKeywordTail" class="keyword-tail-note hidden">…and more in the full report</p>
           </div>
 
-          <div class="result-section">
+          <div id="resultKeywordImportanceWrap" class="result-section">
             <div class="result-section-title">Keyword importance</div>
             <div class="result-section-subtitle">Separate must-have gaps from supporting language and terms you already cover.</div>
             <div id="resultKeywordImportance" class="keyword-importance-grid"></div>
           </div>
 
-          <div class="result-section">
+          <div id="resultExampleWrap" class="result-section">
             <div class="result-section-title">Example improvement</div>
             <div class="result-section-subtitle">A stronger, more results-focused way to phrase the same experience.</div>
             <div class="before-after rewrite-block">
@@ -4413,7 +4561,29 @@
 
           <div id="fullPlanReadyBanner" class="full-plan-ready hidden">
             <div class="full-plan-ready-title">Your full CV improvement plan is ready</div>
-            <div class="full-plan-ready-copy">You can now see the deeper rewrite guidance, tailored bullet improvements, and detailed optimisation steps below.</div>
+            <div class="full-plan-ready-copy">Work through the report in order: confirm the recruiter verdict, fix the highest-impact gaps, adapt the rewrites, then export or re-run after editing.</div>
+            <div class="pro-workflow-steps" aria-label="Full report workflow">
+              <div class="pro-workflow-step">
+                <span>1</span>
+                <strong>Read the verdict</strong>
+                <p>Check the role lens and main shortlist concern first.</p>
+              </div>
+              <div class="pro-workflow-step">
+                <span>2</span>
+                <strong>Fix priorities</strong>
+                <p>Apply the top issues where the report says they belong.</p>
+              </div>
+              <div class="pro-workflow-step">
+                <span>3</span>
+                <strong>Adapt rewrites</strong>
+                <p>Use the before/after examples without adding unsupported claims.</p>
+              </div>
+              <div class="pro-workflow-step">
+                <span>4</span>
+                <strong>Export or re-run</strong>
+                <p>Save the checklist, edit your CV, then test the role match again.</p>
+              </div>
+            </div>
           </div>
 
           <div id="proReportActions" class="pro-report-actions hidden">
@@ -4507,7 +4677,7 @@
             <ul id="skillsSection" class="result-list"></ul>
           </div>
 
-          <div class="result-grid-two">
+          <div id="proAtsRisksGrid" class="result-grid-two">
             <div id="proAtsWrap" class="result-section pro-premium hidden">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                 <div class="result-section-title">ATS-style suggestions</div>
@@ -4813,6 +4983,8 @@
     const recruiterVerdictFixFirst = document.getElementById("recruiterVerdictFixFirst");
     const resultScoreBreakdown = document.getElementById("resultScoreBreakdown");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
+    const resultPriorityPreviewWrap = document.getElementById("resultPriorityPreviewWrap");
+    const resultExampleWrap = document.getElementById("resultExampleWrap");
     const resultKeywordImportance = document.getElementById("resultKeywordImportance");
     const resultKeywordPreview = document.getElementById("resultKeywordPreview");
     const resultKeywordTail = document.getElementById("resultKeywordTail");
@@ -7162,6 +7334,12 @@ passwordLoginBtn.addEventListener("click", async function() {
         anonymousKeywordGapWrap.classList.add("hidden");
         if (resultKeywordSection) {
           resultKeywordSection.classList.toggle("hidden", !isCurrentlyPro);
+        }
+        if (resultPriorityPreviewWrap) {
+          resultPriorityPreviewWrap.classList.toggle("hidden", isCurrentlyPro);
+        }
+        if (resultExampleWrap) {
+          resultExampleWrap.classList.toggle("hidden", isCurrentlyPro && data.bulletRewriteDetails && data.bulletRewriteDetails.length);
         }
         detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
         detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
