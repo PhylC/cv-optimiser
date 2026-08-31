@@ -3014,6 +3014,10 @@
     order: 18;
   }
 
+  #postResultJourneyWrap {
+    order: 18;
+  }
+
   #resultKeywordPreviewWrap {
     order: 19;
   }
@@ -3921,6 +3925,71 @@
     line-height: 1.45;
   }
 
+  .post-result-journey {
+    display: grid;
+    gap: 14px;
+  }
+
+  .post-result-journey-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .post-result-journey-head p {
+    max-width: 64ch;
+  }
+
+  .journey-step-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .journey-step-card {
+    position: relative;
+    min-height: 150px;
+    padding: 14px;
+    border: 1px solid #D8E1EF;
+    border-radius: 16px;
+    background: #F8FAFC;
+  }
+
+  .journey-step-card.is-primary {
+    background: linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%);
+    border-color: #C7D2FE;
+  }
+
+  .journey-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 10px;
+    border-radius: 999px;
+    background: #E0E7FF;
+    color: #2947D3;
+    font-size: 13px;
+    font-weight: 850;
+  }
+
+  .journey-step-card strong {
+    display: block;
+    color: #101B33;
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+  }
+
+  .journey-step-card p {
+    color: #526179;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
   .interactive-checklist {
     display: grid;
     gap: 10px;
@@ -4735,12 +4804,14 @@
   }
 
   .homepage-trust-grid,
-  .pro-difference-grid {
+  .pro-difference-grid,
+  .journey-step-grid {
     grid-template-columns: 1fr;
   }
 
   .homepage-trust-item,
-  .pro-difference-card {
+  .pro-difference-card,
+  .journey-step-card {
     min-height: 0;
   }
 
@@ -5612,7 +5683,9 @@
                 <option value="admin">Office / operations admin</option>
                 <option value="sales">Sales</option>
                 <option value="account_manager">Account manager</option>
+                <option value="customer_success">Customer success</option>
                 <option value="project_manager">Project manager</option>
+                <option value="it_helpdesk">IT helpdesk</option>
                 <option value="software_developer">Software developer</option>
                 <option value="marketing">Marketing</option>
                 <option value="retail_manager">Retail manager</option>
@@ -5938,6 +6011,18 @@
             <div class="result-section-title">Your priority fixes</div>
             <div class="result-section-subtitle">Start here: these changes should have the biggest impact on role fit.</div>
             <div id="resultPriorityPreview" class="fix-detail-grid"></div>
+          </div>
+
+          <div id="postResultJourneyWrap" class="result-section hidden">
+            <div class="post-result-journey">
+              <div class="post-result-journey-head">
+                <div>
+                  <div class="result-section-title">Your next 10 minutes</div>
+                  <p id="postResultJourneyIntro" class="result-section-subtitle">Work through the result in order, then re-run the check.</p>
+                </div>
+              </div>
+              <div id="postResultJourneySteps" class="journey-step-grid"></div>
+            </div>
           </div>
 
           <div id="interactiveChecklistWrap" class="result-section hidden">
@@ -6613,6 +6698,9 @@
     const currentScoreValue = document.getElementById("currentScoreValue");
     const scoreDeltaValue = document.getElementById("scoreDeltaValue");
     const scoreDeltaLabel = document.getElementById("scoreDeltaLabel");
+    const postResultJourneyWrap = document.getElementById("postResultJourneyWrap");
+    const postResultJourneyIntro = document.getElementById("postResultJourneyIntro");
+    const postResultJourneySteps = document.getElementById("postResultJourneySteps");
     const interactiveChecklistWrap = document.getElementById("interactiveChecklistWrap");
     const interactiveChecklist = document.getElementById("interactiveChecklist");
     const checklistProgressText = document.getElementById("checklistProgressText");
@@ -6669,10 +6757,20 @@
         prompt: "Assess this CV through a UK account manager lens. Prioritise retention, renewals, stakeholder management, commercial planning, forecasting, customer growth and relationship ownership.",
         hint: "Account manager lens: retention, stakeholders, forecasting and commercial ownership matter most."
       },
+      customer_success: {
+        label: "Customer success",
+        prompt: "Assess this CV through a UK customer success lens. Prioritise onboarding, adoption, customer health, renewals, churn reduction, QBRs, stakeholder management and customer outcomes.",
+        hint: "Customer success lens: onboarding, adoption, retention and customer outcomes matter most."
+      },
       project_manager: {
         label: "Project manager",
         prompt: "Assess this CV through a UK project manager lens. Prioritise delivery, scope, budgets, risk, dependencies, stakeholders, governance, timelines and measurable outcomes.",
         hint: "Project manager lens: delivery, risk, budget, dependencies and governance matter most."
+      },
+      it_helpdesk: {
+        label: "IT helpdesk",
+        prompt: "Assess this CV through a UK IT helpdesk lens. Prioritise ticketing, troubleshooting, Windows, Microsoft 365, SLAs, escalation, documentation and user support.",
+        hint: "IT helpdesk lens: tickets, troubleshooting, SLAs, escalation and user support matter most."
       },
       software_developer: {
         label: "Software developer",
@@ -6989,7 +7087,9 @@
       "/marketing-cv-checker": "marketing",
       "/sales-cv-checker": "sales",
       "/account-manager-cv-checker": "account_manager",
+      "/customer-success-cv-checker": "customer_success",
       "/project-manager-cv-checker": "project_manager",
+      "/it-helpdesk-cv-checker": "it_helpdesk",
       "/retail-manager-cv-checker": "retail_manager",
       "/admin-cv-checker": "admin",
       "/career-change-cv-checker": "career_change"
@@ -7307,6 +7407,49 @@
         ? "Nice lift. Keep the changes truthful and role-specific."
         : (delta < 0 ? "Score dropped. Check whether useful evidence was removed." : "No movement yet. Try the priority fixes first.");
       scoreComparisonWrap.classList.remove("hidden");
+    }
+
+    function renderPostResultJourney(data, scoreNumber, isFullReport) {
+      if (!postResultJourneyWrap || !postResultJourneySteps) return;
+      const verdict = (data && data.recruiterVerdict) || {};
+      const roleFocus = (data && data.roleFocus) || {};
+      const roleLabel = roleFocus.label || "this UK role";
+      const firstFix = verdict.fixFirst || verdict.firstFix || (data && data.nextStep) || "Tighten the strongest role-fit evidence on page one.";
+      const rewrite = (data && data.freeBulletRewrite) || {};
+      const rewriteText = rewrite.after || (data && data.bulletPoints && data.bulletPoints[0]) || "Turn one vague duty into a clearer action, context and outcome bullet.";
+      const missing = data && Array.isArray(data.missingKeywords) ? data.missingKeywords.slice(0, 3).join(", ") : "";
+      const unlockStep = isFullReport
+        ? "Use the guided workflow, export the checklist, then re-run after editing."
+        : "Use the free result first. Unlock the full report if this application needs section-by-section rewrites.";
+
+      if (postResultJourneyIntro) {
+        postResultJourneyIntro.textContent = "A practical edit path for " + roleLabel + ". Start with the highest-impact change, then re-run the CV.";
+      }
+
+      const steps = [
+        ["1", "Fix first", firstFix],
+        ["2", "Work in truthful keywords", missing ? "Add " + missing + " only where your CV genuinely supports them." : "Use the job description language only where your experience supports it."],
+        ["3", "Copy one stronger line", rewriteText],
+        ["4", isFullReport ? "Export and re-check" : "Decide whether to go deeper", unlockStep]
+      ];
+
+      postResultJourneySteps.innerHTML = "";
+      steps.forEach(function(step, index) {
+        const card = document.createElement("div");
+        card.className = "journey-step-card" + (index === 0 ? " is-primary" : "");
+        const number = document.createElement("span");
+        number.className = "journey-step-number";
+        number.textContent = step[0];
+        const title = document.createElement("strong");
+        title.textContent = step[1];
+        const copy = document.createElement("p");
+        copy.textContent = step[2];
+        card.appendChild(number);
+        card.appendChild(title);
+        card.appendChild(copy);
+        postResultJourneySteps.appendChild(card);
+      });
+      postResultJourneyWrap.classList.remove("hidden");
     }
 
     function setCheckoutButtonState(button, isLoading, loadingText, defaultText) {
@@ -8144,13 +8287,24 @@
       const actionPlanItems = buildActionPlanItems(data);
       const executiveSummary = buildExecutiveSummary(data, score, actionPlanItems);
       const impactCards = buildImpactCards(data, score, actionPlanItems);
+      const scoreColor = getScoreVisualColor(score);
+      const reportSubtitle = isFullReport ? "Full Pro report" : "Saved CV check";
 
       return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
+        ":root{--score-color:" + escapeReportHtml(scoreColor) + ";}" +
         "body{font-family:Inter,Arial,sans-serif;margin:0;background:#f5f7fb;color:#142033;line-height:1.55;}" +
         "main{max-width:900px;margin:0 auto;padding:36px 22px 56px;}" +
-        "header{background:#101c33;color:#fff;border-radius:18px;padding:26px;margin-bottom:22px;}" +
-        "h1{margin:0 0 8px;font-size:30px;}h2{font-size:20px;margin:0 0 12px;}h3{font-size:15px;margin:0 0 8px;}" +
+        "header{position:relative;overflow:hidden;background:linear-gradient(135deg,#101c33 0%,#172b5f 62%,#173d32 100%);color:#fff;border-radius:22px;padding:28px;margin-bottom:22px;}" +
+        "header:before{content:'';position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#5B78FF,#38D996);}" +
+        ".header-grid{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 156px;gap:24px;align-items:center;}" +
+        ".brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:18px;color:#dce6ff;font-size:13px;font-weight:850;text-transform:uppercase;letter-spacing:.06em;}" +
+        ".brand-mark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:900;letter-spacing:0;}" +
+        ".report-type{display:inline-flex;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);color:#dce6ff;font-size:12px;font-weight:800;}" +
+        ".score-ring{width:150px;aspect-ratio:1;border-radius:999px;background:conic-gradient(var(--score-color) 0 " + score + "%,#e5ebf4 " + score + "% 100%);display:grid;place-items:center;box-shadow:0 18px 36px rgba(0,0,0,.22);}" +
+        ".score-ring:before{content:'';width:96px;aspect-ratio:1;border-radius:999px;background:#fff;grid-area:1/1;}" +
+        ".score-ring span{position:relative;grid-area:1/1;color:#101b33;font-size:42px;font-weight:900;}" +
+        "h1{margin:0 0 8px;font-size:30px;line-height:1.08;}h2{font-size:20px;margin:0 0 12px;}h3{font-size:15px;margin:0 0 8px;}" +
         "section{background:#fff;border:1px solid #dce3ef;border-radius:14px;padding:20px;margin:14px 0;}" +
         "ul{margin:0;padding-left:22px;}li{margin:7px 0;}.meta{color:#bfd0ee;font-size:13px;}" +
         ".score{font-size:46px;font-weight:850;margin-top:12px;}.cards{display:grid;gap:12px;}.card{border:1px solid #dce3ef;border-radius:12px;padding:14px;background:#f8faff;}" +
@@ -8160,10 +8314,11 @@
         ".impact{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}.impact article{border:1px solid #dce3ef;border-radius:12px;padding:13px;background:#f8faff;}.impact span{display:block;color:#596987;font-size:11px;font-weight:800;text-transform:uppercase;}.impact strong{display:block;margin:6px 0;font-size:15px;}" +
         ".chips{display:flex;flex-wrap:wrap;gap:7px;}.chip{border-radius:999px;background:#e9eefc;padding:5px 9px;font-size:12px;font-weight:700;}" +
         ".rewrite{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.note{background:#eef3ff;}" +
+        ".truth-note{background:#eef3ff;border-color:#c7d2fe;color:#334155;}" +
         "@media print{body{background:#fff;}main{max-width:none;padding:0;}header,section{break-inside:avoid;box-shadow:none;}}" +
-        "@media(max-width:760px){.breakdown,.rewrite,.impact{grid-template-columns:1fr;}}" +
+        "@media(max-width:760px){.header-grid,.breakdown,.rewrite,.impact{grid-template-columns:1fr;}.score-ring{width:130px;}}" +
         "</style></head><body><main>" +
-        "<header><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        "<header><div class=\"brand\"><span class=\"brand-mark\">CV</span><span>CV Optimiser</span></div><div class=\"header-grid\"><div><span class=\"report-type\">" + escapeReportHtml(reportSubtitle) + "</span><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></div><div class=\"score-ring\" role=\"img\" aria-label=\"Role-fit score " + escapeReportHtml(score || 0) + " out of 100\"><span>" + escapeReportHtml(score || 0) + "</span></div></div></header>" +
         (isFullReport ? "<section><h2>Executive summary</h2><p>" + escapeReportHtml(executiveSummary) + "</p><div class=\"impact\">" + impactCards.map(function(item) {
           return "<article><span>" + escapeReportHtml(item[0]) + "</span><strong>" + escapeReportHtml(item[1]) + "</strong><p>" + escapeReportHtml(item[2]) + "</p></article>";
         }).join("") + "</div></section>" : "") +
@@ -8197,7 +8352,7 @@
         listReportItems("Application risks", data.interviewRisks || []) +
         listReportItems("Step-by-step improvement plan", actionPlanItems) +
         (data.nextStep ? "<section><h2>Best next step</h2><p>" + escapeReportHtml(data.nextStep) + "</p></section>" : "") +
-        "<section><p><small>These suggestions are guidance only. Review them carefully before editing your CV.</small></p></section>" +
+        "<section class=\"truth-note\"><p><small>These suggestions are AI-assisted guidance only. Review every change before applying, keep the wording truthful, and do not add skills, experience or results you cannot support.</small></p></section>" +
         "</main></body></html>";
     }
 
@@ -9628,6 +9783,7 @@ passwordLoginBtn.addEventListener("click", async function() {
             "Include missing keywords from the job description"
           ]
         );
+        renderPostResultJourney(data, scoreNumber, isCurrentlyPro);
 
         renderRecruiterVerdict(data, scoreNumber);
         renderScoreBreakdown(data.scoreBreakdown || [], scoreNumber);

@@ -1133,6 +1133,254 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             ("/best-cv-format-for-ats", "Best CV format for ATS"),
         ],
     },
+    "admin-cv-example-report": {
+        "title": "Admin CV Example Report | CV Optimiser",
+        "description": "See an admin CV example report with accuracy, scheduling, records, systems, customer service and process support feedback.",
+        "h1": "Admin CV example report",
+        "intro": "See how CV Optimiser reviews an admin CV for organisation, accuracy, systems and office support.",
+        "role_label": "Office Administrator",
+        "cv_snippet": "with experience updating records, arranging meetings, handling inboxes and supporting day-to-day office administration.",
+        "job_snippet": "We are looking for an administrator with scheduling, accurate records, documentation, customer service, Microsoft Office and process support experience.",
+        "score": "Role-fit score: 59/100",
+        "score_label": "Relevant admin work, but evidence is too generic",
+        "score_copy": "The CV shows useful office experience, but systems, accuracy, scheduling and process support need to be easier to scan.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may see general admin duties but not enough proof of accuracy, systems use or organised support in a busy office.",
+            "fix_first": "Rewrite the profile and recent admin bullets around records accuracy, scheduling, systems and service support.",
+        },
+        "keywords": ["scheduling", "records", "documentation", "accuracy", "Microsoft Office", "customer service", "process support"],
+        "unclear": [
+            "Systems experience is not named clearly enough.",
+            "Accuracy and records work are mentioned but not proven.",
+            "Scheduling and inbox support need stronger context.",
+            "Process support is implied rather than shown through examples.",
+        ],
+        "fixes": [
+            ("Name the systems", "Add Microsoft Office, CRM, database or scheduling tools where they genuinely apply.", "Key skills and recent role bullets."),
+            ("Prove accuracy", "Show records, data checks, document handling or error prevention in practical language.", "Recent admin experience."),
+            ("Make support work specific", "Replace broad office support wording with scheduling, inbox, meeting or customer examples.", "Profile and experience bullets."),
+        ],
+        "weak_bullet": "Helped with general office admin and supported the team.",
+        "strong_bullet": "Coordinated meeting schedules, maintained accurate records and supported team inboxes to keep daily office administration running smoothly.",
+        "rewrite_examples": [
+            {
+                "before": "Helped with general office admin and supported the team.",
+                "after": "Coordinated meeting schedules, maintained accurate records and supported team inboxes to keep daily office administration running smoothly.",
+                "why_better": "It names the admin tasks and shows reliability, accuracy and organisation.",
+                "where_to_use": "Recent administrator role bullet.",
+                "strengthens": "Scheduling, records accuracy and office support.",
+            },
+            {
+                "before": "Used office systems and answered queries.",
+                "after": "Used office systems to update records, track queries and provide clear customer support across routine administration tasks.",
+                "why_better": "It connects systems use to records and service outcomes.",
+                "where_to_use": "Key responsibilities or systems bullet.",
+                "strengthens": "Systems, documentation and customer service.",
+            },
+        ],
+        "ats_checks": [
+            "Admin keywords such as scheduling, records and documentation should be visible near the top.",
+            "Systems should be named where possible rather than described as general software.",
+            "Accuracy should be supported by real examples, not just listed as a skill.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around admin accuracy, scheduling and systems.",
+            "Add specific tools and office processes where truthful.",
+            "Turn duty-only bullets into clearer examples of organised support.",
+        ],
+        "related": [
+            ("/admin-cv-checker", "Admin CV checker"),
+            ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
+            ("/best-cv-format-uk", "Best CV format UK"),
+        ],
+    },
+    "career-change-cv-example-report": {
+        "title": "Career Change CV Example Report | CV Optimiser",
+        "description": "See a career change CV example report with transferable skills, role clarity, relevant evidence and repositioning feedback.",
+        "h1": "Career change CV example report",
+        "intro": "See how CV Optimiser reviews a career change CV for target-role clarity and transferable evidence.",
+        "role_label": "Career Change Candidate",
+        "cv_snippet": "with customer-facing experience, team coordination, internal training and recent online learning for an operations coordinator role.",
+        "job_snippet": "We are looking for an operations coordinator with stakeholder communication, process support, scheduling, reporting, problem solving and strong organisation.",
+        "score": "Role-fit score: 54/100",
+        "score_label": "Transferable skills are present but not positioned",
+        "score_copy": "The CV has useful experience, but it still reads too much like the previous career and does not prove the target role quickly enough.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may not immediately see why the previous experience transfers into the new role.",
+            "fix_first": "Rewrite the profile around the target role and move transferable examples into the first page.",
+        },
+        "keywords": ["transferable skills", "stakeholder communication", "process support", "scheduling", "reporting", "problem solving", "organisation"],
+        "unclear": [
+            "The target role is not stated clearly enough.",
+            "The old career takes up too much prime space.",
+            "Transferable skills are listed without enough evidence.",
+            "Recent training or projects need clearer relevance to the new direction.",
+        ],
+        "fixes": [
+            ("Lead with the new target role", "Open with the role being targeted and the most relevant transferable evidence.", "Professional profile."),
+            ("Reframe old experience", "Translate previous work into stakeholder, process, coordination and problem-solving evidence.", "Recent experience bullets."),
+            ("Add transition proof", "Use training, projects or volunteering to show commitment to the new direction.", "Education, projects or additional information."),
+        ],
+        "weak_bullet": "Looking to move into operations after working in customer service.",
+        "strong_bullet": "Customer-service professional moving into operations coordination, bringing stakeholder communication, scheduling support and practical process-improvement experience.",
+        "rewrite_examples": [
+            {
+                "before": "Looking to move into operations after working in customer service.",
+                "after": "Customer-service professional moving into operations coordination, bringing stakeholder communication, scheduling support and practical process-improvement experience.",
+                "why_better": "It names the target direction and gives credible transferable evidence.",
+                "where_to_use": "Professional profile.",
+                "strengthens": "Role clarity, transferable skills and transition story.",
+            },
+            {
+                "before": "Helped customers and solved problems each day.",
+                "after": "Resolved customer queries by coordinating information across teams, tracking follow-up actions and keeping communication clear under pressure.",
+                "why_better": "It turns customer service into coordination and stakeholder evidence.",
+                "where_to_use": "Recent experience bullet.",
+                "strengthens": "Stakeholder communication, problem solving and process support.",
+            },
+        ],
+        "ats_checks": [
+            "Target-role keywords should appear in the profile and key skills, not only the old-career terms.",
+            "Transferable skills need evidence from real tasks.",
+            "Training or projects should be easy to find if they support the move.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around the new role and strongest transferable evidence.",
+            "Shorten old-career details that do not support the target role.",
+            "Add truthful target-role keywords where your experience supports them.",
+        ],
+        "related": [
+            ("/career-change-cv-checker", "Career change CV checker"),
+            ("/cv-summary-examples-uk", "CV summary examples UK"),
+            ("/how-to-tailor-cv-to-job-description", "How to tailor a CV"),
+        ],
+    },
+    "it-helpdesk-cv-example-report": {
+        "title": "IT Helpdesk CV Example Report | CV Optimiser",
+        "description": "See an IT helpdesk CV example report with troubleshooting, ticketing, Microsoft 365, SLA, escalation and user support feedback.",
+        "h1": "IT helpdesk CV example report",
+        "intro": "See how CV Optimiser reviews an IT helpdesk CV for troubleshooting, ticketing, SLAs and customer support.",
+        "role_label": "IT Helpdesk Analyst",
+        "cv_snippet": "with experience supporting users, resolving technical queries and helping with software and hardware issues.",
+        "job_snippet": "We are looking for an IT helpdesk analyst with ticketing, Windows, Microsoft 365, troubleshooting, SLA ownership, escalation and customer support experience.",
+        "score": "Role-fit score: 63/100",
+        "score_label": "Good support base, but technical proof needs sharpening",
+        "score_copy": "The CV shows user support experience, but ticketing, SLA, escalation and Microsoft 365 evidence need to be clearer.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter can see IT support exposure, but may not understand the volume, tools, escalation route or technical environment.",
+            "fix_first": "Rewrite recent support bullets around ticketing, troubleshooting steps, SLAs, escalation and user outcomes.",
+        },
+        "keywords": ["ticketing", "Windows", "Microsoft 365", "troubleshooting", "SLA", "escalation", "hardware support"],
+        "unclear": [
+            "Ticketing tools or processes are not named strongly enough.",
+            "SLA and escalation experience are missing or buried.",
+            "Windows and Microsoft 365 support need clearer examples.",
+            "Customer support is present but not connected to technical resolution.",
+        ],
+        "fixes": [
+            ("Add technical environment", "Name Windows, Microsoft 365, hardware, ticketing tools or remote support where truthful.", "Technical skills and recent role bullets."),
+            ("Show support process", "Mention triage, diagnosis, escalation, SLA or documentation if relevant.", "Recent IT support experience."),
+            ("Prove user impact", "Explain how support helped users resolve issues, keep working or understand next steps.", "Achievement bullets."),
+        ],
+        "weak_bullet": "Helped users with IT problems and fixed issues.",
+        "strong_bullet": "Triaged user support tickets, troubleshooting Windows and Microsoft 365 issues before escalating complex incidents through the agreed support route.",
+        "rewrite_examples": [
+            {
+                "before": "Helped users with IT problems and fixed issues.",
+                "after": "Triaged user support tickets, troubleshooting Windows and Microsoft 365 issues before escalating complex incidents through the agreed support route.",
+                "why_better": "It shows process, tools and escalation rather than vague IT help.",
+                "where_to_use": "Recent IT helpdesk role bullet.",
+                "strengthens": "Ticketing, troubleshooting, Microsoft 365 and escalation.",
+            },
+            {
+                "before": "Answered calls and logged support requests.",
+                "after": "Logged support requests accurately, captured symptoms and kept users updated while incidents moved through first-line resolution or escalation.",
+                "why_better": "It makes service quality and helpdesk process clearer.",
+                "where_to_use": "Helpdesk responsibilities bullet.",
+                "strengthens": "Customer support, documentation and SLA awareness.",
+            },
+        ],
+        "ats_checks": [
+            "Technical skills should include the actual platforms and support tools used.",
+            "Ticketing and SLA language should be visible if the advert asks for it.",
+            "Support bullets should show troubleshooting steps, not just that issues were fixed.",
+        ],
+        "action_plan": [
+            "Add a technical skills line with supported systems and tools.",
+            "Rewrite recent bullets around ticket triage, troubleshooting, escalation and user communication.",
+            "Add SLA or documentation evidence where truthful.",
+        ],
+        "related": [
+            ("/it-helpdesk-cv-checker", "IT helpdesk CV checker"),
+            ("/software-developer-cv-example-report", "Software developer CV example report"),
+            ("/ats-cv-checker", "ATS CV checker"),
+        ],
+    },
+    "customer-success-cv-example-report": {
+        "title": "Customer Success CV Example Report | CV Optimiser",
+        "description": "See a customer success CV example report with onboarding, adoption, renewals, churn reduction, stakeholder and customer outcome feedback.",
+        "h1": "Customer success CV example report",
+        "intro": "See how CV Optimiser reviews a customer success CV for onboarding, adoption, retention and customer outcomes.",
+        "role_label": "Customer Success Manager",
+        "cv_snippet": "with experience supporting customers after purchase, answering product queries and maintaining account relationships.",
+        "job_snippet": "We are looking for a customer success manager with onboarding, adoption, customer health, renewals, churn reduction, QBRs and stakeholder management experience.",
+        "score": "Role-fit score: 60/100",
+        "score_label": "Customer experience is clear, but CS outcomes need proof",
+        "score_copy": "The CV shows customer-facing experience, but adoption, renewals, health scoring and retention evidence need to be more visible.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may read this as general account support rather than customer success with ownership of adoption, renewals or customer outcomes.",
+            "fix_first": "Rewrite the profile and customer success bullets around onboarding, adoption, renewals, health and retention impact.",
+        },
+        "keywords": ["onboarding", "adoption", "customer health", "renewals", "churn reduction", "QBRs", "stakeholder management"],
+        "unclear": [
+            "Customer success ownership is not distinct from support.",
+            "Renewal, retention or churn evidence is missing.",
+            "Onboarding and adoption work need stronger examples.",
+            "Stakeholder management needs more seniority or context.",
+        ],
+        "fixes": [
+            ("Separate CS from support", "Show onboarding, adoption, health checks or success planning where truthful.", "Profile and recent customer success role."),
+            ("Add retention evidence", "Use renewals, churn risk, account health or customer outcomes where the CV supports it.", "Achievements and account bullets."),
+            ("Make stakeholder work clearer", "Name customer contacts, internal teams, QBRs or success reviews if relevant.", "Experience bullets."),
+        ],
+        "weak_bullet": "Supported customers and helped with product questions.",
+        "strong_bullet": "Supported customer onboarding and product adoption by answering queries, tracking follow-up actions and helping accounts move towards successful usage.",
+        "rewrite_examples": [
+            {
+                "before": "Supported customers and helped with product questions.",
+                "after": "Supported customer onboarding and product adoption by answering queries, tracking follow-up actions and helping accounts move towards successful usage.",
+                "why_better": "It frames customer work around onboarding, adoption and outcomes.",
+                "where_to_use": "Recent customer success role bullet.",
+                "strengthens": "Onboarding, adoption and customer outcomes.",
+            },
+            {
+                "before": "Kept in touch with accounts and built relationships.",
+                "after": "Maintained regular account contact, identifying customer needs and coordinating internal follow-up to support retention and product value.",
+                "why_better": "It ties relationship management to retention and value rather than generic contact.",
+                "where_to_use": "Account management or customer success bullet.",
+                "strengthens": "Retention, stakeholder management and customer value.",
+            },
+        ],
+        "ats_checks": [
+            "Customer success keywords should distinguish onboarding, adoption and retention from general support.",
+            "Renewals, health scores, QBRs or churn-risk work should be named where truthful.",
+            "Customer outcome language should appear in the profile and recent role.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around customer success ownership, not just support.",
+            "Add adoption, renewal or customer health evidence where supported.",
+            "Use customer success language from the advert naturally in key skills and recent bullets.",
+        ],
+        "related": [
+            ("/customer-success-cv-checker", "Customer success CV checker"),
+            ("/account-manager-cv-example-report", "Account manager CV example report"),
+            ("/sales-cv-keywords", "Sales CV keywords"),
+        ],
+    },
 }
 
 COMPARISON_PAGES: dict[str, dict[str, Any]] = {
@@ -1855,6 +2103,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["onboarding and adoption outcomes", "retention, renewals and churn reduction", "product usage and customer health", "stakeholder management and customer outcomes"],
         "mistakes": ["sounding like generic support", "missing adoption or renewal metrics", "not showing product or customer health work"],
         "keywords": ["retention", "onboarding", "adoption", "churn reduction", "renewals", "customer outcomes"],
+        "example_report": ("/customer-success-cv-example-report", "Customer success CV example report"),
     },
     "project-manager-cv-checker": {
         "role": "project manager",
@@ -1898,6 +2147,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["troubleshooting and ticket resolution", "Windows, Microsoft 365 and hardware/software support", "SLAs, escalation and documentation", "customer service under pressure"],
         "mistakes": ["listing tools without support examples", "missing ticketing or SLA context", "forgetting customer service evidence"],
         "keywords": ["troubleshooting", "ticketing", "Windows", "Microsoft 365", "SLA", "escalation", "hardware support"],
+        "example_report": ("/it-helpdesk-cv-example-report", "IT helpdesk CV example report"),
         "cta_support": "Check whether your IT helpdesk CV highlights troubleshooting, ticketing, SLAs and user support.",
     },
     "software-developer-cv-checker": {
@@ -1919,6 +2169,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["organisation and accuracy", "scheduling, records and documentation", "systems and office support", "customer service and process improvement"],
         "mistakes": ["sounding too generic", "missing systems experience", "not proving accuracy or organisation"],
         "keywords": ["scheduling", "records", "documentation", "accuracy", "office support", "customer service"],
+        "example_report": ("/admin-cv-example-report", "Admin CV example report"),
     },
     "marketing-cv-checker": {
         "role": "marketing",
@@ -1939,6 +2190,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["a clear target role", "transferable skills with evidence", "relevant projects, training or experience", "less space for unrelated detail"],
         "mistakes": ["explaining the old career too much", "not proving the new direction", "using vague transferable skills with no evidence"],
         "keywords": ["transferable skills", "stakeholders", "analysis", "customer service", "projects", "training", "adaptability"],
+        "example_report": ("/career-change-cv-example-report", "Career change CV example report"),
     },
     "nhs-admin-cv-checker": {
         "role": "NHS admin",
@@ -2009,6 +2261,33 @@ ROLE_FOCUS_PROFILES: dict[str, dict[str, Any]] = {
         "proof": ["features shipped", "users supported", "performance improvement", "defect reduction", "delivery cadence", "product metric"],
         "where": "Technical skills, project summaries, and recent delivery bullets.",
     },
+    "it_helpdesk": {
+        "label": "IT helpdesk and first-line support",
+        "category": "IT helpdesk/support",
+        "signals": ["ticket triage and first-line troubleshooting", "Windows, Microsoft 365 and hardware/software support", "SLA, escalation and documentation discipline", "clear user communication under pressure"],
+        "keywords": ["ticketing", "troubleshooting", "Windows", "Microsoft 365", "SLA", "escalation", "hardware support", "user support"],
+        "concerns": ["support work sounds too generic", "ticketing or SLA evidence is missing", "technical environment and escalation process are unclear"],
+        "proof": ["ticket volume", "systems supported", "SLA performance", "first-contact resolution", "escalations handled", "user feedback"],
+        "where": "Technical skills, profile, and recent first-line support bullets.",
+    },
+    "customer_success": {
+        "label": "Customer success",
+        "category": "customer success",
+        "signals": ["onboarding and product adoption", "customer health, renewals and retention", "QBRs, stakeholder management and success planning", "churn risk, product value and customer outcomes"],
+        "keywords": ["onboarding", "adoption", "customer health", "renewals", "retention", "churn reduction", "QBRs", "stakeholder management"],
+        "concerns": ["experience reads like generic support", "renewal or retention ownership is not proven", "adoption and customer outcome evidence is too light"],
+        "proof": ["renewal rate", "retention", "adoption metric", "customer health movement", "QBR cadence", "churn-risk recovery"],
+        "where": "Profile, key skills, and customer success/account bullets.",
+    },
+    "career_change": {
+        "label": "Career change",
+        "category": "career change",
+        "signals": ["clear target role and transition story", "transferable skills with evidence", "relevant training, projects or recent exposure", "less emphasis on unrelated previous-career detail"],
+        "keywords": ["transferable skills", "stakeholder communication", "process support", "analysis", "training", "projects", "problem solving", "adaptability"],
+        "concerns": ["the target role is not obvious", "old-career detail crowds out relevant evidence", "transferable skills are listed without proof"],
+        "proof": ["relevant projects", "training completed", "stakeholder examples", "process improvements", "coordination work", "customer or operational outcomes"],
+        "where": "Profile, transferable skills, projects/training, and reframed recent experience.",
+    },
     "graduate_early": {
         "label": "Graduate and early career",
         "category": "graduate/early career",
@@ -2046,13 +2325,56 @@ ROLE_FOCUS_KEYWORDS: dict[str, list[str]] = {
     "marketing": ["marketing", "campaign", "content", "seo", "paid media", "ppc", "email", "crm", "brand", "analytics", "conversion"],
     "finance_admin": ["finance", "accounts", "invoice", "reconciliation", "purchase ledger", "sales ledger", "month-end", "excel", "bookkeeping", "payroll"],
     "tech_product": ["software", "developer", "engineer", "product manager", "product owner", "api", "python", "javascript", "database", "testing", "agile", "roadmap"],
+    "it_helpdesk": ["helpdesk", "service desk", "first line", "1st line", "ticket", "ticketing", "windows", "microsoft 365", "office 365", "sla", "escalation", "hardware support"],
+    "customer_success": ["customer success", "csm", "onboarding", "adoption", "customer health", "renewal", "renewals", "retention", "churn", "qbr", "success plan"],
+    "career_change": ["career change", "transition", "transferable", "retraining", "bootcamp", "course", "returner", "new career", "moving into"],
     "graduate_early": ["graduate", "entry level", "intern", "placement", "trainee", "assistant", "junior", "student", "apprentice", "early career"],
     "retail_customer": ["retail", "store", "customer service", "shop", "sales assistant", "team leader", "stock", "merchandising", "till", "complaints"],
     "public_nhs": ["nhs", "patient", "clinic", "hospital", "public sector", "local authority", "confidentiality", "records", "appointment", "dbs"],
 }
 
 
-def infer_role_focus(job_description: str, cv_text: str = "") -> dict[str, Any]:
+ROLE_PAGE_FOCUS_KEYS: dict[str, str] = {
+    "sales-cv-checker": "sales_account",
+    "account-manager-cv-checker": "sales_account",
+    "customer-success-cv-checker": "customer_success",
+    "project-manager-cv-checker": "project_programme",
+    "retail-manager-cv-checker": "retail_customer",
+    "graduate-cv-checker": "graduate_early",
+    "it-helpdesk-cv-checker": "it_helpdesk",
+    "software-developer-cv-checker": "tech_product",
+    "admin-cv-checker": "operations_admin",
+    "career-change-cv-checker": "career_change",
+    "nhs-admin-cv-checker": "public_nhs",
+}
+
+
+def role_focus_from_metadata(metadata: dict[str, Any]) -> Optional[dict[str, Any]]:
+    for key in ["current_role_page", "role_page", "first_role_page"]:
+        value = coerce_string(metadata.get(key))
+        if not value:
+            continue
+        slug = value.strip().lstrip("/")
+        focus_key = ROLE_PAGE_FOCUS_KEYS.get(slug)
+        if focus_key:
+            profile = ROLE_FOCUS_PROFILES[focus_key]
+            return {"key": focus_key, **profile}
+
+    for key in ["current_role_landing_path", "role_landing_path", "first_role_landing_path", "current_path", "landing_path", "first_landing_path"]:
+        value = normalise_analytics_path(metadata.get(key)).lstrip("/")
+        focus_key = ROLE_PAGE_FOCUS_KEYS.get(value)
+        if focus_key:
+            profile = ROLE_FOCUS_PROFILES[focus_key]
+            return {"key": focus_key, **profile}
+
+    return None
+
+
+def infer_role_focus(job_description: str, cv_text: str = "", metadata: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+    hinted_focus = role_focus_from_metadata(metadata or {})
+    if hinted_focus:
+        return hinted_focus
+
     text = f"{job_description}\n{cv_text}".lower()
     scores: dict[str, int] = {}
     for key, terms in ROLE_FOCUS_KEYWORDS.items():
@@ -3308,8 +3630,10 @@ ROLE_ANALYTICS_LABELS = {
     "/marketing-cv-checker": "Marketing CV checker",
     "/sales-cv-checker": "Sales CV checker",
     "/account-manager-cv-checker": "Account manager CV checker",
+    "/customer-success-cv-checker": "Customer success CV checker",
     "/project-manager-cv-checker": "Project manager CV checker",
     "/retail-manager-cv-checker": "Retail manager CV checker",
+    "/it-helpdesk-cv-checker": "IT helpdesk CV checker",
     "/admin-cv-checker": "Admin CV checker",
     "/career-change-cv-checker": "Career change CV checker",
 }
@@ -6835,7 +7159,9 @@ def build_attribution_script() -> str:
               "/marketing-cv-checker": "marketing",
               "/sales-cv-checker": "sales",
               "/account-manager-cv-checker": "account_manager",
+              "/customer-success-cv-checker": "customer_success",
               "/project-manager-cv-checker": "project_manager",
+              "/it-helpdesk-cv-checker": "it_helpdesk",
               "/retail-manager-cv-checker": "retail_manager",
               "/admin-cv-checker": "admin",
               "/career-change-cv-checker": "career_change"
@@ -11500,6 +11826,8 @@ def render_guides_page() -> str:
             ("nhs-admin-cv-checker", "/nhs-admin-cv-checker", SEO_LANDING_PAGES["nhs-admin-cv-checker"]["title"], SEO_LANDING_PAGES["nhs-admin-cv-checker"]["intro"]),
             ("marketing-cv-checker", "/marketing-cv-checker", SEO_LANDING_PAGES["marketing-cv-checker"]["title"], SEO_LANDING_PAGES["marketing-cv-checker"]["intro"]),
             ("software-developer-cv-checker", "/software-developer-cv-checker", SEO_LANDING_PAGES["software-developer-cv-checker"]["title"], SEO_LANDING_PAGES["software-developer-cv-checker"]["intro"]),
+            ("it-helpdesk-cv-checker", "/it-helpdesk-cv-checker", SEO_LANDING_PAGES["it-helpdesk-cv-checker"]["title"], SEO_LANDING_PAGES["it-helpdesk-cv-checker"]["intro"]),
+            ("customer-success-cv-checker", "/customer-success-cv-checker", SEO_LANDING_PAGES["customer-success-cv-checker"]["title"], SEO_LANDING_PAGES["customer-success-cv-checker"]["intro"]),
             ("admin-cv-checker", "/admin-cv-checker", SEO_LANDING_PAGES["admin-cv-checker"]["title"], SEO_LANDING_PAGES["admin-cv-checker"]["intro"]),
             ("career-change-cv-checker", "/career-change-cv-checker", SEO_LANDING_PAGES["career-change-cv-checker"]["title"], SEO_LANDING_PAGES["career-change-cv-checker"]["intro"]),
         ]),
@@ -11517,6 +11845,10 @@ def render_guides_page() -> str:
             ("project-manager-cv-example-report", "/project-manager-cv-example-report", ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["intro"]),
             ("graduate-cv-example-report", "/graduate-cv-example-report", ROLE_EXAMPLE_REPORTS["graduate-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["graduate-cv-example-report"]["intro"]),
             ("nhs-admin-cv-example-report", "/nhs-admin-cv-example-report", ROLE_EXAMPLE_REPORTS["nhs-admin-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["nhs-admin-cv-example-report"]["intro"]),
+            ("admin-cv-example-report", "/admin-cv-example-report", ROLE_EXAMPLE_REPORTS["admin-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["admin-cv-example-report"]["intro"]),
+            ("career-change-cv-example-report", "/career-change-cv-example-report", ROLE_EXAMPLE_REPORTS["career-change-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["career-change-cv-example-report"]["intro"]),
+            ("it-helpdesk-cv-example-report", "/it-helpdesk-cv-example-report", ROLE_EXAMPLE_REPORTS["it-helpdesk-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["it-helpdesk-cv-example-report"]["intro"]),
+            ("customer-success-cv-example-report", "/customer-success-cv-example-report", ROLE_EXAMPLE_REPORTS["customer-success-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["customer-success-cv-example-report"]["intro"]),
             ("marketing-cv-example-report", "/marketing-cv-example-report", ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["intro"]),
             ("software-developer-cv-example-report", "/software-developer-cv-example-report", ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
@@ -13040,6 +13372,14 @@ SEO_ROLE_ALIASES = {
     "retail-manager-cv-review": "retail-manager-cv-checker",
     "store-manager-cv-checker": "retail-manager-cv-checker",
     "store-manager-cv-keywords": "retail-manager-cv-checker",
+    "admin-cv-review": "admin-cv-checker",
+    "administrator-cv-checker": "admin-cv-checker",
+    "career-change-cv-review": "career-change-cv-checker",
+    "change-career-cv-checker": "career-change-cv-checker",
+    "it-helpdesk-cv-review": "it-helpdesk-cv-checker",
+    "service-desk-cv-checker": "it-helpdesk-cv-checker",
+    "customer-success-cv-review": "customer-success-cv-checker",
+    "csm-cv-checker": "customer-success-cv-checker",
 }
 
 
@@ -14548,7 +14888,7 @@ async def optimise(
         if not cv_text or len(cv_text) < 20:
             return {"error": "Please paste your CV text or upload a readable PDF, DOCX, or TXT file.", "source": "error"}
 
-        role_focus = infer_role_focus(job_description, cv_text)
+        role_focus = infer_role_focus(job_description, cv_text, attribution_metadata)
 
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,

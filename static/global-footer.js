@@ -19,6 +19,10 @@ function renderFooter() {
           <a href="/project-manager-cv-checker">Project Manager CV Checker</a>
           <a href="/retail-manager-cv-checker">Retail Manager CV Checker</a>
           <a href="/nhs-admin-cv-checker">NHS Admin CV Checker</a>
+          <a href="/admin-cv-checker">Admin CV Checker</a>
+          <a href="/it-helpdesk-cv-checker">IT Helpdesk CV Checker</a>
+          <a href="/customer-success-cv-checker">Customer Success CV Checker</a>
+          <a href="/career-change-cv-checker">Career Change CV Checker</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Resources</div>
@@ -28,6 +32,10 @@ function renderFooter() {
           <a href="/account-manager-cv-example-report">Account Manager Example</a>
           <a href="/project-manager-cv-example-report">Project Manager Example</a>
           <a href="/retail-manager-cv-example-report">Retail Manager Example</a>
+          <a href="/admin-cv-example-report">Admin Example</a>
+          <a href="/it-helpdesk-cv-example-report">IT Helpdesk Example</a>
+          <a href="/customer-success-cv-example-report">Customer Success Example</a>
+          <a href="/career-change-cv-example-report">Career Change Example</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
           <a href="/cv-optimiser-vs-jobscan">CV Optimiser vs Jobscan</a>
