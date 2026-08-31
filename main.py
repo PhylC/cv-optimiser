@@ -426,10 +426,10 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         ],
     },
     "how-cv-optimiser-scores-your-cv": {
-        "title": "How CV Optimiser Scores Your CV | CV Match Score Methodology",
+        "title": "How Our CV Score Works | CV Optimiser",
         "description": "See how CV Optimiser calculates your CV role-fit score using job description relevance, keywords, clarity, evidence and ATS-friendly structure.",
-        "h1": "How CV Optimiser scores your CV",
-        "intro": "CV Optimiser scores your CV by comparing it with a specific job description, then looking for the signals that help recruiters and applicant tracking systems understand your fit.",
+        "h1": "How our CV score works",
+        "intro": "CV Optimiser gives a role-fit score by comparing your CV with the job description you paste in, then looking for the signals that help recruiters and applicant tracking systems understand your fit.",
         "sections": [
             {
                 "title": "The score is role-specific",
@@ -438,6 +438,15 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                     "Role title and responsibility alignment",
                     "Relevant skills, tools and experience",
                     "Evidence that your previous work fits the target role",
+                ],
+            },
+            {
+                "title": "What the visual score means",
+                "copy": "The score is a practical signal for how ready the CV looks for that role. Lower scores usually mean missing role evidence or important keywords. Higher scores mean the CV is easier to connect with the advert, but still needs human review before sending.",
+                "bullets": [
+                    "Red or amber scores show that the CV needs clearer alignment before applying",
+                    "Green scores suggest stronger fit, but not a guaranteed interview",
+                    "The written feedback matters as much as the number",
                 ],
             },
             {
@@ -488,6 +497,158 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                 "copy": "Paste your CV and a job description to see your role-fit score, missing keywords and top improvements.",
                 "cta_href": "/#tool",
                 "cta_label": "Check your CV score",
+            },
+        ],
+    },
+    "how-cv-optimiser-handles-your-cv": {
+        "title": "How CV Optimiser Handles Your CV | Privacy and CV Uploads",
+        "description": "Learn how CV Optimiser handles CV uploads, pasted CV text, job descriptions, AI processing, accounts and payments.",
+        "h1": "How CV Optimiser handles your CV",
+        "intro": "CVs can contain personal information, so this page explains what the tool needs, how it is used, and what you should avoid sharing.",
+        "sections": [
+            {
+                "title": "What you provide",
+                "copy": "To run a useful check, CV Optimiser needs your CV content and the job description you want to apply for.",
+                "bullets": [
+                    "You can paste CV text or upload a CV where upload is available",
+                    "You paste the job description so feedback is specific to that role",
+                    "The tool does not need passport details, bank details, national insurance numbers or a full home address",
+                ],
+            },
+            {
+                "title": "How the content is used",
+                "copy": "Your CV and job description are used to generate your role-fit score, missing keyword guidance, recruiter-style verdict and improvement suggestions.",
+                "bullets": [
+                    "The check compares your CV with the exact role",
+                    "The report highlights gaps, weak evidence and wording opportunities",
+                    "Suggestions are guidance only and should be reviewed before you apply",
+                ],
+            },
+            {
+                "title": "AI processing",
+                "copy": "CV Optimiser uses AI-assisted analysis to produce feedback. Do not upload content you are not comfortable having processed for this purpose.",
+                "helper": "The safest approach is to remove details that are not needed for judging CV quality before running a check.",
+            },
+            {
+                "title": "Accounts, reports and payments",
+                "bullets": [
+                    "Signed-in users may have access to saved results or report history where available",
+                    "Payments are processed by Stripe",
+                    "CV Optimiser does not store full card details",
+                ],
+            },
+            {
+                "title": "Good CV upload hygiene",
+                "copy": "Before checking a CV, keep only the details that help assess the application.",
+                "bullets": [
+                    "Use email and phone details only if you are comfortable including them",
+                    "Remove national insurance numbers, passport numbers and bank details",
+                    "Check every suggested rewrite remains truthful before using it",
+                ],
+            },
+            {
+                "title": "Read the full policies",
+                "copy": "These pages set out the formal privacy and usage terms.",
+                "links": [
+                    ("/privacy", "Privacy policy"),
+                    ("/terms", "Terms"),
+                    ("/contact", "Contact"),
+                ],
+            },
+        ],
+    },
+    "cv-optimiser-vs-human-cv-review": {
+        "title": "CV Optimiser vs Human CV Review | Which Should You Use?",
+        "description": "Compare CV Optimiser with a human CV review and see when AI-assisted role-fit feedback is useful for UK job applications.",
+        "h1": "CV Optimiser vs human CV review",
+        "intro": "CV Optimiser and a human CV review solve different problems. The tool is built for fast, role-specific feedback before you apply; a human reviewer can still help with judgement, positioning and specialist career context.",
+        "sections": [
+            {
+                "title": "Where CV Optimiser is strongest",
+                "copy": "Use CV Optimiser when you want to quickly check one CV against one job description and see what to improve first.",
+                "bullets": [
+                    "Fast role-fit score for a specific advert",
+                    "Missing keyword and evidence-gap checks",
+                    "Recruiter-style shortlisting risks",
+                    "Before/after wording examples and a practical action plan in the full report",
+                ],
+            },
+            {
+                "title": "Where a human reviewer can help",
+                "copy": "A good human reviewer can add wider career judgement that a tool cannot fully replace.",
+                "bullets": [
+                    "Senior, niche or sensitive career moves",
+                    "Complex career gaps, redundancies or employment history",
+                    "Personal brand, interview strategy and market positioning",
+                    "Final judgement before a very important application",
+                ],
+            },
+            {
+                "title": "Best workflow",
+                "copy": "For most applicants, the quickest route is to use CV Optimiser first, fix the obvious role-fit gaps, then consider a human review only if the application is high-stakes or complex.",
+                "bullets": [
+                    "Run the CV against the job description",
+                    "Fix missing truthful keywords and weak first-page evidence",
+                    "Export the checklist or report",
+                    "Ask a human reviewer to judge the improved version if needed",
+                ],
+            },
+            {
+                "title": "What neither option can promise",
+                "copy": "No CV tool or reviewer can guarantee interviews, ATS acceptance, job offers or employer responses. Hiring depends on competition, timing, location, salary, experience level and employer judgement.",
+            },
+            {
+                "title": "Try the faster first step",
+                "copy": "Paste your CV and a job description to see whether the core role-fit problems are obvious.",
+                "cta_href": "/#tool",
+                "cta_label": "Check my CV",
+            },
+        ],
+    },
+    "can-an-ats-checker-guarantee-interviews": {
+        "title": "Can an ATS Checker Guarantee Interviews? | CV Optimiser",
+        "description": "Learn what ATS CV checkers can and cannot do, why no checker can guarantee interviews, and how to use CV scores responsibly.",
+        "h1": "Can an ATS checker guarantee interviews?",
+        "intro": "No ATS checker can guarantee interviews. A good checker can help you make your CV clearer, more relevant and easier to scan, but final hiring decisions are made by employers.",
+        "sections": [
+            {
+                "title": "What an ATS checker can do",
+                "bullets": [
+                    "Compare your CV wording with a job description",
+                    "Highlight missing role keywords and requirements",
+                    "Spot weak or vague evidence",
+                    "Help you make the CV easier for recruiters to understand",
+                ],
+            },
+            {
+                "title": "What it cannot control",
+                "copy": "Even a strong CV can miss out for reasons outside the document.",
+                "bullets": [
+                    "How many candidates applied",
+                    "Whether another candidate has closer experience",
+                    "Salary, location, working pattern or right-to-work requirements",
+                    "Internal candidates, timing and employer preferences",
+                ],
+            },
+            {
+                "title": "Why guarantees are a red flag",
+                "copy": "Interview guarantees can make CV feedback sound more certain than it really is. The honest promise is improvement guidance, not control over employer decisions.",
+                "helper": "CV Optimiser deliberately frames results as guidance so users do not over-trust a score or add unsupported claims.",
+            },
+            {
+                "title": "How to use ATS feedback well",
+                "bullets": [
+                    "Add missing keywords only where they truthfully fit",
+                    "Back up important terms with evidence, scope or outcomes",
+                    "Make the first page clearly point to the target role",
+                    "Review every rewrite before sending the CV",
+                ],
+            },
+            {
+                "title": "Check your CV responsibly",
+                "copy": "Use the score to decide what to fix next, then apply with a CV that is clearer, more truthful and better matched to the role.",
+                "cta_href": "/#tool",
+                "cta_label": "Run a CV check",
             },
         ],
     },
@@ -2783,6 +2944,9 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": canonical_url("/cv-mistakes"), "priority": "0.8"},
     {"group": "Supporting", "loc": canonical_url("/how-it-works"), "priority": "0.6"},
     {"loc": canonical_url("/how-cv-optimiser-scores-your-cv"), "priority": "0.7"},
+    {"loc": canonical_url("/how-cv-optimiser-handles-your-cv"), "priority": "0.7"},
+    {"loc": canonical_url("/cv-optimiser-vs-human-cv-review"), "priority": "0.7"},
+    {"loc": canonical_url("/can-an-ats-checker-guarantee-interviews"), "priority": "0.7"},
     {"loc": canonical_url("/faq"), "priority": "0.5"},
     {"loc": canonical_url("/pricing"), "priority": "0.5"},
     {"loc": canonical_url("/privacy"), "priority": "0.3"},
@@ -11853,6 +12017,9 @@ def render_guides_page() -> str:
             ("software-developer-cv-example-report", "/software-developer-cv-example-report", ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
             ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
+            ("how-cv-optimiser-handles-your-cv", "/how-cv-optimiser-handles-your-cv", SUPPORT_PAGES["how-cv-optimiser-handles-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-handles-your-cv"]["intro"]),
+            ("cv-optimiser-vs-human-cv-review", "/cv-optimiser-vs-human-cv-review", SUPPORT_PAGES["cv-optimiser-vs-human-cv-review"]["title"], SUPPORT_PAGES["cv-optimiser-vs-human-cv-review"]["intro"]),
+            ("can-an-ats-checker-guarantee-interviews", "/can-an-ats-checker-guarantee-interviews", SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"]["title"], SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"]["intro"]),
         ]),
         ("Comparisons", [
             ("cv-optimiser-vs-jobscan", "/cv-optimiser-vs-jobscan", COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["title"], COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["intro"]),
@@ -13451,6 +13618,33 @@ def how_it_works_page(request: Request) -> str:
 def cv_score_methodology_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_support_page("how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"])
+
+
+@app.get("/how-our-cv-score-works", include_in_schema=False)
+@app.get("/how-our-cv-score-works/", include_in_schema=False)
+def cv_score_methodology_alias_page() -> RedirectResponse:
+    return RedirectResponse(url="/how-cv-optimiser-scores-your-cv", status_code=301)
+
+
+@app.get("/how-cv-optimiser-handles-your-cv", response_class=HTMLResponse)
+@app.get("/how-cv-optimiser-handles-your-cv/", response_class=HTMLResponse, include_in_schema=False)
+def cv_handling_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("how-cv-optimiser-handles-your-cv", SUPPORT_PAGES["how-cv-optimiser-handles-your-cv"])
+
+
+@app.get("/cv-optimiser-vs-human-cv-review", response_class=HTMLResponse)
+@app.get("/cv-optimiser-vs-human-cv-review/", response_class=HTMLResponse, include_in_schema=False)
+def cv_optimiser_vs_human_review_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("cv-optimiser-vs-human-cv-review", SUPPORT_PAGES["cv-optimiser-vs-human-cv-review"])
+
+
+@app.get("/can-an-ats-checker-guarantee-interviews", response_class=HTMLResponse)
+@app.get("/can-an-ats-checker-guarantee-interviews/", response_class=HTMLResponse, include_in_schema=False)
+def ats_checker_guarantee_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("can-an-ats-checker-guarantee-interviews", SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"])
 
 
 @app.get("/cv-statistics", response_class=HTMLResponse)

@@ -47,6 +47,10 @@ function renderFooter() {
           <div class="site-footer-title">Trust</div>
           <a href="/faq">FAQ</a>
           <a href="/pricing">Pricing</a>
+          <a href="/how-cv-optimiser-handles-your-cv">How CVs are handled</a>
+          <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
+          <a href="/cv-optimiser-vs-human-cv-review">AI vs human CV review</a>
+          <a href="/can-an-ats-checker-guarantee-interviews">ATS checker limits</a>
           <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms</a>
           <a href="/contact">Contact</a>
