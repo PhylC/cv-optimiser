@@ -4179,15 +4179,15 @@
 </div>
 
 <div id="resultsUpgradeCta" class="results-upgrade-cta hidden">
-  <div class="results-upgrade-cta-title">Unlock my full CV report</div>
-  <div class="results-upgrade-cta-copy">
-    Get the full analysis, keyword gaps, rewritten examples and priority fixes before you apply.
+  <div id="resultsUpgradeTitle" class="results-upgrade-cta-title">Unlock the fixes behind this score</div>
+  <div id="resultsUpgradeCopy" class="results-upgrade-cta-copy">
+    Get the full keyword gap analysis, rewritten examples and priority action plan for this CV before you apply.
   </div>
   <div class="checkout-trust-strip" aria-label="Checkout trust points">
-    <span>One-off report available</span>
+    <span>Built from this CV result</span>
     <span>Secure payment via Stripe</span>
-    <span>No subscription required for one report</span>
-    <span>Built for UK job seekers</span>
+    <span>One-off report, no subscription</span>
+    <span>Rewrite guidance included</span>
   </div>
   <div class="checkout-option-stack">
     <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
@@ -4197,15 +4197,15 @@
 </div>
 
   <div id="proUnlockPrompt" class="results-upgrade-cta upgrade-gate hidden">
-  <div class="results-upgrade-cta-title">Unlock my full CV report</div>
-  <div class="results-upgrade-cta-copy">
-    <p>Get the full analysis, keyword gaps, rewritten examples and priority fixes before you apply.</p>
+  <div id="proUnlockTitle" class="results-upgrade-cta-title">Unlock the fixes behind this score</div>
+  <div id="proUnlockCopy" class="results-upgrade-cta-copy">
+    <p>Get the full keyword gap analysis, rewritten examples and priority action plan for this CV before you apply.</p>
   </div>
   <div class="checkout-trust-strip" aria-label="Checkout trust points">
-    <span>One-off report available</span>
+    <span>Built from this CV result</span>
     <span>Secure payment via Stripe</span>
-    <span>No subscription required for one report</span>
-    <span>Built for UK job seekers</span>
+    <span>One-off report, no subscription</span>
+    <span>Rewrite guidance included</span>
   </div>
   <div class="checkout-option-stack">
     <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
@@ -4340,6 +4340,8 @@
     const resultsUpgradeBtn = document.getElementById("resultsUpgradeBtn");
     const resultsUpgradeMonthlyBtn = document.getElementById("resultsUpgradeMonthlyBtn");
     const resultsUpgradeCta = document.getElementById("resultsUpgradeCta");
+    const resultsUpgradeTitle = document.getElementById("resultsUpgradeTitle");
+    const resultsUpgradeCopy = document.getElementById("resultsUpgradeCopy");
     const clearFileBtn = document.getElementById("clearFileBtn");
     const upgradeBtn = document.getElementById("upgradeBtn");
     const status = document.getElementById("status");
@@ -4401,6 +4403,8 @@
     const emailCaptureStatus = document.getElementById("emailCaptureStatus");
     const checkoutError = document.getElementById("checkoutError");
     const proUnlockPrompt = document.getElementById("proUnlockPrompt");
+    const proUnlockTitle = document.getElementById("proUnlockTitle");
+    const proUnlockCopy = document.getElementById("proUnlockCopy");
     const lockedPreviewCard = document.getElementById("lockedPreviewCard");
     const unlockFullReportBtn = document.getElementById("unlockFullReportBtn");
     const proMonthlyBtn = document.getElementById("proMonthlyBtn");
@@ -4652,6 +4656,28 @@
       }
 
       requestAnimationFrame(reportEmbedHeight);
+    }
+
+    function updateUnlockCtaForResult(data, scoreNumber) {
+      const missingCount = (data.missingKeywords || []).length;
+      const weakCount = (data.weakPoints || []).length;
+      const headline = scoreNumber < 60
+        ? "Unlock the fastest route to a stronger CV"
+        : "Unlock the fixes behind this score";
+      const detailParts = [];
+      if (missingCount) detailParts.push(missingCount + " keyword gap" + (missingCount === 1 ? "" : "s"));
+      if (weakCount) detailParts.push(weakCount + " weak area" + (weakCount === 1 ? "" : "s"));
+      const detail = detailParts.length
+        ? "This result found " + detailParts.join(" and ") + "."
+        : "This result has more role-fit detail ready.";
+      const copy = detail + " Unlock the full report for a prioritised action plan, stronger wording examples, and ATS/readability fixes for this specific application.";
+
+      [resultsUpgradeTitle, proUnlockTitle].forEach(function(el) {
+        if (el) el.textContent = headline;
+      });
+      [resultsUpgradeCopy, proUnlockCopy].forEach(function(el) {
+        if (el) el.textContent = copy;
+      });
     }
 
     function openSupportModal() {
@@ -6491,6 +6517,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (atsReadabilitySummary) {
           atsReadabilitySummary.textContent = "Keyword match: " + keywordStatus + ". Structure: " + structureStatus + ". Impact: " + impactStatus + ". The free preview shows the main scan signals; the full report expands this into detailed ATS, readability and role-fit checks.";
         }
+        updateUnlockCtaForResult(data, scoreNumber);
 
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
         const hasFullPlanContent = !!(
@@ -6568,7 +6595,16 @@ passwordLoginBtn.addEventListener("click", async function() {
         trackEvent("cv_check_completed", {
           anonymous_result: isAnonymousResult,
           account_state: accountState,
-          score: scoreNumber
+          score: scoreNumber,
+          score_band: scoreNumber < 45 ? "0-44" : (scoreNumber < 60 ? "45-59" : (scoreNumber < 75 ? "60-74" : "75+")),
+          missing_keyword_count: (data.missingKeywords || []).length,
+          matched_keyword_count: (data.matchedKeywords || []).length,
+          weak_point_count: (data.weakPoints || []).length,
+          priority_fix_count: (data.priorityFixes || data.previewPriorityFixes || []).length,
+          missing_keywords_top: (data.missingKeywords || []).slice(0, 8),
+          weak_points_top: (data.weakPoints || []).slice(0, 5),
+          priority_fixes_top: (data.priorityFixes || data.previewPriorityFixes || []).slice(0, 5),
+          ats_tips_top: (data.atsTips || []).slice(0, 5)
         });
         if (!isCurrentlyPro) {
           trackEvent("free_result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });

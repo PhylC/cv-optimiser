@@ -2588,6 +2588,7 @@ UNLOCK_INTENT_EVENTS = {
 TREND_EVENTS = {
     "page_view",
     "content_page_view",
+    "content_to_checker_clicked",
     "cv_check_started",
     "free_result_shown",
     "unlock_intent",
@@ -2626,18 +2627,60 @@ def make_dimension_row(label: str, counts: dict[str, int]) -> dict[str, Any]:
     unlocks = counts.get("unlock_intent", 0)
     checkouts = counts.get("checkout_started", 0)
     reports = counts.get("one_time_report_generated", 0)
+    page_views = counts.get("page_view", 0) + counts.get("content_page_view", 0)
+    content_clicks = counts.get("content_to_checker_clicked", 0)
     return {
         "label": label,
-        "page_views": counts.get("page_view", 0) + counts.get("content_page_view", 0),
+        "page_views": page_views,
+        "checker_clicks": content_clicks,
         "cv_checks": counts.get("cv_check_started", 0),
         "free_results": free_results,
         "unlock_clicks": unlocks,
         "checkout_starts": checkouts,
         "paid_reports": reports,
+        "checker_click_rate": percent(content_clicks, page_views),
         "unlock_rate": percent(unlocks, free_results),
         "checkout_rate": percent(checkouts, unlocks),
         "paid_report_rate": percent(reports, checkouts),
     }
+
+
+def score_band(score: Optional[int]) -> str:
+    if score is None:
+        return "unknown"
+    if score < 45:
+        return "0-44"
+    if score < 60:
+        return "45-59"
+    if score < 75:
+        return "60-74"
+    return "75+"
+
+
+def increment_counter(counter: dict[str, int], value: str) -> None:
+    clean = coerce_string(value).strip().lower()
+    if not clean:
+        return
+    clean = re.sub(r"\s+", " ", clean)[:120]
+    counter[clean] = counter.get(clean, 0) + 1
+
+
+def increment_list_counter(counter: dict[str, int], values: Any, limit: int = 8) -> None:
+    if isinstance(values, list):
+        for value in values[:limit]:
+            if isinstance(value, dict):
+                increment_counter(counter, value.get("title") or value.get("issue") or value.get("keyword") or value.get("text"))
+            else:
+                increment_counter(counter, value)
+    elif values:
+        increment_counter(counter, values)
+
+
+def top_counter_items(counter: dict[str, int], limit: int = 12) -> list[dict[str, Any]]:
+    return [
+        {"label": label, "count": count}
+        for label, count in sorted(counter.items(), key=lambda item: (-item[1], item[0]))[:limit]
+    ]
 
 
 def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -2650,6 +2693,12 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "campaigns": {},
     }
     trend_counts: dict[str, dict[str, int]] = {}
+    score_bands: dict[str, int] = {"0-44": 0, "45-59": 0, "60-74": 0, "75+": 0}
+    missing_keyword_counts: dict[str, int] = {}
+    weak_point_counts: dict[str, int] = {}
+    priority_fix_counts: dict[str, int] = {}
+    ats_tip_counts: dict[str, int] = {}
+    low_score_sources: dict[str, int] = {}
     score_total = 0
     score_count = 0
     unique_emails = set()
@@ -2695,6 +2744,15 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         if score is not None:
             score_total += score
             score_count += 1
+            band = score_band(score)
+            score_bands[band] = score_bands.get(band, 0) + 1
+            if score < 60:
+                increment_counter(low_score_sources, dimensions["sources"])
+        if event_name == "cv_check_completed":
+            increment_list_counter(missing_keyword_counts, metadata.get("missing_keywords_top"))
+            increment_list_counter(weak_point_counts, metadata.get("weak_points_top"))
+            increment_list_counter(priority_fix_counts, metadata.get("priority_fixes_top"))
+            increment_list_counter(ats_tip_counts, metadata.get("ats_tips_top"))
 
     funnel = []
     previous_count: Optional[int] = None
@@ -2739,6 +2797,15 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "source_counts": source_counts,
         "dimension_tables": dimension_tables,
         "daily_trends": daily_trends,
+        "quality_audit": {
+            "analysed_results": score_count,
+            "score_bands": score_bands,
+            "common_missing_keywords": top_counter_items(missing_keyword_counts),
+            "common_weak_points": top_counter_items(weak_point_counts),
+            "common_priority_fixes": top_counter_items(priority_fix_counts),
+            "common_ats_tips": top_counter_items(ats_tip_counts),
+            "low_score_sources": top_counter_items(low_score_sources, 8),
+        },
         "funnel": funnel,
         "key_metrics": {
             "free_results": counts.get("free_result_shown", 0),
@@ -4387,6 +4454,29 @@ def build_attribution_script() -> str:
             }
 
             window.CV_OPTIMISER_ATTRIBUTION = metadata;
+            document.addEventListener("click", function(event) {
+              var link = event.target && event.target.closest ? event.target.closest("a[href]") : null;
+              if (!link) return;
+              var href = link.getAttribute("href") || "";
+              var destination = "";
+              try {
+                destination = new URL(href, window.location.origin).pathname;
+              } catch (error) {
+                destination = href.split("?")[0] || "";
+              }
+              if (destination !== "/cv-checker" && destination !== "/") return;
+              fetch("/api/track", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  event_name: "content_to_checker_clicked",
+                  metadata: Object.assign(metadata(), {
+                    destination_path: destination,
+                    link_text: (link.textContent || "").trim().slice(0, 120)
+                  })
+                })
+              }).catch(function() {});
+            });
             window.addEventListener("load", function() {
               fetch("/api/track", {
                 method: "POST",
@@ -9204,6 +9294,30 @@ def admin_analytics_page(request: Request) -> str:
             color: #EEF3FF;
             font-weight: 800;
           }}
+          .quality-grid {{
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 18px;
+          }}
+          .bar-row {{
+            display: grid;
+            grid-template-columns: 64px 1fr 44px;
+            align-items: center;
+            gap: 10px;
+            margin: 9px 0;
+            color: #DCE6FF;
+            font-size: 13px;
+          }}
+          .bar-track {{
+            height: 9px;
+            border-radius: 999px;
+            background: rgba(159, 176, 212, 0.18);
+            overflow: hidden;
+          }}
+          .bar-fill {{
+            height: 100%;
+            border-radius: inherit;
+            background: #38D996;
+          }}
           h2 {{
             margin: 0 0 12px;
             font-size: 20px;
@@ -9275,6 +9389,9 @@ def admin_analytics_page(request: Request) -> str:
               display: grid;
             }}
             .conversion-grid {{
+              grid-template-columns: 1fr;
+            }}
+            .quality-grid {{
               grid-template-columns: 1fr;
             }}
             .kpi-grid {{
@@ -9356,6 +9473,20 @@ def admin_analytics_page(request: Request) -> str:
                 <div id="campaignConversion"></div>
               </div>
             </div>
+            <div class="grid quality-grid">
+              <div class="panel">
+                <h2>Score Bands</h2>
+                <div id="scoreBands"></div>
+              </div>
+              <div class="panel">
+                <h2>Common Gaps</h2>
+                <div id="commonGaps" class="count-list"></div>
+              </div>
+              <div class="panel">
+                <h2>Quality Signals</h2>
+                <div id="qualitySignals" class="count-list"></div>
+              </div>
+            </div>
           </div>
         </div>
         <script>
@@ -9371,6 +9502,9 @@ def admin_analytics_page(request: Request) -> str:
           const sourceConversion = document.getElementById("sourceConversion");
           const landingConversion = document.getElementById("landingConversion");
           const campaignConversion = document.getElementById("campaignConversion");
+          const scoreBands = document.getElementById("scoreBands");
+          const commonGaps = document.getElementById("commonGaps");
+          const qualitySignals = document.getElementById("qualitySignals");
           const windowSelect = document.getElementById("windowSelect");
           const refreshBtn = document.getElementById("refreshBtn");
           const chartSeries = [
@@ -9408,16 +9542,41 @@ def admin_analytics_page(request: Request) -> str:
             )).join("");
           }}
 
+          function renderCountItems(target, rows) {{
+            const data = rows || [];
+            if (!data.length) {{
+              target.innerHTML = "<p>No quality data yet.</p>";
+              return;
+            }}
+            target.innerHTML = data.slice(0, 10).map((row) => (
+              "<div class='count-row'><span>" + escapeHtml(row.label) + "</span><strong>" + formatNumber(row.count) + "</strong></div>"
+            )).join("");
+          }}
+
+          function renderScoreBands(target, bands) {{
+            const entries = Object.entries(bands || {{}});
+            const total = entries.reduce((sum, [, count]) => sum + Number(count || 0), 0);
+            if (!total) {{
+              target.innerHTML = "<p>No scored results yet.</p>";
+              return;
+            }}
+            target.innerHTML = entries.map(([label, count]) => {{
+              const pct = Math.round((Number(count || 0) / total) * 100);
+              return "<div class='bar-row'><span>" + escapeHtml(label) + "</span><div class='bar-track'><div class='bar-fill' style='width:" + pct + "%'></div></div><strong>" + formatNumber(count) + "</strong></div>";
+            }}).join("");
+          }}
+
           function renderDimensionTable(target, rows) {{
             const data = (rows || []).slice(0, 15);
             if (!data.length) {{
               target.innerHTML = "<p>No attribution data yet.</p>";
               return;
             }}
-            target.innerHTML = "<div class='table-scroll'><table><thead><tr><th>Name</th><th>Views</th><th>Checks</th><th>Free results</th><th>Unlocks</th><th>Checkouts</th><th>Paid</th><th>Unlock rate</th><th>Checkout rate</th></tr></thead><tbody>" +
+            target.innerHTML = "<div class='table-scroll'><table><thead><tr><th>Name</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Checks</th><th>Free results</th><th>Unlocks</th><th>Checkouts</th><th>Paid</th><th>Unlock rate</th><th>Checkout rate</th></tr></thead><tbody>" +
               data.map((row) => (
                 "<tr><td class='dimension-label'>" + escapeHtml(row.label) + "</td><td>" + formatNumber(row.page_views) +
-                "</td><td>" + formatNumber(row.cv_checks) + "</td><td>" + formatNumber(row.free_results) +
+                "</td><td>" + formatNumber(row.checker_clicks) + "</td><td class='rate'>" + escapeHtml(row.checker_click_rate) +
+                "%</td><td>" + formatNumber(row.cv_checks) + "</td><td>" + formatNumber(row.free_results) +
                 "</td><td>" + formatNumber(row.unlock_clicks) + "</td><td>" + formatNumber(row.checkout_starts) +
                 "</td><td>" + formatNumber(row.paid_reports) + "</td><td class='rate'>" + escapeHtml(row.unlock_rate) +
                 "%</td><td class='rate'>" + escapeHtml(row.checkout_rate) + "%</td></tr>"
@@ -9493,6 +9652,13 @@ def admin_analytics_page(request: Request) -> str:
             renderDimensionTable(sourceConversion, (summary.dimension_tables || {{}}).sources || []);
             renderDimensionTable(landingConversion, (summary.dimension_tables || {{}}).landing_pages || []);
             renderDimensionTable(campaignConversion, (summary.dimension_tables || {{}}).campaigns || []);
+            const quality = summary.quality_audit || {{}};
+            renderScoreBands(scoreBands, quality.score_bands || {{}});
+            renderCountItems(commonGaps, quality.common_missing_keywords || []);
+            renderCountItems(qualitySignals, [
+              ...((quality.common_weak_points || []).slice(0, 5)),
+              ...((quality.common_priority_fixes || []).slice(0, 5))
+            ]);
 
             recentEvents.innerHTML = "<table><thead><tr><th>Time</th><th>Event</th><th>Email</th><th>Metadata</th></tr></thead><tbody>" +
               (data.items || []).slice(0, 40).map((item) => (
