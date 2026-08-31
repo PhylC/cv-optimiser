@@ -2318,6 +2318,155 @@
     margin-bottom: 8px;
   }
 
+  .score-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .score-breakdown-card,
+  .fix-detail-card,
+  .keyword-group {
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.28);
+    background: rgba(3, 13, 31, 0.34);
+  }
+
+  .score-breakdown-card {
+    padding: 12px;
+  }
+
+  .score-breakdown-label {
+    min-height: 34px;
+    color: #EEF3FF;
+    font-size: 13px;
+    font-weight: 760;
+    line-height: 1.3;
+  }
+
+  .score-breakdown-value {
+    margin: 10px 0 8px;
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 850;
+  }
+
+  .score-breakdown-meter {
+    overflow: hidden;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(91, 120, 255, 0.14);
+  }
+
+  .score-breakdown-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #5B78FF, #58D68D);
+  }
+
+  .score-breakdown-detail {
+    margin-top: 8px;
+    color: #AEBDE0;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .fix-detail-grid,
+  .keyword-importance-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .fix-detail-card {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .fix-detail-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(91, 120, 255, 0.2);
+    border: 1px solid rgba(91, 120, 255, 0.34);
+    color: #EAF0FF;
+    font-size: 12px;
+    font-weight: 850;
+  }
+
+  .fix-detail-card strong,
+  .keyword-group strong,
+  .rewrite-note strong {
+    display: block;
+    color: #F2F6FF;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .fix-detail-card p,
+  .keyword-group p,
+  .rewrite-note p {
+    color: #C6D3EC;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .fix-detail-card p + p {
+    margin-top: 8px;
+  }
+
+  .keyword-importance-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .keyword-group {
+    padding: 14px;
+  }
+
+  .keyword-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .keyword-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(91, 120, 255, 0.15);
+    border: 1px solid rgba(91, 120, 255, 0.28);
+    color: #DCE6FF;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .keyword-chip.is-critical {
+    background: rgba(255, 153, 102, 0.12);
+    border-color: rgba(255, 184, 160, 0.28);
+    color: #FFD7C7;
+  }
+
+  .keyword-chip.is-covered {
+    background: rgba(88, 214, 141, 0.12);
+    border-color: rgba(88, 214, 141, 0.28);
+    color: #C8F8D5;
+  }
+
+  .rewrite-note {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(91, 120, 255, 0.1);
+    border: 1px solid rgba(91, 120, 255, 0.24);
+  }
+
   #resultPriorityPreview li,
   #anonymousPriorityFixes li {
     color: #EEF3FF;
@@ -2987,8 +3136,18 @@
 
   .diagnosis-bar,
   .result-grid-two,
-  .before-after {
+  .before-after,
+  .score-breakdown-grid,
+  .keyword-importance-grid {
     grid-template-columns: 1fr;
+  }
+
+  .score-breakdown-label {
+    min-height: 0;
+  }
+
+  .fix-detail-card {
+    grid-template-columns: 30px minmax(0, 1fr);
   }
 
   .score-headline {
@@ -3633,9 +3792,15 @@
           </div>
 
           <div class="result-section">
+            <div class="result-section-title">Score breakdown</div>
+            <div class="result-section-subtitle">The five checks behind your headline score.</div>
+            <div id="resultScoreBreakdown" class="score-breakdown-grid"></div>
+          </div>
+
+          <div class="result-section">
             <div class="result-section-title">Top 3 fixes to make first</div>
-            <div class="result-section-subtitle">Focus on these first to improve clarity and role fit.</div>
-            <ul id="resultPriorityPreview" class="result-list"></ul>
+            <div class="result-section-subtitle">The issue, why it matters, and what to change next.</div>
+            <div id="resultPriorityPreview" class="fix-detail-grid"></div>
           </div>
 
           <div class="result-section">
@@ -3643,6 +3808,12 @@
             <div id="resultKeywordSubtitle" class="result-section-subtitle"></div>
             <ul id="resultKeywordPreview" class="result-list"></ul>
             <p id="resultKeywordTail" class="keyword-tail-note hidden">…and more in the full report</p>
+          </div>
+
+          <div class="result-section">
+            <div class="result-section-title">Keyword importance</div>
+            <div class="result-section-subtitle">Separate must-have gaps from supporting language and terms you already cover.</div>
+            <div id="resultKeywordImportance" class="keyword-importance-grid"></div>
           </div>
 
           <div class="result-section">
@@ -3657,6 +3828,10 @@
                 <strong>After</strong>
                 <p id="resultExampleAfter"></p>
               </div>
+            </div>
+            <div id="resultExampleWhyWrap" class="rewrite-note hidden">
+              <strong>Why this is stronger</strong>
+              <p id="resultExampleWhy"></p>
             </div>
           </div>
 
@@ -4053,9 +4228,13 @@
     const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
+    const resultExampleWhy = document.getElementById("resultExampleWhy");
+    const resultExampleWhyWrap = document.getElementById("resultExampleWhyWrap");
     const atsReadabilitySummary = document.getElementById("atsReadabilitySummary");
     const lockedReportSections = document.getElementById("lockedReportSections");
+    const resultScoreBreakdown = document.getElementById("resultScoreBreakdown");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
+    const resultKeywordImportance = document.getElementById("resultKeywordImportance");
     const resultKeywordPreview = document.getElementById("resultKeywordPreview");
     const resultKeywordTail = document.getElementById("resultKeywordTail");
     const resultKeywordTitle = document.getElementById("resultKeywordTitle");
@@ -4396,6 +4575,137 @@
         return fallback || "Something went wrong. Please try again.";
       }
       return text || fallback || "Something went wrong. Please try again.";
+    }
+
+    function appendTextItem(listEl, text) {
+      const li = document.createElement("li");
+      li.textContent = text;
+      listEl.appendChild(li);
+    }
+
+    function renderScoreBreakdown(items, fallbackScore) {
+      if (!resultScoreBreakdown) return;
+      resultScoreBreakdown.innerHTML = "";
+      const fallbackItems = [
+        { label: "Role alignment", score: fallbackScore, detail: "How clearly the CV matches this role." },
+        { label: "Keyword coverage", score: fallbackScore, detail: "How many important role terms are covered." },
+        { label: "Evidence strength", score: fallbackScore, detail: "How well claims are supported by examples." },
+        { label: "ATS readability", score: fallbackScore, detail: "How easy the CV is to scan." },
+        { label: "Structure and clarity", score: fallbackScore, detail: "How quickly the strongest points are visible." }
+      ];
+      const breakdown = Array.isArray(items) && items.length ? items.slice(0, 5) : fallbackItems;
+
+      breakdown.forEach(function(item) {
+        const score = Math.max(0, Math.min(100, Number(item.score || fallbackScore || 0)));
+        const card = document.createElement("div");
+        card.className = "score-breakdown-card";
+
+        const label = document.createElement("div");
+        label.className = "score-breakdown-label";
+        label.textContent = item.label || item.name || "CV signal";
+
+        const value = document.createElement("div");
+        value.className = "score-breakdown-value";
+        value.textContent = String(Math.round(score));
+
+        const meter = document.createElement("div");
+        meter.className = "score-breakdown-meter";
+        const fill = document.createElement("span");
+        fill.className = "score-breakdown-fill";
+        fill.style.width = String(Math.round(score)) + "%";
+        meter.appendChild(fill);
+
+        const detail = document.createElement("p");
+        detail.className = "score-breakdown-detail";
+        detail.textContent = item.detail || item.reason || "";
+
+        card.appendChild(label);
+        card.appendChild(value);
+        card.appendChild(meter);
+        if (detail.textContent) card.appendChild(detail);
+        resultScoreBreakdown.appendChild(card);
+      });
+    }
+
+    function renderPriorityFixDetails(items, fallbackItems) {
+      if (!resultPriorityPreview) return;
+      resultPriorityPreview.innerHTML = "";
+      const fixes = Array.isArray(items) && items.length
+        ? items.slice(0, 3)
+        : (fallbackItems || []).slice(0, 3).map(function(item) {
+            return {
+              issue: item,
+              why: "This makes the CV harder to shortlist quickly.",
+              change: "Rewrite it so the role fit, evidence, and outcome are easier to see."
+            };
+          });
+
+      fixes.forEach(function(item, index) {
+        const card = document.createElement("div");
+        card.className = "fix-detail-card";
+
+        const number = document.createElement("span");
+        number.className = "fix-detail-number";
+        number.textContent = String(index + 1);
+
+        const body = document.createElement("div");
+        const issue = document.createElement("strong");
+        issue.textContent = item.issue || item.title || String(item || "");
+        body.appendChild(issue);
+
+        if (item.why || item.whyItMatters) {
+          const why = document.createElement("p");
+          why.textContent = "Why it matters: " + (item.why || item.whyItMatters);
+          body.appendChild(why);
+        }
+        if (item.change || item.whatToChange || item.fix) {
+          const change = document.createElement("p");
+          change.textContent = "What to change: " + (item.change || item.whatToChange || item.fix);
+          body.appendChild(change);
+        }
+
+        card.appendChild(number);
+        card.appendChild(body);
+        resultPriorityPreview.appendChild(card);
+      });
+    }
+
+    function renderKeywordImportance(groups, fallbackMissing, fallbackMatched) {
+      if (!resultKeywordImportance) return;
+      resultKeywordImportance.innerHTML = "";
+      const data = groups || {};
+      const groupDefs = [
+        ["Critical missing", data.criticalMissing || (fallbackMissing || []).slice(0, 3), "is-critical"],
+        ["Useful supporting", data.supportingKeywords || (fallbackMissing || []).slice(3, 8), ""],
+        ["Already covered", data.coveredKeywords || (fallbackMatched || []).slice(0, 6), "is-covered"]
+      ];
+
+      groupDefs.forEach(function(group) {
+        const wrap = document.createElement("div");
+        wrap.className = "keyword-group";
+
+        const title = document.createElement("strong");
+        title.textContent = group[0];
+        wrap.appendChild(title);
+
+        const chips = document.createElement("div");
+        chips.className = "keyword-chip-list";
+        const terms = Array.isArray(group[1]) ? group[1].filter(Boolean).slice(0, 6) : [];
+        if (terms.length) {
+          terms.forEach(function(term) {
+            const chip = document.createElement("span");
+            chip.className = "keyword-chip" + (group[2] ? " " + group[2] : "");
+            chip.textContent = term;
+            chips.appendChild(chip);
+          });
+        } else {
+          const empty = document.createElement("p");
+          empty.textContent = "No clear terms found in this group yet.";
+          wrap.appendChild(empty);
+        }
+        if (terms.length) wrap.appendChild(chips);
+        resultKeywordImportance.appendChild(wrap);
+      });
     }
 
     async function startCheckout(plan, button) {
@@ -5459,9 +5769,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           const el = document.getElementById(id);
           el.innerHTML = "";
           items.forEach(function(item) {
-            const li = document.createElement("li");
-            li.textContent = item;
-            el.appendChild(li);
+            appendTextItem(el, item);
           });
         });
 
@@ -5482,43 +5790,38 @@ passwordLoginBtn.addEventListener("click", async function() {
         const priorityPreviewItems = (data.previewPriorityFixes && data.previewPriorityFixes.length)
           ? data.previewPriorityFixes.slice(0, 3)
           : (data.weakPoints || []).slice(0, 3);
-        resultPriorityPreview.innerHTML = "";
-        priorityPreviewItems.forEach(function(item) {
-          const li = document.createElement("li");
-          li.textContent = item;
-          resultPriorityPreview.appendChild(li);
-        });
 
-        if (!priorityPreviewItems.length) {
-          [
+        renderPriorityFixDetails(
+          data.priorityFixDetails || [],
+          priorityPreviewItems.length ? priorityPreviewItems : [
             "Add measurable results (revenue, growth, impact)",
             "Strengthen your professional summary",
             "Include missing keywords from the job description"
-          ].forEach(function(item) {
-            const li = document.createElement("li");
-            li.textContent = item;
-            resultPriorityPreview.appendChild(li);
-          });
-        }
+          ]
+        );
+
+        renderScoreBreakdown(data.scoreBreakdown || [], scoreNumber);
+        renderKeywordImportance(data.keywordImportance || {}, data.missingKeywords || [], data.matchedKeywords || []);
 
         const keywordPreviewItems = (data.missingKeywords || []).slice(0, 5);
         resultKeywordPreview.innerHTML = "";
         keywordPreviewItems.forEach(function(item) {
-          const li = document.createElement("li");
-          li.textContent = item;
-          resultKeywordPreview.appendChild(li);
+          appendTextItem(resultKeywordPreview, item);
         });
         if (!keywordPreviewItems.length && data.keywordGapInsight) {
-          const li = document.createElement("li");
-          li.textContent = data.keywordGapInsight;
-          resultKeywordPreview.appendChild(li);
+          appendTextItem(resultKeywordPreview, data.keywordGapInsight);
         }
         resultKeywordTail.classList.toggle("hidden", isCurrentlyPro || !(data.missingKeywords && data.missingKeywords.length > keywordPreviewItems.length));
 
-        resultExampleBefore.textContent = "Responsible for managing customer accounts.";
-        resultExampleAfter.textContent = (data.bulletPoints && data.bulletPoints.length && data.bulletPoints[0])
+        const freeRewrite = data.freeBulletRewrite || {};
+        resultExampleBefore.textContent = freeRewrite.before || "Responsible for managing customer accounts.";
+        resultExampleAfter.textContent = freeRewrite.after || ((data.bulletPoints && data.bulletPoints.length && data.bulletPoints[0])
           ? data.bulletPoints[0]
-          : "Managed key customer accounts and turned plans into measurable commercial opportunities.";
+          : "Managed key customer accounts and turned plans into measurable commercial opportunities.");
+        if (resultExampleWhy && resultExampleWhyWrap) {
+          resultExampleWhy.textContent = freeRewrite.whyWeak || "The improved version is more specific about action, context, and value.";
+          resultExampleWhyWrap.classList.toggle("hidden", !resultExampleWhy.textContent);
+        }
 
         const matchedKeywordCount = (data.matchedKeywords || []).length;
         const missingKeywordCount = (data.missingKeywords || []).length;

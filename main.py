@@ -2036,14 +2036,26 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
         output_schema = """
 {
   "score": 0,
+  "scoreBreakdown": [],
   "matchedKeywords": [],
   "missingKeywords": [],
+  "keywordImportance": {
+    "criticalMissing": [],
+    "supportingKeywords": [],
+    "coveredKeywords": []
+  },
   "strongPoints": [],
   "weakPoints": [],
   "bulletPoints": [],
+  "freeBulletRewrite": {
+    "before": "",
+    "whyWeak": "",
+    "after": ""
+  },
   "nextStep": "",
   "professionalSummary": "",
   "priorityFixes": [],
+  "priorityFixDetails": [],
   "skillsSection": [],
   "atsTips": [],
   "interviewRisks": []
@@ -2053,11 +2065,22 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
         output_schema = """
 {
   "score": 0,
+  "scoreBreakdown": [],
   "matchedKeywords": [],
   "missingKeywords": [],
+  "keywordImportance": {
+    "criticalMissing": [],
+    "supportingKeywords": [],
+    "coveredKeywords": []
+  },
   "strongPoints": [],
   "weakPoints": [],
   "bulletPoints": [],
+  "freeBulletRewrite": {
+    "before": "",
+    "whyWeak": "",
+    "after": ""
+  },
   "nextStep": ""
 }
 """.strip()
@@ -2113,10 +2136,13 @@ Quality rules:
 - score must be realistic, not inflated
 - matchedKeywords must be short phrases clearly supported by the CV
 - missingKeywords must be genuinely important role terms missing or weak in the CV
+- scoreBreakdown must include role alignment, keyword coverage, evidence strength, ATS readability, and structure and clarity
+- keywordImportance must separate critical missing keywords, useful supporting keywords, and keywords already covered
 - strongPoints must explain what already helps this CV for this role
 - weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
 - bulletPoints must be improved CV bullet points, not advice bullets
 - bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
+- freeBulletRewrite must rewrite one weak original CV bullet or sentence where possible
 - prefer quantified impact only if supported by the CV
 - never invent responsibilities, tools, employers, achievements, or metrics
 - nextStep must be a short paragraph describing the single highest-value improvement to make next
@@ -2379,6 +2405,209 @@ def coerce_string_list(value: Any, max_items: int = 5) -> list[str]:
     return items
 
 
+def coerce_named_score_list(value: Any, max_items: int = 5) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, Any]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        label = coerce_string(item.get("label") or item.get("name") or item.get("area"))
+        detail = coerce_string(item.get("detail") or item.get("reason") or item.get("copy"))
+        try:
+            score = int(item.get("score", 0))
+        except Exception:
+            score = 0
+        score = max(0, min(100, score))
+        if label:
+            items.append({"label": label, "score": score, "detail": detail})
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def coerce_priority_fix_details(value: Any, max_items: int = 3) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, str]] = []
+    for item in value:
+        if isinstance(item, dict):
+            issue = coerce_string(item.get("issue") or item.get("title"))
+            why = coerce_string(item.get("why") or item.get("whyItMatters") or item.get("reason"))
+            change = coerce_string(item.get("change") or item.get("whatToChange") or item.get("fix"))
+        else:
+            issue = coerce_string(item)
+            why = ""
+            change = ""
+        if issue:
+            items.append({"issue": issue, "why": why, "change": change})
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def coerce_keyword_importance(value: Any) -> dict[str, list[str]]:
+    if not isinstance(value, dict):
+        value = {}
+    return {
+        "criticalMissing": coerce_string_list(value.get("criticalMissing"), max_items=5),
+        "supportingKeywords": coerce_string_list(value.get("supportingKeywords"), max_items=6),
+        "coveredKeywords": coerce_string_list(value.get("coveredKeywords"), max_items=6),
+    }
+
+
+def coerce_free_bullet_rewrite(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        value = {}
+    return {
+        "before": coerce_string(value.get("before")),
+        "whyWeak": coerce_string(value.get("whyWeak") or value.get("why")),
+        "after": coerce_string(value.get("after") or value.get("improved")),
+    }
+
+
+def clamp_score(value: int) -> int:
+    return max(0, min(100, value))
+
+
+def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
+    existing = coerce_named_score_list(data.get("scoreBreakdown"))
+    if len(existing) >= 5:
+        return existing[:5]
+
+    score = int(data.get("score", 0) or 0)
+    matched = len(data.get("matchedKeywords", []))
+    missing = len(data.get("missingKeywords", []))
+    strong = len(data.get("strongPoints", []))
+    weak = len(data.get("weakPoints", []))
+    bullets = len(data.get("bulletPoints", []))
+    total_keywords = max(1, matched + missing)
+    keyword_score = clamp_score(round((matched / total_keywords) * 100))
+
+    return [
+        {
+            "label": "Role alignment",
+            "score": clamp_score(score + (strong * 3) - (weak * 4)),
+            "detail": "How clearly the CV matches the responsibilities and seniority in the job description.",
+        },
+        {
+            "label": "Keyword coverage",
+            "score": keyword_score,
+            "detail": "Whether important role terms are present naturally in the CV.",
+        },
+        {
+            "label": "Evidence strength",
+            "score": clamp_score(score - 8 + (bullets * 4) + (strong * 2)),
+            "detail": "How well the CV proves impact with relevant examples rather than duty-only wording.",
+        },
+        {
+            "label": "ATS readability",
+            "score": clamp_score(score + 4 - (missing * 3)),
+            "detail": "How easy the CV is likely to be for screening tools and recruiters to scan.",
+        },
+        {
+            "label": "Structure and clarity",
+            "score": clamp_score(score + (strong * 2) - (weak * 2)),
+            "detail": "Whether the strongest information is clear, specific, and easy to find.",
+        },
+    ]
+
+
+def build_priority_fix_details(data: dict[str, Any]) -> list[dict[str, str]]:
+    existing = coerce_priority_fix_details(data.get("priorityFixDetails"))
+    if len(existing) >= 3:
+        return existing[:3]
+
+    fixes: list[dict[str, str]] = []
+    missing_keywords = data.get("missingKeywords", [])
+
+    if missing_keywords:
+        joined = ", ".join(missing_keywords[:3])
+        fixes.append({
+            "issue": f"Important role keywords are missing or too weak: {joined}.",
+            "why": "Recruiters and ATS-style screening can miss relevant experience if the same language is not visible.",
+            "change": "Add these terms only where they are true, then back them up with a concrete example or outcome.",
+        })
+
+    for weak_point in data.get("weakPoints", []):
+        text = coerce_string(weak_point)
+        if text:
+            fixes.append({
+                "issue": text,
+                "why": "This makes the CV harder to shortlist because the role fit is not obvious quickly.",
+                "change": "Rewrite the affected section so it names the skill, context, and result more directly.",
+            })
+        if len(fixes) >= 3:
+            break
+
+    next_step = coerce_string(data.get("nextStep"))
+    if next_step and len(fixes) < 3:
+        fixes.append({
+            "issue": "The highest-value next improvement is not yet reflected strongly enough.",
+            "why": "Fixing the main gap first usually improves the whole application more than small wording edits.",
+            "change": next_step,
+        })
+
+    fallback_fixes = [
+        {
+            "issue": "The top third of the CV needs sharper role positioning.",
+            "why": "Recruiters often decide quickly whether the CV is worth reading in full.",
+            "change": "Open with the target role, strongest relevant skills, and one or two proof points from your experience.",
+        },
+        {
+            "issue": "Some bullets read like responsibilities rather than evidence.",
+            "why": "Duty-only wording makes it harder to see what you personally changed, improved, or delivered.",
+            "change": "Rewrite bullets with action, context, and outcome, using numbers only when they are true.",
+        },
+        {
+            "issue": "The CV needs more natural job-description language.",
+            "why": "Relevant wording helps both human review and keyword-based screening.",
+            "change": "Mirror the advert's important terms across your profile, skills, and recent experience sections.",
+        },
+    ]
+
+    for fallback in fallback_fixes:
+        if len(fixes) >= 3:
+            break
+        fixes.append(fallback)
+
+    return fixes[:3]
+
+
+def build_keyword_importance(data: dict[str, Any]) -> dict[str, list[str]]:
+    existing = coerce_keyword_importance(data.get("keywordImportance"))
+    if any(existing.values()):
+        return existing
+
+    missing = data.get("missingKeywords", [])
+    matched = data.get("matchedKeywords", [])
+    return {
+        "criticalMissing": missing[:3],
+        "supportingKeywords": missing[3:8],
+        "coveredKeywords": matched[:6],
+    }
+
+
+def build_free_bullet_rewrite(data: dict[str, Any]) -> dict[str, str]:
+    existing = coerce_free_bullet_rewrite(data.get("freeBulletRewrite"))
+    if existing["before"] and existing["after"]:
+        if not existing["whyWeak"]:
+            existing["whyWeak"] = "The original wording does not make the result or role relevance clear enough."
+        return existing
+
+    improved = ""
+    if data.get("bulletPoints"):
+        improved = coerce_string(data["bulletPoints"][0])
+
+    return {
+        "before": "Responsible for managing customer accounts.",
+        "whyWeak": "This describes a duty, but it does not show scope, action, or the value created.",
+        "after": improved or "Managed key customer accounts by strengthening stakeholder contact, spotting commercial opportunities, and improving follow-up on priority actions.",
+    }
+
+
 def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any]:
     try:
         score = int(data.get("score", 0))
@@ -2388,11 +2617,14 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
 
     normalized = {
         "score": score,
+        "scoreBreakdown": build_score_breakdown(data),
         "matchedKeywords": coerce_string_list(data.get("matchedKeywords")),
         "missingKeywords": coerce_string_list(data.get("missingKeywords")),
+        "keywordImportance": build_keyword_importance(data),
         "strongPoints": coerce_string_list(data.get("strongPoints")),
         "weakPoints": coerce_string_list(data.get("weakPoints")),
         "bulletPoints": coerce_string_list(data.get("bulletPoints")),
+        "freeBulletRewrite": build_free_bullet_rewrite(data),
         "nextStep": coerce_string(data.get("nextStep")),
     }
 
@@ -2400,6 +2632,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
         normalized.update({
             "professionalSummary": coerce_string(data.get("professionalSummary")),
             "priorityFixes": coerce_string_list(data.get("priorityFixes")),
+            "priorityFixDetails": build_priority_fix_details(data),
             "skillsSection": coerce_string_list(data.get("skillsSection")),
             "atsTips": coerce_string_list(data.get("atsTips")),
             "interviewRisks": coerce_string_list(data.get("interviewRisks")),
@@ -2409,6 +2642,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
         normalized.update({
             "professionalSummary": "",
             "priorityFixes": [],
+            "priorityFixDetails": build_priority_fix_details(data),
             "skillsSection": [],
             "atsTips": [],
             "interviewRisks": [],
@@ -8750,19 +8984,26 @@ async def optimise(
 
         payload = {
             "score": data.get("score", 0),
+            "scoreBreakdown": data.get("scoreBreakdown", []),
             "matchedKeywords": data.get("matchedKeywords", []),
             "missingKeywords": data.get("missingKeywords", []),
+            "keywordImportance": data.get("keywordImportance", {}),
             "strongPoints": data.get("strongPoints", []),
             "weakPoints": data.get("weakPoints", []),
             "bulletPoints": data.get("bulletPoints", []),
+            "freeBulletRewrite": data.get("freeBulletRewrite", {}),
             "nextStep": data.get("nextStep", ""),
             "professionalSummary": data.get("professionalSummary", ""),
             "priorityFixes": data.get("priorityFixes", []),
+            "priorityFixDetails": data.get("priorityFixDetails", []),
             "skillsSection": data.get("skillsSection", []),
             "atsTips": data.get("atsTips", []),
             "interviewRisks": data.get("interviewRisks", []),
             "source": "openai",
         }
+
+        if not bool(plan and plan["is_pro"]):
+            payload.update(build_anonymous_result_preview(data))
 
         if user:
             save_usage_event(user["id"])
@@ -8787,7 +9028,6 @@ async def optimise(
                 }
             )
         else:
-            payload.update(build_anonymous_result_preview(data))
             payload["isAnonymousResult"] = True
             payload["signupPrompt"] = "Create a free account to save this result and unlock the full report."
             print("CONVERSION_EVENT: anonymous_result_generated")
