@@ -1101,6 +1101,36 @@
     color: #C3D1EE;
   }
 
+  .journey-preview-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 14px 0 0;
+  }
+
+  .journey-preview-item {
+    min-height: 64px;
+    padding: 10px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    border: 1px solid #D8E1EF;
+  }
+
+  .journey-preview-item strong {
+    display: block;
+    color: #101B33;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .journey-preview-item span {
+    display: block;
+    margin-top: 3px;
+    color: #64748B;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
   .upload-details {
     border: 0;
     border-top: 1px solid rgba(148, 163, 184, 0.24);
@@ -1156,8 +1186,8 @@
   .example-preview {
     padding: 18px;
     border-radius: 16px;
-    border: 1px solid rgba(92, 112, 150, 0.18);
-    background: linear-gradient(180deg, rgba(13, 24, 45, 0.62), rgba(10, 19, 35, 0.5));
+    border: 1px solid rgba(199, 210, 254, 0.26);
+    background: linear-gradient(180deg, rgba(20, 35, 60, 0.76), rgba(10, 19, 35, 0.68));
     margin-top: 14px;
   }
 
@@ -1543,20 +1573,22 @@
   }
 
   .text-link-btn {
-    padding: 0;
+    min-height: 36px;
+    padding: 7px 10px;
     margin: 0;
-    border: none;
-    background: none;
+    border: 1px solid rgba(199, 210, 254, 0.9);
+    border-radius: 999px;
+    background: #EEF2FF;
     box-shadow: none;
-    color: #afc0ff;
+    color: #1D4ED8;
     font-size: 13px;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    font-weight: 800;
+    text-decoration: none;
   }
 
   .text-link-btn:hover {
-    color: #dce5ff;
+    color: #0F2F83;
+    background: #E0E7FF;
     transform: none;
   }
 
@@ -1589,13 +1621,20 @@
     gap: 8px;
     padding: 12px 14px;
     border-radius: 14px;
-    background: rgba(10, 19, 35, 0.34);
-    border: 1px solid rgba(92, 112, 150, 0.18);
+    background: #FFFFFF;
+    border: 1px solid #D8E1EF;
   }
 
   .loading-step {
-    color: #cdd8ef;
+    color: #334155;
     font-size: 13px;
+  }
+
+  .loading-step::before {
+    content: "✓";
+    margin-right: 8px;
+    color: #15803D;
+    font-weight: 900;
   }
 
   .checker-loading {
@@ -4211,6 +4250,17 @@
     font-size: 13px;
   }
 
+  .journey-preview-strip {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .journey-preview-item {
+    min-height: 0;
+    padding: 12px 13px;
+  }
+
   .homepage-plan-grid {
     grid-template-columns: 1fr;
   }
@@ -4242,6 +4292,26 @@
   .upload-intro {
     margin-top: 18px;
     font-size: 15px;
+  }
+
+  .tool-actions-row {
+    margin-top: -4px;
+  }
+
+  .text-link-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  .primary-action-panel {
+    padding-top: 18px;
+  }
+
+  .primary-action-helper {
+    padding: 0 4px;
+    font-size: 13px;
+    text-align: left;
   }
 
   .score-hero,
@@ -4450,6 +4520,14 @@
     line-height: 1.5;
   }
 
+  .journey-preview-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-preview-item {
+    min-height: 0;
+  }
+
   .result-preview-card,
   .example-preview,
   .tool-step,
@@ -4524,6 +4602,17 @@
   textarea.job-description-textarea {
     padding: 16px;
     border-radius: 16px;
+  }
+
+  textarea.cv-textarea,
+  textarea.job-description-textarea {
+    min-height: 150px;
+  }
+
+  .upload-details summary {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
   }
 
   .tool-step,
@@ -4874,12 +4963,26 @@
         <div class="tool-embed-title">Check your CV</div>
         <div class="home-product-kicker tool-hero-support">UK CV checker</div>
         <h1 class="homepage-hero-title tool-hero-title">Check your CV against the job</h1>
-        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused match score, missing keywords, recruiter-style verdict and priority fixes before you apply.</p>
+        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes before you apply.</p>
         <p class="compliance-notice">UK-focused, AI-assisted guidance. Your first check does not need an account, and no job outcome is guaranteed.</p>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>Takes ~60 seconds</span></div>
+        </div>
+        <div class="journey-preview-strip" aria-label="What the CV check returns">
+          <div class="journey-preview-item">
+            <strong>Role-fit score</strong>
+            <span>See how closely your CV matches the advert.</span>
+          </div>
+          <div class="journey-preview-item">
+            <strong>Priority fixes</strong>
+            <span>Know what to change first before applying.</span>
+          </div>
+          <div class="journey-preview-item">
+            <strong>Example rewrite</strong>
+            <span>Turn vague duties into stronger evidence.</span>
+          </div>
         </div>
 
         <p class="upload-intro">Start with paste. It is fastest and avoids uploading anything you do not need to share.</p>
@@ -4888,17 +4991,18 @@
           <div class="paste-toggle form-section paste-cv-section">
             <div class="form-step-label"><span>1</span> CV text</div>
             <label class="field-label" for="cvText">Paste your CV</label>
+            <p class="field-helper field-help">Paste the CV you would actually send. You can remove phone numbers, addresses or anything sensitive first.</p>
             <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here..."></textarea>
           </div>
 
           <div class="tool-actions-row">
-            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try with example CV</button>
+            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try an example CV</button>
           </div>
 
           <div class="tool-step form-section job-description-section">
             <div class="form-step-label"><span>2</span> Target role</div>
             <label class="field-label" for="jobDescription">Paste the job description</label>
-            <p class="field-helper field-help">Paste the job advert so we can compare your CV against the role.</p>
+            <p class="field-helper field-help">Paste the advert, person spec or LinkedIn role text. The more specific this is, the more useful the result.</p>
             <textarea id="jobDescription" class="text-field job-description-textarea" placeholder="Paste the job advert here…"></textarea>
             <p class="field-helper field-help">Don’t have a job description? You can still run a general CV check.</p>
           </div>
@@ -5013,17 +5117,17 @@
         <ul class="how-it-works-list">
           <li>Paste your CV</li>
           <li>Paste the job description</li>
-          <li>Get instant feedback</li>
+          <li>Get your role-fit score and priority fixes</li>
         </ul>
         <div class="example-preview">
           <div class="example-label">Example result</div>
-          <div class="example-score">Match score: 62/100</div>
+          <div class="example-score">Role-fit score: 62/100</div>
           <ul class="example-points">
-            <li>Missing keywords: stakeholder management</li>
-            <li>Weak bullet points</li>
-            <li>Summary not tailored to role</li>
+            <li>Keyword match: missing stakeholder management and reporting language</li>
+            <li>Priority fix: make recent achievements more measurable</li>
+            <li>Example rewrite: replace duty-led wording with evidence-led impact</li>
           </ul>
-          <div class="example-hint">Full report shows how to fix this →</div>
+          <div class="example-hint">Full report adds the recruiter verdict, section rewrite plan and exportable checklist.</div>
         </div>
       </div>
 

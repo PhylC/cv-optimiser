@@ -366,7 +366,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                 "title": "What this tool does",
                 "bullets": [
                     "Compares your CV to a job description",
-                    "Calculates a match score",
+                    "Calculates a role-fit score",
                     "Highlights missing keywords",
                     "Shows the most important improvements to make",
                 ],
@@ -396,7 +396,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "What you get from your CV check",
                 "bullets": [
-                    "A CV match score",
+                    "A CV role-fit score",
                     "Missing keywords for the role",
                     "Top priority fixes",
                     "Feedback on structure and clarity",
@@ -427,7 +427,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
     },
     "how-cv-optimiser-scores-your-cv": {
         "title": "How CV Optimiser Scores Your CV | CV Match Score Methodology",
-        "description": "See how CV Optimiser calculates your CV match score using job description relevance, keywords, clarity, evidence and ATS-friendly structure.",
+        "description": "See how CV Optimiser calculates your CV role-fit score using job description relevance, keywords, clarity, evidence and ATS-friendly structure.",
         "h1": "How CV Optimiser scores your CV",
         "intro": "CV Optimiser scores your CV by comparing it with a specific job description, then looking for the signals that help recruiters and applicant tracking systems understand your fit.",
         "sections": [
@@ -485,7 +485,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "title": "Try the scoring tool",
-                "copy": "Paste your CV and a job description to see your match score, missing keywords and top improvements.",
+                "copy": "Paste your CV and a job description to see your role-fit score, missing keywords and top improvements.",
                 "cta_href": "/#tool",
                 "cta_label": "Check your CV score",
             },
@@ -497,7 +497,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "CV Optimiser features",
         "intro": "CV Optimiser focuses on the parts of CV feedback that matter most when you are applying for a real job and need clear next steps.",
         "sections": [
-            ("CV match score", "See how closely your CV aligns with the role before you apply."),
+            ("CV role-fit score", "See how closely your CV aligns with the role before you apply."),
             ("Missing keyword detection", "Spot the role-specific terms your CV is missing or not supporting strongly enough."),
             ("Priority fixes", "Get priority improvements for clearer role fit."),
             ("Full report upgrade", "Unlock deeper feedback, stronger wording and a more detailed improvement plan when you need more help."),
@@ -631,7 +631,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
 
 EXAMPLE_REPORT_PAGE: dict[str, Any] = {
     "title": "Example CV Report | CV Optimiser",
-    "description": "See an example CV Optimiser report with match score, missing keywords, priority fixes and rewrite suggestions.",
+    "description": "See an example CV Optimiser report with role-fit score, missing keywords, priority fixes and rewrite suggestions.",
     "h1": "Example CV report",
     "intro": "See the type of feedback CV Optimiser gives before you run your own check.",
 }
@@ -639,13 +639,13 @@ EXAMPLE_REPORT_PAGE: dict[str, Any] = {
 ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
     "sales-cv-example-report": {
         "title": "Sales CV Example Report | CV Optimiser",
-        "description": "See an example sales CV report with match score, missing sales keywords, revenue evidence gaps and improved bullet examples.",
+        "description": "See an example sales CV report with role-fit score, missing sales keywords, revenue evidence gaps and improved bullet examples.",
         "h1": "Sales CV example report",
         "intro": "See how CV Optimiser reviews a sales CV against a real sales job description.",
         "role_label": "Sales Executive",
         "cv_snippet": "with experience managing prospects, building relationships and supporting revenue growth across B2B accounts.",
         "job_snippet": "We are looking for a sales executive with pipeline generation, CRM discipline, discovery calls, negotiation, forecasting and quota achievement experience.",
-        "score": "Match Score: 61/100",
+        "score": "Role-fit score: 61/100",
         "score_label": "Commercial evidence needs to be sharper",
         "score_copy": "The CV shows sales experience, but target performance, pipeline ownership and CRM evidence are not strong enough for the role.",
         "recruiter_verdict": {
@@ -707,7 +707,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "Account Manager",
         "cv_snippet": "with experience managing retail customers, coordinating account plans and supporting commercial targets.",
         "job_snippet": "We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&L ownership experience.",
-        "score": "Match Score: 58/100",
+        "score": "Role-fit score: 58/100",
         "score_label": "Needs clearer role alignment",
         "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
         "recruiter_verdict": {
@@ -769,7 +769,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "Project Manager",
         "cv_snippet": "with experience coordinating teams, managing tasks and supporting project delivery across business change initiatives.",
         "job_snippet": "We are looking for a project manager with stakeholder governance, delivery planning, budget tracking, RAID management, dependencies and measurable implementation outcomes.",
-        "score": "Match Score: 64/100",
+        "score": "Role-fit score: 64/100",
         "score_label": "Delivery evidence is present but too broad",
         "score_copy": "The CV suggests project experience, but budget, risk, dependencies and measurable delivery outcomes need to be easier to see.",
         "recruiter_verdict": {
@@ -831,7 +831,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "Graduate Analyst",
         "cv_snippet": "with a business degree, university projects, part-time retail work and strong interest in data-led decision making.",
         "job_snippet": "We are looking for a graduate analyst with Excel, research, communication, teamwork, problem solving and clear evidence of initiative.",
-        "score": "Match Score: 57/100",
+        "score": "Role-fit score: 57/100",
         "score_label": "Good potential, but evidence is buried",
         "score_copy": "The CV has useful graduate evidence, but the projects, transferable skills and target role need to be clearer on page one.",
         "recruiter_verdict": {
@@ -893,7 +893,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "NHS Administrator",
         "cv_snippet": "with experience handling appointments, updating records and supporting busy front-office administration.",
         "job_snippet": "We are looking for an NHS administrator with patient communication, confidentiality, accurate records, appointment scheduling, systems and team support experience.",
-        "score": "Match Score: 60/100",
+        "score": "Role-fit score: 60/100",
         "score_label": "Relevant admin experience needs NHS framing",
         "score_copy": "The CV shows useful admin skills, but confidentiality, records accuracy and patient-facing context need to be more explicit.",
         "recruiter_verdict": {
@@ -955,7 +955,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "Marketing Executive",
         "cv_snippet": "with experience supporting campaigns, creating content and helping with reporting across digital channels.",
         "job_snippet": "We are looking for a marketing executive with campaign delivery, content, SEO, email, CRM, analytics and conversion reporting experience.",
-        "score": "Match Score: 63/100",
+        "score": "Role-fit score: 63/100",
         "score_label": "Channel experience is present but not measurable",
         "score_copy": "The CV shows marketing exposure, but campaign results, channel ownership and analytics evidence need to be clearer.",
         "recruiter_verdict": {
@@ -1017,7 +1017,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "role_label": "Software Developer",
         "cv_snippet": "with experience building web features, working with APIs and contributing to team development projects.",
         "job_snippet": "We are looking for a software developer with Python, JavaScript, APIs, databases, testing, Git, CI/CD and agile delivery experience.",
-        "score": "Match Score: 66/100",
+        "score": "Role-fit score: 66/100",
         "score_label": "Relevant stack, but shipped impact needs detail",
         "score_copy": "The CV shows technical experience, but project outcomes, testing and production impact are not specific enough.",
         "recruiter_verdict": {
@@ -1115,7 +1115,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "positioning": "Our niche: less general career tooling, more focused CV-to-job matching before you press apply.",
         "competitor": "Resume Worded",
         "best_for_competitor": "Job seekers who want resume feedback, LinkedIn profile help, rewrite support and templates in one broader platform.",
-        "best_for_us": "Job seekers who want a direct CV match score against a specific job description, with missing keywords and role-specific guidance.",
+        "best_for_us": "Job seekers who want a direct CV role-fit score against a specific job description, with missing keywords and role-specific guidance.",
         "rows": [
             ("Primary focus", "CV-to-job-description match, missing keywords, scoring and practical report guidance.", "Resume scoring, LinkedIn profile feedback, AI rewrites, templates and keyword targeting."),
             ("Workflow", "Paste a CV and job description, then review the role match quickly.", "Upload a resume or LinkedIn profile and use broader feedback features."),
@@ -1145,7 +1145,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
         "description": "Find out what makes a useful ATS CV checker for UK job applications, including keyword match, formatting, role relevance and clear improvement steps.",
         "h1": "Best ATS CV checker UK",
         "intro": "The best ATS CV checker for a UK job seeker should not behave like a magic keyword counter. It should show whether your CV is readable, relevant, honest and clearly matched to the job description you actually want.",
-        "positioning": "CV Optimiser is built for the practical middle ground: not a generic spelling check, not a scary ATS promise, but a clear CV match score with next fixes.",
+        "positioning": "CV Optimiser is built for the practical middle ground: not a generic spelling check, not a scary ATS promise, but a clear CV role-fit score with next fixes.",
         "competitor": "Other ATS checkers",
         "best_for_competitor": "Some tools are useful for broad resume scans, template checks or large job-search workflows.",
         "best_for_us": "CV Optimiser is useful when you want a UK CV check focused on a specific job description and practical fixes before applying.",
@@ -1207,7 +1207,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
 TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
     "cv-checker": {
         "title": "Free CV Checker | Compare Your CV to Any Job Description",
-        "meta_description": "Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.",
+        "meta_description": "Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.",
         "h1": "Check your CV before applying — in under 60 seconds",
         "intro": "Compare your CV with a job description and get practical suggestions before you apply.",
         "tool_intro": [
@@ -1231,7 +1231,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
                 "title": "What this CV checker does",
                 "copy": "This CV checker compares your CV against a job description to show:",
                 "bullets": [
-                    "Your CV match score",
+                    "Your CV role-fit score",
                     "Missing keywords for the role",
                     "What may be unclear",
                     "The most important improvements to make",
@@ -1262,7 +1262,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "What you get from your CV check",
                 "bullets": [
-                    "CV match score",
+                    "CV role-fit score",
                     "Missing keywords",
                     "Top priority fixes",
                     "Feedback on clarity and relevance",
@@ -1399,7 +1399,7 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
             {
                 "title": "What this checker helps with",
                 "bullets": [
-                    "ATS match score",
+                    "ATS role-fit score",
                     "missing keywords",
                     "CV improvement suggestions",
                     "priority fixes",
@@ -6426,16 +6426,16 @@ def render_cv_checker_page() -> str:
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Free CV Checker | Compare Your CV to Any Job Description</title>
-        <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <meta name="description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
         {canonical_link_tag("/cv-checker")}
         {google_tag()}
         <meta property="og:title" content="Free CV Checker | Compare Your CV to Any Job Description">
-        <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <meta property="og:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Free CV Checker | Compare Your CV to Any Job Description">
-        <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your match score, missing keywords and top improvements in seconds.">
+        <meta name="twitter:description" content="Use our free CV checker to compare your CV to any job description. Get your role-fit score, missing keywords and top improvements in seconds.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
         {build_footer_assets_head()}
         <style>
@@ -6633,7 +6633,7 @@ def render_cv_checker_page() -> str:
               <div class="card">
                 <h2>Check my CV</h2>
                 <p>Many CVs are overlooked when they do not clearly match the job description.</p>
-                <p style="margin-top:12px;">Paste your CV and a job description below to get your match score and improvement suggestions.</p>
+                <p style="margin-top:12px;">Paste your CV and a job description below to get your role-fit score and improvement suggestions.</p>
                 <iframe class="tool-frame tool-embed compact" src="/?embed_tool=1&compact=1" title="CV checker tool"></iframe>
               </div>
 
@@ -6642,7 +6642,7 @@ def render_cv_checker_page() -> str:
                   <h2>What this CV checker does</h2>
                   <p>This CV checker compares your CV against a job description to show:</p>
                   <ul>
-                    <li>Your CV match score</li>
+                    <li>Your CV role-fit score</li>
                     <li>Missing keywords for the role</li>
                     <li>What may be unclear</li>
                     <li>The most important improvements to make</li>
@@ -6676,7 +6676,7 @@ def render_cv_checker_page() -> str:
                 <div class="card">
                   <h2>What you get from your CV check</h2>
                   <ul>
-                    <li>CV match score</li>
+                    <li>CV role-fit score</li>
                     <li>Missing keywords</li>
                     <li>Top priority fixes</li>
                     <li>Feedback on clarity and relevance</li>
@@ -6736,16 +6736,16 @@ def render_ats_cv_checker_page() -> str:
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>ATS CV Checker | Improve Your CV for Applicant Tracking Systems</title>
-        <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
+        <meta name="description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your role-fit score and improve CV clarity and role match.">
         {canonical_link_tag("/ats-cv-checker")}
         {google_tag()}
         <meta property="og:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
-        <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
+        <meta property="og:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your role-fit score and improve CV clarity and role match.">
         <meta property="og:url" content="{page_url}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="ATS CV Checker | Improve Your CV for Applicant Tracking Systems">
-        <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your match score and improve CV clarity and role match.">
+        <meta name="twitter:description" content="Check how your CV performs in ATS systems. Identify missing keywords, improve your role-fit score and improve CV clarity and role match.">
         <script type="application/ld+json">{build_software_json_ld(page_url)}</script>
         {build_footer_assets_head()}
         <style>
@@ -6935,7 +6935,7 @@ def render_ats_cv_checker_page() -> str:
                 <div class="card">
                   <h2>What you get</h2>
                   <ul>
-                    <li>ATS match score</li>
+                    <li>ATS role-fit score</li>
                     <li>Missing keywords</li>
                     <li>CV improvement suggestions</li>
                     <li>Priority fixes</li>
@@ -6962,7 +6962,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         "role_label": "Account Manager",
         "cv_snippet": "with experience managing retail customers, coordinating account plans and supporting commercial targets.",
         "job_snippet": "We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&L ownership experience.",
-        "score": "Match Score: 58/100",
+        "score": "Role-fit score: 58/100",
         "score_label": "Needs clearer role alignment",
         "score_copy": "This CV has relevant experience, but the strongest achievements are not obvious and several role-specific keywords are missing.",
         "recruiter_verdict": {
@@ -7187,10 +7187,32 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             font-size: 13px;
           }}
           .hero-card, .card {{
-            background: rgba(15, 28, 50, 0.72);
-            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: #FFFFFF;
+            border: 1px solid #D8E1EF;
             border-radius: 18px;
             padding: 24px;
+            color: #101B33;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14);
+          }}
+          .hero-card h1,
+          .hero-card h2,
+          .hero-card h3,
+          .card h1,
+          .card h2,
+          .card h3 {{
+            color: #101B33;
+          }}
+          .hero-card p,
+          .hero-card li,
+          .card p,
+          .card li,
+          .priority-card p,
+          .before-after-card p {{
+            color: #334155;
+          }}
+          .card .text-link {{
+            color: #1D4ED8;
+            font-weight: 700;
           }}
           .hero-card {{
             margin-bottom: 24px;
@@ -7203,14 +7225,16 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .score-block {{
             padding: 18px 20px;
             border-radius: 18px;
-            background: linear-gradient(135deg, rgba(91,120,255,0.18), rgba(18,31,58,0.92));
-            border: 1px solid rgba(91,120,255,0.32);
+            background:
+              radial-gradient(circle at 12% 14%, rgba(91, 120, 255, 0.14), transparent 32%),
+              linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 54%, #EEF7F2 100%);
+            border: 1px solid #D8E1EF;
             margin-bottom: 18px;
           }}
           .score-value {{
             font-size: 52px;
             font-weight: 850;
-            color: #FFFFFF;
+            color: #101B33;
             line-height: 1;
             margin-bottom: 8px;
           }}
@@ -7239,9 +7263,9 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             font-weight: 700;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #DDE6FF;
-            background: rgba(91,120,255,0.14);
-            border: 1px solid rgba(91,120,255,0.35);
+            color: #3157D5;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
           }}
           .before-after {{
             display: grid;
@@ -7262,8 +7286,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .before-after-card {{
             padding: 18px;
             border-radius: 16px;
-            background: rgba(10, 19, 35, 0.34);
-            border: 1px solid rgba(92, 112, 150, 0.18);
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
           }}
           .cta-row {{
             display: flex;
@@ -7298,7 +7322,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             margin-bottom: 20px;
           }}
           .secondary-cta {{
-            background: rgba(10, 19, 35, 0.34);
+            background: #101B33;
             border: 1px solid rgba(92, 112, 150, 0.22);
           }}
           .eyebrow {{
@@ -7321,7 +7345,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
           .section-helper {{
             margin-top: 12px;
-            color: #9FB0D4;
+            color: #64748B;
             font-size: 13px;
             line-height: 1.6;
           }}
@@ -7336,9 +7360,9 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             align-items: center;
             padding: 8px 12px;
             border-radius: 999px;
-            border: 1px solid rgba(92, 112, 150, 0.24);
-            background: rgba(12, 23, 43, 0.8);
-            color: #E6EEFF;
+            border: 1px solid #C7D2FE;
+            background: #EEF2FF;
+            color: #3157D5;
             font-size: 13px;
             font-weight: 600;
           }}
@@ -7356,13 +7380,13 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .diagnosis-card {{
             padding: 16px;
             border-radius: 16px;
-            background: rgba(10, 19, 35, 0.34);
-            border: 1px solid rgba(92, 112, 150, 0.18);
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
           }}
           .diagnosis-card span {{
             display: block;
             margin-bottom: 7px;
-            color: #9FB0D4;
+            color: #64748B;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.04em;
@@ -7370,7 +7394,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
           .diagnosis-card strong {{
             display: block;
-            color: #EEF3FF;
+            color: #101B33;
             font-size: 15px;
             line-height: 1.5;
           }}
@@ -7381,8 +7405,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             align-items: start;
             padding: 16px;
             border-radius: 16px;
-            background: rgba(10, 19, 35, 0.34);
-            border: 1px solid rgba(92, 112, 150, 0.18);
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
           }}
           .priority-number {{
             width: 34px;
@@ -7391,14 +7415,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(91, 120, 255, 0.16);
-            color: #EEF3FF;
+            background: #EEF2FF;
+            color: #3157D5;
             font-size: 14px;
             font-weight: 800;
           }}
           .priority-card strong {{
             display: block;
-            color: #EEF3FF;
+            color: #101B33;
             font-size: 15px;
             margin-bottom: 6px;
           }}
@@ -7414,7 +7438,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
 
           .text-link:hover {{
-            color: #FFFFFF;
+            color: #0F2F83;
           }}
 
           @media (max-width: 900px) {{
@@ -7898,7 +7922,7 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
 
           <section class="section-block">
             <h2>Try CV Optimiser</h2>
-            <p>Paste your CV and a job description to see your match score, missing keywords and top improvements.</p>
+            <p>Paste your CV and a job description to see your role-fit score, missing keywords and top improvements.</p>
             {build_compliance_notice()}
             <div class="cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
@@ -8062,7 +8086,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             <div class="card">
               <h2>What you get</h2>
               <ul>
-                <li>CV match score</li>
+                <li>CV role-fit score</li>
                 <li>Missing keywords</li>
                 <li>Top priority fixes</li>
                 <li>Improvement suggestions</li>
@@ -8171,7 +8195,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           <div>
             <p class="eyebrow">Try it now</p>
             <h2>Check your CV against the role</h2>
-            <p>Paste your CV and a job description to see match score, missing keywords and priority fixes.</p>
+            <p>Paste your CV and a job description to see role-fit score, missing keywords and priority fixes.</p>
           </div>
           <iframe class="tool-frame tool-embed compact" src="/{iframe_query}" title="CV Optimiser checker"></iframe>
         </section>
