@@ -12055,8 +12055,111 @@ def render_pricing_page() -> str:
             font-size: 14px;
             line-height: 1.6;
           }}
+          .pricing-proof-panel {{
+            display: grid;
+            gap: 16px;
+            margin: 26px 0 0;
+            padding: 22px;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.20);
+          }}
+          .pricing-proof-head {{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+          }}
+          .pricing-proof-kicker {{
+            display: block;
+            margin-bottom: 6px;
+            color: #3758D8;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }}
+          .pricing-proof-head h2 {{
+            margin: 0;
+            color: #101B33;
+            font-size: 24px;
+            line-height: 1.18;
+          }}
+          .pricing-proof-head p {{
+            margin: 6px 0 0;
+            max-width: 66ch;
+            color: #53627A;
+            font-size: 15px;
+            line-height: 1.58;
+          }}
+          .pricing-proof-link {{
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            color: #1D4ED8;
+            font-size: 13px;
+            font-weight: 850;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+          }}
+          .pricing-proof-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+          }}
+          .pricing-proof-card {{
+            min-height: 132px;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid #D8E1EF;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 100%);
+          }}
+          .pricing-proof-card strong {{
+            display: block;
+            margin-bottom: 8px;
+            color: #101B33;
+            font-size: 15px;
+            line-height: 1.35;
+          }}
+          .pricing-proof-card span {{
+            display: block;
+            color: #53627A;
+            font-size: 14px;
+            line-height: 1.55;
+          }}
+          .pricing-trust-row {{
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid #D8E1EF;
+          }}
+          .pricing-trust-row span {{
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: #F8FBFF;
+            border: 1px solid #D8E1EF;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.3;
+          }}
           @media (max-width: 900px) {{
             .pricing-grid {{
+              grid-template-columns: 1fr;
+            }}
+            .pricing-proof-grid,
+            .pricing-trust-row {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -12084,8 +12187,18 @@ def render_pricing_page() -> str:
               font-size: 32px;
             }}
             .pricing-note,
-            .pricing-footnote {{
+            .pricing-footnote,
+            .pricing-proof-panel {{
               border-radius: 18px;
+            }}
+            .pricing-proof-panel {{
+              padding: 20px;
+            }}
+            .pricing-proof-head h2 {{
+              font-size: 22px;
+            }}
+            .pricing-proof-card {{
+              min-height: 0;
             }}
           }}
         </style>
@@ -12107,6 +12220,37 @@ def render_pricing_page() -> str:
 
           <section class="pricing-grid" aria-label="CV Optimiser pricing plans">
             {cards_html}
+          </section>
+
+          <section class="pricing-proof-panel" aria-label="What changes when you upgrade">
+            <div class="pricing-proof-head">
+              <div>
+                <span class="pricing-proof-kicker">Which option fits?</span>
+                <h2>Free tells you what is wrong. The full report tells you what to edit.</h2>
+                <p>Use the free check for a fast role-fit read. Use a paid report or Pro when you want a practical, UK-focused workflow for improving the CV before applying.</p>
+              </div>
+              <a class="pricing-proof-link" href="/example-cv-report">View example report</a>
+            </div>
+            <div class="pricing-proof-grid">
+              <div class="pricing-proof-card">
+                <strong>Free check</strong>
+                <span>Best for quickly checking whether the CV and advert are aligned before spending time on edits.</span>
+              </div>
+              <div class="pricing-proof-card">
+                <strong>Paid report</strong>
+                <span>Best for one important application where you want the recruiter verdict, section plan and safer rewrites.</span>
+              </div>
+              <div class="pricing-proof-card">
+                <strong>Pro access</strong>
+                <span>Best when you are tailoring several UK applications and want full reports, exports and re-checks as you go.</span>
+              </div>
+            </div>
+            <div class="pricing-trust-row" aria-label="Trust points">
+              <span>Role-specific scoring</span>
+              <span>UK CV guidance</span>
+              <span>Secure Stripe checkout</span>
+              <span>Guidance, not guarantees</span>
+            </div>
           </section>
 
           <section class="pricing-footnote">

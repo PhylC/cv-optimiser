@@ -1564,6 +1564,66 @@
     text-decoration-color: currentColor;
   }
 
+  .homepage-trust-panel {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #D8E1EF;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 68%, #F0FDF4 100%);
+  }
+
+  .homepage-trust-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .homepage-trust-head strong {
+    display: block;
+    color: #101B33;
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .homepage-trust-head span:not(.homepage-upgrade-kicker) {
+    display: block;
+    margin-top: 3px;
+    color: #53627A;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .homepage-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .homepage-trust-item {
+    min-height: 96px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid #D8E1EF;
+    background: rgba(255, 255, 255, 0.82);
+  }
+
+  .homepage-trust-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #101B33;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .homepage-trust-item span {
+    display: block;
+    color: #53627A;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
   .paste-toggle {
     border: 0;
     border-radius: 0;
@@ -4276,6 +4336,54 @@
   line-height: 1.6;
 }
 
+.pro-difference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.pro-difference-card {
+  min-height: 116px;
+  padding: 13px;
+  border-radius: 16px;
+  border: 1px solid rgba(199, 210, 254, 0.20);
+  background: rgba(8, 17, 31, 0.42);
+}
+
+.pro-difference-card.is-pro {
+  border-color: rgba(134, 239, 172, 0.36);
+  background: linear-gradient(135deg, rgba(21, 128, 61, 0.20), rgba(59, 130, 246, 0.10));
+}
+
+.pro-difference-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #E8EEFC;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pro-difference-card p {
+  margin: 0;
+  color: #B7C6E6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pro-difference-card.is-pro p {
+  color: #DDFCEB;
+}
+
+.result-trust-note {
+  margin: 10px 0 14px;
+  color: #B7C6E6;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .upgrade-gate {
   border-color: #C7D2FE;
   background: linear-gradient(135deg, #101B33 0%, #172B5F 62%, #214836 100%);
@@ -4619,6 +4727,21 @@
 
   .homepage-proof-grid {
     grid-template-columns: 1fr;
+  }
+
+  .homepage-trust-head {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .homepage-trust-grid,
+  .pro-difference-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .homepage-trust-item,
+  .pro-difference-card {
+    min-height: 0;
   }
 
   .result-preview-card {
@@ -5590,6 +5713,39 @@
             <a href="/nhs-admin-cv-example-report">NHS admin example</a>
             <a href="/software-developer-cv-example-report">Software developer example</a>
           </div>
+          <div class="homepage-trust-panel" aria-label="Why users can trust the check">
+            <div class="homepage-trust-head">
+              <div>
+                <span class="homepage-upgrade-kicker">Trust layer</span>
+                <strong>Clear guidance, not magic-score promises.</strong>
+                <span>The report is built from the CV and job advert you provide, with practical UK CV judgement and plain limits.</span>
+              </div>
+              <a class="homepage-upgrade-link" href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
+            </div>
+            <div class="homepage-trust-grid">
+              <div class="homepage-trust-item">
+                <strong>Role-specific scoring</strong>
+                <span>Checks the CV against this job description, not a generic template.</span>
+              </div>
+              <div class="homepage-trust-item">
+                <strong>UK CV lens</strong>
+                <span>Uses UK-style CV language, recruiter expectations and role examples.</span>
+              </div>
+              <div class="homepage-trust-item">
+                <strong>Safe rewrites</strong>
+                <span>Shows stronger wording to adapt without adding unsupported claims.</span>
+              </div>
+              <div class="homepage-trust-item">
+                <strong>Privacy explained</strong>
+                <span>CV handling, payment and account details are explained before you commit.</span>
+              </div>
+            </div>
+            <div class="homepage-proof-links">
+              <a href="/privacy">Privacy policy</a>
+              <a href="/terms">Terms and limits</a>
+              <a href="/faq">FAQ</a>
+            </div>
+          </div>
         </div>
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -5828,28 +5984,28 @@
 
           <div id="lockedReportSections" class="locked-report-grid hidden">
             <div class="locked-report-card">
-              <span class="locked-preview-label">Full keyword gap analysis</span>
-              <p>See the complete list of missing, weak and already-matched role keywords.</p>
+              <span class="locked-preview-label">UK recruiter verdict</span>
+              <p>See the likely shortlisting read and the main reason a recruiter may hesitate.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Role-specific improvement plan</span>
-              <p>Get a prioritised plan for improving this CV before you apply.</p>
+              <span class="locked-preview-label">First-page diagnosis</span>
+              <p>Check whether the profile, recent role and evidence are strong enough up front.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Rewritten profile suggestion</span>
-              <p>Unlock a sharper summary tailored to the job description.</p>
+              <span class="locked-preview-label">Section rewrite plan</span>
+              <p>Know what to change in the profile, skills and experience sections first.</p>
             </div>
             <div class="locked-report-card">
               <span class="locked-preview-label">Line-by-line fixes</span>
               <p>See weak lines, stronger alternatives and the recruiter signal each rewrite improves.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Detailed ATS/readability checks</span>
-              <p>Review formatting, keyword and clarity issues in more depth.</p>
+              <span class="locked-preview-label">Keyword and ATS map</span>
+              <p>Separate critical gaps from useful supporting terms and already-covered evidence.</p>
             </div>
             <div class="locked-report-card">
-              <span class="locked-preview-label">Guided edit workflow</span>
-              <p>Know exactly what to fix, where to fix it and when to re-check.</p>
+              <span class="locked-preview-label">Checklist and re-check loop</span>
+              <p>Copy or export the action plan, edit your CV, then test the improved version.</p>
             </div>
           </div>
 
@@ -6089,7 +6245,7 @@
 
           <div id="resultDisclaimerWrap" class="result-section" style="padding:14px 16px;">
             <p class="small">
-              These suggestions are guidance only. Review them carefully before editing your CV.
+              These suggestions are AI-assisted guidance only. Review every change before applying, keep the wording truthful, and do not add skills, experience or results you cannot support.
             </p>
           </div>
 
@@ -6105,12 +6261,23 @@
   <div id="resultsUpgradeCopy" class="results-upgrade-cta-copy">
     Get the full keyword gap analysis, rewritten examples and priority action plan for this CV before you apply.
   </div>
+  <div class="pro-difference-grid" aria-label="Free result and Pro report difference">
+    <div class="pro-difference-card">
+      <span class="pro-difference-label">Free result</span>
+      <p>Shows the score, headline gaps and the first improvements to consider.</p>
+    </div>
+    <div class="pro-difference-card is-pro">
+      <span class="pro-difference-label">Full report</span>
+      <p>Adds the recruiter verdict, first-page diagnosis, section rewrite plan, line fixes, checklist and re-check workflow.</p>
+    </div>
+  </div>
   <div class="checkout-trust-strip" aria-label="Checkout trust points">
     <span>Built from this CV result</span>
     <span>Secure payment via Stripe</span>
     <span>One-off report, no subscription</span>
     <span>Rewrite guidance included</span>
   </div>
+  <div class="result-trust-note">Scores are practical signals, not guarantees. The report is designed to help you make clearer, truthful edits before applying.</div>
   <div class="checkout-option-stack">
     <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
     <button id="resultsUpgradeMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
@@ -6123,12 +6290,23 @@
   <div id="proUnlockCopy" class="results-upgrade-cta-copy">
     <p>Get the full keyword gap analysis, rewritten examples and priority action plan for this CV before you apply.</p>
   </div>
+  <div class="pro-difference-grid" aria-label="Free result and Pro report difference">
+    <div class="pro-difference-card">
+      <span class="pro-difference-label">Free result</span>
+      <p>Shows the score, headline gaps and the first improvements to consider.</p>
+    </div>
+    <div class="pro-difference-card is-pro">
+      <span class="pro-difference-label">Full report</span>
+      <p>Adds the recruiter verdict, first-page diagnosis, section rewrite plan, line fixes, checklist and re-check workflow.</p>
+    </div>
+  </div>
   <div class="checkout-trust-strip" aria-label="Checkout trust points">
     <span>Built from this CV result</span>
     <span>Secure payment via Stripe</span>
     <span>One-off report, no subscription</span>
     <span>Rewrite guidance included</span>
   </div>
+  <div class="result-trust-note">Scores are practical signals, not guarantees. The report is designed to help you make clearer, truthful edits before applying.</div>
   <div class="checkout-option-stack">
     <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
     <button id="proMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
@@ -6745,7 +6923,7 @@
       const detail = detailParts.length
         ? "This result found " + detailParts.join(" and ") + "."
         : "This result has more role-fit detail ready.";
-      const copy = detail + " Unlock the full report for the UK recruiter verdict, first-page diagnosis, section rewrite plan, before/after rewrites, and exportable checklist.";
+      const copy = detail + " Free shows the diagnosis. The full report gives the edit plan: UK recruiter verdict, first-page diagnosis, section rewrite plan, line-by-line fixes, checklist and re-check workflow.";
 
       [resultsUpgradeTitle, proUnlockTitle].forEach(function(el) {
         if (el) el.textContent = headline;
