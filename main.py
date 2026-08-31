@@ -2585,6 +2585,17 @@ UNLOCK_INTENT_EVENTS = {
     "upgrade_clicked",
 }
 
+TREND_EVENTS = {
+    "page_view",
+    "content_page_view",
+    "cv_check_started",
+    "free_result_shown",
+    "unlock_intent",
+    "checkout_started",
+    "payment_success_seen",
+    "one_time_report_generated",
+}
+
 
 def percent(numerator: int, denominator: int) -> float:
     if denominator <= 0:
@@ -2592,10 +2603,53 @@ def percent(numerator: int, denominator: int) -> float:
     return round((numerator / denominator) * 100, 1)
 
 
+def analytics_dimension_value(metadata: dict[str, Any], keys: list[str], fallback: str = "unknown") -> str:
+    for key in keys:
+        value = coerce_string(metadata.get(key))
+        if value:
+            return value[:120]
+    return fallback
+
+
+def analytics_date_key(value: Any) -> str:
+    raw = coerce_string(value)
+    if not raw:
+        return "unknown"
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00")).date().isoformat()
+    except Exception:
+        return raw[:10] or "unknown"
+
+
+def make_dimension_row(label: str, counts: dict[str, int]) -> dict[str, Any]:
+    free_results = counts.get("free_result_shown", 0)
+    unlocks = counts.get("unlock_intent", 0)
+    checkouts = counts.get("checkout_started", 0)
+    reports = counts.get("one_time_report_generated", 0)
+    return {
+        "label": label,
+        "page_views": counts.get("page_view", 0) + counts.get("content_page_view", 0),
+        "cv_checks": counts.get("cv_check_started", 0),
+        "free_results": free_results,
+        "unlock_clicks": unlocks,
+        "checkout_starts": checkouts,
+        "paid_reports": reports,
+        "unlock_rate": percent(unlocks, free_results),
+        "checkout_rate": percent(checkouts, unlocks),
+        "paid_report_rate": percent(reports, checkouts),
+    }
+
+
 def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     counts: dict[str, int] = {}
     checkout_counts: dict[str, int] = {}
     source_counts: dict[str, int] = {}
+    dimension_counts: dict[str, dict[str, dict[str, int]]] = {
+        "sources": {},
+        "landing_pages": {},
+        "campaigns": {},
+    }
+    trend_counts: dict[str, dict[str, int]] = {}
     score_total = 0
     score_count = 0
     unique_emails = set()
@@ -2603,6 +2657,9 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     for row in rows:
         event_name = coerce_string(row.get("event_name"))
         metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+        event_keys = [event_name] if event_name else []
+        if event_name in UNLOCK_INTENT_EVENTS:
+            event_keys.append("unlock_intent")
         email = coerce_string(row.get("email"))
         if email:
             unique_emails.add(email.lower())
@@ -2610,12 +2667,27 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             counts[event_name] = counts.get(event_name, 0) + 1
             if event_name in UNLOCK_INTENT_EVENTS:
                 counts["unlock_intent"] = counts.get("unlock_intent", 0) + 1
+        date_key = analytics_date_key(row.get("created_at"))
+        if date_key != "unknown":
+            trend_day = trend_counts.setdefault(date_key, {})
+            for key in event_keys:
+                if key in TREND_EVENTS:
+                    trend_day[key] = trend_day.get(key, 0) + 1
         checkout_plan = coerce_string(metadata.get("checkout_plan"))
         if checkout_plan and event_name == "checkout_started":
             checkout_counts[checkout_plan] = checkout_counts.get(checkout_plan, 0) + 1
         source = coerce_string(metadata.get("source"))
         if source:
             source_counts[source] = source_counts.get(source, 0) + 1
+        dimensions = {
+            "sources": analytics_dimension_value(metadata, ["source", "first_source", "current_source"], "direct"),
+            "landing_pages": analytics_dimension_value(metadata, ["first_landing_path", "landing_path", "current_path"], "unknown"),
+            "campaigns": analytics_dimension_value(metadata, ["first_campaign", "campaign", "current_campaign"], "none"),
+        }
+        for dimension_name, dimension_label in dimensions.items():
+            dimension_bucket = dimension_counts[dimension_name].setdefault(dimension_label, {})
+            for key in event_keys:
+                dimension_bucket[key] = dimension_bucket.get(key, 0) + 1
         try:
             score = int(metadata.get("score"))
         except Exception:
@@ -2639,6 +2711,25 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         })
         previous_count = count
 
+    dimension_tables = {
+        name: sorted(
+            [make_dimension_row(label, bucket_counts) for label, bucket_counts in buckets.items()],
+            key=lambda row: (
+                row["paid_reports"],
+                row["checkout_starts"],
+                row["unlock_clicks"],
+                row["free_results"],
+                row["page_views"],
+            ),
+            reverse=True,
+        )[:25]
+        for name, buckets in dimension_counts.items()
+    }
+    daily_trends = [
+        {"date": date, **{key: trend_counts[date].get(key, 0) for key in sorted(TREND_EVENTS)}}
+        for date in sorted(trend_counts)
+    ]
+
     return {
         "total_events": len(rows),
         "unique_emails": len(unique_emails),
@@ -2646,6 +2737,8 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "counts": counts,
         "checkout_counts": checkout_counts,
         "source_counts": source_counts,
+        "dimension_tables": dimension_tables,
+        "daily_trends": daily_trends,
         "funnel": funnel,
         "key_metrics": {
             "free_results": counts.get("free_result_shown", 0),
@@ -9049,6 +9142,68 @@ def admin_analytics_page(request: Request) -> str:
             grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
             align-items: start;
           }}
+          .wide-panel {{
+            margin-top: 18px;
+          }}
+          .chart-wrap {{
+            overflow-x: auto;
+          }}
+          .trend-chart {{
+            width: 100%;
+            min-width: 720px;
+            height: 280px;
+            display: block;
+          }}
+          .chart-axis {{
+            stroke: rgba(159, 176, 212, 0.28);
+            stroke-width: 1;
+          }}
+          .chart-label {{
+            fill: #9FB0D4;
+            font-size: 11px;
+          }}
+          .chart-line {{
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+          }}
+          .chart-dot {{
+            stroke: #07142D;
+            stroke-width: 2;
+          }}
+          .legend {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            margin-top: 12px;
+            color: #C7D3EE;
+            font-size: 13px;
+          }}
+          .legend span {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+          }}
+          .legend i {{
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            display: inline-block;
+          }}
+          .conversion-grid {{
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 18px;
+          }}
+          .table-scroll {{
+            overflow-x: auto;
+          }}
+          .dimension-label {{
+            max-width: 260px;
+            overflow-wrap: anywhere;
+            color: #EEF3FF;
+            font-weight: 800;
+          }}
           h2 {{
             margin: 0 0 12px;
             font-size: 20px;
@@ -9119,6 +9274,9 @@ def admin_analytics_page(request: Request) -> str:
               grid-template-columns: 1fr;
               display: grid;
             }}
+            .conversion-grid {{
+              grid-template-columns: 1fr;
+            }}
             .kpi-grid {{
               grid-template-columns: repeat(2, minmax(0, 1fr));
             }}
@@ -9180,6 +9338,24 @@ def admin_analytics_page(request: Request) -> str:
               <h2>Recent Events</h2>
               <div id="recentEvents"></div>
             </div>
+            <div class="panel wide-panel">
+              <h2>Daily Trends</h2>
+              <div id="trendChart"></div>
+            </div>
+            <div class="panel wide-panel">
+              <h2>Source Conversion</h2>
+              <div id="sourceConversion"></div>
+            </div>
+            <div class="grid conversion-grid">
+              <div class="panel">
+                <h2>Landing Page Conversion</h2>
+                <div id="landingConversion"></div>
+              </div>
+              <div class="panel">
+                <h2>Campaign Conversion</h2>
+                <div id="campaignConversion"></div>
+              </div>
+            </div>
           </div>
         </div>
         <script>
@@ -9191,8 +9367,20 @@ def admin_analytics_page(request: Request) -> str:
           const checkoutCounts = document.getElementById("checkoutCounts");
           const sourceCounts = document.getElementById("sourceCounts");
           const recentEvents = document.getElementById("recentEvents");
+          const trendChart = document.getElementById("trendChart");
+          const sourceConversion = document.getElementById("sourceConversion");
+          const landingConversion = document.getElementById("landingConversion");
+          const campaignConversion = document.getElementById("campaignConversion");
           const windowSelect = document.getElementById("windowSelect");
           const refreshBtn = document.getElementById("refreshBtn");
+          const chartSeries = [
+            ["page_view", "Page views", "#8FB3FF"],
+            ["content_page_view", "Content views", "#B7F7C4"],
+            ["cv_check_started", "CV checks", "#38D996"],
+            ["unlock_intent", "Unlock intent", "#FFD166"],
+            ["checkout_started", "Checkouts", "#FF8A65"],
+            ["one_time_report_generated", "Paid reports", "#F472B6"]
+          ];
 
           function escapeHtml(value) {{
             return String(value ?? "")
@@ -9218,6 +9406,56 @@ def admin_analytics_page(request: Request) -> str:
             target.innerHTML = entries.slice(0, 18).map(([name, count]) => (
               "<div class='count-row'><span>" + escapeHtml(name) + "</span><strong>" + formatNumber(count) + "</strong></div>"
             )).join("");
+          }}
+
+          function renderDimensionTable(target, rows) {{
+            const data = (rows || []).slice(0, 15);
+            if (!data.length) {{
+              target.innerHTML = "<p>No attribution data yet.</p>";
+              return;
+            }}
+            target.innerHTML = "<div class='table-scroll'><table><thead><tr><th>Name</th><th>Views</th><th>Checks</th><th>Free results</th><th>Unlocks</th><th>Checkouts</th><th>Paid</th><th>Unlock rate</th><th>Checkout rate</th></tr></thead><tbody>" +
+              data.map((row) => (
+                "<tr><td class='dimension-label'>" + escapeHtml(row.label) + "</td><td>" + formatNumber(row.page_views) +
+                "</td><td>" + formatNumber(row.cv_checks) + "</td><td>" + formatNumber(row.free_results) +
+                "</td><td>" + formatNumber(row.unlock_clicks) + "</td><td>" + formatNumber(row.checkout_starts) +
+                "</td><td>" + formatNumber(row.paid_reports) + "</td><td class='rate'>" + escapeHtml(row.unlock_rate) +
+                "%</td><td class='rate'>" + escapeHtml(row.checkout_rate) + "%</td></tr>"
+              )).join("") + "</tbody></table></div>";
+          }}
+
+          function renderTrendChart(target, rows) {{
+            const data = rows || [];
+            if (!data.length) {{
+              target.innerHTML = "<p>No trend data yet.</p>";
+              return;
+            }}
+            const width = 860;
+            const height = 280;
+            const pad = {{ left: 46, right: 18, top: 20, bottom: 42 }};
+            const plotWidth = width - pad.left - pad.right;
+            const plotHeight = height - pad.top - pad.bottom;
+            const maxValue = Math.max(1, ...data.flatMap((row) => chartSeries.map(([key]) => Number(row[key] || 0))));
+            const xFor = (index) => pad.left + (data.length === 1 ? plotWidth / 2 : (index / (data.length - 1)) * plotWidth);
+            const yFor = (value) => pad.top + plotHeight - (Number(value || 0) / maxValue) * plotHeight;
+            const grid = [0, 0.25, 0.5, 0.75, 1].map((ratio) => {{
+              const y = pad.top + plotHeight - ratio * plotHeight;
+              const value = Math.round(maxValue * ratio);
+              return "<line class='chart-axis' x1='" + pad.left + "' y1='" + y + "' x2='" + (width - pad.right) + "' y2='" + y + "'></line>" +
+                "<text class='chart-label' x='8' y='" + (y + 4) + "'>" + value + "</text>";
+            }}).join("");
+            const labels = data.map((row, index) => {{
+              if (data.length > 10 && index % Math.ceil(data.length / 8) !== 0 && index !== data.length - 1) return "";
+              return "<text class='chart-label' text-anchor='middle' x='" + xFor(index) + "' y='" + (height - 14) + "'>" + escapeHtml(String(row.date).slice(5)) + "</text>";
+            }}).join("");
+            const lines = chartSeries.map(([key, label, color]) => {{
+              const points = data.map((row, index) => xFor(index) + "," + yFor(row[key])).join(" ");
+              const dots = data.map((row, index) => "<circle class='chart-dot' cx='" + xFor(index) + "' cy='" + yFor(row[key]) + "' r='3' fill='" + color + "'><title>" + escapeHtml(label + " " + row.date + ": " + formatNumber(row[key] || 0)) + "</title></circle>").join("");
+              return "<polyline class='chart-line' stroke='" + color + "' points='" + points + "'></polyline>" + dots;
+            }}).join("");
+            const legend = "<div class='legend'>" + chartSeries.map(([, label, color]) => "<span><i style='background:" + color + "'></i>" + escapeHtml(label) + "</span>").join("") + "</div>";
+            target.innerHTML = "<div class='chart-wrap'><svg class='trend-chart' viewBox='0 0 " + width + " " + height + "' role='img' aria-label='Daily analytics trends'>" +
+              grid + labels + lines + "</svg></div>" + legend;
           }}
 
           function renderDashboard(data) {{
@@ -9251,6 +9489,10 @@ def admin_analytics_page(request: Request) -> str:
             renderCountList(eventCounts, summary.counts || {{}});
             renderCountList(checkoutCounts, summary.checkout_counts || {{}});
             renderCountList(sourceCounts, summary.source_counts || {{}});
+            renderTrendChart(trendChart, summary.daily_trends || []);
+            renderDimensionTable(sourceConversion, (summary.dimension_tables || {{}}).sources || []);
+            renderDimensionTable(landingConversion, (summary.dimension_tables || {{}}).landing_pages || []);
+            renderDimensionTable(campaignConversion, (summary.dimension_tables || {{}}).campaigns || []);
 
             recentEvents.innerHTML = "<table><thead><tr><th>Time</th><th>Event</th><th>Email</th><th>Metadata</th></tr></thead><tbody>" +
               (data.items || []).slice(0, 40).map((item) => (
@@ -9266,7 +9508,7 @@ def admin_analytics_page(request: Request) -> str:
             dashboardEl.classList.add("hidden");
             try {{
               const days = windowSelect.value || "30";
-              const response = await fetch("/api/admin/analytics?days=" + encodeURIComponent(days) + "&limit=500");
+              const response = await fetch("/api/admin/analytics?days=" + encodeURIComponent(days) + "&limit=1000");
               const data = await response.json();
               if (!response.ok || data.error) {{
                 throw new Error(data.error || "analytics_unavailable");
