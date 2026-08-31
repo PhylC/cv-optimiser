@@ -6718,6 +6718,67 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         f"<li>{html.escape(item)}</li>"
         for item in page["action_plan"]
     )
+    first_page_diagnosis = page.get("first_page_diagnosis") or {
+        "Opening profile": "The profile needs to name the target role and strongest matching evidence faster.",
+        "Recent role": "The most relevant recent role should carry the proof a recruiter is likely to scan first.",
+        "Evidence quality": page.get("unclear", ["Evidence needs clearer context, scale or outcomes."])[0],
+        "Recruiter read": f"{recruiter_verdict.get('shortlist_likelihood', 'Possible')} if the first-page evidence is made easier to scan.",
+    }
+    first_page_html = "".join(
+        f"""
+        <div class="diagnosis-card">
+          <span>{html.escape(label)}</span>
+          <strong>{html.escape(copy)}</strong>
+        </div>
+        """
+        for label, copy in first_page_diagnosis.items()
+    )
+    default_section_plan = [
+        {
+            "section": "Professional profile",
+            "problem": "The role target and strongest evidence are not visible quickly enough.",
+            "rewrite_direction": recruiter_verdict.get("fix_first", "Rewrite the top profile around the target role and strongest relevant evidence."),
+            "example_line": page.get("score_copy", ""),
+            "why_it_helps": "It lets a UK recruiter understand the application story before scanning the detail.",
+        },
+        {
+            "section": "Key skills",
+            "problem": "Important job-description terms are missing or buried.",
+            "rewrite_direction": "Group the most relevant truthful keywords into a concise skills section.",
+            "example_line": ", ".join(page["keywords"][:5]),
+            "why_it_helps": "It improves scanability without keyword stuffing.",
+        },
+        {
+            "section": "Recent experience",
+            "problem": page["fixes"][0][0] if page.get("fixes") else "Recent bullets are too duty-led.",
+            "rewrite_direction": page["fixes"][0][1] if page.get("fixes") else "Rewrite bullets around action, context and outcome.",
+            "example_line": page.get("strong_bullet", ""),
+            "why_it_helps": "The recent role usually carries the most weight in shortlisting.",
+        },
+        {
+            "section": "Evidence and achievements",
+            "problem": page["unclear"][0] if page.get("unclear") else "Achievements need clearer proof.",
+            "rewrite_direction": "Add specific context, tools, standards or outcomes where the CV supports them.",
+            "example_line": rewrite_examples[-1].get("after", page.get("strong_bullet", "")),
+            "why_it_helps": "Specific evidence makes the CV easier to compare against the role requirements.",
+        },
+    ]
+    section_rewrite_plan = page.get("section_rewrite_plan") or default_section_plan
+    section_rewrite_html = "".join(
+        f"""
+        <div class="priority-card">
+          <span class="priority-number">{index}</span>
+          <div>
+            <strong>{html.escape(item.get("section", "CV section"))}</strong>
+            <p><strong>Problem:</strong> {html.escape(item.get("problem", ""))}</p>
+            <p><strong>Rewrite direction:</strong> {html.escape(item.get("rewrite_direction", item.get("rewriteDirection", "")))}</p>
+            <p><strong>Example line:</strong> {html.escape(item.get("example_line", item.get("exampleLine", "")))}</p>
+            <p><strong>Why it helps:</strong> {html.escape(item.get("why_it_helps", item.get("whyItHelps", "")))}</p>
+          </div>
+        </div>
+        """
+        for index, item in enumerate(section_rewrite_plan[:4], start=1)
+    )
     related_html = "".join(
         f'<li><a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a></li>'
         for href, label in page.get("related", [])
@@ -6928,6 +6989,33 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             gap: 14px;
             margin-top: 14px;
           }}
+          .diagnosis-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+          }}
+          .diagnosis-card {{
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(10, 19, 35, 0.34);
+            border: 1px solid rgba(92, 112, 150, 0.18);
+          }}
+          .diagnosis-card span {{
+            display: block;
+            margin-bottom: 7px;
+            color: #9FB0D4;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }}
+          .diagnosis-card strong {{
+            display: block;
+            color: #EEF3FF;
+            font-size: 15px;
+            line-height: 1.5;
+          }}
           .priority-card {{
             display: grid;
             grid-template-columns: auto 1fr;
@@ -6972,7 +7060,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
 
           @media (max-width: 900px) {{
-            .report-grid, .before-after {{
+            .report-grid, .before-after, .diagnosis-grid {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -7076,6 +7164,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               </div>
 
               <div class="card" style="margin-top:24px;">
+                <h2>First-page diagnosis</h2>
+                <p class="section-helper">The full report checks whether the profile, recent role and evidence are strong enough to earn a closer read.</p>
+                <div class="diagnosis-grid">
+                  {first_page_html}
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
                 <h2>Missing keywords</h2>
                 <div class="keyword-chip-row">
                   {keyword_html}
@@ -7094,6 +7190,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                 <h2>Top priority fixes</h2>
                 <div class="priority-grid">
                   {fixes_html}
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Rewrite plan by CV section</h2>
+                <p class="section-helper">A Pro report points to the exact CV sections to improve, with safe example wording based on the evidence available.</p>
+                <div class="priority-grid">
+                  {section_rewrite_html}
                 </div>
               </div>
 
@@ -7120,12 +7224,12 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                   <span class="pro-badge">PRO</span>
                 </div>
                 <div class="locked-list blurred">
-                  <p>• Full rewritten professional summary</p>
-                  <p>• Stronger bullet points</p>
-                  <p>• Full keyword optimisation plan</p>
-                  <p>• Export-ready improvement checklist</p>
+                  <p>• UK recruiter verdict and shortlisting risk</p>
+                  <p>• First-page diagnosis</p>
+                  <p>• Rewrite plan by CV section</p>
+                  <p>• Before/after rewrites and export checklist</p>
                 </div>
-                <p>The free check gives you the score and top fixes. The full report helps you rewrite and improve the CV properly.</p>
+                <p>The free check gives you the score and top fixes. The full report helps you decide what to change, where to change it, and how to rewrite it safely.</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
@@ -7144,7 +7248,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
               <div class="card" style="margin-top:24px;">
                 <h2>Get this report for your CV</h2>
-                <p>Run your own CV and job description through CV Optimiser to unlock the full analysis, keyword gaps, rewritten examples and priority fixes.</p>
+                <p>Run your own CV and job description through CV Optimiser to unlock the recruiter verdict, first-page diagnosis, section rewrite plan, keyword gaps and exportable checklist.</p>
                 {build_compliance_notice()}
                 <div class="cta-row cta-block-tight">
                   <a href="/#tool" class="cta cta-button">Get this report for your CV</a>
@@ -9271,13 +9375,13 @@ def render_upgrade_page() -> str:
               <h2>Paid report</h2>
               <div class="price">£7.99 one-time</div>
               <ul>
-                <li>Fuller report details for one CV result</li>
-                <li>More detailed improvement suggestions</li>
-                <li>Keyword gaps and role-match guidance</li>
-                <li>Step-by-step improvement plan</li>
+                <li>UK recruiter verdict and main shortlisting risk</li>
+                <li>First-page diagnosis for profile, recent role and evidence</li>
+                <li>Rewrite plan by CV section with safe example lines</li>
+                <li>Before/after rewrites, keyword plan and exportable checklist</li>
               </ul>
               <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Buy paid report</button>
-              <p class="upgrade-helper">Sign in first so the paid report can be attached to your account.</p>
+              <p class="upgrade-helper">Best for one important application. Sign in first so the report can be attached to your account.</p>
             </div>
 
             <div id="proCard" class="upgrade-card">
@@ -9285,9 +9389,9 @@ def render_upgrade_page() -> str:
               <div class="price">£9.99/month</div>
               <ul>
                 <li>Unlimited CV checks</li>
-                <li>Full reports</li>
-                <li>Saved results</li>
-                <li>Ongoing improvements</li>
+                <li>Full Pro reports for every role you test</li>
+                <li>Saved reports, exports and copied checklists</li>
+                <li>Useful for tailoring multiple UK applications</li>
               </ul>
               <button class="checkout-btn secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Go Pro — £9.99/month</button>
               <p id="proSignedOutPrompt" class="upgrade-helper hidden">Sign in to start monthly Pro access.</p>

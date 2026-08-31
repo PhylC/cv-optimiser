@@ -1348,6 +1348,53 @@
     font-weight: 900;
   }
 
+  .homepage-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .homepage-proof-card {
+    min-height: 116px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(92, 112, 150, 0.22);
+    background: rgba(4, 14, 31, 0.26);
+  }
+
+  .homepage-proof-card strong {
+    display: block;
+    margin-bottom: 7px;
+    color: #F4F7FF;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .homepage-proof-card span {
+    display: block;
+    color: #AFC0E4;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .homepage-proof-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid rgba(92, 112, 150, 0.16);
+  }
+
+  .homepage-proof-links a {
+    color: #B7F7C4;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .paste-toggle {
     border: 0;
     border-radius: 0;
@@ -3785,6 +3832,10 @@
     gap: 10px;
   }
 
+  .homepage-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
   .result-preview-card {
     margin-top: 26px;
     padding: 18px 14px;
@@ -4408,7 +4459,7 @@
             <div>
               <span class="homepage-upgrade-kicker">Free first, upgrade when useful</span>
               <h2 class="homepage-upgrade-title">Start with the free check. Unlock the full report when the role matters.</h2>
-              <p class="homepage-upgrade-copy">The homepage should make the upgrade clear without getting in your way. Run the check first, then decide whether the deeper rewrite and ATS guidance is worth unlocking for that application.</p>
+              <p class="homepage-upgrade-copy">Run the free check first. If the application is worth extra care, unlock a UK-focused Pro report with the verdict, first-page diagnosis, section rewrite plan and exportable checklist.</p>
             </div>
             <a class="homepage-upgrade-link" href="/upgrade" data-upgrade-link>See upgrade options</a>
           </div>
@@ -4424,11 +4475,43 @@
             <div class="homepage-plan-panel is-pro">
               <div class="homepage-plan-name">Full report <span class="homepage-plan-tag">Upgrade</span></div>
               <ul class="homepage-plan-list">
-                <li>Detailed ATS, readability and role-fit breakdown</li>
-                <li>Stronger rewrite guidance for bullets and summary</li>
-                <li>Saved reports, export options and deeper action plan</li>
+                <li>UK recruiter verdict and first-page diagnosis</li>
+                <li>Rewrite plan by CV section with example lines</li>
+                <li>Before/after rewrites, export options and checklist</li>
               </ul>
             </div>
+          </div>
+          <div class="homepage-proof-grid" aria-label="What the full report includes">
+            <div class="homepage-proof-card">
+              <strong>Shortlisting verdict</strong>
+              <span>Likely, possible or unlikely, with the main reason a UK recruiter may pause.</span>
+            </div>
+            <div class="homepage-proof-card">
+              <strong>First-page diagnosis</strong>
+              <span>Checks whether the profile, recent role and evidence are strong enough to earn a closer read.</span>
+            </div>
+            <div class="homepage-proof-card">
+              <strong>Section rewrite plan</strong>
+              <span>Tells you what to change in the profile, skills and experience sections, with safe example lines.</span>
+            </div>
+            <div class="homepage-proof-card">
+              <strong>Before/after rewrites</strong>
+              <span>Shows how to turn duty-led wording into clearer role-fit evidence without inventing claims.</span>
+            </div>
+            <div class="homepage-proof-card">
+              <strong>Keyword and ATS checks</strong>
+              <span>Separates critical gaps from useful supporting terms and terms your CV already covers.</span>
+            </div>
+            <div class="homepage-proof-card">
+              <strong>Exportable checklist</strong>
+              <span>Download, print or copy the action plan before editing and re-running the CV.</span>
+            </div>
+          </div>
+          <div class="homepage-proof-links">
+            <a href="/example-cv-report">View example report</a>
+            <a href="/graduate-cv-example-report">Graduate example</a>
+            <a href="/nhs-admin-cv-example-report">NHS admin example</a>
+            <a href="/software-developer-cv-example-report">Software developer example</a>
           </div>
         </div>
 
@@ -5423,7 +5506,7 @@
       const detail = detailParts.length
         ? "This result found " + detailParts.join(" and ") + "."
         : "This result has more role-fit detail ready.";
-      const copy = detail + " Unlock the full report for a prioritised action plan, stronger wording examples, and ATS/readability fixes for this specific application.";
+      const copy = detail + " Unlock the full report for the UK recruiter verdict, first-page diagnosis, section rewrite plan, before/after rewrites, and exportable checklist.";
 
       [resultsUpgradeTitle, proUnlockTitle].forEach(function(el) {
         if (el) el.textContent = headline;
