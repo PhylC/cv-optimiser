@@ -4856,22 +4856,22 @@ def build_typography_css() -> str:
     return """
           h1 {
             margin: 0 0 12px;
-            font-size: clamp(2.35rem, 4.8vw, 3rem);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
+            font-size: clamp(2.2rem, 4.2vw, 2.85rem);
+            line-height: 1.06;
+            letter-spacing: 0;
             color: #F4F7FF;
             font-weight: 820;
           }
           h2 {
-            margin: 32px 0 16px;
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            line-height: 1.12;
+            margin: 28px 0 14px;
+            font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+            line-height: 1.16;
             color: #EEF3FF;
             font-weight: 780;
           }
           h3 {
-            margin: 32px 0 16px;
-            font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+            margin: 24px 0 12px;
+            font-size: clamp(1.08rem, 1.8vw, 1.25rem);
             line-height: 1.2;
             color: #EEF3FF;
             font-weight: 760;
@@ -4888,13 +4888,13 @@ def build_typography_css() -> str:
           }
           @media (max-width: 900px) {
             h1 {
-              font-size: clamp(2rem, 8vw, 2.55rem);
+              font-size: clamp(2rem, 8vw, 2.5rem);
             }
             h2 {
-              font-size: clamp(1.4rem, 6vw, 1.8rem);
+              font-size: clamp(1.3rem, 5.2vw, 1.65rem);
             }
             h3 {
-              font-size: clamp(1.1rem, 4.8vw, 1.3rem);
+              font-size: clamp(1.05rem, 4.4vw, 1.22rem);
             }
             p, li {
               font-size: 15px;
@@ -5379,24 +5379,24 @@ def build_mobile_layout_css() -> str:
             }
 
             h1 {
-              font-size: clamp(32px, 9vw, 44px);
-              line-height: 1.08;
+              font-size: clamp(32px, 8vw, 40px);
+              line-height: 1.1;
             }
 
             h2 {
-              font-size: clamp(24px, 7vw, 34px);
-              line-height: 1.15;
+              font-size: clamp(22px, 5.8vw, 28px);
+              line-height: 1.18;
             }
 
             h3 {
-              font-size: clamp(21px, 6vw, 28px);
+              font-size: clamp(18px, 4.8vw, 22px);
               line-height: 1.2;
             }
 
             p,
             li {
-              font-size: 18px;
-              line-height: 1.55;
+              font-size: 16px;
+              line-height: 1.6;
               overflow-wrap: anywhere;
             }
 
@@ -5444,9 +5444,9 @@ def build_public_content_surface_css() -> str:
           .guides-page .guide-group {
             background: #FFFFFF !important;
             border: 1px solid #D8E1EF !important;
-            border-radius: 24px !important;
+            border-radius: 18px !important;
             color: #14213D !important;
-            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22) !important;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
           }
 
           .faq-page .summary-box,
@@ -5469,7 +5469,7 @@ def build_public_content_surface_css() -> str:
           .content-page .check-card,
           .content-page .score-card,
           .guides-page .guide-group {
-            padding: 28px !important;
+            padding: 24px !important;
           }
 
           .faq-page .summary-box h1,
@@ -5546,6 +5546,58 @@ def build_public_content_surface_css() -> str:
             color: #101B33 !important;
           }
 
+          .faq-page .summary-box h2,
+          .faq-page > .faq-list h2,
+          .faq-page .final-cta h2,
+          .seo-page > .card h2,
+          .seo-page .layout > .card h2,
+          .landing-page .summary-box h2,
+          .landing-page .final-cta h2,
+          .content-page .hero-panel h2,
+          .content-page .trust-box h2,
+          .content-page .cta-panel h2,
+          .content-page .privacy-box h2,
+          .content-page .pro-proof-section h2,
+          .content-page .example-link-panel h2,
+          .content-page .bottom-cta h2,
+          .content-page .final-cta h2,
+          .content-page .lead-capture-panel h2,
+          .content-page .panel h2,
+          .content-page .check-card h2,
+          .content-page .score-card h2,
+          .guides-page .guide-group h2 {
+            margin: 0 0 12px !important;
+            font-size: clamp(22px, 3vw, 28px) !important;
+            line-height: 1.16 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .faq-page .summary-box h3,
+          .faq-page > .faq-list h3,
+          .faq-page .final-cta h3,
+          .seo-page > .card h3,
+          .seo-page .layout > .card h3,
+          .landing-page .summary-box h3,
+          .landing-page .final-cta h3,
+          .content-page .hero-panel h3,
+          .content-page .trust-box h3,
+          .content-page .cta-panel h3,
+          .content-page .privacy-box h3,
+          .content-page .pro-proof-section h3,
+          .content-page .example-link-panel h3,
+          .content-page .bottom-cta h3,
+          .content-page .final-cta h3,
+          .content-page .lead-capture-panel h3,
+          .content-page .panel h3,
+          .content-page .check-card h3,
+          .content-page .score-card h3,
+          .guides-page .guide-group h3 {
+            margin: 18px 0 10px !important;
+            font-size: clamp(17px, 2vw, 20px) !important;
+            line-height: 1.22 !important;
+            letter-spacing: 0 !important;
+          }
+
           .faq-page .summary-box p,
           .faq-page .summary-box li,
           .faq-page > .faq-list p,
@@ -5586,7 +5638,9 @@ def build_public_content_surface_css() -> str:
           .content-page .score-card li,
           .guides-page .guide-group p,
           .guides-page .guide-group li {
-            color: #53627A !important;
+            color: #334155 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
           }
 
           .content-page .comparison-table th {
@@ -5676,9 +5730,101 @@ def build_public_content_surface_css() -> str:
             .content-page .check-card,
             .content-page .score-card,
             .guides-page .guide-group {
-              padding: 20px 16px !important;
-              border-radius: 20px !important;
-              box-shadow: 0 18px 42px rgba(3, 9, 23, 0.22) !important;
+              padding: 22px !important;
+              border-radius: 18px !important;
+              box-shadow: 0 12px 28px rgba(3, 9, 23, 0.16) !important;
+            }
+
+            .faq-page .summary-box h2,
+            .faq-page > .faq-list h2,
+            .faq-page .final-cta h2,
+            .seo-page > .card h2,
+            .seo-page .layout > .card h2,
+            .landing-page .summary-box h2,
+            .landing-page .final-cta h2,
+            .content-page .hero-panel h2,
+            .content-page .trust-box h2,
+            .content-page .cta-panel h2,
+            .content-page .privacy-box h2,
+            .content-page .pro-proof-section h2,
+            .content-page .example-link-panel h2,
+            .content-page .bottom-cta h2,
+            .content-page .final-cta h2,
+            .content-page .lead-capture-panel h2,
+            .content-page .panel h2,
+            .content-page .check-card h2,
+            .content-page .score-card h2,
+            .guides-page .guide-group h2 {
+              font-size: 24px !important;
+              line-height: 1.18 !important;
+            }
+
+            .faq-page .summary-box h3,
+            .faq-page > .faq-list h3,
+            .faq-page .final-cta h3,
+            .seo-page > .card h3,
+            .seo-page .layout > .card h3,
+            .landing-page .summary-box h3,
+            .landing-page .final-cta h3,
+            .content-page .hero-panel h3,
+            .content-page .trust-box h3,
+            .content-page .cta-panel h3,
+            .content-page .privacy-box h3,
+            .content-page .pro-proof-section h3,
+            .content-page .example-link-panel h3,
+            .content-page .bottom-cta h3,
+            .content-page .final-cta h3,
+            .content-page .lead-capture-panel h3,
+            .content-page .panel h3,
+            .content-page .check-card h3,
+            .content-page .score-card h3,
+            .guides-page .guide-group h3 {
+              font-size: 18px !important;
+              line-height: 1.24 !important;
+            }
+
+            .faq-page .summary-box p,
+            .faq-page .summary-box li,
+            .faq-page > .faq-list p,
+            .faq-page > .faq-list li,
+            .faq-page .final-cta p,
+            .seo-page > .card p,
+            .seo-page > .card li,
+            .seo-page .layout > .card p,
+            .seo-page .layout > .card li,
+            .landing-page .summary-box p,
+            .landing-page .summary-box li,
+            .landing-page .example-row span,
+            .landing-page .example-row p,
+            .landing-page .final-cta p,
+            .content-page .hero-panel p,
+            .content-page .hero-panel li,
+            .content-page .trust-box p,
+            .content-page .trust-box li,
+            .content-page .cta-panel p,
+            .content-page .cta-panel li,
+            .content-page .privacy-box p,
+            .content-page .privacy-box li,
+            .content-page .comparison-wrap td,
+            .content-page .comparison-wrap li,
+            .content-page .pro-proof-section p,
+            .content-page .pro-proof-section li,
+            .content-page .example-link-panel p,
+            .content-page .bottom-cta p,
+            .content-page .final-cta p,
+            .content-page .final-cta li,
+            .content-page .lead-capture-panel p,
+            .content-page .lead-capture-panel li,
+            .content-page .panel p,
+            .content-page .panel li,
+            .content-page .check-card p,
+            .content-page .check-card li,
+            .content-page .score-card p,
+            .content-page .score-card li,
+            .guides-page .guide-group p,
+            .guides-page .guide-group li {
+              font-size: 16px !important;
+              line-height: 1.6 !important;
             }
           }
     """
