@@ -7497,10 +7497,6 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             ("/software-developer-cv-example-report", "Software developer CV example report"),
         ],
     })
-    keyword_html = "".join(
-        f'<span class="keyword-chip">{html.escape(keyword)}</span>'
-        for keyword in page["keywords"]
-    )
     unclear_html = "".join(
         f"<li>{html.escape(item)}</li>"
         for item in page["unclear"]
@@ -7612,6 +7608,112 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         """
         for index, item in enumerate(section_rewrite_plan[:4], start=1)
     )
+    score_number_match = re.search(r"(\d+)", page.get("score", ""))
+    score_number = int(score_number_match.group(1)) if score_number_match else 58
+    critical_keywords = page["keywords"][:3]
+    supporting_keywords = page["keywords"][3:6] or page["keywords"][:3]
+    covered_keywords = page.get("covered_keywords") or [
+        page.get("role_label", "target role"),
+        "communication",
+        "team support",
+        "relevant experience",
+    ]
+    professional_summary = page.get("professional_summary") or (
+        f"{page.get('role_label', 'Candidate')} with relevant experience, but the CV needs a sharper "
+        "opening profile, clearer evidence and more job-description language before it is ready for a competitive UK shortlist."
+    )
+    executive_summary = (
+        f"For a {page.get('role_label', 'target UK role')}, this CV is "
+        f"{recruiter_verdict.get('shortlist_likelihood', 'possible').lower()} but not yet as strong as it could be. "
+        f"Fix first: {recruiter_verdict.get('fix_first', 'strengthen the profile and most relevant recent role bullets before applying')}. "
+        f"The main shortlisting risk is: {recruiter_verdict.get('main_concern', page.get('score_copy', 'the strongest fit is not visible quickly enough'))}"
+    )
+    impact_cards = [
+        (
+            "ATS match",
+            "Useful lift" if len(page["keywords"]) >= 3 else "Fine tuning",
+            f"Work in {min(len(page['keywords']), 6)} missing role terms where they are true.",
+        ),
+        (
+            "Recruiter clarity",
+            "High priority",
+            f"Address the top {min(len(page.get('fixes', [])), 3)} shortlist risks before styling edits.",
+        ),
+        (
+            "Evidence strength",
+            "Strong lift" if len(rewrite_examples) > 1 else "Targeted lift",
+            "Adapt the rewrite examples into measurable, specific bullets.",
+        ),
+        (
+            "Next test",
+            "Re-score after edits",
+            "Re-run after editing to confirm role fit and keyword coverage moved.",
+        ),
+    ]
+    impact_cards_html = "".join(
+        f"""
+        <div class="pro-impact-card">
+          <span>{html.escape(label)}</span>
+          <strong>{html.escape(value)}</strong>
+          <p>{html.escape(copy)}</p>
+        </div>
+        """
+        for label, value, copy in impact_cards
+    )
+    snapshot_cards = [
+        ("Primary gap", recruiter_verdict.get("main_concern", page.get("unclear", ["Role fit needs to be clearer."])[0])),
+        ("Keyword focus", ", ".join(critical_keywords)),
+        ("Rewrite focus", rewrite_examples[0].get("after", page.get("strong_bullet", ""))),
+        ("Next action", page.get("action_plan", ["Improve the first-page evidence before applying."])[0]),
+    ]
+    snapshot_cards_html = "".join(
+        f"""
+        <div class="pro-snapshot-card">
+          <span>{html.escape(label)}</span>
+          <strong>{html.escape(copy)}</strong>
+        </div>
+        """
+        for label, copy in snapshot_cards
+    )
+    score_breakdown = page.get("score_breakdown") or [
+        ("Role alignment", min(100, score_number + 4), "Relevant experience is present but needs tighter framing."),
+        ("Keyword coverage", max(35, score_number - 8), "Important job-description terms are missing or buried."),
+        ("Evidence strength", max(35, score_number - 5), "Bullets need clearer outcomes, scope or proof."),
+        ("ATS readability", min(88, score_number + 12), "The structure is readable but keyword placement can improve."),
+        ("Recruiter clarity", max(35, score_number - 3), "The first-page story should be faster to understand."),
+    ]
+    score_breakdown_html = "".join(
+        f"""
+        <div class="score-breakdown-card">
+          <span>{html.escape(label)}</span>
+          <strong>{score}/100</strong>
+          <p>{html.escape(copy)}</p>
+        </div>
+        """
+        for label, score, copy in score_breakdown
+    )
+    keyword_importance_html = "".join(
+        f"""
+        <div class="keyword-group">
+          <h3>{html.escape(label)}</h3>
+          <div class="keyword-chip-row">{''.join(f'<span class="keyword-chip">{html.escape(keyword)}</span>' for keyword in keywords)}</div>
+          <p>{html.escape(copy)}</p>
+        </div>
+        """
+        for label, keywords, copy in [
+            ("Critical missing", critical_keywords, "Add these only where your real experience supports them."),
+            ("Useful supporting", supporting_keywords, "Use these to strengthen the skills section and recent-role bullets."),
+            ("Already covered", covered_keywords[:6], "Keep these signals visible while improving the weaker gaps."),
+        ]
+    )
+    skills_section_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in (page.get("skills_section") or page["keywords"][:6])
+    )
+    interview_risks_html = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in (page.get("interview_risks") or page.get("unclear", [])[:3])
+    )
     related_html = "".join(
         f'<li><a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a></li>'
         for href, label in page.get("related", [])
@@ -7695,6 +7797,15 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .hero-card {{
             margin-bottom: 24px;
           }}
+          .hero-card .example-truth-note {{
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
+            color: #334155;
+            font-size: 14px;
+          }}
           .report-grid {{
             display: grid;
             grid-template-columns: 1.2fr 1fr;
@@ -7708,6 +7819,94 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 54%, #EEF7F2 100%);
             border: 1px solid #D8E1EF;
             margin-bottom: 18px;
+          }}
+          .pro-command-centre {{
+            margin-bottom: 24px;
+            background:
+              radial-gradient(circle at 10% 0%, rgba(91, 120, 255, 0.12), transparent 30%),
+              linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 52%, #EEF7F2 100%);
+          }}
+          .pro-command-centre .report-summary {{
+            max-width: 820px;
+            margin-bottom: 18px;
+            color: #334155;
+            font-size: 17px;
+            line-height: 1.7;
+          }}
+          .pro-impact-grid,
+          .pro-snapshot-grid,
+          .score-breakdown-grid,
+          .keyword-importance-grid {{
+            display: grid;
+            gap: 14px;
+          }}
+          .pro-impact-grid {{
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }}
+          .pro-snapshot-grid,
+          .score-breakdown-grid {{
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }}
+          .keyword-importance-grid {{
+            grid-template-columns: 1fr;
+          }}
+          .pro-impact-card,
+          .pro-snapshot-card,
+          .score-breakdown-card,
+          .keyword-group,
+          .report-action-card {{
+            padding: 16px;
+            border-radius: 16px;
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
+          }}
+          .pro-impact-card span,
+          .pro-snapshot-card span,
+          .score-breakdown-card span {{
+            display: block;
+            margin-bottom: 8px;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }}
+          .pro-impact-card strong,
+          .pro-snapshot-card strong,
+          .score-breakdown-card strong {{
+            display: block;
+            color: #101B33;
+            font-size: 16px;
+            line-height: 1.45;
+          }}
+          .score-breakdown-card strong {{
+            font-size: 28px;
+          }}
+          .pro-impact-card p,
+          .score-breakdown-card p,
+          .keyword-group p {{
+            margin: 8px 0 0;
+          }}
+          .report-actions {{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #D8E1EF;
+          }}
+          .report-action-chip {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            color: #3157D5;
+            font-size: 13px;
+            font-weight: 800;
           }}
           .score-value {{
             font-size: 52px;
@@ -7907,8 +8106,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .priority-card p {{
             margin: 0;
           }}
-          .locked-list p {{
-            margin: 0 0 10px;
+          .report-action-card p {{
+            margin: 0;
           }}
           .cta-panel {{
             margin-top: 24px;
@@ -7920,7 +8119,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
 
           @media (max-width: 900px) {{
-            .report-grid, .before-after, .diagnosis-grid {{
+            .report-grid, .before-after, .diagnosis-grid, .pro-impact-grid, .pro-snapshot-grid, .score-breakdown-grid {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -7940,7 +8139,12 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             }}
             .score-block,
             .before-after-card,
-            .priority-card {{
+            .priority-card,
+            .pro-impact-card,
+            .pro-snapshot-card,
+            .score-breakdown-card,
+            .keyword-group,
+            .report-action-card {{
               padding: 14px;
               border-radius: 14px;
             }}
@@ -7977,10 +8181,85 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
 {build_mobile_layout_css()}
 {build_public_content_surface_css()}
+          .page.example-report-page,
+          .page.content-page.seo-page.example-report-page {{
+            overflow-x: hidden !important;
+          }}
+          .page.seo-page.example-report-page > .card,
+          .page.content-page.seo-page.example-report-page > .card,
+          .page.example-report-page > .hero-card,
+          .page.example-report-page > .card.pro-command-centre,
+          .page.example-report-page .report-grid > div > .card {{
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 18px !important;
+            color: #101B33 !important;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
+          }}
+          .page.example-report-page > .card.pro-command-centre {{
+            background:
+              radial-gradient(circle at 10% 0%, rgba(91, 120, 255, 0.12), transparent 30%),
+              linear-gradient(135deg, #FFFFFF 0%, #F8FBFF 52%, #EEF7F2 100%) !important;
+          }}
+          .page.example-report-page > .card.pro-command-centre h2,
+          .page.example-report-page > .card.pro-command-centre strong,
+          .page.example-report-page .report-action-card strong {{
+            color: #101B33 !important;
+          }}
+          .page.example-report-page > .card.pro-command-centre p,
+          .page.example-report-page > .card.pro-command-centre li,
+          .page.example-report-page .report-action-card p {{
+            color: #334155 !important;
+          }}
+          .page.example-report-page .hero-card,
+          .page.example-report-page .card,
+          .page.example-report-page .cta {{
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }}
           @media (max-width: 768px) {{
+            .page.example-report-page,
+            .page.content-page.seo-page.example-report-page {{
+              width: 100% !important;
+              max-width: 100vw !important;
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+              box-sizing: border-box !important;
+            }}
+            .page.example-report-page .site-header,
+            .page.example-report-page .site-header-main,
+            .page.example-report-page .site-header-inner,
+            .page.example-report-page .site-header-right,
+            .page.example-report-page .header-actions,
+            .page.example-report-page .mobile-nav-panel {{
+              width: 100% !important;
+              max-width: 100% !important;
+              min-width: 0 !important;
+              box-sizing: border-box !important;
+            }}
+            .page.example-report-page .site-logo {{
+              min-width: 0 !important;
+              flex: 1 1 auto !important;
+            }}
+            .page.example-report-page .site-logo-title {{
+              min-width: 0 !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              white-space: nowrap !important;
+            }}
+            .page.example-report-page .header-actions {{
+              flex: 0 1 auto !important;
+              justify-content: flex-end !important;
+            }}
+            .page.example-report-page .mobile-menu-toggle,
+            .page.example-report-page .header-signin-link {{
+              flex: 0 0 auto !important;
+              max-width: 96px !important;
+            }}
             .example-report-page .hero-card,
             .example-report-page .report-grid > div > .card,
             .example-report-page .card {{
+              width: 100% !important;
               padding: 18px 14px !important;
               border: 1px solid #D8E1EF !important;
               border-radius: 18px !important;
@@ -8002,7 +8281,12 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             }}
             .example-report-page .priority-card,
             .example-report-page .before-after-card,
-            .example-report-page .diagnosis-card {{
+            .example-report-page .diagnosis-card,
+            .example-report-page .pro-impact-card,
+            .example-report-page .pro-snapshot-card,
+            .example-report-page .score-breakdown-card,
+            .example-report-page .keyword-group,
+            .example-report-page .report-action-card {{
               padding: 14px !important;
               border: 1px solid #D8E1EF !important;
               border-radius: 14px !important;
@@ -8036,9 +8320,24 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             <div class="eyebrow">Example report</div>
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
+            <p class="example-truth-note">This page uses fictional sample data, but the report layout, section names and upgrade workflow mirror the full CV Optimiser report.</p>
             {build_compliance_notice()}
             <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
+            </div>
+          </div>
+
+          <div class="card pro-command-centre">
+            <div class="eyebrow">Pro report command centre</div>
+            <h2>Executive summary</h2>
+            <p class="report-summary">{html.escape(executive_summary)}</p>
+            <div class="pro-impact-grid">
+              {impact_cards_html}
+            </div>
+            <div class="report-actions" aria-label="Full report actions included after unlock">
+              <span class="report-action-chip">Download report</span>
+              <span class="report-action-chip">Copy checklist</span>
+              <span class="report-action-chip">Print / save PDF</span>
             </div>
           </div>
 
@@ -8062,6 +8361,16 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                   <p><strong>{html.escape(page["score_label"])}</strong></p>
                   <p>{html.escape(page["score_copy"])}</p>
                 </div>
+                <div class="score-breakdown-grid">
+                  {score_breakdown_html}
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Pro snapshot</h2>
+                <div class="pro-snapshot-grid">
+                  {snapshot_cards_html}
+                </div>
               </div>
 
               <div class="card" style="margin-top:24px;">
@@ -8082,11 +8391,11 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               </div>
 
               <div class="card" style="margin-top:24px;">
-                <h2>Missing keywords</h2>
-                <div class="keyword-chip-row">
-                  {keyword_html}
+                <h2>Keyword importance</h2>
+                <p class="section-helper">The full report separates urgent gaps from useful supporting terms and terms your CV already covers.</p>
+                <div class="keyword-importance-grid">
+                  {keyword_importance_html}
                 </div>
-                <p class="section-helper">These are examples of keywords a recruiter or ATS may expect for this type of role.</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
@@ -8101,6 +8410,11 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                 <div class="priority-grid">
                   {fixes_html}
                 </div>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Professional summary</h2>
+                <p>{html.escape(professional_summary)}</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
@@ -8128,24 +8442,45 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             </div>
 
             <div>
-              <div class="card locked-block">
+              <div class="card">
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-                  <h2 style="margin:0;">Full report preview</h2>
+                  <h2 style="margin:0;">Full report workflow</h2>
                   <span class="pro-badge">PRO</span>
                 </div>
-                <div class="locked-list blurred">
-                  <p>• UK recruiter verdict and shortlisting risk</p>
-                  <p>• First-page diagnosis</p>
-                  <p>• Rewrite plan by CV section</p>
-                  <p>• Before/after rewrites and export checklist</p>
+                <div class="priority-grid">
+                  <div class="report-action-card">
+                    <strong>1. Read the verdict</strong>
+                    <p>Start with the executive summary, score, shortlist risk and first-page diagnosis.</p>
+                  </div>
+                  <div class="report-action-card">
+                    <strong>2. Edit by priority</strong>
+                    <p>Use the section rewrite plan, keyword groups and before/after examples to improve the CV safely.</p>
+                  </div>
+                  <div class="report-action-card">
+                    <strong>3. Export and re-test</strong>
+                    <p>Download, copy the checklist or print the report, then re-run the CV after edits.</p>
+                  </div>
                 </div>
-                <p>The free check gives you the score and top fixes. The full report helps you decide what to change, where to change it, and how to rewrite it safely.</p>
               </div>
 
               <div class="card" style="margin-top:24px;">
                 <h2>Priority action plan</h2>
                 <ul class="section-list">
                   {action_plan_html}
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Suggested skills section</h2>
+                <ul class="section-list">
+                  {skills_section_html}
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top:24px;">
+                <h2>Application risks</h2>
+                <ul class="section-list">
+                  {interview_risks_html}
                 </ul>
               </div>
 
