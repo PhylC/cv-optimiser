@@ -1609,6 +1609,39 @@
     flex-wrap: wrap;
   }
 
+  .role-preset-panel {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid #D8E1EF;
+    border-radius: 16px;
+    background: #F8FAFC;
+  }
+
+  .role-preset-panel label {
+    margin: 0;
+  }
+
+  .role-preset-select {
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    border: 1px solid #CBD5E1;
+    border-radius: 14px;
+    background: #FFFFFF;
+    color: #102033;
+    padding: 0 14px;
+    font: inherit;
+    font-weight: 720;
+  }
+
+  .role-preset-hint {
+    margin: 0;
+    color: #53627A;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
   .hero-start-link {
     display: inline-flex;
     align-items: center;
@@ -3791,6 +3824,125 @@
     flex-wrap: wrap;
   }
 
+  .score-comparison {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .score-comparison-card {
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid #D8E1EF;
+    background: #F8FAFC;
+  }
+
+  .score-comparison-card span {
+    display: block;
+    margin-bottom: 6px;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .score-comparison-card strong {
+    color: #101B33;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .score-comparison-card p {
+    margin: 8px 0 0;
+    color: #526179;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .interactive-checklist {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .checklist-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 13px;
+    border: 1px solid #D8E1EF;
+    border-radius: 14px;
+    background: #F8FAFC;
+  }
+
+  .checklist-item input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: #38D996;
+  }
+
+  .checklist-item span {
+    display: block;
+    color: #101B33;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+
+  .checklist-item small {
+    display: block;
+    margin-top: 4px;
+    color: #526179;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .checklist-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    color: #526179;
+    font-size: 13px;
+    font-weight: 760;
+  }
+
+  .checklist-progress-bar {
+    overflow: hidden;
+    flex: 1;
+    height: 7px;
+    border-radius: 999px;
+    background: #E5ECF6;
+  }
+
+  .checklist-progress-bar span {
+    display: block;
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #5B78FF, #38D996);
+    transition: width 0.18s ease;
+  }
+
+  .copy-rewrite-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin-top: 10px;
+    padding: 7px 10px;
+    border: 1px solid #C7D2FE;
+    border-radius: 999px;
+    background: #EEF2FF;
+    color: #1D4ED8;
+    font-size: 13px;
+    font-weight: 820;
+    box-shadow: none;
+  }
+
   .recheck-copy {
     flex: 1 1 260px;
   }
@@ -4537,7 +4689,21 @@
     font-size: 34px;
   }
 
+  .checklist-item {
+    gap: 12px;
+  }
+
+  .checklist-item span {
+    font-size: 16px;
+  }
+
+  .checklist-item small {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
   .locked-report-grid,
+  .score-comparison,
   .checkout-trust-strip {
     grid-template-columns: 1fr;
   }
@@ -5314,6 +5480,23 @@
             <div class="form-step-label"><span>2</span> Target role</div>
             <label class="field-label" for="jobDescription">Paste the job description</label>
             <p class="field-helper field-help">Paste the advert, person spec or LinkedIn role text. The more specific this is, the more useful the result.</p>
+            <div class="role-preset-panel">
+              <label class="field-label" for="rolePreset">Role focus</label>
+              <select id="rolePreset" class="role-preset-select">
+                <option value="">Auto-detect from the job description</option>
+                <option value="graduate">Graduate / entry-level</option>
+                <option value="nhs_admin">NHS administrator</option>
+                <option value="admin">Office / operations admin</option>
+                <option value="sales">Sales</option>
+                <option value="account_manager">Account manager</option>
+                <option value="project_manager">Project manager</option>
+                <option value="software_developer">Software developer</option>
+                <option value="marketing">Marketing</option>
+                <option value="retail_manager">Retail manager</option>
+                <option value="career_change">Career change</option>
+              </select>
+              <p id="rolePresetHint" class="role-preset-hint">Leave this on auto unless you want the checker to weigh a specific UK role lens.</p>
+            </div>
             <textarea id="jobDescription" class="text-field job-description-textarea" placeholder="Paste the job advert here…"></textarea>
             <p class="field-helper field-help">Don’t have a job description? You can still run a general CV check.</p>
           </div>
@@ -5520,6 +5703,28 @@
             </div>
           </div>
 
+          <div id="scoreComparisonWrap" class="result-section hidden">
+            <div class="result-section-title">Score movement</div>
+            <div class="result-section-subtitle">Compare this check with your previous run on this browser.</div>
+            <div class="score-comparison">
+              <div class="score-comparison-card">
+                <span>Previous</span>
+                <strong id="previousScoreValue">-</strong>
+                <p id="previousScoreLabel">No previous score yet.</p>
+              </div>
+              <div class="score-comparison-card">
+                <span>Current</span>
+                <strong id="currentScoreValue">-</strong>
+                <p>Latest role-fit score.</p>
+              </div>
+              <div class="score-comparison-card">
+                <span>Change</span>
+                <strong id="scoreDeltaValue">-</strong>
+                <p id="scoreDeltaLabel">Re-check after editing to see movement.</p>
+              </div>
+            </div>
+          </div>
+
           <div id="auditSummaryGrid" class="audit-summary-grid">
             <div class="audit-summary-card">
               <span>Role lens</span>
@@ -5578,6 +5783,16 @@
             <div id="resultPriorityPreview" class="fix-detail-grid"></div>
           </div>
 
+          <div id="interactiveChecklistWrap" class="result-section hidden">
+            <div class="result-section-title">Improvement checklist</div>
+            <div class="result-section-subtitle">Tick these off as you edit, then run the checker again.</div>
+            <div id="interactiveChecklist" class="interactive-checklist"></div>
+            <div class="checklist-progress">
+              <span id="checklistProgressText">0/0 complete</span>
+              <div class="checklist-progress-bar"><span id="checklistProgressBar"></span></div>
+            </div>
+          </div>
+
           <div id="resultKeywordPreviewWrap" class="result-section">
             <div id="resultKeywordTitle" class="result-section-title">Missing keywords</div>
             <div id="resultKeywordSubtitle" class="result-section-subtitle"></div>
@@ -5602,6 +5817,7 @@
               <div class="before-after-card">
                 <strong>After</strong>
                 <p id="resultExampleAfter"></p>
+                <button id="resultExampleCopyBtn" class="copy-rewrite-btn" type="button">Copy stronger line</button>
               </div>
             </div>
             <div id="resultExampleWhyWrap" class="rewrite-note hidden">
@@ -5641,7 +5857,7 @@
             Many CVs are scanned quickly, so unclear role fit is easy to miss.
           </div>
 
-          <div class="result-section hidden">
+          <div id="recheckWrap" class="result-section hidden">
             <div class="recheck-block">
               <div class="recheck-copy">
                 <strong>Check again after changes</strong>
@@ -6093,6 +6309,8 @@
     const pasteToggle = document.querySelector(".paste-toggle");
     const cvTextInput = document.getElementById("cvText");
     const jobDescriptionInput = document.getElementById("jobDescription");
+    const rolePresetSelect = document.getElementById("rolePreset");
+    const rolePresetHint = document.getElementById("rolePresetHint");
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("cvFileInput");
     const fileName = document.getElementById("fileName");
@@ -6174,6 +6392,7 @@
     const proRewriteDetails = document.getElementById("proRewriteDetails");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
+    const resultExampleCopyBtn = document.getElementById("resultExampleCopyBtn");
     const resultExampleWhy = document.getElementById("resultExampleWhy");
     const resultExampleWhyWrap = document.getElementById("resultExampleWhyWrap");
     const atsReadabilitySummary = document.getElementById("atsReadabilitySummary");
@@ -6209,6 +6428,17 @@
     const resultKeywordStatus = document.getElementById("resultKeywordStatus");
     const resultStructureStatus = document.getElementById("resultStructureStatus");
     const resultImpactStatus = document.getElementById("resultImpactStatus");
+    const scoreComparisonWrap = document.getElementById("scoreComparisonWrap");
+    const previousScoreValue = document.getElementById("previousScoreValue");
+    const previousScoreLabel = document.getElementById("previousScoreLabel");
+    const currentScoreValue = document.getElementById("currentScoreValue");
+    const scoreDeltaValue = document.getElementById("scoreDeltaValue");
+    const scoreDeltaLabel = document.getElementById("scoreDeltaLabel");
+    const interactiveChecklistWrap = document.getElementById("interactiveChecklistWrap");
+    const interactiveChecklist = document.getElementById("interactiveChecklist");
+    const checklistProgressText = document.getElementById("checklistProgressText");
+    const checklistProgressBar = document.getElementById("checklistProgressBar");
+    const recheckWrap = document.getElementById("recheckWrap");
     const recheckBtn = document.getElementById("recheckBtn");
     const proSummaryWrap = document.getElementById("proSummaryWrap");
     const professionalSummaryEl = document.getElementById("professionalSummary");
@@ -6233,6 +6463,59 @@
     const passwordCardTitle = document.getElementById("passwordCardTitle");
     const passwordCardSubtitle = document.getElementById("passwordCardSubtitle");
     const MAGIC_LINK_PASSWORD_SETUP_KEY = "cvOptimiserShowPasswordSetupFor";
+    const PREVIOUS_SCORE_KEY = "cvOptimiserPreviousScore";
+    const ROLE_PRESETS = {
+      graduate: {
+        label: "Graduate / entry-level",
+        prompt: "Assess this CV through a UK graduate or entry-level lens. Prioritise placements, internships, projects, education evidence, transferable skills and clear motivation.",
+        hint: "Graduate lens: projects, placements, education and transferable evidence carry more weight."
+      },
+      nhs_admin: {
+        label: "NHS administrator",
+        prompt: "Assess this CV through a UK NHS administrator lens. Prioritise patient communication, confidentiality, accurate records, appointment scheduling, systems and public-sector relevance.",
+        hint: "NHS admin lens: confidentiality, patient contact, records and systems matter most."
+      },
+      admin: {
+        label: "Office / operations admin",
+        prompt: "Assess this CV through a UK office or operations administration lens. Prioritise organisation, records, systems, scheduling, stakeholder support, accuracy and process improvement.",
+        hint: "Admin lens: accuracy, systems, organisation and team support matter most."
+      },
+      sales: {
+        label: "Sales",
+        prompt: "Assess this CV through a UK sales lens. Prioritise targets, revenue, pipeline, CRM, conversion, account growth, objection handling and measurable outcomes.",
+        hint: "Sales lens: targets, revenue, pipeline and measurable wins matter most."
+      },
+      account_manager: {
+        label: "Account manager",
+        prompt: "Assess this CV through a UK account manager lens. Prioritise retention, renewals, stakeholder management, commercial planning, forecasting, customer growth and relationship ownership.",
+        hint: "Account manager lens: retention, stakeholders, forecasting and commercial ownership matter most."
+      },
+      project_manager: {
+        label: "Project manager",
+        prompt: "Assess this CV through a UK project manager lens. Prioritise delivery, scope, budgets, risk, dependencies, stakeholders, governance, timelines and measurable outcomes.",
+        hint: "Project manager lens: delivery, risk, budget, dependencies and governance matter most."
+      },
+      software_developer: {
+        label: "Software developer",
+        prompt: "Assess this CV through a UK software developer lens. Prioritise relevant stack, shipped projects, production impact, testing, collaboration, code quality and measurable technical outcomes.",
+        hint: "Software lens: stack, shipped impact, testing and production evidence matter most."
+      },
+      marketing: {
+        label: "Marketing",
+        prompt: "Assess this CV through a UK marketing lens. Prioritise channel ownership, campaign outcomes, analytics, audience insight, content, paid/organic performance and measurable results.",
+        hint: "Marketing lens: channels, campaign results, analytics and audience insight matter most."
+      },
+      retail_manager: {
+        label: "Retail manager",
+        prompt: "Assess this CV through a UK retail manager lens. Prioritise team leadership, KPIs, store standards, stock, rota planning, customer experience, training and commercial performance.",
+        hint: "Retail manager lens: KPIs, team leadership, standards and store performance matter most."
+      },
+      career_change: {
+        label: "Career change",
+        prompt: "Assess this CV through a UK career-change lens. Prioritise transferable evidence, target-role framing, relevant achievements, skills translation and gaps that need explanation.",
+        hint: "Career-change lens: transferable proof and clear target-role framing matter most."
+      }
+    };
 
     function clearAccountSnapshot() {
       if (typeof window.clearCachedAccountSnapshot === "function") {
@@ -6762,6 +7045,90 @@
       }
     }
 
+    function getSelectedRolePreset() {
+      if (!rolePresetSelect) return null;
+      const key = rolePresetSelect.value || "";
+      return key && ROLE_PRESETS[key] ? { key: key, ...ROLE_PRESETS[key] } : null;
+    }
+
+    function inferPresetFromUrl() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const parentRole = params.get("parent_role_page") || "";
+        const parentPath = params.get("parent_landing_path") || "";
+        const cleanPath = normalisePath(parentPath);
+        if (parentRole && ROLE_PRESETS[parentRole]) return parentRole;
+        const roleFromPath = ROLE_LANDING_PATHS[cleanPath] || "";
+        return ROLE_PRESETS[roleFromPath] ? roleFromPath : "";
+      } catch (error) {
+        return "";
+      }
+    }
+
+    function initialiseRolePresetFromUrl() {
+      if (!rolePresetSelect || rolePresetSelect.value) return;
+      const presetKey = inferPresetFromUrl();
+      if (!presetKey) return;
+      rolePresetSelect.value = presetKey;
+      const preset = getSelectedRolePreset();
+      if (rolePresetHint && preset) {
+        rolePresetHint.textContent = preset.hint;
+      }
+    }
+
+    function buildEffectiveJobDescription(jobDescription) {
+      const preset = getSelectedRolePreset();
+      if (!preset) return jobDescription || "General CV review for job applications";
+      return [
+        "[User-selected role focus: " + preset.label + "]",
+        preset.prompt,
+        "",
+        jobDescription || "General CV review for job applications"
+      ].join("\\n");
+    }
+
+    function getPreviousScoreSnapshot() {
+      try {
+        const raw = window.localStorage.getItem(PREVIOUS_SCORE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function savePreviousScoreSnapshot(scoreNumber, data) {
+      try {
+        window.localStorage.setItem(PREVIOUS_SCORE_KEY, JSON.stringify({
+          score: scoreNumber,
+          role: data && data.roleFocus && data.roleFocus.label ? data.roleFocus.label : "",
+          savedAt: Date.now()
+        }));
+      } catch (error) {}
+    }
+
+    function renderScoreComparison(previous, scoreNumber) {
+      if (!scoreComparisonWrap || !previousScoreValue || !currentScoreValue || !scoreDeltaValue || !scoreDeltaLabel) return;
+      currentScoreValue.textContent = scoreNumber ? String(scoreNumber) : "-";
+      if (!previous || typeof previous.score !== "number") {
+        previousScoreValue.textContent = "-";
+        if (previousScoreLabel) previousScoreLabel.textContent = "No previous score yet.";
+        scoreDeltaValue.textContent = "-";
+        scoreDeltaLabel.textContent = "Run again after editing to compare.";
+        scoreComparisonWrap.classList.remove("hidden");
+        return;
+      }
+
+      const delta = scoreNumber - previous.score;
+      previousScoreValue.textContent = String(previous.score);
+      if (previousScoreLabel) previousScoreLabel.textContent = previous.role ? previous.role : "Previous browser score.";
+      scoreDeltaValue.textContent = (delta > 0 ? "+" : "") + String(delta);
+      scoreDeltaValue.style.color = delta > 0 ? "#15803D" : (delta < 0 ? "#B91C1C" : "#526179");
+      scoreDeltaLabel.textContent = delta > 0
+        ? "Nice lift. Keep the changes truthful and role-specific."
+        : (delta < 0 ? "Score dropped. Check whether useful evidence was removed." : "No movement yet. Try the priority fixes first.");
+      scoreComparisonWrap.classList.remove("hidden");
+    }
+
     function setCheckoutButtonState(button, isLoading, loadingText, defaultText) {
       if (!button) return;
 
@@ -6826,6 +7193,58 @@
       scoreRing.style.setProperty("--score-color", color);
       scoreRingValue.textContent = value ? String(value) : "0";
       scoreRing.setAttribute("aria-label", value ? "Role-fit score " + value + " out of 100" : "Role-fit score unavailable");
+    }
+
+    function getChecklistItems(data, actionPlanItems) {
+      const workflow = normaliseGuidedWorkflow(data || {}, actionPlanItems || []);
+      if (workflow.length) {
+        return workflow.map(function(item) {
+          return {
+            title: item.title || item.action || "Improve this section",
+            detail: [item.action, item.section ? "Where: " + item.section : "", item.successCheck ? "Done when: " + item.successCheck : ""].filter(Boolean).join(" ")
+          };
+        });
+      }
+      return (actionPlanItems || []).slice(0, 5).map(function(item, index) {
+        return { title: "Fix " + String(index + 1), detail: item };
+      });
+    }
+
+    function updateChecklistProgress() {
+      if (!interactiveChecklist || !checklistProgressText || !checklistProgressBar) return;
+      const boxes = Array.from(interactiveChecklist.querySelectorAll("input[type='checkbox']"));
+      const done = boxes.filter(function(box) { return box.checked; }).length;
+      const total = boxes.length;
+      checklistProgressText.textContent = done + "/" + total + " complete";
+      checklistProgressBar.style.width = total ? String(Math.round((done / total) * 100)) + "%" : "0%";
+    }
+
+    function renderInteractiveChecklist(data, actionPlanItems) {
+      if (!interactiveChecklistWrap || !interactiveChecklist) return;
+      const items = getChecklistItems(data, actionPlanItems).slice(0, 5);
+      interactiveChecklist.innerHTML = "";
+      items.forEach(function(item, index) {
+        const label = document.createElement("label");
+        label.className = "checklist-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.checklistIndex = String(index);
+
+        const body = document.createElement("div");
+        const title = document.createElement("span");
+        title.textContent = item.title;
+        const detail = document.createElement("small");
+        detail.textContent = item.detail || "Make this edit, then re-check the CV.";
+
+        body.appendChild(title);
+        body.appendChild(detail);
+        label.appendChild(checkbox);
+        label.appendChild(body);
+        interactiveChecklist.appendChild(label);
+      });
+      interactiveChecklistWrap.classList.toggle("hidden", !items.length);
+      updateChecklistProgress();
     }
 
     function renderScoreBreakdown(items, fallbackScore) {
@@ -7012,6 +7431,13 @@
         after.className = "rewrite-detail-after";
         after.textContent = "After: " + item.after;
         body.appendChild(after);
+
+        const copyButton = document.createElement("button");
+        copyButton.className = "copy-rewrite-btn";
+        copyButton.type = "button";
+        copyButton.dataset.copyRewrite = item.after;
+        copyButton.textContent = "Copy stronger line";
+        body.appendChild(copyButton);
 
         if (item.whyBetter) {
           const why = document.createElement("p");
@@ -7289,6 +7715,13 @@
         after.className = "line-feedback-after";
         after.textContent = "Stronger line: " + item.improvedLine;
         body.appendChild(after);
+
+        const copyButton = document.createElement("button");
+        copyButton.className = "copy-rewrite-btn";
+        copyButton.type = "button";
+        copyButton.dataset.copyRewrite = item.improvedLine;
+        copyButton.textContent = "Copy stronger line";
+        body.appendChild(copyButton);
 
         const why = document.createElement("p");
         why.textContent = "Why better: " + item.whyBetter;
@@ -7889,6 +8322,11 @@
         "[data-role='job-description-input']"
       ], exampleJobDescriptionText);
 
+      if (rolePresetSelect) {
+        rolePresetSelect.value = "account_manager";
+        rolePresetSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
       if (!cvUpdated || !jdUpdated) {
         console.warn("Example CV fill incomplete", { cvUpdated: cvUpdated, jdUpdated: jdUpdated });
       }
@@ -8467,6 +8905,42 @@ const result = await sbClient.auth.signInWithOtp({
       });
     }
 
+    if (rolePresetSelect) {
+      rolePresetSelect.addEventListener("change", function() {
+        const preset = getSelectedRolePreset();
+        if (rolePresetHint) {
+          rolePresetHint.textContent = preset
+            ? preset.hint
+            : "Leave this on auto unless you want the checker to weigh a specific UK role lens.";
+        }
+        trackEvent("role_preset_changed", { role_preset: preset ? preset.key : "auto" });
+      });
+    }
+
+    document.addEventListener("change", function(event) {
+      if (event.target && event.target.matches("[data-checklist-index]")) {
+        updateChecklistProgress();
+      }
+    });
+
+    document.addEventListener("click", async function(event) {
+      const copyButton = event.target.closest("[data-copy-rewrite]");
+      if (!copyButton) return;
+      event.preventDefault();
+      const text = copyButton.getAttribute("data-copy-rewrite") || "";
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyButton.textContent = "Copied";
+        trackEvent("rewrite_line_copied");
+      } catch (error) {
+        copyButton.textContent = "Select and copy this line";
+      }
+      window.setTimeout(function() {
+        copyButton.textContent = "Copy stronger line";
+      }, 1600);
+    });
+
     if (footerSupportBtn) {
       footerSupportBtn.addEventListener("click", function() {
         supportStatus.textContent = "";
@@ -8800,7 +9274,8 @@ passwordLoginBtn.addEventListener("click", async function() {
 
       const jobDescription = jobDescriptionInput.value.trim();
       const cvText = cvTextInput.value.trim();
-      const effectiveJobDescription = jobDescription || "General CV review for job applications";
+      const selectedRolePreset = getSelectedRolePreset();
+      const effectiveJobDescription = buildEffectiveJobDescription(jobDescription);
 
       if (!jobDescription && !cvText && !selectedFile) {
         alert("Please add a job description or CV before running optimisation.");
@@ -8823,9 +9298,13 @@ passwordLoginBtn.addEventListener("click", async function() {
       setCheckerLoading(true);
       status.textContent = "Analysing...";
       status.classList.remove("is-success", "is-error");
-      trackEvent("optimise_started", { has_file: !!selectedFile });
+      trackEvent("optimise_started", {
+        has_file: !!selectedFile,
+        role_preset: selectedRolePreset ? selectedRolePreset.key : "auto"
+      });
 
       try {
+        const previousScoreSnapshot = getPreviousScoreSnapshot();
         const formData = new FormData();
         formData.append("jobDescription", effectiveJobDescription);
         formData.append("cvText", cvText || "");
@@ -8894,6 +9373,7 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
         updateScoreRing(scoreNumber);
+        renderScoreComparison(previousScoreSnapshot, scoreNumber);
         document.getElementById("nextStep").textContent = data.nextStep || "";
         document.getElementById("source").textContent = data.source || "unknown";
         resultStatusHeadline.textContent = narrative.headline;
@@ -8988,6 +9468,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         resultExampleAfter.textContent = freeRewrite.after || ((data.bulletPoints && data.bulletPoints.length && data.bulletPoints[0])
           ? data.bulletPoints[0]
           : "Managed key customer accounts and turned plans into measurable commercial opportunities.");
+        if (resultExampleCopyBtn) {
+          resultExampleCopyBtn.dataset.copyRewrite = resultExampleAfter.textContent || "";
+        }
         if (resultExampleWhy && resultExampleWhyWrap) {
           resultExampleWhy.textContent = freeRewrite.whyWeak || "The improved version is more specific about action, context, and value.";
           resultExampleWhyWrap.classList.toggle("hidden", !resultExampleWhy.textContent);
@@ -9043,6 +9526,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           (data.interviewRisks && data.interviewRisks.length)
         );
         const actionPlanItems = buildActionPlanItems(data);
+        renderInteractiveChecklist(data, actionPlanItems);
         professionalSummaryEl.textContent = data.professionalSummary || "";
         proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
 
@@ -9116,6 +9600,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (lockedReportSections) {
           lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
         }
+        if (recheckWrap) {
+          recheckWrap.classList.remove("hidden");
+        }
         fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
         if (proReportActions) {
           proReportActions.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
@@ -9161,6 +9648,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           priority_fixes_top: (data.priorityFixes || data.previewPriorityFixes || []).slice(0, 5),
           ats_tips_top: (data.atsTips || []).slice(0, 5)
         });
+        savePreviousScoreSnapshot(scoreNumber, data);
         if (!isCurrentlyPro) {
           trackEvent("free_result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         }
@@ -9230,6 +9718,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     }
 
     window.addEventListener("load", async function() {
+      initialiseRolePresetFromUrl();
       trackEvent("page_view");
       trackEvent("homepage_loaded");
       await loadUserState();
