@@ -6679,10 +6679,20 @@ def render_cv_checker_page() -> str:
             align-items: start;
           }}
           .card {{
-            background: rgba(15, 28, 50, 0.72);
-            border: 1px solid rgba(92, 112, 150, 0.22);
-            border-radius: 18px;
+            background: #FFFFFF;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
             padding: 24px;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24);
+          }}
+          .card h1,
+          .card h2 {{
+            color: #101B33;
+          }}
+          .card p,
+          .card li {{
+            color: #53627A;
           }}
           h2 {{
             margin: 0 0 10px;
@@ -9846,9 +9856,25 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             font-size: 13px;
           }}
           .support-hero {{
-            padding: 0 0 28px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(92, 112, 150, 0.16);
+            padding: 0 0 26px;
+            margin-bottom: 0;
+            border-bottom: 1px solid #D8E1EF;
+          }}
+          .support-panel {{
+            padding: 30px;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24);
+          }}
+          .support-panel h1,
+          .support-panel h2 {{
+            color: #101B33;
+          }}
+          .support-panel p,
+          .support-panel li {{
+            color: #53627A;
           }}
           .support-content {{
             display: grid;
@@ -9864,7 +9890,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           .section-list {{
             margin: 12px 0 0;
             padding-left: 20px;
-            color: #B7C6E6;
+            color: #53627A;
           }}
           .section-list li {{
             margin-bottom: 8px;
@@ -9872,13 +9898,13 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .section-helper {{
             margin-top: 12px;
-            color: #9FB0D4;
+            color: #64748B;
             font-size: 14px;
           }}
           .text-link {{
             display: inline-block;
             margin-top: 10px;
-            color: #AFC0FF;
+            color: #1D4ED8;
             text-decoration: underline;
             text-underline-offset: 2px;
             font-size: 14px;
@@ -9910,12 +9936,16 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           .section-block + .section-block {{
             margin-top: 0;
             padding-top: 32px;
-            border-top: 1px solid rgba(80, 103, 146, 0.18);
+            border-top: 1px solid #E2E8F0;
           }}
           @media (max-width: 768px) {{
             .page {{
               max-width: 100%;
               padding: 32px 16px 48px;
+            }}
+            .support-panel {{
+              padding: 22px 16px;
+              border-radius: 20px;
             }}
             .support-hero {{
               padding-bottom: 22px;
@@ -9927,7 +9957,7 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
           }}
 
           .text-link:hover {{
-            color: #FFFFFF;
+            color: #0F2F83;
           }}
 
           @media (max-width: 900px) {{
@@ -9939,13 +9969,15 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
       <body data-auth-state="loading">
         <div class="page">
           {build_site_header("how-it-works" if slug == "how-it-works" else None)}
-          <section class="support-hero">
-            <h1>{html.escape(page["h1"])}</h1>
-            <p>{html.escape(page["intro"])}</p>
-            {build_compliance_notice()}
-          </section>
-          <div class="support-content">
-            {sections_html}
+          <div class="support-panel">
+            <section class="support-hero">
+              <h1>{html.escape(page["h1"])}</h1>
+              <p>{html.escape(page["intro"])}</p>
+              {build_compliance_notice()}
+            </section>
+            <div class="support-content">
+              {sections_html}
+            </div>
           </div>
           {build_site_footer()}
         </div>
@@ -10383,10 +10415,18 @@ def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
 {build_typography_css()}
 {build_cta_spacing_css()}
           .card {{
-            background: rgba(15, 28, 50, 0.72);
-            border: 1px solid rgba(92, 112, 150, 0.22);
-            border-radius: 18px;
+            background: #FFFFFF;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
             padding: 24px;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24);
+          }}
+          .card h1 {{
+            color: #101B33;
+          }}
+          .card p {{
+            color: #53627A;
           }}
           .cta {{
             display: inline-flex;
@@ -10785,16 +10825,20 @@ def billing_page() -> str:
         {build_footer_assets_head()}
         <style>
           body {{ font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px), radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%), radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%), #08111F; color: #E8EEFC; line-height: 1.7; }}
-          h1,h2 {{ color: #FFFFFF; }}
-          a {{ color: #9AB0FF; }}
-          p, li {{ color: #C7D3EE; }}
+          main {{ padding: 30px; border: 1px solid #D8E1EF; border-radius: 24px; background: #FFFFFF; color: #14213D; box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24); }}
+          h1,h2 {{ color: #101B33; }}
+          a {{ color: #1D4ED8; font-weight: 700; }}
+          p, li {{ color: #53627A; }}
+          @media (max-width: 768px) {{ body {{ margin: 24px auto; }} main {{ padding: 22px 16px; border-radius: 20px; }} }}
         </style>
       </head>
       <body data-auth-state="loading">
-        <h1>Billing & Cancellation</h1>
-        <p>Pro subscriptions are billed through Stripe. You can manage or cancel your subscription from the account menu inside the app.</p>
-        <p>If you need billing help, please use the support form.</p>
-        <p><a href="/">Back to CV Optimiser</a></p>
+        <main>
+          <h1>Billing & Cancellation</h1>
+          <p>Pro subscriptions are billed through Stripe. You can manage or cancel your subscription from the account menu inside the app.</p>
+          <p>If you need billing help, please use the support form.</p>
+          <p><a href="/">Back to CV Optimiser</a></p>
+        </main>
       </body>
     </html>
     """
