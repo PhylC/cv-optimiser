@@ -5965,6 +5965,210 @@ def build_public_content_surface_css() -> str:
             padding-left: 20px !important;
           }
 
+          .content-page .pro-proof-card,
+          .content-page .check-card,
+          .content-page .score-card,
+          .content-page .mini-card,
+          .content-page .example-row,
+          .content-page .keyword-group,
+          .content-page .diagnosis-card,
+          .content-page .priority-card,
+          .content-page .before-after-card,
+          .content-page .report-action-card,
+          .content-page .pro-impact-card,
+          .content-page .pro-snapshot-card,
+          .content-page .score-breakdown-card,
+          .page .support-panel .compliance-notice {
+            background: #F8FAFC !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 16px !important;
+            color: #14213D !important;
+            box-shadow: none !important;
+          }
+
+          .page .support-panel .compliance-notice {
+            display: block !important;
+            margin: 18px 0 0 !important;
+            padding: 14px 16px !important;
+            color: #2D3B66 !important;
+            font-size: 14px !important;
+            line-height: 1.55 !important;
+          }
+
+          .content-page .pro-proof-card strong,
+          .content-page .check-card strong,
+          .content-page .score-card strong,
+          .content-page .mini-card strong,
+          .content-page .example-row strong,
+          .content-page .keyword-group strong,
+          .content-page .diagnosis-card strong,
+          .content-page .priority-card strong,
+          .content-page .before-after-card strong,
+          .content-page .report-action-card strong,
+          .content-page .pro-impact-card strong,
+          .content-page .pro-snapshot-card strong,
+          .content-page .score-breakdown-card strong {
+            color: #101B33 !important;
+            font-size: 15px !important;
+            line-height: 1.45 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .content-page .pro-proof-card p,
+          .content-page .check-card p,
+          .content-page .score-card p,
+          .content-page .mini-card p,
+          .content-page .example-row span,
+          .content-page .example-row p,
+          .content-page .keyword-group p,
+          .content-page .diagnosis-card p,
+          .content-page .priority-card p,
+          .content-page .before-after-card p,
+          .content-page .report-action-card p,
+          .content-page .pro-impact-card p,
+          .content-page .pro-snapshot-card p,
+          .content-page .score-breakdown-card p {
+            color: #334155 !important;
+            font-size: 15px !important;
+            line-height: 1.58 !important;
+          }
+
+          .content-page .intent-chip-row span,
+          .content-page .related-links a,
+          .content-page .keyword-chip,
+          .content-page .report-action-chip,
+          .content-page .pro-badge {
+            border: 1px solid #C7D2FE !important;
+            background: #EEF2FF !important;
+            color: #3157D5 !important;
+            font-size: 13px !important;
+            font-weight: 750 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .page > .support-panel,
+          .page .support-panel {
+            position: relative !important;
+            overflow: hidden !important;
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 24px !important;
+            color: #14213D !important;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.22) !important;
+          }
+
+          .page > .support-panel::before,
+          .page .support-panel::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 0 auto !important;
+            height: 4px !important;
+            background: linear-gradient(90deg, #5B78FF, #22C55E) !important;
+            pointer-events: none !important;
+          }
+
+          .page .support-panel h1,
+          .page .support-panel h2,
+          .page .support-panel h3,
+          .page .support-panel strong {
+            color: #101B33 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .page .support-panel p,
+          .page .support-panel li {
+            color: #334155 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }
+
+          .page .support-panel .section-helper {
+            color: #64748B !important;
+            font-size: 14px !important;
+          }
+
+          .page .support-panel .support-hero,
+          .page .support-panel .section-block + .section-block {
+            border-color: #E2E8F0 !important;
+          }
+
+          .page .support-panel .text-link,
+          .content-page .text-link,
+          .seo-page .text-link,
+          .landing-page .text-link,
+          .faq-page .text-link {
+            color: #1D4ED8 !important;
+            font-weight: 750 !important;
+            text-decoration-thickness: 1px !important;
+            text-underline-offset: 3px !important;
+          }
+
+          .content-page .comparison-table-wrap,
+          .content-page .comparison-wrap {
+            overflow: hidden !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 18px !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
+          }
+
+          .content-page .comparison-table {
+            width: 100% !important;
+            min-width: 0 !important;
+            border-collapse: collapse !important;
+            background: #FFFFFF !important;
+          }
+
+          .content-page .comparison-table th,
+          .content-page .comparison-table td {
+            background: #FFFFFF !important;
+            color: #334155 !important;
+            border-color: #E2E8F0 !important;
+            font-size: 15px !important;
+            line-height: 1.55 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .content-page .comparison-table thead th,
+          .content-page .comparison-table tbody th {
+            background: #F8FBFF !important;
+            color: #101B33 !important;
+            font-weight: 800 !important;
+          }
+
+          .content-page .comparison-table tbody td:nth-child(2) {
+            background: #F8FBFF !important;
+          }
+
+          .content-page .comparison-table strong {
+            color: #101B33 !important;
+          }
+
+          .content-page .lead-capture-panel {
+            background: #FFFFFF !important;
+            border-color: #D8E1EF !important;
+            color: #14213D !important;
+          }
+
+          .content-page .lead-capture-panel h2 {
+            color: #101B33 !important;
+            font-size: clamp(22px, 3vw, 28px) !important;
+            line-height: 1.16 !important;
+          }
+
+          .content-page .lead-capture-panel p {
+            color: #334155 !important;
+          }
+
+          .content-page .lead-capture-panel .lead-capture-status {
+            color: #3157D5 !important;
+          }
+
+          .content-page .lead-capture-panel .lead-capture-form button {
+            background: #38D996 !important;
+            color: #061322 !important;
+          }
+
           .content-page .section-stack,
           .content-page .content-section,
           .content-page .seo-section,
@@ -6221,6 +6425,48 @@ def build_public_content_surface_css() -> str:
           .guides-page .guide-group h3 {
             color: #101B33 !important;
             opacity: 1 !important;
+          }
+
+          .content-page .tool-feature,
+          .content-page .tool-card.tool-shell,
+          .content-page .card:has(.tool-frame) {
+            background: #F8FAFC !important;
+            border: 1px solid rgba(210, 220, 238, 0.86) !important;
+            border-radius: 24px !important;
+            color: #14213D !important;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24) !important;
+          }
+
+          .content-page .tool-feature h1,
+          .content-page .tool-feature h2,
+          .content-page .tool-feature h3,
+          .content-page .tool-card.tool-shell h1,
+          .content-page .tool-card.tool-shell h2,
+          .content-page .tool-card.tool-shell h3,
+          .content-page .card:has(.tool-frame) h1,
+          .content-page .card:has(.tool-frame) h2,
+          .content-page .card:has(.tool-frame) h3 {
+            color: #101B33 !important;
+            font-size: clamp(22px, 3vw, 28px) !important;
+            line-height: 1.16 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .content-page .tool-feature p,
+          .content-page .tool-feature li,
+          .content-page .tool-card.tool-shell p,
+          .content-page .tool-card.tool-shell li,
+          .content-page .card:has(.tool-frame) p,
+          .content-page .card:has(.tool-frame) li {
+            color: #334155 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }
+
+          .content-page .tool-feature .eyebrow,
+          .content-page .tool-card.tool-shell .eyebrow,
+          .content-page .card:has(.tool-frame) .eyebrow {
+            color: #3758D8 !important;
           }
 
           @media (max-width: 768px) {
@@ -7752,9 +7998,6 @@ def render_cv_checker_page() -> str:
             .page {{
               padding: 16px 10px 44px;
             }}
-            .topbar {{
-              margin-bottom: 18px;
-            }}
             .hero {{
               gap: 12px;
               margin-bottom: 18px;
@@ -7796,13 +8039,7 @@ def render_cv_checker_page() -> str:
       </head>
       <body data-auth-state="loading">
         <div class="page content-page seo-page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#tool" class="header-link">Homepage tool</a>
-          </div>
+          {build_site_header("cv-checker")}
 
           <div class="hero">
             <h1>Free CV Checker</h1>
@@ -7945,41 +8182,9 @@ def render_ats_cv_checker_page() -> str:
             margin: 0 auto;
             padding: 28px 20px 60px;
           }}
+{build_site_header_css()}
 {build_typography_css()}
-.topbar {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-          }}
-          .logo {{
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-          }}
-          .logo-mark {{
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 15px;
-          }}
-          .logo-title {{
-            color: #E8EEFC;
-            font-size: 24px;
-            letter-spacing: -0.03em;
-          }}
-          .logo-title strong {{ font-weight: 800; }}
-          .logo-title span {{ font-weight: 400; }}
-          .header-link, .text-link {{
+          .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
             text-underline-offset: 2px;
@@ -8057,7 +8262,7 @@ def render_ats_cv_checker_page() -> str:
             text-align: left;
           }}
 
-          .text-link:hover, .header-link:hover {{
+          .text-link:hover {{
             color: #FFFFFF;
           }}
 
@@ -8076,13 +8281,7 @@ def render_ats_cv_checker_page() -> str:
       </head>
       <body data-auth-state="loading">
         <div class="page content-page">
-          <div class="topbar">
-            <a href="/" class="logo">
-              <span class="logo-mark">CV</span>
-              <span class="logo-title"><strong>CV</strong> <span>Optimiser</span></span>
-            </a>
-            <a href="/#tool" class="header-link">Homepage tool</a>
-          </div>
+          {build_site_header("cv-checker")}
 
           <div class="hero">
             <h1>ATS CV Checker</h1>
