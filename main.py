@@ -8,7 +8,7 @@ import logging
 import os
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Optional
 
@@ -2416,6 +2416,87 @@ def get_report_type(payload: dict[str, Any]) -> str:
     if report_access == "subscription" or payload.get("fullReportUnlocked") or payload.get("professionalSummary"):
         return "Pro report"
     return "Free check"
+
+
+FUNNEL_STEPS = [
+    ("free_result_shown", "Free result shown"),
+    ("unlock_clicked", "Unlock clicked"),
+    ("checkout_started", "Checkout started"),
+    ("payment_success_seen", "Payment success seen"),
+    ("one_time_report_activated", "One-time report activated"),
+    ("one_time_report_generated", "One-time report generated"),
+]
+
+
+def percent(numerator: int, denominator: int) -> float:
+    if denominator <= 0:
+        return 0.0
+    return round((numerator / denominator) * 100, 1)
+
+
+def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    counts: dict[str, int] = {}
+    checkout_counts: dict[str, int] = {}
+    source_counts: dict[str, int] = {}
+    score_total = 0
+    score_count = 0
+    unique_emails = set()
+
+    for row in rows:
+        event_name = coerce_string(row.get("event_name"))
+        metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+        email = coerce_string(row.get("email"))
+        if email:
+            unique_emails.add(email.lower())
+        if event_name:
+            counts[event_name] = counts.get(event_name, 0) + 1
+        checkout_plan = coerce_string(metadata.get("checkout_plan"))
+        if checkout_plan:
+            checkout_counts[checkout_plan] = checkout_counts.get(checkout_plan, 0) + 1
+        source = coerce_string(metadata.get("source"))
+        if source:
+            source_counts[source] = source_counts.get(source, 0) + 1
+        try:
+            score = int(metadata.get("score"))
+        except Exception:
+            score = None
+        if score is not None:
+            score_total += score
+            score_count += 1
+
+    funnel = []
+    previous_count: Optional[int] = None
+    first_count = counts.get(FUNNEL_STEPS[0][0], 0)
+    for key, label in FUNNEL_STEPS:
+        count = counts.get(key, 0)
+        funnel.append({
+            "key": key,
+            "label": label,
+            "count": count,
+            "from_previous_rate": percent(count, previous_count) if previous_count is not None else 100.0,
+            "from_start_rate": percent(count, first_count) if first_count else 0.0,
+            "drop_from_previous": max(0, (previous_count or count) - count) if previous_count is not None else 0,
+        })
+        previous_count = count
+
+    return {
+        "total_events": len(rows),
+        "unique_emails": len(unique_emails),
+        "average_score": round(score_total / score_count, 1) if score_count else None,
+        "counts": counts,
+        "checkout_counts": checkout_counts,
+        "source_counts": source_counts,
+        "funnel": funnel,
+        "key_metrics": {
+            "free_results": counts.get("free_result_shown", 0),
+            "unlock_clicks": counts.get("unlock_clicked", 0),
+            "checkout_starts": counts.get("checkout_started", 0),
+            "payment_successes": counts.get("payment_success_seen", 0),
+            "one_time_reports_generated": counts.get("one_time_report_generated", 0),
+            "saved_report_downloads": counts.get("saved_report_downloaded", 0),
+            "report_downloads": counts.get("report_downloaded", 0),
+        },
+    }
 
 
 def parse_openai_json_output(raw: str) -> dict[str, Any]:
@@ -8564,17 +8645,27 @@ async def api_track(request: Request) -> dict[str, Any]:
 
 
 @app.get("/api/admin/analytics")
-def admin_analytics(limit: int = 100) -> dict[str, Any]:
+def admin_analytics(limit: int = 250, days: int = 30) -> dict[str, Any]:
     try:
+        limit = max(20, min(limit, 1000))
+        days = max(1, min(days, 365))
+        since = current_utc() - timedelta(days=days)
         result = (
             require_supabase()
             .table("analytics_events")
             .select("created_at,event_name,email,metadata")
+            .gte("created_at", since.isoformat())
             .order("created_at", desc=True)
             .limit(limit)
             .execute()
         )
-        return {"items": result.data or []}
+        items = result.data or []
+        return {
+            "window_days": days,
+            "limit": limit,
+            "summary": build_analytics_summary(items),
+            "items": items,
+        }
     except Exception as e:
         print("ADMIN ANALYTICS ERROR:", repr(e))
         return {"error": "analytics_unavailable"}
@@ -8583,24 +8674,325 @@ def admin_analytics(limit: int = 100) -> dict[str, Any]:
 @app.get("/admin-analytics", response_class=HTMLResponse)
 def admin_analytics_page() -> str:
     return f"""
-    <html>
+    <!doctype html>
+    <html lang="en">
       <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Analytics | CV Optimiser</title>
         <meta name="description" content="Internal analytics dashboard for CV Optimiser.">
         {canonical_link_tag("/admin-analytics")}
         {google_tag()}
         {build_footer_assets_head()}
         <style>
-          body {{ font-family: Inter, Arial, sans-serif; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; }}
-          h1 {{ margin-bottom: 18px; }}
-          iframe {{ width: 100%; height: 80vh; border: 1px solid rgba(80,103,146,0.35); border-radius: 16px; background: white; }}
-          p, a {{ color: #C7D3EE; }}
+          body {{
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: #07142D;
+            color: #E8EEFC;
+          }}
+          .page {{
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 34px 20px 70px;
+          }}
+          .topbar {{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 24px;
+          }}
+          h1 {{
+            margin: 0 0 8px;
+            font-size: 34px;
+          }}
+          p {{
+            margin: 0;
+            color: #B7C6E6;
+            line-height: 1.6;
+          }}
+          .controls {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+          }}
+          select,
+          button {{
+            min-height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(160, 180, 230, 0.24);
+            background: rgba(10, 20, 40, 0.82);
+            color: #EEF3FF;
+            padding: 9px 12px;
+            font-weight: 800;
+          }}
+          button {{
+            cursor: pointer;
+          }}
+          .grid {{
+            display: grid;
+            gap: 14px;
+          }}
+          .hidden {{
+            display: none;
+          }}
+          .kpi-grid {{
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-bottom: 18px;
+          }}
+          .panel {{
+            border: 1px solid rgba(80, 103, 146, 0.28);
+            border-radius: 18px;
+            background: rgba(10, 20, 40, 0.82);
+            padding: 18px;
+          }}
+          .kpi span {{
+            display: block;
+            color: #9FB0D4;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+          }}
+          .kpi strong {{
+            display: block;
+            margin-top: 8px;
+            color: #FFFFFF;
+            font-size: 31px;
+          }}
+          .dashboard-grid {{
+            grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+            align-items: start;
+          }}
+          h2 {{
+            margin: 0 0 12px;
+            font-size: 20px;
+          }}
+          table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+          }}
+          th,
+          td {{
+            padding: 11px 8px;
+            border-bottom: 1px solid rgba(80, 103, 146, 0.28);
+            text-align: left;
+            vertical-align: top;
+          }}
+          th {{
+            color: #9FB0D4;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }}
+          .rate {{
+            color: #B7F7C4;
+            font-weight: 800;
+          }}
+          .drop {{
+            color: #FFB8A0;
+            font-weight: 800;
+          }}
+          .count-list {{
+            display: grid;
+            gap: 9px;
+          }}
+          .count-row {{
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: #DCE6FF;
+          }}
+          .count-row span {{
+            color: #9FB0D4;
+          }}
+          .recent-events {{
+            margin-top: 18px;
+          }}
+          .event-name {{
+            color: #EEF3FF;
+            font-weight: 800;
+          }}
+          .metadata {{
+            max-width: 430px;
+            color: #9FB0D4;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+          }}
+          .empty,
+          .error {{
+            padding: 18px;
+            border-radius: 14px;
+            background: rgba(58, 18, 29, 0.72);
+            border: 1px solid rgba(192, 102, 112, 0.34);
+            color: #FFD8DD;
+          }}
+          @media (max-width: 900px) {{
+            .topbar,
+            .dashboard-grid {{
+              grid-template-columns: 1fr;
+              display: grid;
+            }}
+            .kpi-grid {{
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }}
+          }}
+          @media (max-width: 620px) {{
+            .kpi-grid {{
+              grid-template-columns: 1fr;
+            }}
+            table {{
+              font-size: 13px;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
-        <h1>Analytics</h1>
-        <p>Open the raw analytics endpoint here:</p>
-        <p><a href="/api/admin/analytics" target="_blank">/api/admin/analytics</a></p>
+        <div class="page">
+          <div class="topbar">
+            <div>
+              <h1>Analytics</h1>
+              <p>Conversion dashboard for CV checks, paid report unlocks, checkout and saved reports.</p>
+            </div>
+            <div class="controls">
+              <select id="windowSelect" aria-label="Analytics window">
+                <option value="7">Last 7 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last 90 days</option>
+              </select>
+              <button id="refreshBtn" type="button">Refresh</button>
+            </div>
+          </div>
+
+          <div id="status" class="panel">Loading analytics...</div>
+          <div id="dashboard" class="hidden">
+            <div id="kpiGrid" class="grid kpi-grid"></div>
+            <div class="grid dashboard-grid">
+              <div class="panel">
+                <h2>Revenue Funnel</h2>
+                <div id="funnelTable"></div>
+              </div>
+              <div class="grid">
+                <div class="panel">
+                  <h2>Event Counts</h2>
+                  <div id="eventCounts" class="count-list"></div>
+                </div>
+                <div class="panel">
+                  <h2>Checkout Split</h2>
+                  <div id="checkoutCounts" class="count-list"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel recent-events">
+              <h2>Recent Events</h2>
+              <div id="recentEvents"></div>
+            </div>
+          </div>
+        </div>
+        <script>
+          const statusEl = document.getElementById("status");
+          const dashboardEl = document.getElementById("dashboard");
+          const kpiGrid = document.getElementById("kpiGrid");
+          const funnelTable = document.getElementById("funnelTable");
+          const eventCounts = document.getElementById("eventCounts");
+          const checkoutCounts = document.getElementById("checkoutCounts");
+          const recentEvents = document.getElementById("recentEvents");
+          const windowSelect = document.getElementById("windowSelect");
+          const refreshBtn = document.getElementById("refreshBtn");
+
+          function escapeHtml(value) {{
+            return String(value ?? "")
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          }}
+
+          function formatNumber(value) {{
+            if (value === null || typeof value === "undefined") return "0";
+            return Number(value).toLocaleString("en-GB");
+          }}
+
+          function renderCountList(target, counts) {{
+            const entries = Object.entries(counts || {{}})
+              .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+            if (!entries.length) {{
+              target.innerHTML = "<p>No events yet.</p>";
+              return;
+            }}
+            target.innerHTML = entries.slice(0, 18).map(([name, count]) => (
+              "<div class='count-row'><span>" + escapeHtml(name) + "</span><strong>" + formatNumber(count) + "</strong></div>"
+            )).join("");
+          }}
+
+          function renderDashboard(data) {{
+            const summary = data.summary || {{}};
+            const metrics = summary.key_metrics || {{}};
+            const unlockRate = metrics.free_results ? ((metrics.unlock_clicks || 0) / metrics.free_results * 100).toFixed(1) + "%" : "0%";
+            const checkoutRate = metrics.unlock_clicks ? ((metrics.checkout_starts || 0) / metrics.unlock_clicks * 100).toFixed(1) + "%" : "0%";
+            const paidReportRate = metrics.checkout_starts ? ((metrics.one_time_reports_generated || 0) / metrics.checkout_starts * 100).toFixed(1) + "%" : "0%";
+            const kpis = [
+              ["Free results", metrics.free_results || 0],
+              ["Unlock rate", unlockRate],
+              ["Checkout starts", metrics.checkout_starts || 0],
+              ["Paid reports generated", metrics.one_time_reports_generated || 0],
+              ["Payment success", metrics.payment_successes || 0],
+              ["Avg score", summary.average_score ?? "n/a"],
+              ["Known emails", summary.unique_emails || 0],
+              ["Downloads", (metrics.report_downloads || 0) + (metrics.saved_report_downloads || 0)]
+            ];
+            kpiGrid.innerHTML = kpis.map(([label, value]) => (
+              "<div class='panel kpi'><span>" + escapeHtml(label) + "</span><strong>" + escapeHtml(value) + "</strong></div>"
+            )).join("");
+
+            const funnelRows = (summary.funnel || []).map((step) => (
+              "<tr><td>" + escapeHtml(step.label) + "</td><td>" + formatNumber(step.count) + "</td><td class='rate'>" +
+              escapeHtml(step.from_previous_rate) + "%</td><td class='rate'>" + escapeHtml(step.from_start_rate) +
+              "%</td><td class='drop'>" + formatNumber(step.drop_from_previous) + "</td></tr>"
+            )).join("");
+            funnelTable.innerHTML = "<table><thead><tr><th>Step</th><th>Events</th><th>From previous</th><th>From free result</th><th>Drop</th></tr></thead><tbody>" + funnelRows + "</tbody></table>" +
+              "<p style='margin-top:12px;'>Unlock rate: <strong>" + escapeHtml(unlockRate) + "</strong>. Checkout start rate from unlock clicks: <strong>" + escapeHtml(checkoutRate) + "</strong>. Paid report generation from checkout starts: <strong>" + escapeHtml(paidReportRate) + "</strong>.</p>";
+
+            renderCountList(eventCounts, summary.counts || {{}});
+            renderCountList(checkoutCounts, summary.checkout_counts || {{}});
+
+            recentEvents.innerHTML = "<table><thead><tr><th>Time</th><th>Event</th><th>Email</th><th>Metadata</th></tr></thead><tbody>" +
+              (data.items || []).slice(0, 40).map((item) => (
+                "<tr><td>" + escapeHtml(new Date(item.created_at).toLocaleString("en-GB")) + "</td><td class='event-name'>" +
+                escapeHtml(item.event_name) + "</td><td>" + escapeHtml(item.email || "") + "</td><td class='metadata'>" +
+                escapeHtml(JSON.stringify(item.metadata || {{}})) + "</td></tr>"
+              )).join("") + "</tbody></table>";
+          }}
+
+          async function loadAnalytics() {{
+            statusEl.className = "panel";
+            statusEl.textContent = "Loading analytics...";
+            dashboardEl.classList.add("hidden");
+            try {{
+              const days = windowSelect.value || "30";
+              const response = await fetch("/api/admin/analytics?days=" + encodeURIComponent(days) + "&limit=500");
+              const data = await response.json();
+              if (!response.ok || data.error) {{
+                throw new Error(data.error || "analytics_unavailable");
+              }}
+              renderDashboard(data);
+              statusEl.textContent = "Showing last " + data.window_days + " days. Total events: " + formatNumber(data.summary.total_events || 0) + ".";
+              dashboardEl.classList.remove("hidden");
+            }} catch (error) {{
+              console.error(error);
+              statusEl.className = "error";
+              statusEl.textContent = "Analytics are not available right now.";
+            }}
+          }}
+
+          refreshBtn.addEventListener("click", loadAnalytics);
+          windowSelect.addEventListener("change", loadAnalytics);
+          loadAnalytics();
+        </script>
       </body>
     </html>
     """
