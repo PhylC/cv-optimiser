@@ -5765,13 +5765,19 @@ def build_lead_capture_css() -> str:
             padding: 24px;
             border-radius: 18px;
             border: 1px solid rgba(56, 217, 150, 0.28);
-            background: linear-gradient(135deg, rgba(56, 217, 150, 0.13), rgba(15, 28, 50, 0.72));
+            background: linear-gradient(135deg, rgba(17, 67, 58, 0.92), rgba(10, 20, 40, 0.92));
+            color: #E8EEFC;
           }
           .lead-capture-panel h2 {
             margin: 0 0 8px;
+            color: #F4F7FF !important;
           }
           .lead-capture-panel p {
             margin-bottom: 0;
+            color: #D7E2FA !important;
+          }
+          .lead-capture-panel .eyebrow {
+            color: #A7F3D0 !important;
           }
           .lead-capture-form {
             display: grid;
@@ -5784,14 +5790,14 @@ def build_lead_capture_css() -> str:
             height: 48px;
             box-sizing: border-box;
             border-radius: 14px;
-            border: 1px solid rgba(180, 197, 245, 0.24);
-            background: rgba(7, 14, 27, 0.62);
+            border: 1px solid rgba(199, 210, 254, 0.34);
+            background: rgba(7, 14, 27, 0.78);
             color: #F4F7FF;
             padding: 0 14px;
             font: inherit;
           }
           .lead-capture-form input::placeholder {
-            color: #8EA0C4;
+            color: #B7C6E6;
           }
           .lead-capture-form button {
             min-height: 48px;
@@ -5812,7 +5818,7 @@ def build_lead_capture_css() -> str:
           .lead-capture-status {
             grid-column: 1 / -1;
             min-height: 20px;
-            color: #CFFFE7;
+            color: #CFFFE7 !important;
             font-size: 13px;
             line-height: 1.5;
           }
