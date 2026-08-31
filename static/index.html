@@ -2467,6 +2467,84 @@
     border: 1px solid rgba(91, 120, 255, 0.24);
   }
 
+  .pro-report-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(91, 120, 255, 0.32);
+    background: linear-gradient(135deg, rgba(91, 120, 255, 0.16), rgba(18, 31, 58, 0.72));
+  }
+
+  .pro-report-actions strong {
+    display: block;
+    color: #F4F7FF;
+    font-size: 17px;
+    margin-bottom: 5px;
+  }
+
+  .pro-report-actions p {
+    color: #B7C6E6;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .pro-report-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pro-report-button {
+    min-height: 40px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    border: 1px solid rgba(160, 180, 230, 0.24);
+    background: rgba(3, 13, 31, 0.42);
+    color: #EEF3FF;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: none;
+  }
+
+  .pro-report-button:hover {
+    background: rgba(91, 120, 255, 0.18);
+    transform: translateY(-1px);
+  }
+
+  .pro-snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .pro-snapshot-card {
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.28);
+    background: rgba(3, 13, 31, 0.34);
+  }
+
+  .pro-snapshot-card span {
+    display: block;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .pro-snapshot-card strong {
+    display: block;
+    color: #EEF3FF;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
   #resultPriorityPreview li,
   #anonymousPriorityFixes li {
     color: #EEF3FF;
@@ -3138,8 +3216,18 @@
   .result-grid-two,
   .before-after,
   .score-breakdown-grid,
-  .keyword-importance-grid {
+  .keyword-importance-grid,
+  .pro-snapshot-grid {
     grid-template-columns: 1fr;
+  }
+
+  .pro-report-actions {
+    align-items: stretch;
+  }
+
+  .pro-report-button-row,
+  .pro-report-button {
+    width: 100%;
   }
 
   .score-breakdown-label {
@@ -3899,6 +3987,26 @@
             <div class="full-plan-ready-copy">You can now see the deeper rewrite guidance, tailored bullet improvements, and detailed optimisation steps below.</div>
           </div>
 
+          <div id="proReportActions" class="pro-report-actions hidden">
+            <div>
+              <strong>Full report workspace</strong>
+              <p>Save this analysis, print it, or use it as your editing checklist before re-running the CV.</p>
+            </div>
+            <div class="pro-report-button-row">
+              <button id="downloadReportBtn" class="pro-report-button" type="button">Download report</button>
+              <button id="printReportBtn" class="pro-report-button" type="button">Print / save PDF</button>
+            </div>
+          </div>
+
+          <div id="proSnapshotWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Executive snapshot</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">The practical readout before the detailed sections.</div>
+            <div id="proSnapshotGrid" class="pro-snapshot-grid"></div>
+          </div>
+
           <div id="proSummaryWrap" class="result-section pro-premium hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div class="result-section-title">Professional summary</div>
@@ -3914,7 +4022,8 @@
               <span class="pro-badge">Pro</span>
             </div>
             <div class="result-section-subtitle">Ranked in the order most likely to improve fit, clarity, and role match.</div>
-            <ol id="priorityFixes" class="result-list ranked-fixes"></ol>
+            <div id="proPriorityDetails" class="fix-detail-grid"></div>
+            <ol id="priorityFixes" class="result-list ranked-fixes hidden"></ol>
           </div>
 
           <div id="detailKeywordsWrap" class="result-grid-two">
@@ -4156,6 +4265,7 @@
     let lastPlanJson = "";
     let currentUser = null;
     let currentPlan = null;
+    let currentResultData = null;
     let historyLoadedForUserId = null;
 
     const optimiseBtn = document.getElementById("optimiseBtn");
@@ -4226,6 +4336,11 @@
     const unlockFullReportBtn = document.getElementById("unlockFullReportBtn");
     const proMonthlyBtn = document.getElementById("proMonthlyBtn");
     const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
+    const proReportActions = document.getElementById("proReportActions");
+    const downloadReportBtn = document.getElementById("downloadReportBtn");
+    const printReportBtn = document.getElementById("printReportBtn");
+    const proSnapshotWrap = document.getElementById("proSnapshotWrap");
+    const proSnapshotGrid = document.getElementById("proSnapshotGrid");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
     const resultExampleWhy = document.getElementById("resultExampleWhy");
@@ -4251,6 +4366,7 @@
     const proSummaryWrap = document.getElementById("proSummaryWrap");
     const professionalSummaryEl = document.getElementById("professionalSummary");
     const proPriorityWrap = document.getElementById("proPriorityWrap");
+    const proPriorityDetails = document.getElementById("proPriorityDetails");
     const proSkillsWrap = document.getElementById("proSkillsWrap");
     const proAtsWrap = document.getElementById("proAtsWrap");
     const proRisksWrap = document.getElementById("proRisksWrap");
@@ -4629,7 +4745,12 @@
 
     function renderPriorityFixDetails(items, fallbackItems) {
       if (!resultPriorityPreview) return;
-      resultPriorityPreview.innerHTML = "";
+      renderPriorityFixDetailsForElement(resultPriorityPreview, items, fallbackItems);
+    }
+
+    function renderPriorityFixDetailsForElement(targetEl, items, fallbackItems) {
+      if (!targetEl) return;
+      targetEl.innerHTML = "";
       const fixes = Array.isArray(items) && items.length
         ? items.slice(0, 3)
         : (fallbackItems || []).slice(0, 3).map(function(item) {
@@ -4666,7 +4787,7 @@
 
         card.appendChild(number);
         card.appendChild(body);
-        resultPriorityPreview.appendChild(card);
+        targetEl.appendChild(card);
       });
     }
 
@@ -4706,6 +4827,181 @@
         if (terms.length) wrap.appendChild(chips);
         resultKeywordImportance.appendChild(wrap);
       });
+    }
+
+    function renderProSnapshot(data, actionPlanItems) {
+      if (!proSnapshotGrid || !proSnapshotWrap) return;
+      proSnapshotGrid.innerHTML = "";
+      const keywordFocus = (data.keywordImportance && data.keywordImportance.criticalMissing && data.keywordImportance.criticalMissing.length)
+        ? data.keywordImportance.criticalMissing.slice(0, 3).join(", ")
+        : (data.missingKeywords || []).slice(0, 3).join(", ");
+      const firstFix = data.priorityFixDetails && data.priorityFixDetails.length
+        ? data.priorityFixDetails[0].issue
+        : ((data.priorityFixes && data.priorityFixes[0]) || (data.weakPoints && data.weakPoints[0]) || "Clarify role fit in the first page.");
+      const rewriteFocus = data.freeBulletRewrite && data.freeBulletRewrite.after
+        ? data.freeBulletRewrite.after
+        : ((data.bulletPoints && data.bulletPoints[0]) || "Rewrite duty-only bullets so they show action, context and value.");
+      const nextAction = actionPlanItems && actionPlanItems.length
+        ? actionPlanItems[0]
+        : (data.nextStep || "Work through the priority fixes before making smaller wording edits.");
+      const cards = [
+        ["Primary gap", firstFix],
+        ["Keyword focus", keywordFocus || "Keyword coverage looks reasonable; focus on evidence and clarity."],
+        ["Rewrite focus", rewriteFocus],
+        ["Next action", nextAction]
+      ];
+
+      cards.forEach(function(cardData) {
+        const card = document.createElement("div");
+        card.className = "pro-snapshot-card";
+        const label = document.createElement("span");
+        label.textContent = cardData[0];
+        const value = document.createElement("strong");
+        value.textContent = cardData[1];
+        card.appendChild(label);
+        card.appendChild(value);
+        proSnapshotGrid.appendChild(card);
+      });
+
+      proSnapshotWrap.classList.toggle("hidden", false);
+    }
+
+    function escapeReportHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function listReportItems(title, items) {
+      const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
+      if (!safeItems.length) return "";
+      return "<section><h2>" + escapeReportHtml(title) + "</h2><ul>" +
+        safeItems.map(function(item) {
+          return "<li>" + escapeReportHtml(item) + "</li>";
+        }).join("") +
+        "</ul></section>";
+    }
+
+    function cardReportItems(title, items) {
+      const safeItems = Array.isArray(items) ? items.filter(Boolean).slice(0, 3) : [];
+      if (!safeItems.length) return "";
+      return "<section><h2>" + escapeReportHtml(title) + "</h2><div class=\"cards\">" +
+        safeItems.map(function(item, index) {
+          const issue = item.issue || item.title || String(item || "");
+          const why = item.why || item.whyItMatters || "";
+          const change = item.change || item.whatToChange || item.fix || "";
+          return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>" +
+            escapeReportHtml(issue) + "</h3>" +
+            (why ? "<p><strong>Why it matters:</strong> " + escapeReportHtml(why) + "</p>" : "") +
+            (change ? "<p><strong>What to change:</strong> " + escapeReportHtml(change) + "</p>" : "") +
+            "</article>";
+        }).join("") +
+        "</div></section>";
+    }
+
+    function buildReportHtml(data) {
+      const score = getScoreNumber(data && data.score);
+      const keywordGroups = data.keywordImportance || {};
+      const rewrite = data.freeBulletRewrite || {};
+      const generatedAt = new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      const scoreBreakdown = Array.isArray(data.scoreBreakdown) ? data.scoreBreakdown : [];
+      const critical = keywordGroups.criticalMissing || (data.missingKeywords || []).slice(0, 3);
+      const supporting = keywordGroups.supportingKeywords || (data.missingKeywords || []).slice(3, 8);
+      const covered = keywordGroups.coveredKeywords || (data.matchedKeywords || []).slice(0, 6);
+
+      return "<!doctype html><html><head><meta charset=\"utf-8\"><title>CV Optimiser Report</title>" +
+        "<style>" +
+        "body{font-family:Inter,Arial,sans-serif;margin:0;background:#f5f7fb;color:#142033;line-height:1.55;}" +
+        "main{max-width:900px;margin:0 auto;padding:36px 22px 56px;}" +
+        "header{background:#101c33;color:#fff;border-radius:18px;padding:26px;margin-bottom:22px;}" +
+        "h1{margin:0 0 8px;font-size:30px;}h2{font-size:20px;margin:0 0 12px;}h3{font-size:15px;margin:0 0 8px;}" +
+        "section{background:#fff;border:1px solid #dce3ef;border-radius:14px;padding:20px;margin:14px 0;}" +
+        "ul{margin:0;padding-left:22px;}li{margin:7px 0;}.meta{color:#bfd0ee;font-size:13px;}" +
+        ".score{font-size:46px;font-weight:850;margin-top:12px;}.cards{display:grid;gap:12px;}.card{border:1px solid #dce3ef;border-radius:12px;padding:14px;background:#f8faff;}" +
+        ".card span{display:inline-flex;width:26px;height:26px;border-radius:999px;background:#e6ebff;color:#2947d3;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px;}" +
+        ".breakdown{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}.mini{border:1px solid #dce3ef;border-radius:12px;padding:12px;background:#f8faff;}" +
+        ".mini strong{display:block;font-size:13px;min-height:36px;}.mini b{display:block;font-size:26px;margin-top:8px;}" +
+        ".chips{display:flex;flex-wrap:wrap;gap:7px;}.chip{border-radius:999px;background:#e9eefc;padding:5px 9px;font-size:12px;font-weight:700;}" +
+        ".rewrite{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.note{background:#eef3ff;}" +
+        "@media print{body{background:#fff;}main{max-width:none;padding:0;}header,section{break-inside:avoid;box-shadow:none;}}" +
+        "@media(max-width:760px){.breakdown,.rewrite{grid-template-columns:1fr;}}" +
+        "</style></head><body><main>" +
+        "<header><h1>CV Optimiser Full Report</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        (scoreBreakdown.length ? "<section><h2>Score breakdown</h2><div class=\"breakdown\">" + scoreBreakdown.map(function(item) {
+          return "<div class=\"mini\"><strong>" + escapeReportHtml(item.label || item.name || "CV signal") + "</strong><b>" + escapeReportHtml(item.score || 0) + "</b><p>" + escapeReportHtml(item.detail || item.reason || "") + "</p></div>";
+        }).join("") + "</div></section>" : "") +
+        cardReportItems("Top priority fixes", data.priorityFixDetails || []) +
+        (data.professionalSummary ? "<section><h2>Professional summary</h2><p>" + escapeReportHtml(data.professionalSummary) + "</p></section>" : "") +
+        "<section><h2>Keyword importance</h2><h3>Critical missing</h3><p class=\"chips\">" + critical.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Useful supporting</h3><p class=\"chips\">" + supporting.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Already covered</h3><p class=\"chips\">" + covered.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p></section>" +
+        ((rewrite.before || rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
+        listReportItems("Matched keywords", data.matchedKeywords || []) +
+        listReportItems("Missing keywords", data.missingKeywords || []) +
+        listReportItems("What works", data.strongPoints || []) +
+        listReportItems("What will hold you back", data.weakPoints || []) +
+        listReportItems("Rewritten CV bullets", data.bulletPoints || []) +
+        listReportItems("Suggested skills section", data.skillsSection || []) +
+        listReportItems("ATS-style suggestions", data.atsTips || []) +
+        listReportItems("Application risks", data.interviewRisks || []) +
+        listReportItems("Step-by-step improvement plan", buildActionPlanItems(data)) +
+        (data.nextStep ? "<section><h2>Best next step</h2><p>" + escapeReportHtml(data.nextStep) + "</p></section>" : "") +
+        "<section><p><small>These suggestions are guidance only. Review them carefully before editing your CV.</small></p></section>" +
+        "</main></body></html>";
+    }
+
+    function buildActionPlanItems(data) {
+      const actionPlanItems = [];
+      (data.priorityFixes || []).slice(0, 3).forEach(function(item) {
+        if (item && !actionPlanItems.includes(item)) actionPlanItems.push(item);
+      });
+      if (data.nextStep && !actionPlanItems.includes(data.nextStep) && actionPlanItems.length < 3) {
+        actionPlanItems.push(data.nextStep);
+      }
+      if (data.missingKeywords && data.missingKeywords.length && actionPlanItems.length < 3) {
+        actionPlanItems.push("Add and support keywords like " + data.missingKeywords.slice(0, 2).join(" and ") + " where they genuinely match your experience.");
+      }
+      return actionPlanItems;
+    }
+
+    function downloadCurrentReport() {
+      if (!currentResultData) return;
+      const html = buildReportHtml(currentResultData);
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = "cv-optimiser-report-" + stamp + ".html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      trackEvent("report_downloaded");
+    }
+
+    function printCurrentReport() {
+      if (!currentResultData) return;
+      const reportWindow = window.open("", "_blank");
+      if (!reportWindow) {
+        status.textContent = "Pop-up blocked. Use Download report instead.";
+        return;
+      }
+      reportWindow.document.open();
+      reportWindow.document.write(buildReportHtml(currentResultData));
+      reportWindow.document.close();
+      reportWindow.focus();
+      reportWindow.setTimeout(function() {
+        reportWindow.print();
+      }, 250);
+      trackEvent("report_print_opened");
     }
 
     async function startCheckout(plan, button) {
@@ -5501,6 +5797,14 @@ passwordLoginBtn.addEventListener("click", async function() {
       }, 200);
     });
 
+    if (downloadReportBtn) {
+      downloadReportBtn.addEventListener("click", downloadCurrentReport);
+    }
+
+    if (printReportBtn) {
+      printReportBtn.addEventListener("click", printCurrentReport);
+    }
+
     function setEmailCaptureStatus(message) {
       if (!emailCaptureStatus) return;
       emailCaptureStatus.textContent = message || "";
@@ -5723,6 +6027,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         const isCurrentlyPro = accountState === "signed_in_pro";
         const isAnonymousResult = !!data.isAnonymousResult;
         const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
+        currentResultData = isCurrentlyPro ? data : null;
 
         document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
         document.getElementById("nextStep").textContent = data.nextStep || "";
@@ -5865,30 +6170,24 @@ passwordLoginBtn.addEventListener("click", async function() {
           (data.atsTips && data.atsTips.length) ||
           (data.interviewRisks && data.interviewRisks.length)
         );
-        const actionPlanItems = [];
-        (data.priorityFixes || []).slice(0, 3).forEach(function(item) {
-          if (item && !actionPlanItems.includes(item)) {
-            actionPlanItems.push(item);
-          }
-        });
-        if (data.nextStep && !actionPlanItems.includes(data.nextStep) && actionPlanItems.length < 3) {
-          actionPlanItems.push(data.nextStep);
-        }
-        if (data.missingKeywords && data.missingKeywords.length && actionPlanItems.length < 3) {
-          actionPlanItems.push("Add and support keywords like " + data.missingKeywords.slice(0, 2).join(" and ") + " where they genuinely match your experience.");
-        }
+        const actionPlanItems = buildActionPlanItems(data);
         professionalSummaryEl.textContent = data.professionalSummary || "";
         proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
 
-        proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.priorityFixes && data.priorityFixes.length));
+        if (isCurrentlyPro) {
+          renderProSnapshot(data, actionPlanItems);
+          renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
+        } else if (proSnapshotWrap) {
+          proSnapshotWrap.classList.add("hidden");
+        }
+
+        proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !((data.priorityFixDetails && data.priorityFixDetails.length) || (data.priorityFixes && data.priorityFixes.length)));
         proSkillsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.skillsSection && data.skillsSection.length));
         proAtsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.atsTips && data.atsTips.length));
         proRisksWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.interviewRisks && data.interviewRisks.length));
         proActionPlan.innerHTML = "";
         actionPlanItems.forEach(function(item) {
-          const li = document.createElement("li");
-          li.textContent = item;
-          proActionPlan.appendChild(li);
+          appendTextItem(proActionPlan, item);
         });
         proActionPlanWrap.classList.toggle("hidden", !isCurrentlyPro || !actionPlanItems.length);
         const lockedInsights = document.getElementById("lockedInsights");
@@ -5911,6 +6210,9 @@ passwordLoginBtn.addEventListener("click", async function() {
           lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
         }
         fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
+        if (proReportActions) {
+          proReportActions.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
+        }
         anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
         proUnlockPrompt.classList.toggle("hidden", isCurrentlyPro);

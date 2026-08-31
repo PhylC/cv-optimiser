@@ -2091,11 +2091,19 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
 - professionalSummary:
   Write a tight, high-quality CV summary tailored to this specific job.
   It should position the candidate strongly for THIS role, not generic roles.
+  Make it 3-4 sentences and useful enough for the user to adapt into the top third of their CV.
 
 - priorityFixes:
   Exactly 3 (not more) high-impact improvements.
   These must be the most important changes that would improve CV clarity and role match.
   Each should be specific, practical, and immediately actionable.
+
+- priorityFixDetails:
+  Exactly 3 structured fixes.
+  Each item must include issue, why, and change.
+  The issue should name the actual weakness.
+  The why should explain recruiter/ATS impact.
+  The change should be a concrete edit the user can make.
 
 - skillsSection:
   6–10 role-aligned skills phrased the way recruiters expect to see them.
@@ -2107,12 +2115,19 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
   3–5 realistic concerns a hiring manager or recruiter would have.
   These should feel honest and insightful, not generic.
 
+- bulletPoints:
+  Give 4–6 stronger CV bullets where the CV gives enough source material.
+  Make them concise, evidence-led and suitable to paste into a CV after human review.
+  Do not invent numbers, tools, employers, industries or outcomes.
+
 CRITICAL QUALITY RULES:
 - Be specific to THIS job, not generic advice
 - Do not repeat content across sections
 - Avoid generic phrases like "results-driven" unless clearly supported
 - Make the output feel like it was written by an experienced recruiter
 - Prioritise clarity and usefulness over length
+- Use UK CV terminology
+- Do not promise interviews, ATS success, or hiring outcomes
 """.strip() if is_pro else ""
 
     return f"""
@@ -8960,7 +8975,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=bool(plan and plan["is_pro"])),
-            max_output_tokens=1100,
+            max_output_tokens=2200 if bool(plan and plan["is_pro"]) else 1300,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
