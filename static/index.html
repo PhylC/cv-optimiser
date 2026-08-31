@@ -2463,7 +2463,7 @@
 
   .audit-summary-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
   }
 
@@ -4264,6 +4264,11 @@
 
           <div id="auditSummaryGrid" class="audit-summary-grid">
             <div class="audit-summary-card">
+              <span>Role lens</span>
+              <strong id="auditRoleLens">General UK CV</strong>
+              <p id="auditRoleLensCopy">Guidance adapts to the job advert you paste.</p>
+            </div>
+            <div class="audit-summary-card">
               <span>Keyword gaps</span>
               <strong id="auditKeywordCount">0</strong>
               <p id="auditKeywordCopy">Missing role language reduces apparent fit.</p>
@@ -4800,6 +4805,8 @@
     const auditEvidenceCopy = document.getElementById("auditEvidenceCopy");
     const auditBestAction = document.getElementById("auditBestAction");
     const auditBestActionCopy = document.getElementById("auditBestActionCopy");
+    const auditRoleLens = document.getElementById("auditRoleLens");
+    const auditRoleLensCopy = document.getElementById("auditRoleLensCopy");
     const recruiterVerdictWrap = document.getElementById("recruiterVerdictWrap");
     const recruiterVerdictLikelihood = document.getElementById("recruiterVerdictLikelihood");
     const recruiterVerdictConcern = document.getElementById("recruiterVerdictConcern");
@@ -5075,7 +5082,17 @@
       const matchedCount = (data.matchedKeywords || []).length;
       const weakCount = (data.weakPoints || []).length;
       const bestAction = (data.previewPriorityFixes && data.previewPriorityFixes[0]) || (data.priorityFixes && data.priorityFixes[0]) || data.nextStep || "Tailor the CV to this role";
+      const roleFocus = data.roleFocus || {};
+      const proofPoints = Array.isArray(roleFocus.proof) ? roleFocus.proof.slice(0, 2).join(" and ") : "";
 
+      if (auditRoleLens) {
+        auditRoleLens.textContent = roleFocus.label || "General UK CV";
+      }
+      if (auditRoleLensCopy) {
+        auditRoleLensCopy.textContent = proofPoints
+          ? "Looks for proof such as " + proofPoints + "."
+          : "Guidance adapts to the job advert you paste.";
+      }
       if (auditKeywordCount) {
         auditKeywordCount.textContent = missingCount ? String(missingCount) + " missing" : "No major gaps";
       }
@@ -5720,6 +5737,9 @@
       const mainConcern = recruiterVerdict.mainConcern || recruiterVerdict.concern || (data.weakPoints && data.weakPoints[0]) || "";
       const fixFirst = recruiterVerdict.fixFirst || recruiterVerdict.firstFix || data.nextStep || "";
       const rewriteDetails = normaliseRewriteDetails(data, isFullReport ? 5 : 1);
+      const roleFocus = data.roleFocus || {};
+      const roleProof = Array.isArray(roleFocus.proof) ? roleFocus.proof.slice(0, 4).join(", ") : "";
+      const roleKeywords = Array.isArray(roleFocus.keywords) ? roleFocus.keywords.slice(0, 6).join(", ") : "";
 
       return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
@@ -5739,6 +5759,10 @@
         "@media(max-width:760px){.breakdown,.rewrite{grid-template-columns:1fr;}}" +
         "</style></head><body><main>" +
         "<header><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        "<section><h2>Role lens</h2><p><strong>" + escapeReportHtml(roleFocus.label || "General UK CV") + "</strong></p>" +
+        (roleKeywords ? "<p><strong>Keywords weighed:</strong> " + escapeReportHtml(roleKeywords) + "</p>" : "") +
+        (roleProof ? "<p><strong>Proof points checked:</strong> " + escapeReportHtml(roleProof) + "</p>" : "") +
+        "</section>" +
         "<section><h2>UK recruiter verdict</h2><p><strong>Shortlist likelihood:</strong> " + escapeReportHtml(shortlistLikelihood) + "</p>" +
         (mainConcern ? "<p><strong>Main concern:</strong> " + escapeReportHtml(mainConcern) + "</p>" : "") +
         (fixFirst ? "<p><strong>Fix first:</strong> " + escapeReportHtml(fixFirst) + "</p>" : "") +
@@ -7177,6 +7201,8 @@ passwordLoginBtn.addEventListener("click", async function() {
           anonymous_result: isAnonymousResult,
           account_state: accountState,
           score: scoreNumber,
+          role_focus: data.roleFocus && data.roleFocus.key ? data.roleFocus.key : "",
+          role_category: data.roleFocus && data.roleFocus.category ? data.roleFocus.category : "",
           score_band: scoreNumber < 45 ? "0-44" : (scoreNumber < 60 ? "45-59" : (scoreNumber < 75 ? "60-74" : "75+")),
           missing_keyword_count: (data.missingKeywords || []).length,
           matched_keyword_count: (data.matchedKeywords || []).length,

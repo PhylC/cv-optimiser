@@ -823,6 +823,254 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             ("/best-cv-format-for-ats", "Best CV format for ATS"),
         ],
     },
+    "graduate-cv-example-report": {
+        "title": "Graduate CV Example Report | CV Optimiser",
+        "description": "See a graduate CV example report with education, placement, project, internship and transferable skill feedback.",
+        "h1": "Graduate CV example report",
+        "intro": "See how CV Optimiser reviews a graduate CV for role clarity, projects, placements and transferable evidence.",
+        "role_label": "Graduate Analyst",
+        "cv_snippet": "with a business degree, university projects, part-time retail work and strong interest in data-led decision making.",
+        "job_snippet": "We are looking for a graduate analyst with Excel, research, communication, teamwork, problem solving and clear evidence of initiative.",
+        "score": "Match Score: 57/100",
+        "score_label": "Good potential, but evidence is buried",
+        "score_copy": "The CV has useful graduate evidence, but the projects, transferable skills and target role need to be clearer on page one.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may miss the relevant project and analysis evidence because the CV reads like a general graduate profile.",
+            "fix_first": "Move the strongest project, Excel and research evidence into the profile, education and project sections.",
+        },
+        "keywords": ["Excel", "research", "analysis", "teamwork", "communication", "initiative", "problem solving"],
+        "unclear": [
+            "The target role is not clear enough in the profile.",
+            "University project evidence is too low down.",
+            "Part-time work is not translated into useful transferable skills.",
+            "Excel and analysis evidence needs clearer examples.",
+        ],
+        "fixes": [
+            ("Lead with target-role clarity", "Say what graduate role this CV is aiming at and why the evidence fits.", "Professional profile."),
+            ("Move project evidence higher", "Show the most relevant university project with tools, task and outcome.", "Education or projects section."),
+            ("Translate part-time work", "Connect customer service, teamwork and problem solving to workplace evidence.", "Experience bullets."),
+        ],
+        "weak_bullet": "Worked on a university project and presented findings to the class.",
+        "strong_bullet": "Analysed survey data in Excel for a university project, summarising findings and presenting recommendations to a group of 30 students.",
+        "rewrite_examples": [
+            {
+                "before": "Worked on a university project and presented findings to the class.",
+                "after": "Analysed survey data in Excel for a university project, summarising findings and presenting recommendations to a group of 30 students.",
+                "why_better": "It names the tool, task, audience and output, which makes graduate evidence easier to assess.",
+                "where_to_use": "Education or projects section.",
+                "strengthens": "Excel, analysis, communication and initiative.",
+            },
+            {
+                "before": "Worked part time in retail while studying.",
+                "after": "Balanced part-time retail work with full-time study, developing customer communication, prioritisation and problem-solving skills in a busy store environment.",
+                "why_better": "It turns part-time work into transferable evidence without pretending it is senior experience.",
+                "where_to_use": "Experience section.",
+                "strengthens": "Communication, teamwork and reliability.",
+            },
+        ],
+        "ats_checks": [
+            "Graduate keywords are present, but project evidence needs stronger placement.",
+            "The CV should avoid sounding senior without proof.",
+            "Education, projects and part-time work need clearer relevance to the role.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around the target graduate role.",
+            "Move the most relevant project into a visible project section.",
+            "Add truthful keywords such as Excel, research, analysis and communication where supported.",
+        ],
+        "related": [
+            ("/graduate-cv-checker", "Graduate CV checker"),
+            ("/cv-summary-examples-uk", "CV summary examples UK"),
+            ("/how-to-tailor-cv-to-job-description", "Tailor CV to a job description"),
+        ],
+    },
+    "nhs-admin-cv-example-report": {
+        "title": "NHS Admin CV Example Report | CV Optimiser",
+        "description": "See an NHS admin CV example report with confidentiality, records, scheduling, systems and patient communication feedback.",
+        "h1": "NHS admin CV example report",
+        "intro": "See how CV Optimiser reviews an NHS admin CV for accuracy, confidentiality, systems and public-sector relevance.",
+        "role_label": "NHS Administrator",
+        "cv_snippet": "with experience handling appointments, updating records and supporting busy front-office administration.",
+        "job_snippet": "We are looking for an NHS administrator with patient communication, confidentiality, accurate records, appointment scheduling, systems and team support experience.",
+        "score": "Match Score: 60/100",
+        "score_label": "Relevant admin experience needs NHS framing",
+        "score_copy": "The CV shows useful admin skills, but confidentiality, records accuracy and patient-facing context need to be more explicit.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "The CV sounds like general administration rather than clearly showing NHS-style confidentiality, records and patient communication evidence.",
+            "fix_first": "Make confidentiality, accurate records and appointment handling visible in the profile and recent admin bullets.",
+        },
+        "keywords": ["confidentiality", "patient communication", "records", "appointment scheduling", "accuracy", "systems", "team support"],
+        "unclear": [
+            "Confidentiality is not stated clearly enough.",
+            "Records and systems experience needs stronger detail.",
+            "Appointment scheduling is present but not evidenced.",
+            "Patient or public-facing communication needs clearer wording.",
+        ],
+        "fixes": [
+            ("Name confidentiality directly", "Show that sensitive information is handled carefully and appropriately.", "Profile and key skills."),
+            ("Evidence records accuracy", "Mention records, systems and accuracy where this is truthful.", "Recent admin role bullets."),
+            ("Frame communication for NHS context", "Describe patient, public or stakeholder contact clearly and calmly.", "Experience bullets."),
+        ],
+        "weak_bullet": "Answered calls and updated records for the team.",
+        "strong_bullet": "Handled patient and team queries professionally while updating appointment records accurately and maintaining confidentiality.",
+        "rewrite_examples": [
+            {
+                "before": "Answered calls and updated records for the team.",
+                "after": "Handled patient and team queries professionally while updating appointment records accurately and maintaining confidentiality.",
+                "why_better": "It adds NHS-relevant signals around patients, accuracy and confidentiality.",
+                "where_to_use": "Recent admin role bullet.",
+                "strengthens": "Patient communication, records and confidentiality.",
+            },
+            {
+                "before": "Helped with appointments and office work.",
+                "after": "Supported appointment scheduling, document handling and front-office administration in a busy service environment.",
+                "why_better": "It makes the admin tasks more specific and easier to match to the advert.",
+                "where_to_use": "Experience section.",
+                "strengthens": "Scheduling, documentation and service support.",
+            },
+        ],
+        "ats_checks": [
+            "NHS admin language should be more visible in the profile and skills section.",
+            "Confidentiality and accuracy should be explicit rather than assumed.",
+            "Systems experience needs to be named where possible.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around NHS-style admin, confidentiality and records accuracy.",
+            "Add appointment scheduling and systems evidence where truthful.",
+            "Make patient or public communication examples easier to scan.",
+        ],
+        "related": [
+            ("/nhs-admin-cv-checker", "NHS admin CV checker"),
+            ("/admin-cv-checker", "Admin CV checker"),
+            ("/best-cv-format-uk", "Best CV format UK"),
+        ],
+    },
+    "marketing-cv-example-report": {
+        "title": "Marketing CV Example Report | CV Optimiser",
+        "description": "See a marketing CV example report with campaign, content, analytics, SEO, CRM and conversion feedback.",
+        "h1": "Marketing CV example report",
+        "intro": "See how CV Optimiser reviews a marketing CV for campaign evidence, channel fit, analytics and measurable outcomes.",
+        "role_label": "Marketing Executive",
+        "cv_snippet": "with experience supporting campaigns, creating content and helping with reporting across digital channels.",
+        "job_snippet": "We are looking for a marketing executive with campaign delivery, content, SEO, email, CRM, analytics and conversion reporting experience.",
+        "score": "Match Score: 63/100",
+        "score_label": "Channel experience is present but not measurable",
+        "score_copy": "The CV shows marketing exposure, but campaign results, channel ownership and analytics evidence need to be clearer.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may see marketing activity but not enough evidence of outcomes, channel ownership or reporting impact.",
+            "fix_first": "Rewrite campaign bullets with channel, audience, metric and result where truthful.",
+        },
+        "keywords": ["campaigns", "content", "SEO", "email", "CRM", "analytics", "conversion"],
+        "unclear": [
+            "Campaign outcomes are not measurable enough.",
+            "The marketing channel mix is not matched closely to the advert.",
+            "Analytics and reporting evidence is too broad.",
+            "Content work needs clearer audience or performance context.",
+        ],
+        "fixes": [
+            ("Add campaign outcomes", "Show traffic, leads, engagement, conversion or reporting improvements where truthful.", "Recent campaign bullets."),
+            ("Match the channel mix", "Reflect SEO, email, CRM or paid media depending on the advert.", "Key skills and campaign experience."),
+            ("Make analytics visible", "Show what was measured and how reporting informed decisions.", "Experience bullets."),
+        ],
+        "weak_bullet": "Helped with marketing campaigns and content.",
+        "strong_bullet": "Supported email and content campaigns by preparing audience segments, tracking engagement and reporting performance insights to the marketing team.",
+        "rewrite_examples": [
+            {
+                "before": "Helped with marketing campaigns and content.",
+                "after": "Supported email and content campaigns by preparing audience segments, tracking engagement and reporting performance insights to the marketing team.",
+                "why_better": "It names channels, actions and reporting value rather than saying 'helped'.",
+                "where_to_use": "Recent marketing role bullet.",
+                "strengthens": "Campaign delivery, email, content and analytics.",
+            },
+            {
+                "before": "Worked on SEO updates for the website.",
+                "after": "Updated SEO content across priority web pages, improving keyword relevance and supporting clearer organic search reporting.",
+                "why_better": "It connects SEO activity to keyword relevance and reporting, which fits the advert more closely.",
+                "where_to_use": "Digital marketing or content bullet.",
+                "strengthens": "SEO, content optimisation and reporting.",
+            },
+        ],
+        "ats_checks": [
+            "Marketing keywords should match the exact channel mix in the advert.",
+            "Results should be quantified where the CV genuinely supports them.",
+            "Tools such as CRM, analytics or email platforms should be named if used.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around the target marketing role and channels.",
+            "Add campaign metrics or reporting outputs where truthful.",
+            "Move the most relevant tools and channels into key skills.",
+        ],
+        "related": [
+            ("/marketing-cv-checker", "Marketing CV checker"),
+            ("/cv-keyword-optimiser", "CV keyword optimiser"),
+            ("/cv-improvement-tool", "CV improvement tool"),
+        ],
+    },
+    "software-developer-cv-example-report": {
+        "title": "Software Developer CV Example Report | CV Optimiser",
+        "description": "See a software developer CV example report with stack match, shipped projects, APIs, testing, databases and impact feedback.",
+        "h1": "Software developer CV example report",
+        "intro": "See how CV Optimiser reviews a software developer CV for stack relevance, shipped work, testing and project impact.",
+        "role_label": "Software Developer",
+        "cv_snippet": "with experience building web features, working with APIs and contributing to team development projects.",
+        "job_snippet": "We are looking for a software developer with Python, JavaScript, APIs, databases, testing, Git, CI/CD and agile delivery experience.",
+        "score": "Match Score: 66/100",
+        "score_label": "Relevant stack, but shipped impact needs detail",
+        "score_copy": "The CV shows technical experience, but project outcomes, testing and production impact are not specific enough.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter can see development exposure, but may not understand what was shipped, how it was tested or what impact it had.",
+            "fix_first": "Rewrite project bullets around stack, problem solved, shipped feature and measurable or observable outcome.",
+        },
+        "keywords": ["Python", "JavaScript", "APIs", "databases", "testing", "Git", "CI/CD", "agile"],
+        "unclear": [
+            "The tech stack is listed but not always tied to projects.",
+            "Testing and code quality evidence is light.",
+            "Project outcomes are not specific enough.",
+            "The CV needs clearer shipped-work examples.",
+        ],
+        "fixes": [
+            ("Tie stack to shipped work", "Show what was built with each relevant technology.", "Project and recent role bullets."),
+            ("Add testing evidence", "Mention unit tests, QA, bug fixing or code review where truthful.", "Technical project bullets."),
+            ("Show product or user impact", "Explain who used the feature or what improved after delivery.", "Achievement bullets."),
+        ],
+        "weak_bullet": "Worked on APIs and frontend features.",
+        "strong_bullet": "Built JavaScript frontend features integrated with Python API endpoints, improving data visibility for internal users.",
+        "rewrite_examples": [
+            {
+                "before": "Worked on APIs and frontend features.",
+                "after": "Built JavaScript frontend features integrated with Python API endpoints, improving data visibility for internal users.",
+                "why_better": "It links stack, feature and user value instead of listing technical tasks.",
+                "where_to_use": "Recent developer role or project bullet.",
+                "strengthens": "JavaScript, Python, APIs and shipped impact.",
+            },
+            {
+                "before": "Fixed bugs and helped with testing.",
+                "after": "Resolved defects and supported test coverage across web features, helping the team release more stable updates.",
+                "why_better": "It makes quality contribution clearer without inventing metrics.",
+                "where_to_use": "Technical achievements or project responsibilities.",
+                "strengthens": "Testing, debugging and delivery quality.",
+            },
+        ],
+        "ats_checks": [
+            "Stack keywords should be connected to specific shipped examples.",
+            "Testing, Git and CI/CD evidence should be visible if the advert asks for them.",
+            "Avoid long technology lists without context.",
+        ],
+        "action_plan": [
+            "Rewrite project bullets with stack, problem, action and outcome.",
+            "Add testing, Git and delivery-process evidence where truthful.",
+            "Make the most relevant stack visible in the profile and technical skills.",
+        ],
+        "related": [
+            ("/software-developer-cv-checker", "Software developer CV checker"),
+            ("/it-helpdesk-cv-checker", "IT helpdesk CV checker"),
+            ("/best-cv-format-for-ats", "Best CV format for ATS"),
+        ],
+    },
 }
 
 COMPARISON_PAGES: dict[str, dict[str, Any]] = {
@@ -856,6 +1104,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("/best-free-cv-checker-uk", "Best free CV checker UK"),
             ("/ats-cv-checker", "ATS CV checker"),
             ("/sales-cv-example-report", "Sales CV example report"),
+            ("/graduate-cv-example-report", "Graduate CV example report"),
         ],
     },
     "cv-optimiser-vs-resume-worded": {
@@ -888,6 +1137,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("/cv-score-checker", "CV score checker"),
             ("/cv-job-description-match", "CV job description match"),
             ("/project-manager-cv-example-report", "Project manager CV example report"),
+            ("/software-developer-cv-example-report", "Software developer CV example report"),
         ],
     },
     "best-ats-cv-checker-uk": {
@@ -1619,6 +1869,125 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
 }
 
 
+ROLE_FOCUS_PROFILES: dict[str, dict[str, Any]] = {
+    "sales_account": {
+        "label": "Sales and account management",
+        "category": "sales/account management",
+        "signals": ["revenue, quota and target performance", "pipeline generation and conversion", "CRM, forecasting and negotiation", "account growth, retention and commercial outcomes"],
+        "keywords": ["revenue", "quota", "pipeline", "CRM", "forecasting", "negotiation", "account growth", "retention"],
+        "concerns": ["commercial impact is vague", "quota or pipeline ownership is not proven", "customer relationship language is not tied to results"],
+        "proof": ["target attainment", "pipeline value", "deal size", "conversion rate", "account growth", "retention"],
+        "where": "Profile, key skills, and recent sales or account-management bullets.",
+    },
+    "project_programme": {
+        "label": "Project and programme management",
+        "category": "project/programme management",
+        "signals": ["delivery ownership", "governance and stakeholder control", "risk, dependency and issue management", "budget, timeline and implementation outcomes"],
+        "keywords": ["delivery", "governance", "stakeholders", "RAID", "dependencies", "budget", "implementation", "change"],
+        "concerns": ["project scale is unclear", "delivery ownership is not obvious", "risk, governance or outcome evidence is weak"],
+        "proof": ["budget size", "timeline", "workstreams", "team size", "delivery outcome", "risk reduction"],
+        "where": "Profile, project summary lines, and the strongest recent delivery bullets.",
+    },
+    "operations_admin": {
+        "label": "Operations and administration",
+        "category": "operations/admin",
+        "signals": ["accuracy and organisation", "scheduling, records and documentation", "systems and process support", "customer or internal service quality"],
+        "keywords": ["administration", "records", "scheduling", "documentation", "accuracy", "process", "systems", "customer service"],
+        "concerns": ["admin evidence sounds too generic", "systems or accuracy proof is missing", "process improvements are not visible"],
+        "proof": ["volume handled", "accuracy improvements", "systems used", "process time saved", "stakeholder support"],
+        "where": "Profile, key skills, systems section and recent admin bullets.",
+    },
+    "marketing": {
+        "label": "Marketing",
+        "category": "marketing",
+        "signals": ["campaign ownership", "channel mix and content relevance", "analytics, reporting and conversion", "SEO, paid media, email or CRM evidence"],
+        "keywords": ["campaigns", "content", "analytics", "SEO", "paid media", "email", "CRM", "conversion"],
+        "concerns": ["channels are listed without outcomes", "metrics are missing", "the CV does not match the role's marketing mix"],
+        "proof": ["campaign performance", "traffic", "leads", "conversion rate", "open rate", "ROAS", "ranking improvement"],
+        "where": "Profile, channel/tool skills, and campaign achievement bullets.",
+    },
+    "finance_admin": {
+        "label": "Finance and office support",
+        "category": "finance/admin",
+        "signals": ["accuracy and controls", "reconciliations, invoicing or reporting", "Excel, systems and data handling", "stakeholder support and deadlines"],
+        "keywords": ["reconciliation", "invoicing", "Excel", "reporting", "month-end", "accuracy", "controls", "data"],
+        "concerns": ["finance process evidence is too light", "accuracy and controls are not proven", "systems experience is unclear"],
+        "proof": ["transaction volume", "reporting cadence", "error reduction", "month-end support", "systems used"],
+        "where": "Key skills, systems/tools section, and finance process bullets.",
+    },
+    "tech_product": {
+        "label": "Tech and product",
+        "category": "tech/product",
+        "signals": ["relevant stack or product domain", "shipped work and business impact", "APIs, data, testing or delivery process", "cross-functional collaboration"],
+        "keywords": ["Python", "JavaScript", "APIs", "databases", "testing", "product", "roadmap", "agile"],
+        "concerns": ["tools are listed without shipped outcomes", "the stack does not match the advert clearly", "impact or product context is missing"],
+        "proof": ["features shipped", "users supported", "performance improvement", "defect reduction", "delivery cadence", "product metric"],
+        "where": "Technical skills, project summaries, and recent delivery bullets.",
+    },
+    "graduate_early": {
+        "label": "Graduate and early career",
+        "category": "graduate/early career",
+        "signals": ["target role clarity", "education, projects and placements", "internships, volunteering or part-time work", "transferable skills with evidence"],
+        "keywords": ["placement", "internship", "project", "analysis", "teamwork", "communication", "initiative", "research"],
+        "concerns": ["the CV tries to sound senior without evidence", "relevant projects are buried", "transferable skills are vague"],
+        "proof": ["degree modules", "project outcomes", "placement responsibilities", "part-time work results", "volunteering scope"],
+        "where": "Profile, education/projects, placements and transferable-skills bullets.",
+    },
+    "retail_customer": {
+        "label": "Retail and customer service",
+        "category": "retail/customer service",
+        "signals": ["customer experience", "KPIs, sales or service standards", "stock, tills, merchandising or operations", "teamwork, training or supervision"],
+        "keywords": ["customer service", "KPIs", "sales", "stock control", "merchandising", "till", "complaints", "teamwork"],
+        "concerns": ["service evidence is too generic", "KPIs or standards are missing", "operational responsibilities are not specific"],
+        "proof": ["sales uplift", "customer scores", "queue time", "stock accuracy", "team size", "training delivered"],
+        "where": "Profile, key skills and recent retail/customer-service bullets.",
+    },
+    "public_nhs": {
+        "label": "Public sector and NHS admin",
+        "category": "public sector/NHS-style roles",
+        "signals": ["confidentiality, accuracy and records", "patient, citizen or stakeholder handling", "scheduling, communication and process", "systems and public-sector language"],
+        "keywords": ["confidentiality", "records", "scheduling", "patient", "communication", "accuracy", "systems", "DBS"],
+        "concerns": ["confidentiality and accuracy are not explicit", "systems or records evidence is missing", "public-sector service context is too generic"],
+        "proof": ["records volume", "appointment scheduling", "confidential data handled", "systems used", "service standards"],
+        "where": "Profile, key skills, systems section and recent public-sector/admin bullets.",
+    },
+}
+
+
+ROLE_FOCUS_KEYWORDS: dict[str, list[str]] = {
+    "sales_account": ["sales", "account manager", "account executive", "business development", "bdm", "quota", "pipeline", "crm", "revenue", "forecast", "retention", "renewal", "negotiation"],
+    "project_programme": ["project manager", "programme manager", "delivery manager", "pmo", "stakeholder", "governance", "raid", "dependency", "implementation", "change management", "budget"],
+    "operations_admin": ["administrator", "admin", "office", "operations", "coordinator", "scheduling", "records", "documentation", "process", "data entry"],
+    "marketing": ["marketing", "campaign", "content", "seo", "paid media", "ppc", "email", "crm", "brand", "analytics", "conversion"],
+    "finance_admin": ["finance", "accounts", "invoice", "reconciliation", "purchase ledger", "sales ledger", "month-end", "excel", "bookkeeping", "payroll"],
+    "tech_product": ["software", "developer", "engineer", "product manager", "product owner", "api", "python", "javascript", "database", "testing", "agile", "roadmap"],
+    "graduate_early": ["graduate", "entry level", "intern", "placement", "trainee", "assistant", "junior", "student", "apprentice", "early career"],
+    "retail_customer": ["retail", "store", "customer service", "shop", "sales assistant", "team leader", "stock", "merchandising", "till", "complaints"],
+    "public_nhs": ["nhs", "patient", "clinic", "hospital", "public sector", "local authority", "confidentiality", "records", "appointment", "dbs"],
+}
+
+
+def infer_role_focus(job_description: str, cv_text: str = "") -> dict[str, Any]:
+    text = f"{job_description}\n{cv_text}".lower()
+    scores: dict[str, int] = {}
+    for key, terms in ROLE_FOCUS_KEYWORDS.items():
+        scores[key] = sum(2 if term in job_description.lower() else 1 for term in terms if term in text)
+    best_key = max(scores, key=scores.get)
+    if scores.get(best_key, 0) <= 0:
+        best_key = "operations_admin"
+    profile = ROLE_FOCUS_PROFILES[best_key]
+    return {
+        "key": best_key,
+        "label": profile["label"],
+        "category": profile["category"],
+        "signals": profile["signals"],
+        "keywords": profile["keywords"],
+        "concerns": profile["concerns"],
+        "proof": profile["proof"],
+        "where": profile["where"],
+    }
+
+
 def build_role_page(slug: str, spec: dict[str, Any]) -> dict[str, Any]:
     role = spec["role"]
     title_role = role if role.upper() == "NHS" else role
@@ -2245,11 +2614,31 @@ def extract_cv_text(filename: str, file_bytes: bytes) -> str:
     raise ValueError("Unsupported file type. Please upload a PDF, DOCX, or TXT file.")
 
 
-def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> str:
+def build_prompt(job_description: str, cv_text: str, is_pro: bool = False, role_focus: Optional[dict[str, Any]] = None) -> str:
+    role_focus = role_focus or infer_role_focus(job_description, cv_text)
+    role_focus_block = f"""
+Detected UK role lens:
+- Category: {role_focus["category"]}
+- Label: {role_focus["label"]}
+- Signals to prioritise: {", ".join(role_focus["signals"])}
+- Keywords to weigh carefully: {", ".join(role_focus["keywords"])}
+- Common concerns to check for: {", ".join(role_focus["concerns"])}
+- Proof points that matter: {", ".join(role_focus["proof"])}
+- Where fixes usually belong: {role_focus["where"]}
+""".strip()
+
     if is_pro:
         output_schema = """
 {
   "score": 0,
+  "roleFocus": {
+    "label": "",
+    "category": "",
+    "signals": [],
+    "keywords": [],
+    "concerns": [],
+    "proof": []
+  },
   "scoreBreakdown": [],
   "recruiterVerdict": {
     "shortlistLikelihood": "",
@@ -2285,6 +2674,14 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
         output_schema = """
 {
   "score": 0,
+  "roleFocus": {
+    "label": "",
+    "category": "",
+    "signals": [],
+    "keywords": [],
+    "concerns": [],
+    "proof": []
+  },
   "scoreBreakdown": [],
   "recruiterVerdict": {
     "shortlistLikelihood": "",
@@ -2383,8 +2780,13 @@ Use this exact JSON structure:
 
 {output_schema}
 
+{role_focus_block}
+
 Quality rules:
 - score must be realistic, not inflated
+- use the detected role lens to judge what matters for this specific UK application
+- roleFocus must summarise the detected role lens and must not invent a sector unrelated to the advert
+- prioritise the role-specific signals, keywords, concerns and proof points above generic CV advice
 - recruiterVerdict must sound like a concise UK recruiter verdict on this application
 - recruiterVerdict.shortlistLikelihood must be one of: "Likely", "Possible", "Unlikely", or "Unclear"
 - recruiterVerdict.mainConcern must state the main reason this CV may not be shortlisted for this specific role
@@ -3087,6 +3489,20 @@ def coerce_recruiter_verdict(value: Any) -> dict[str, str]:
     }
 
 
+def build_role_focus_payload(role_focus: Optional[dict[str, Any]]) -> dict[str, Any]:
+    role_focus = role_focus or ROLE_FOCUS_PROFILES["operations_admin"]
+    return {
+        "key": coerce_string(role_focus.get("key")) or "operations_admin",
+        "label": coerce_string(role_focus.get("label")) or "Operations and administration",
+        "category": coerce_string(role_focus.get("category")) or "operations/admin",
+        "signals": coerce_string_list(role_focus.get("signals"), max_items=6),
+        "keywords": coerce_string_list(role_focus.get("keywords"), max_items=10),
+        "concerns": coerce_string_list(role_focus.get("concerns"), max_items=5),
+        "proof": coerce_string_list(role_focus.get("proof"), max_items=6),
+        "where": coerce_string(role_focus.get("where")),
+    }
+
+
 def coerce_keyword_importance(value: Any) -> dict[str, list[str]]:
     if not isinstance(value, dict):
         value = {}
@@ -3371,7 +3787,7 @@ def build_bullet_rewrite_details(data: dict[str, Any], is_pro: bool) -> list[dic
     return fallback_items[:5 if is_pro else 1]
 
 
-def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any]:
+def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Optional[dict[str, Any]] = None) -> dict[str, Any]:
     try:
         score = int(data.get("score", 0))
     except Exception:
@@ -3380,6 +3796,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
 
     normalized = {
         "score": score,
+        "roleFocus": build_role_focus_payload(role_focus or data.get("roleFocus")),
         "scoreBreakdown": build_score_breakdown(data),
         "recruiterVerdict": build_recruiter_verdict(data),
         "matchedKeywords": coerce_string_list(data.get("matchedKeywords")),
@@ -6097,6 +6514,10 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             ("/account-manager-cv-example-report", "Account manager CV example report"),
             ("/sales-cv-example-report", "Sales CV example report"),
             ("/project-manager-cv-example-report", "Project manager CV example report"),
+            ("/graduate-cv-example-report", "Graduate CV example report"),
+            ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
+            ("/marketing-cv-example-report", "Marketing CV example report"),
+            ("/software-developer-cv-example-report", "Software developer CV example report"),
         ],
     })
     keyword_html = "".join(
@@ -7592,6 +8013,10 @@ def render_best_free_cv_checker_page() -> str:
         ("/example-cv-report", "Example CV report"),
         ("/sales-cv-example-report", "Sales CV example report"),
         ("/account-manager-cv-example-report", "Account manager example report"),
+        ("/graduate-cv-example-report", "Graduate CV example report"),
+        ("/nhs-admin-cv-example-report", "NHS admin example report"),
+        ("/marketing-cv-example-report", "Marketing example report"),
+        ("/software-developer-cv-example-report", "Software developer example report"),
         ("/cv-optimiser-vs-jobscan", "CV Optimiser vs Jobscan"),
         ("/cv-optimiser-vs-resume-worded", "CV Optimiser vs Resume Worded"),
         ("/privacy", "Privacy Policy"),
@@ -8169,8 +8594,19 @@ def render_guides_page() -> str:
         ("Sales and management CVs", [
             ("sales-cv-keywords", "/sales-cv-keywords", SEO_LANDING_PAGES["sales-cv-keywords"]["title"], SEO_LANDING_PAGES["sales-cv-keywords"]["intro"]),
             ("account-manager-cv-keywords", "/account-manager-cv-keywords", SEO_LANDING_PAGES["account-manager-cv-keywords"]["title"], SEO_LANDING_PAGES["account-manager-cv-keywords"]["intro"]),
+            ("sales-cv-checker", "/sales-cv-checker", SEO_LANDING_PAGES["sales-cv-checker"]["title"], SEO_LANDING_PAGES["sales-cv-checker"]["intro"]),
+            ("account-manager-cv-checker", "/account-manager-cv-checker", SEO_LANDING_PAGES["account-manager-cv-checker"]["title"], SEO_LANDING_PAGES["account-manager-cv-checker"]["intro"]),
+            ("project-manager-cv-checker", "/project-manager-cv-checker", SEO_LANDING_PAGES["project-manager-cv-checker"]["title"], SEO_LANDING_PAGES["project-manager-cv-checker"]["intro"]),
             ("sales-director-cv-example", "/sales-director-cv-example", SEO_LANDING_PAGES["sales-director-cv-example"]["title"], SEO_LANDING_PAGES["sales-director-cv-example"]["intro"]),
             ("retail-manager-cv-example", "/retail-manager-cv-example", SEO_LANDING_PAGES["retail-manager-cv-example"]["title"], SEO_LANDING_PAGES["retail-manager-cv-example"]["intro"]),
+        ]),
+        ("Role-specific CV checkers", [
+            ("graduate-cv-checker", "/graduate-cv-checker", SEO_LANDING_PAGES["graduate-cv-checker"]["title"], SEO_LANDING_PAGES["graduate-cv-checker"]["intro"]),
+            ("nhs-admin-cv-checker", "/nhs-admin-cv-checker", SEO_LANDING_PAGES["nhs-admin-cv-checker"]["title"], SEO_LANDING_PAGES["nhs-admin-cv-checker"]["intro"]),
+            ("marketing-cv-checker", "/marketing-cv-checker", SEO_LANDING_PAGES["marketing-cv-checker"]["title"], SEO_LANDING_PAGES["marketing-cv-checker"]["intro"]),
+            ("software-developer-cv-checker", "/software-developer-cv-checker", SEO_LANDING_PAGES["software-developer-cv-checker"]["title"], SEO_LANDING_PAGES["software-developer-cv-checker"]["intro"]),
+            ("admin-cv-checker", "/admin-cv-checker", SEO_LANDING_PAGES["admin-cv-checker"]["title"], SEO_LANDING_PAGES["admin-cv-checker"]["intro"]),
+            ("career-change-cv-checker", "/career-change-cv-checker", SEO_LANDING_PAGES["career-change-cv-checker"]["title"], SEO_LANDING_PAGES["career-change-cv-checker"]["intro"]),
         ]),
         ("CV writing advice", [
             ("why-is-my-cv-not-getting-interviews", "/why-is-my-cv-not-getting-interviews", SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["title"], SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"]["intro"]),
@@ -8184,6 +8620,10 @@ def render_guides_page() -> str:
             ("sales-cv-example-report", "/sales-cv-example-report", ROLE_EXAMPLE_REPORTS["sales-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["sales-cv-example-report"]["intro"]),
             ("account-manager-cv-example-report", "/account-manager-cv-example-report", ROLE_EXAMPLE_REPORTS["account-manager-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["account-manager-cv-example-report"]["intro"]),
             ("project-manager-cv-example-report", "/project-manager-cv-example-report", ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["project-manager-cv-example-report"]["intro"]),
+            ("graduate-cv-example-report", "/graduate-cv-example-report", ROLE_EXAMPLE_REPORTS["graduate-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["graduate-cv-example-report"]["intro"]),
+            ("nhs-admin-cv-example-report", "/nhs-admin-cv-example-report", ROLE_EXAMPLE_REPORTS["nhs-admin-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["nhs-admin-cv-example-report"]["intro"]),
+            ("marketing-cv-example-report", "/marketing-cv-example-report", ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["intro"]),
+            ("software-developer-cv-example-report", "/software-developer-cv-example-report", ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
             ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
         ]),
@@ -10579,9 +11019,11 @@ async def optimise(
         if not cv_text or len(cv_text) < 20:
             return {"error": "Please paste your CV text or upload a readable PDF, DOCX, or TXT file.", "source": "error"}
 
+        role_focus = infer_role_focus(job_description, cv_text)
+
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
-            input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report),
+            input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report, role_focus=role_focus),
             max_output_tokens=3600 if should_generate_full_report else 1800,
         ).output_text.strip()
 
@@ -10602,10 +11044,11 @@ async def optimise(
                     content={"error": "Model returned invalid JSON"}
                 )
 
-        data = normalize_analysis_data(data, is_pro=should_generate_full_report)
+        data = normalize_analysis_data(data, is_pro=should_generate_full_report, role_focus=role_focus)
 
         payload = {
             "score": data.get("score", 0),
+            "roleFocus": data.get("roleFocus", {}),
             "scoreBreakdown": data.get("scoreBreakdown", []),
             "recruiterVerdict": data.get("recruiterVerdict", {}),
             "matchedKeywords": data.get("matchedKeywords", []),
