@@ -2385,80 +2385,84 @@
     order: 4;
   }
 
-  #proReportActions {
+  #proCommandWrap {
     order: 5;
   }
 
-  #proSnapshotWrap {
+  #proReportActions {
     order: 6;
   }
 
-  #proPriorityWrap {
+  #proSnapshotWrap {
     order: 7;
   }
 
-  #proRewriteWrap {
+  #proPriorityWrap {
     order: 8;
   }
 
-  #proSummaryWrap {
+  #proRewriteWrap {
     order: 9;
   }
 
-  #recruiterVerdictWrap {
+  #proSummaryWrap {
     order: 10;
   }
 
-  #atsReadabilitySummaryWrap {
+  #recruiterVerdictWrap {
     order: 11;
   }
 
-  #resultScoreBreakdownWrap {
+  #atsReadabilitySummaryWrap {
     order: 12;
   }
 
-  #resultPriorityPreviewWrap {
+  #resultScoreBreakdownWrap {
     order: 13;
   }
 
-  #resultKeywordPreviewWrap {
+  #resultPriorityPreviewWrap {
     order: 14;
   }
 
-  #resultKeywordImportanceWrap {
+  #resultKeywordPreviewWrap {
     order: 15;
   }
 
-  #resultExampleWrap {
+  #resultKeywordImportanceWrap {
     order: 16;
   }
 
-  #lockedReportSections {
+  #resultExampleWrap {
     order: 17;
   }
 
-  #detailKeywordsWrap {
+  #lockedReportSections {
     order: 18;
   }
 
-  #detailStrengthsWrap {
+  #detailKeywordsWrap {
     order: 19;
   }
 
-  #proSkillsWrap {
+  #detailStrengthsWrap {
     order: 20;
   }
 
-  #proAtsRisksGrid {
+  #proSkillsWrap {
     order: 21;
   }
 
-  #bestNextStepWrap {
+  #proAtsRisksGrid {
     order: 22;
   }
 
-  #proActionPlanWrap {
+  #bestNextStepWrap {
     order: 23;
+  }
+
+  #proActionPlanWrap {
+    order: 24;
   }
 
   #resultDisclaimerWrap {
@@ -2926,6 +2930,82 @@
     color: #B7C6E6;
     font-size: 14px;
     line-height: 1.55;
+  }
+
+  .pro-command-centre {
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(56, 217, 150, 0.28);
+    background:
+      linear-gradient(135deg, rgba(56, 217, 150, 0.10), rgba(91, 120, 255, 0.12)),
+      rgba(3, 13, 31, 0.40);
+  }
+
+  .pro-command-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .pro-command-title {
+    color: #F4F7FF;
+    font-size: 19px;
+    font-weight: 850;
+    line-height: 1.25;
+  }
+
+  .pro-command-summary {
+    margin-top: 7px;
+    color: #C8D6F2;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .pro-impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .pro-impact-card {
+    min-height: 104px;
+    padding: 13px;
+    border-radius: 14px;
+    border: 1px solid rgba(80, 103, 146, 0.30);
+    background: rgba(3, 13, 31, 0.36);
+  }
+
+  .pro-impact-card span {
+    display: block;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 850;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .pro-impact-card strong {
+    display: block;
+    color: #F4F7FF;
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+
+  .pro-impact-card p {
+    color: #AFC0E4;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .pro-report-status {
+    flex: 1 1 100%;
+    min-height: 18px;
+    color: #B7F7C4;
+    font-size: 12px;
+    font-weight: 750;
   }
 
   .pro-workflow-steps {
@@ -3705,6 +3785,7 @@
   .before-after,
   .score-breakdown-grid,
   .keyword-importance-grid,
+  .pro-impact-grid,
   .pro-workflow-steps,
   .pro-snapshot-grid {
     grid-template-columns: 1fr;
@@ -4586,15 +4667,28 @@
             </div>
           </div>
 
+          <div id="proCommandWrap" class="pro-command-centre hidden">
+            <div class="pro-command-head">
+              <div>
+                <div class="pro-command-title">Pro report command centre</div>
+                <p id="proExecutiveSummary" class="pro-command-summary"></p>
+              </div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div id="proImpactGrid" class="pro-impact-grid" aria-label="Estimated improvement impact"></div>
+          </div>
+
           <div id="proReportActions" class="pro-report-actions hidden">
             <div>
-              <strong>Full report workspace</strong>
-              <p>Save this analysis, print it, or use it as your editing checklist before re-running the CV.</p>
+              <strong>Export and editing workflow</strong>
+              <p>Download the report, copy the action checklist, or print it before editing your CV and re-running the role match.</p>
             </div>
             <div class="pro-report-button-row">
               <button id="downloadReportBtn" class="pro-report-button" type="button">Download report</button>
+              <button id="copyChecklistBtn" class="pro-report-button" type="button">Copy checklist</button>
               <button id="printReportBtn" class="pro-report-button" type="button">Print / save PDF</button>
             </div>
+            <div id="proReportStatus" class="pro-report-status" aria-live="polite"></div>
           </div>
 
           <div id="proSnapshotWrap" class="result-section pro-premium hidden">
@@ -4956,9 +5050,14 @@
     const unlockFullReportBtn = document.getElementById("unlockFullReportBtn");
     const proMonthlyBtn = document.getElementById("proMonthlyBtn");
     const fullPlanReadyBanner = document.getElementById("fullPlanReadyBanner");
+    const proCommandWrap = document.getElementById("proCommandWrap");
+    const proExecutiveSummary = document.getElementById("proExecutiveSummary");
+    const proImpactGrid = document.getElementById("proImpactGrid");
     const proReportActions = document.getElementById("proReportActions");
     const downloadReportBtn = document.getElementById("downloadReportBtn");
+    const copyChecklistBtn = document.getElementById("copyChecklistBtn");
     const printReportBtn = document.getElementById("printReportBtn");
+    const proReportStatus = document.getElementById("proReportStatus");
     const proSnapshotWrap = document.getElementById("proSnapshotWrap");
     const proSnapshotGrid = document.getElementById("proSnapshotGrid");
     const proRewriteWrap = document.getElementById("proRewriteWrap");
@@ -5828,6 +5927,59 @@
       proSnapshotWrap.classList.toggle("hidden", false);
     }
 
+    function buildExecutiveSummary(data, scoreNumber, actionPlanItems) {
+      const recruiterVerdict = (data && data.recruiterVerdict) || {};
+      const roleFocus = (data && data.roleFocus) || {};
+      const roleLabel = roleFocus.label || "this UK role";
+      const shortlistLikelihood = recruiterVerdict.shortlistLikelihood || recruiterVerdict.likelihood || (scoreNumber >= 75 ? "likely to compete" : (scoreNumber >= 55 ? "within reach" : "unlikely to shortlist yet"));
+      const firstFix = recruiterVerdict.fixFirst || recruiterVerdict.firstFix || (actionPlanItems && actionPlanItems[0]) || (data && data.nextStep) || "tighten the strongest evidence on page one";
+      const mainConcern = recruiterVerdict.mainConcern || recruiterVerdict.concern || (data && data.weakPoints && data.weakPoints[0]) || "";
+      const concernCopy = mainConcern ? " The main shortlisting risk is: " + mainConcern : "";
+      return "For " + roleLabel + ", this CV is " + shortlistLikelihood + ". Fix first: " + firstFix + "." + concernCopy;
+    }
+
+    function buildImpactCards(data, scoreNumber, actionPlanItems) {
+      const missingCount = data && data.missingKeywords ? data.missingKeywords.length : 0;
+      const matchedCount = data && data.matchedKeywords ? data.matchedKeywords.length : 0;
+      const priorityCount = data && data.priorityFixDetails && data.priorityFixDetails.length
+        ? data.priorityFixDetails.length
+        : ((data && data.priorityFixes && data.priorityFixes.length) || (actionPlanItems ? actionPlanItems.length : 0));
+      const rewriteCount = data && data.bulletRewriteDetails && data.bulletRewriteDetails.length
+        ? data.bulletRewriteDetails.length
+        : ((data && data.bulletPoints && data.bulletPoints.length) || 0);
+      const atsLevel = missingCount >= 6 ? "High upside" : (missingCount >= 3 ? "Useful lift" : "Fine tuning");
+      const recruiterLevel = priorityCount >= 3 ? "High priority" : (scoreNumber >= 75 ? "Polish stage" : "Needs attention");
+      const evidenceLevel = rewriteCount >= 3 ? "Strong lift" : (rewriteCount ? "Targeted lift" : "Check proof");
+      const rerunLevel = scoreNumber >= 75 ? "Validate gains" : "Re-score after edits";
+      return [
+        ["ATS match", atsLevel, missingCount ? "Work in " + Math.min(missingCount, 6) + " missing role terms where they are true." : "Keep keyword coverage natural and avoid over-stuffing."],
+        ["Recruiter clarity", recruiterLevel, priorityCount ? "Address the top " + Math.min(priorityCount, 3) + " shortlist risks before styling edits." : "Make the first page faster to scan."],
+        ["Evidence strength", evidenceLevel, rewriteCount ? "Adapt the rewrite examples into measurable, specific bullets." : "Add clearer action, context and outcome proof."],
+        ["Next test", rerunLevel, matchedCount ? "Re-run after editing to confirm role fit and keyword coverage moved." : "Re-run once the first-pass fixes are in place."]
+      ];
+    }
+
+    function renderProCommandCentre(data, scoreNumber, actionPlanItems) {
+      if (!proCommandWrap || !proImpactGrid || !proExecutiveSummary) return;
+      proExecutiveSummary.textContent = buildExecutiveSummary(data, scoreNumber, actionPlanItems);
+      proImpactGrid.innerHTML = "";
+      buildImpactCards(data, scoreNumber, actionPlanItems).forEach(function(item) {
+        const card = document.createElement("div");
+        card.className = "pro-impact-card";
+        const label = document.createElement("span");
+        label.textContent = item[0];
+        const value = document.createElement("strong");
+        value.textContent = item[1];
+        const copy = document.createElement("p");
+        copy.textContent = item[2];
+        card.appendChild(label);
+        card.appendChild(value);
+        card.appendChild(copy);
+        proImpactGrid.appendChild(card);
+      });
+      proCommandWrap.classList.remove("hidden");
+    }
+
     function escapeReportHtml(value) {
       return String(value || "")
         .replace(/&/g, "&amp;")
@@ -5912,6 +6064,9 @@
       const roleFocus = data.roleFocus || {};
       const roleProof = Array.isArray(roleFocus.proof) ? roleFocus.proof.slice(0, 4).join(", ") : "";
       const roleKeywords = Array.isArray(roleFocus.keywords) ? roleFocus.keywords.slice(0, 6).join(", ") : "";
+      const actionPlanItems = buildActionPlanItems(data);
+      const executiveSummary = buildExecutiveSummary(data, score, actionPlanItems);
+      const impactCards = buildImpactCards(data, score, actionPlanItems);
 
       return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
@@ -5925,12 +6080,16 @@
         ".card span{display:inline-flex;width:26px;height:26px;border-radius:999px;background:#e6ebff;color:#2947d3;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px;}" +
         ".breakdown{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}.mini{border:1px solid #dce3ef;border-radius:12px;padding:12px;background:#f8faff;}" +
         ".mini strong{display:block;font-size:13px;min-height:36px;}.mini b{display:block;font-size:26px;margin-top:8px;}" +
+        ".impact{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}.impact article{border:1px solid #dce3ef;border-radius:12px;padding:13px;background:#f8faff;}.impact span{display:block;color:#596987;font-size:11px;font-weight:800;text-transform:uppercase;}.impact strong{display:block;margin:6px 0;font-size:15px;}" +
         ".chips{display:flex;flex-wrap:wrap;gap:7px;}.chip{border-radius:999px;background:#e9eefc;padding:5px 9px;font-size:12px;font-weight:700;}" +
         ".rewrite{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.note{background:#eef3ff;}" +
         "@media print{body{background:#fff;}main{max-width:none;padding:0;}header,section{break-inside:avoid;box-shadow:none;}}" +
-        "@media(max-width:760px){.breakdown,.rewrite{grid-template-columns:1fr;}}" +
+        "@media(max-width:760px){.breakdown,.rewrite,.impact{grid-template-columns:1fr;}}" +
         "</style></head><body><main>" +
         "<header><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><div class=\"score\">" + escapeReportHtml(score ? score + "/100" : "CV analysis") + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></header>" +
+        (isFullReport ? "<section><h2>Executive summary</h2><p>" + escapeReportHtml(executiveSummary) + "</p><div class=\"impact\">" + impactCards.map(function(item) {
+          return "<article><span>" + escapeReportHtml(item[0]) + "</span><strong>" + escapeReportHtml(item[1]) + "</strong><p>" + escapeReportHtml(item[2]) + "</p></article>";
+        }).join("") + "</div></section>" : "") +
         "<section><h2>Role lens</h2><p><strong>" + escapeReportHtml(roleFocus.label || "General UK CV") + "</strong></p>" +
         (roleKeywords ? "<p><strong>Keywords weighed:</strong> " + escapeReportHtml(roleKeywords) + "</p>" : "") +
         (roleProof ? "<p><strong>Proof points checked:</strong> " + escapeReportHtml(roleProof) + "</p>" : "") +
@@ -5955,7 +6114,7 @@
         listReportItems("Suggested skills section", data.skillsSection || []) +
         listReportItems("ATS-style suggestions", data.atsTips || []) +
         listReportItems("Application risks", data.interviewRisks || []) +
-        listReportItems("Step-by-step improvement plan", buildActionPlanItems(data)) +
+        listReportItems("Step-by-step improvement plan", actionPlanItems) +
         (data.nextStep ? "<section><h2>Best next step</h2><p>" + escapeReportHtml(data.nextStep) + "</p></section>" : "") +
         "<section><p><small>These suggestions are guidance only. Review them carefully before editing your CV.</small></p></section>" +
         "</main></body></html>";
@@ -5973,6 +6132,43 @@
         actionPlanItems.push("Add and support keywords like " + data.missingKeywords.slice(0, 2).join(" and ") + " where they genuinely match your experience.");
       }
       return actionPlanItems;
+    }
+
+    function buildChecklistText(data) {
+      if (!data) return "";
+      const score = getScoreNumber(data.score);
+      const actionPlanItems = buildActionPlanItems(data);
+      const lines = [
+        "CV Optimiser Pro checklist",
+        "",
+        "Executive summary:",
+        buildExecutiveSummary(data, score, actionPlanItems),
+        "",
+        "Fix first:"
+      ];
+      actionPlanItems.forEach(function(item, index) {
+        lines.push((index + 1) + ". " + item);
+      });
+      const rewrites = normaliseRewriteDetails(data, 3);
+      if (rewrites.length) {
+        lines.push("", "Rewrite into your CV:");
+        rewrites.forEach(function(item, index) {
+          lines.push((index + 1) + ". " + item.after);
+        });
+      }
+      const keywords = data.keywordImportance && data.keywordImportance.criticalMissing && data.keywordImportance.criticalMissing.length
+        ? data.keywordImportance.criticalMissing
+        : (data.missingKeywords || []);
+      if (keywords.length) {
+        lines.push("", "Keywords to work in naturally:");
+        lines.push(keywords.slice(0, 8).join(", "));
+      }
+      if (data.nextStep) {
+        lines.push("", "Re-run after:", data.nextStep);
+      }
+      return lines.filter(function(line) {
+        return line !== undefined && line !== null;
+      }).join("\n");
     }
 
     function downloadCurrentReport() {
@@ -6006,6 +6202,35 @@
         reportWindow.print();
       }, 250);
       trackEvent("report_print_opened");
+    }
+
+    async function copyCurrentChecklist() {
+      if (!currentResultData) return;
+      const checklist = buildChecklistText(currentResultData);
+      if (!checklist) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(checklist);
+        } else {
+          const textArea = document.createElement("textarea");
+          textArea.value = checklist;
+          textArea.setAttribute("readonly", "readonly");
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          textArea.remove();
+        }
+        if (proReportStatus) {
+          proReportStatus.textContent = "Checklist copied. Paste it into your notes while editing your CV.";
+        }
+        trackEvent("report_checklist_copied");
+      } catch (error) {
+        if (proReportStatus) {
+          proReportStatus.textContent = "Could not copy automatically. Download or print the report instead.";
+        }
+      }
     }
 
     async function startCheckout(plan, button) {
@@ -6909,6 +7134,10 @@ passwordLoginBtn.addEventListener("click", async function() {
       downloadReportBtn.addEventListener("click", downloadCurrentReport);
     }
 
+    if (copyChecklistBtn) {
+      copyChecklistBtn.addEventListener("click", copyCurrentChecklist);
+    }
+
     if (printReportBtn) {
       printReportBtn.addEventListener("click", printCurrentReport);
     }
@@ -7301,15 +7530,21 @@ passwordLoginBtn.addEventListener("click", async function() {
         professionalSummaryEl.textContent = data.professionalSummary || "";
         proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
 
-        if (isCurrentlyPro) {
+        if (isCurrentlyPro && hasFullPlanContent) {
+          renderProCommandCentre(data, scoreNumber, actionPlanItems);
           renderProSnapshot(data, actionPlanItems);
           renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
           const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
           if (proRewriteWrap) {
             proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
           }
-        } else if (proSnapshotWrap) {
-          proSnapshotWrap.classList.add("hidden");
+        } else {
+          if (proCommandWrap) {
+            proCommandWrap.classList.add("hidden");
+          }
+          if (proSnapshotWrap) {
+            proSnapshotWrap.classList.add("hidden");
+          }
           if (proRewriteWrap) {
             proRewriteWrap.classList.add("hidden");
           }
@@ -7352,6 +7587,9 @@ passwordLoginBtn.addEventListener("click", async function() {
         fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
         if (proReportActions) {
           proReportActions.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
+        }
+        if (proReportStatus) {
+          proReportStatus.textContent = "";
         }
         anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
         anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
