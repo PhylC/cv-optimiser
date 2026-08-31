@@ -3118,6 +3118,44 @@ def track_event(
         print("TRACK EVENT ERROR:", repr(e))
 
 
+def is_valid_email(value: str) -> bool:
+    return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", value or ""))
+
+
+def save_lead_capture(email: str, metadata: dict[str, Any], user_id: Optional[str] = None) -> None:
+    page_path = normalise_analytics_path(
+        metadata.get("page_path")
+        or metadata.get("role_landing_path")
+        or metadata.get("first_role_landing_path")
+        or metadata.get("landing_path")
+        or metadata.get("first_landing_path")
+        or metadata.get("current_path")
+    )
+    page_type = coerce_string(metadata.get("page_type") or metadata.get("first_page_type") or metadata.get("current_page_type"))
+    role_label = coerce_string(metadata.get("role_page")) or role_landing_label(metadata)
+    role_page = "" if role_label == "none" else role_label
+    source = coerce_string(metadata.get("source") or metadata.get("first_source") or metadata.get("current_source") or "direct")
+    require_supabase().table("lead_captures").insert({
+        "email": email.lower(),
+        "page_path": page_path,
+        "page_type": page_type,
+        "role_page": role_page,
+        "source": source,
+        "metadata": metadata,
+    }).execute()
+    track_event(
+        event_name="lead_captured",
+        user_id=user_id,
+        email=email,
+        metadata={
+            **metadata,
+            "lead_email_domain": email.split("@", 1)[-1].lower() if "@" in email else "",
+            "lead_page_path": page_path,
+            "lead_role_page": role_page,
+        },
+    )
+
+
 def get_report_type(payload: dict[str, Any]) -> str:
     report_access = coerce_string(payload.get("reportAccess"))
     if report_access == "one_time" or payload.get("oneTimeReportConsumed"):
@@ -3147,6 +3185,7 @@ TREND_EVENTS = {
     "page_view",
     "content_page_view",
     "content_to_checker_clicked",
+    "lead_captured",
     "cv_check_started",
     "free_result_shown",
     "unlock_intent",
@@ -3231,6 +3270,7 @@ def sanitize_attribution_metadata(value: Any) -> dict[str, Any]:
         "current_page_type",
         "current_role_page",
         "current_role_landing_path",
+        "page_path",
         "page_type",
         "role_page",
         "role_landing_path",
@@ -3259,16 +3299,19 @@ def make_dimension_row(label: str, counts: dict[str, int]) -> dict[str, Any]:
     reports = counts.get("one_time_report_generated", 0)
     page_views = counts.get("page_view", 0) + counts.get("content_page_view", 0)
     content_clicks = counts.get("content_to_checker_clicked", 0)
+    leads = counts.get("lead_captured", 0)
     return {
         "label": label,
         "page_views": page_views,
         "checker_clicks": content_clicks,
+        "leads": leads,
         "cv_checks": counts.get("cv_check_started", 0),
         "free_results": free_results,
         "unlock_clicks": unlocks,
         "checkout_starts": checkouts,
         "paid_reports": reports,
         "checker_click_rate": percent(content_clicks, page_views),
+        "lead_rate": percent(leads, page_views),
         "unlock_rate": percent(unlocks, free_results),
         "checkout_rate": percent(checkouts, unlocks),
         "paid_report_rate": percent(reports, checkouts),
@@ -3441,6 +3484,7 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "funnel": funnel,
         "key_metrics": {
             "free_results": counts.get("free_result_shown", 0),
+            "leads": counts.get("lead_captured", 0),
             "unlock_clicks": counts.get("unlock_intent", 0),
             "checkout_starts": counts.get("checkout_started", 0),
             "payment_successes": counts.get("payment_success_seen", 0),
@@ -5525,6 +5569,171 @@ def build_tool_embed_script() -> str:
     """
 
 
+def build_lead_capture_css() -> str:
+    return """
+          .lead-capture-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 20px;
+            align-items: center;
+            margin: 28px 0;
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(56, 217, 150, 0.28);
+            background: linear-gradient(135deg, rgba(56, 217, 150, 0.13), rgba(15, 28, 50, 0.72));
+          }
+          .lead-capture-panel h2 {
+            margin: 0 0 8px;
+          }
+          .lead-capture-panel p {
+            margin-bottom: 0;
+          }
+          .lead-capture-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: start;
+          }
+          .lead-capture-form input {
+            min-width: 0;
+            height: 48px;
+            box-sizing: border-box;
+            border-radius: 14px;
+            border: 1px solid rgba(180, 197, 245, 0.24);
+            background: rgba(7, 14, 27, 0.62);
+            color: #F4F7FF;
+            padding: 0 14px;
+            font: inherit;
+          }
+          .lead-capture-form input::placeholder {
+            color: #8EA0C4;
+          }
+          .lead-capture-form button {
+            min-height: 48px;
+            border: 0;
+            border-radius: 14px;
+            background: #38D996;
+            color: #061322;
+            padding: 0 16px;
+            font: inherit;
+            font-weight: 850;
+            cursor: pointer;
+            white-space: nowrap;
+          }
+          .lead-capture-form button:disabled {
+            cursor: wait;
+            opacity: 0.72;
+          }
+          .lead-capture-status {
+            grid-column: 1 / -1;
+            min-height: 20px;
+            color: #CFFFE7;
+            font-size: 13px;
+            line-height: 1.5;
+          }
+          @media (max-width: 768px) {
+            .lead-capture-panel,
+            .lead-capture-form {
+              grid-template-columns: 1fr;
+            }
+            .lead-capture-panel {
+              padding: 20px 16px;
+              border-radius: 16px;
+            }
+            .lead-capture-form button {
+              width: 100%;
+            }
+          }
+    """
+
+
+def build_lead_capture_html(page_path: str, page_type: str = "content", role_page: str = "") -> str:
+    return f"""
+        <section class="lead-capture-panel" data-lead-capture data-page-path="{html.escape(page_path)}" data-page-type="{html.escape(page_type)}" data-role-page="{html.escape(role_page)}">
+          <div>
+            <p class="eyebrow">Free checklist</p>
+            <h2>Get your CV improvement checklist</h2>
+            <p>Leave your email and we will send practical UK CV tips, role-fit prompts and product updates. No spam.</p>
+          </div>
+          <form class="lead-capture-form">
+            <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+            <button type="submit">Send checklist</button>
+            <p class="lead-capture-status" aria-live="polite"></p>
+          </form>
+        </section>
+    """
+
+
+def build_lead_capture_script() -> str:
+    return """
+        <script>
+          (function () {
+            function getAttribution() {
+              try {
+                if (typeof window.CV_OPTIMISER_ATTRIBUTION === "function") {
+                  return window.CV_OPTIMISER_ATTRIBUTION();
+                }
+              } catch (error) {}
+              return {};
+            }
+
+            document.addEventListener("submit", async function (event) {
+              const form = event.target && event.target.closest ? event.target.closest(".lead-capture-form") : null;
+              if (!form) return;
+              event.preventDefault();
+
+              const panel = form.closest("[data-lead-capture]");
+              const input = form.querySelector("input[name='email']");
+              const status = form.querySelector(".lead-capture-status");
+              const button = form.querySelector("button");
+              const email = input ? input.value.trim() : "";
+
+              if (!email) {
+                if (status) status.textContent = "Enter your email first.";
+                return;
+              }
+
+              if (button) {
+                button.disabled = true;
+                button.textContent = "Sending...";
+              }
+
+              try {
+                const attribution = getAttribution();
+                const response = await fetch("/api/lead-capture", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    email: email,
+                    page_path: panel ? panel.getAttribute("data-page-path") : window.location.pathname,
+                    page_type: panel ? panel.getAttribute("data-page-type") : "content",
+                    role_page: panel ? panel.getAttribute("data-role-page") : "",
+                    attribution: attribution
+                  })
+                });
+                const data = await response.json().catch(function () { return {}; });
+                if (!response.ok || data.error) {
+                  throw new Error(data.error || "Could not save that email right now.");
+                }
+                if (status) status.textContent = "Done. Check your inbox soon for practical CV tips.";
+                form.reset();
+                if (typeof window.gtag === "function") {
+                  window.gtag("event", "lead_captured", attribution);
+                }
+              } catch (error) {
+                if (status) status.textContent = error.message || "Could not save that email right now.";
+              } finally {
+                if (button) {
+                  button.disabled = false;
+                  button.textContent = "Send checklist";
+                }
+              }
+            });
+          })();
+        </script>
+    """
+
+
 def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
     page_url = canonical_url(slug)
     upgrade_notice_html = ""
@@ -6929,6 +7138,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         f'<li><a href="{html.escape(href)}" class="text-link">{html.escape(label)}</a></li>'
         for href, label in page.get("related", [])
     )
+    lead_capture_html = build_lead_capture_html(f"/{slug}", "example_report", page.get("role_label", ""))
     return f"""
     <!doctype html>
     <html lang="en">
@@ -6968,6 +7178,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 {build_typography_css()}
 {build_cta_spacing_css()}
 {build_compliance_notice_css()}
+{build_lead_capture_css()}
           .header-link, .text-link {{
             color: #AFC0FF;
             text-decoration: underline;
@@ -7392,6 +7603,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
                 </ul>
               </div>
 
+              {lead_capture_html}
+
               <div class="card" style="margin-top:24px;">
                 <h2>Get this report for your CV</h2>
                 <p>Run your own CV and job description through CV Optimiser to unlock the recruiter verdict, first-page diagnosis, section rewrite plan, keyword gaps and exportable checklist.</p>
@@ -7414,6 +7627,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
           {build_site_footer()}
         </div>
+        {build_lead_capture_script()}
       </body>
     </html>
     """
@@ -7961,6 +8175,13 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           <iframe class="tool-frame tool-embed compact" src="/{iframe_query}" title="CV Optimiser checker"></iframe>
         </section>
         """
+    page_path = f"/{slug}"
+    role_label = ROLE_ANALYTICS_LABELS.get(page_path, page.get("h1", "")) if page.get("pro_checks") else ""
+    lead_capture_html = build_lead_capture_html(
+        page_path,
+        "seo_role" if page.get("pro_checks") else "seo_content",
+        role_label,
+    )
     return f"""
     <!doctype html>
     <html lang="en">
@@ -8006,6 +8227,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
 {build_site_header_css()}
 {build_typography_css()}
 {build_cta_spacing_css()}
+{build_lead_capture_css()}
           .seo-hero {{
             display: grid;
             grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.85fr);
@@ -8254,6 +8476,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           </section>
 
           {tool_html}
+          {lead_capture_html}
 
           <div class="seo-grid">{list_html}</div>
           {pro_checks_html}
@@ -8276,6 +8499,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           {build_site_footer()}
         </div>
         {build_tool_embed_script() if page.get("tool") else ""}
+        {build_lead_capture_script()}
       </body>
     </html>
     """
@@ -10346,6 +10570,35 @@ async def api_track(request: Request) -> dict[str, Any]:
         return {"error": "tracking_unavailable"}
 
 
+@app.post("/api/lead-capture")
+async def api_lead_capture(request: Request) -> dict[str, Any]:
+    try:
+        body = await request.json()
+        email = coerce_string(body.get("email")).lower()
+        if not is_valid_email(email):
+            return JSONResponse(status_code=400, content={"error": "Enter a valid email address."})
+
+        metadata = sanitize_attribution_metadata(body.get("attribution"))
+        for key in ["page_path", "page_type", "role_page"]:
+            if body.get(key):
+                metadata[key] = coerce_string(body.get(key))[:240]
+
+        user_id = None
+        auth_header = request.headers.get("Authorization")
+        if auth_header:
+            try:
+                user = get_user_from_token(auth_header)
+                user_id = user["id"]
+            except Exception:
+                user_id = None
+
+        save_lead_capture(email=email, metadata=metadata, user_id=user_id)
+        return {"ok": True}
+    except Exception as e:
+        print("LEAD_CAPTURE_ERROR:", repr(e))
+        return JSONResponse(status_code=500, content={"error": "Could not save that email right now."})
+
+
 @app.post("/admin-analytics/login", response_class=HTMLResponse)
 async def admin_analytics_login(request: Request, password: str = Form("")) -> Response:
     if not ADMIN_PASSWORD:
@@ -10782,6 +11035,7 @@ def admin_analytics_page(request: Request) -> str:
             ["page_view", "Page views", "#8FB3FF"],
             ["content_page_view", "Content views", "#B7F7C4"],
             ["cv_check_started", "CV checks", "#38D996"],
+            ["lead_captured", "Leads", "#22C55E"],
             ["unlock_intent", "Unlock intent", "#FFD166"],
             ["checkout_started", "Checkouts", "#FF8A65"],
             ["one_time_report_generated", "Paid reports", "#F472B6"]
@@ -10843,10 +11097,11 @@ def admin_analytics_page(request: Request) -> str:
               target.innerHTML = "<p>No attribution data yet.</p>";
               return;
             }}
-            target.innerHTML = "<div class='table-scroll'><table><thead><tr><th>Name</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Checks</th><th>Free results</th><th>Unlocks</th><th>Checkouts</th><th>Paid</th><th>Unlock rate</th><th>Checkout rate</th></tr></thead><tbody>" +
+            target.innerHTML = "<div class='table-scroll'><table><thead><tr><th>Name</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Leads</th><th>Lead rate</th><th>Checks</th><th>Free results</th><th>Unlocks</th><th>Checkouts</th><th>Paid</th><th>Unlock rate</th><th>Checkout rate</th></tr></thead><tbody>" +
               data.map((row) => (
                 "<tr><td class='dimension-label'>" + escapeHtml(row.label) + "</td><td>" + formatNumber(row.page_views) +
                 "</td><td>" + formatNumber(row.checker_clicks) + "</td><td class='rate'>" + escapeHtml(row.checker_click_rate) +
+                "%</td><td>" + formatNumber(row.leads) + "</td><td class='rate'>" + escapeHtml(row.lead_rate) +
                 "%</td><td>" + formatNumber(row.cv_checks) + "</td><td>" + formatNumber(row.free_results) +
                 "</td><td>" + formatNumber(row.unlock_clicks) + "</td><td>" + formatNumber(row.checkout_starts) +
                 "</td><td>" + formatNumber(row.paid_reports) + "</td><td class='rate'>" + escapeHtml(row.unlock_rate) +
@@ -10896,6 +11151,7 @@ def admin_analytics_page(request: Request) -> str:
             const paidReportRate = metrics.checkout_starts ? ((metrics.one_time_reports_generated || 0) / metrics.checkout_starts * 100).toFixed(1) + "%" : "0%";
             const kpis = [
               ["Free results", metrics.free_results || 0],
+              ["Leads", metrics.leads || 0],
               ["Unlock rate", unlockRate],
               ["Checkout starts", metrics.checkout_starts || 0],
               ["Paid reports generated", metrics.one_time_reports_generated || 0],

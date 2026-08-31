@@ -73,5 +73,27 @@ on analytics_events(event_name);
 create index if not exists analytics_events_user_id_idx
 on analytics_events(user_id);
 
+create table if not exists lead_captures (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  email text not null,
+  page_path text,
+  page_type text,
+  role_page text,
+  source text,
+  metadata jsonb not null default '{}'::jsonb
+);
+
+alter table lead_captures enable row level security;
+
+create index if not exists lead_captures_created_at_idx
+on lead_captures(created_at desc);
+
+create index if not exists lead_captures_email_idx
+on lead_captures(lower(email));
+
+create index if not exists lead_captures_role_page_idx
+on lead_captures(role_page);
+
 alter table profiles
 add column if not exists password_ready boolean not null default false;
