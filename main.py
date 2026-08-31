@@ -5475,6 +5475,8 @@ def build_public_content_surface_css() -> str:
             border: 1px solid #D8E1EF !important;
             border-radius: 18px !important;
             color: #14213D !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
             box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
           }
 
@@ -6014,7 +6016,27 @@ def build_public_content_surface_css() -> str:
             .guides-page .guide-group {
               padding: 22px !important;
               border-radius: 18px !important;
+              max-width: 100% !important;
+              box-sizing: border-box !important;
               box-shadow: 0 12px 28px rgba(3, 9, 23, 0.16) !important;
+            }
+
+            .content-page .comparison-wrap {
+              overflow: visible !important;
+              padding: 0 !important;
+              border: 0 !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
+            }
+
+            .content-page .comparison-table,
+            .content-page .comparison-table tbody,
+            .content-page .comparison-table tr,
+            .content-page .comparison-table th,
+            .content-page .comparison-table td {
+              max-width: 100% !important;
+              box-sizing: border-box !important;
             }
 
             .faq-page .summary-box h2,
@@ -8962,8 +8984,8 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
         f"""
         <tr>
           <th scope="row">{html.escape(label)}</th>
-          <td>{html.escape(cv_optimiser)}</td>
-          <td>{html.escape(alternative)}</td>
+          <td data-label="CV Optimiser">{html.escape(cv_optimiser)}</td>
+          <td data-label="{html.escape(page["competitor"])}">{html.escape(alternative)}</td>
         </tr>
         """
         for label, cv_optimiser, alternative in page["rows"]
@@ -9056,40 +9078,57 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
           .comparison-card {{
             padding: 24px;
             border-radius: 18px;
-            border: 1px solid rgba(92, 112, 150, 0.22);
-            background: rgba(15, 28, 50, 0.62);
+            border: 1px solid #D8E1EF;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14);
           }}
           .comparison-card h2 {{
             margin-top: 0;
+            color: #101B33;
+          }}
+          .comparison-card p,
+          .comparison-card li {{
+            color: #334155;
           }}
           .comparison-table-wrap {{
             overflow-x: auto;
-            border-top: 1px solid rgba(92, 112, 150, 0.18);
-            border-bottom: 1px solid rgba(92, 112, 150, 0.18);
+            border: 1px solid #D8E1EF;
+            border-radius: 18px;
+            background: #FFFFFF;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14);
           }}
           .comparison-table {{
             width: 100%;
             border-collapse: collapse;
-            min-width: 720px;
           }}
           .comparison-table th,
           .comparison-table td {{
             padding: 18px 14px;
             vertical-align: top;
-            border-top: 1px solid rgba(92, 112, 150, 0.16);
-            color: #B7C6E6;
+            border-top: 1px solid #E2E8F0;
+            color: #334155;
             line-height: 1.55;
             text-align: left;
           }}
           .comparison-table thead th {{
-            color: #EEF3FF;
+            color: #101B33;
             border-top: 0;
             font-size: 14px;
+            background: #F1F5F9;
           }}
           .comparison-table tbody th {{
             width: 22%;
-            color: #E8EEFC;
+            color: #101B33;
             font-size: 14px;
+            background: #FFFFFF;
+          }}
+          .comparison-table tbody td:nth-child(2) {{
+            background: linear-gradient(180deg, #F8FBFF 0%, #F2F7FF 100%);
+          }}
+          .comparison-table tbody tr:hover td,
+          .comparison-table tbody tr:hover th {{
+            background-color: #F8FAFC;
           }}
           .section-block {{
             padding: 32px 0;
@@ -9146,6 +9185,67 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             .comparison-card {{
               padding: 18px 14px;
               border-radius: 16px;
+            }}
+            .comparison-table-wrap {{
+              overflow: visible;
+              border: 0;
+              border-radius: 0;
+              background: transparent;
+              box-shadow: none;
+            }}
+            .comparison-table,
+            .comparison-table thead,
+            .comparison-table tbody,
+            .comparison-table tr,
+            .comparison-table th,
+            .comparison-table td {{
+              display: block;
+              width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
+            }}
+            .comparison-table thead {{
+              display: none;
+            }}
+            .comparison-table tr {{
+              margin: 0 0 14px;
+              overflow: hidden;
+              border: 1px solid #D8E1EF;
+              border-radius: 18px;
+              background: #FFFFFF;
+              box-shadow: 0 12px 28px rgba(3, 9, 23, 0.16);
+            }}
+            .comparison-table tbody th {{
+              width: 100%;
+              padding: 16px 16px 10px !important;
+              border-top: 0 !important;
+              background: #FFFFFF !important;
+              color: #101B33 !important;
+              font-size: 16px !important;
+              line-height: 1.25 !important;
+            }}
+            .comparison-table td {{
+              position: relative;
+              padding: 38px 16px 16px !important;
+              border-top: 1px solid #E2E8F0 !important;
+              background: #FFFFFF !important;
+              color: #334155 !important;
+              font-size: 15px !important;
+              line-height: 1.55 !important;
+            }}
+            .comparison-table td:nth-child(2) {{
+              background: #F8FBFF !important;
+            }}
+            .comparison-table td::before {{
+              content: attr(data-label);
+              position: absolute;
+              top: 13px;
+              left: 16px;
+              color: #3758D8;
+              font-size: 11px;
+              font-weight: 820;
+              letter-spacing: 0.06em;
+              text-transform: uppercase;
             }}
           }}
 {build_mobile_layout_css()}
@@ -10076,6 +10176,16 @@ def render_best_free_cv_checker_page() -> str:
         """
         for question, answer in BEST_FREE_CV_CHECKER_FAQS
     )
+    comparison_rows_html = "".join(
+        f"""
+                  <tr>
+                    <td data-label="Option"><strong>{html.escape(option)}</strong></td>
+                    <td data-label="Best for">{html.escape(best)}</td>
+                    <td data-label="Limitations">{html.escape(limit)}</td>
+                  </tr>
+        """
+        for option, best, limit in comparison_rows
+    )
     return f"""
     <!doctype html>
     <html lang="en">
@@ -10316,6 +10426,68 @@ def render_best_free_cv_checker_page() -> str:
             .comparison-table td {{
               padding: 14px;
             }}
+            .comparison-wrap {{
+              overflow: visible;
+              border: 0 !important;
+              border-radius: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
+              padding: 0 !important;
+            }}
+            .comparison-table,
+            .comparison-table thead,
+            .comparison-table tbody,
+            .comparison-table tr,
+            .comparison-table th,
+            .comparison-table td {{
+              display: block;
+              width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
+            }}
+            .comparison-table thead {{
+              display: none;
+            }}
+            .comparison-table tr {{
+              margin: 0 0 14px;
+              overflow: hidden;
+              border: 1px solid #D8E1EF;
+              border-radius: 18px;
+              background: #FFFFFF;
+              box-shadow: 0 12px 28px rgba(3, 9, 23, 0.16);
+            }}
+            .comparison-table td {{
+              position: relative;
+              padding: 38px 16px 16px !important;
+              border-bottom: 0 !important;
+              border-top: 1px solid #E2E8F0 !important;
+              background: #FFFFFF !important;
+              color: #334155 !important;
+              font-size: 15px !important;
+              line-height: 1.55 !important;
+            }}
+            .comparison-table td:first-child {{
+              padding-top: 16px !important;
+              border-top: 0 !important;
+              background: #F8FBFF !important;
+            }}
+            .comparison-table td:not(:first-child)::before {{
+              content: attr(data-label);
+              position: absolute;
+              top: 13px;
+              left: 16px;
+              color: #3758D8;
+              font-size: 11px;
+              font-weight: 820;
+              letter-spacing: 0.06em;
+              text-transform: uppercase;
+            }}
+            .comparison-table td:first-child::before {{
+              content: none;
+            }}
+            .comparison-table strong {{
+              color: #101B33 !important;
+            }}
           }}
 {build_mobile_layout_css()}
 {build_public_content_surface_css()}
@@ -10396,9 +10568,7 @@ def render_best_free_cv_checker_page() -> str:
                     <th>Limitations</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {"".join(f"<tr><td><strong>{html.escape(option)}</strong></td><td>{html.escape(best)}</td><td>{html.escape(limit)}</td></tr>" for option, best, limit in comparison_rows)}
-                </tbody>
+                <tbody>{comparison_rows_html}</tbody>
               </table>
             </div>
           </section>
