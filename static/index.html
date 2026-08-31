@@ -1237,6 +1237,117 @@
     margin-bottom: 2px;
   }
 
+  .homepage-upgrade-guide {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+  }
+
+  .homepage-upgrade-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .homepage-upgrade-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .homepage-upgrade-title {
+    margin: 0;
+    color: #F4F7FF;
+    font-size: 19px;
+    line-height: 1.3;
+  }
+
+  .homepage-upgrade-copy {
+    margin: 4px 0 0;
+    max-width: 62ch;
+    color: #AFC0E4;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .homepage-upgrade-link {
+    flex: 0 0 auto;
+    color: #B7F7C4;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .homepage-plan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .homepage-plan-panel {
+    border: 1px solid rgba(92, 112, 150, 0.22);
+    border-radius: 16px;
+    background: rgba(4, 14, 31, 0.30);
+    padding: 16px;
+  }
+
+  .homepage-plan-panel.is-pro {
+    border-color: rgba(56, 217, 150, 0.32);
+    background: linear-gradient(180deg, rgba(7, 36, 37, 0.48), rgba(4, 14, 31, 0.30));
+  }
+
+  .homepage-plan-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: #F4F7FF;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .homepage-plan-tag {
+    color: #B7F7C4;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .homepage-plan-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: #C4D1EB;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .homepage-plan-list li {
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .homepage-plan-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #38D996;
+    font-weight: 900;
+  }
+
   .paste-toggle {
     border: 0;
     border-radius: 0;
@@ -3322,6 +3433,14 @@
     font-size: 13px;
   }
 
+  .homepage-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .homepage-upgrade-header {
+    gap: 10px;
+  }
+
   .result-preview-card {
     margin-top: 26px;
     padding: 18px 14px;
@@ -3926,6 +4045,35 @@
               </div>
             </div>
           </details>
+        </div>
+
+        <div class="homepage-upgrade-guide" aria-label="Free and Pro comparison">
+          <div class="homepage-upgrade-header">
+            <div>
+              <span class="homepage-upgrade-kicker">Free first, upgrade when useful</span>
+              <h2 class="homepage-upgrade-title">Start with the free check. Unlock the full report when the role matters.</h2>
+              <p class="homepage-upgrade-copy">The homepage should make the upgrade clear without getting in your way. Run the check first, then decide whether the deeper rewrite and ATS guidance is worth unlocking for that application.</p>
+            </div>
+            <a class="homepage-upgrade-link" href="/upgrade" data-upgrade-link>See upgrade options</a>
+          </div>
+          <div class="homepage-plan-grid">
+            <div class="homepage-plan-panel">
+              <div class="homepage-plan-name">Free CV check <span class="homepage-plan-tag">No card</span></div>
+              <ul class="homepage-plan-list">
+                <li>CV score against a real job advert</li>
+                <li>Top keyword gaps and matched strengths</li>
+                <li>Priority fixes and one example rewrite</li>
+              </ul>
+            </div>
+            <div class="homepage-plan-panel is-pro">
+              <div class="homepage-plan-name">Full report <span class="homepage-plan-tag">Upgrade</span></div>
+              <ul class="homepage-plan-list">
+                <li>Detailed ATS, readability and role-fit breakdown</li>
+                <li>Stronger rewrite guidance for bullets and summary</li>
+                <li>Saved reports, export options and deeper action plan</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
