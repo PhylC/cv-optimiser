@@ -1772,6 +1772,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["revenue, quota and target performance", "pipeline generation and conversion", "negotiation, CRM and forecasting", "account growth and commercial outcomes"],
         "mistakes": ["listing duties without numbers", "hiding quota performance", "using generic relationship language without commercial evidence"],
         "keywords": ["revenue", "pipeline", "conversion", "CRM", "forecasting", "negotiation", "account growth"],
+        "example_report": ("/sales-cv-example-report", "Sales CV example report"),
         "cta_support": "Check whether your sales CV proves revenue impact, pipeline ownership and account growth.",
     },
     "account-manager-cv-checker": {
@@ -1782,6 +1783,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["account ownership and portfolio size", "retention, growth and renewal outcomes", "stakeholder management and forecasting", "commercial delivery and customer planning"],
         "mistakes": ["describing accounts without ownership", "missing retention or growth evidence", "not showing senior stakeholder work"],
         "keywords": ["retention", "growth", "stakeholder management", "forecasting", "customer relationships", "commercial planning"],
+        "example_report": ("/account-manager-cv-example-report", "Account manager CV example report"),
     },
     "customer-success-cv-checker": {
         "role": "customer success",
@@ -1800,6 +1802,7 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["delivery against timelines and budgets", "risk, dependency and issue management", "stakeholder communication and governance", "measurable project outcomes"],
         "mistakes": ["listing methodologies without delivery evidence", "missing budget or timeline context", "not explaining outcomes"],
         "keywords": ["delivery", "stakeholders", "risk", "budget", "dependencies", "governance", "outcomes"],
+        "example_report": ("/project-manager-cv-example-report", "Project manager CV example report"),
         "cta_support": "Check whether your project manager CV proves delivery, stakeholder control, risk management and outcomes.",
     },
     "graduate-cv-checker": {
@@ -1810,6 +1813,8 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["target role clarity", "education, projects and placements", "internships and part-time work", "transferable skills with evidence"],
         "mistakes": ["trying to sound senior", "burying relevant projects", "using a vague objective with no target role"],
         "keywords": ["placement", "internship", "project", "analysis", "teamwork", "communication", "initiative"],
+        "example_report": ("/graduate-cv-example-report", "Graduate CV example report"),
+        "search_terms": ["graduate CV checker", "graduate CV review", "entry level CV checker UK"],
     },
     "it-helpdesk-cv-checker": {
         "role": "IT helpdesk",
@@ -1829,6 +1834,8 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["tech stack and role-specific tools", "shipped projects and production impact", "APIs, databases and testing", "GitHub or portfolio evidence where relevant"],
         "mistakes": ["dumping every technology without context", "missing shipped outcomes", "not matching the stack in the advert"],
         "keywords": ["JavaScript", "Python", "APIs", "databases", "testing", "GitHub", "CI/CD"],
+        "example_report": ("/software-developer-cv-example-report", "Software developer CV example report"),
+        "search_terms": ["software developer CV checker", "developer CV review UK", "tech CV ATS checker"],
     },
     "admin-cv-checker": {
         "role": "admin",
@@ -1847,6 +1854,8 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["campaign outcomes and channel ownership", "analytics, reporting and conversion", "SEO, paid media, email or CRM evidence", "content and brand relevance"],
         "mistakes": ["listing channels without results", "missing metrics", "not matching the role's marketing mix"],
         "keywords": ["campaigns", "content", "analytics", "SEO", "paid media", "email", "CRM", "conversion"],
+        "example_report": ("/marketing-cv-example-report", "Marketing CV example report"),
+        "search_terms": ["marketing CV checker", "marketing CV review", "marketing CV keywords"],
     },
     "career-change-cv-checker": {
         "role": "career change",
@@ -1865,6 +1874,8 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "signals": ["accuracy, confidentiality and records", "patient or customer handling", "scheduling, communication and process", "systems experience and public-sector language"],
         "mistakes": ["not showing confidentiality or accuracy", "missing systems and records context", "using generic admin wording"],
         "keywords": ["confidentiality", "records", "scheduling", "communication", "patient handling", "accuracy", "systems"],
+        "example_report": ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
+        "search_terms": ["NHS admin CV help", "NHS admin CV checker", "NHS administrator CV keywords"],
     },
 }
 
@@ -1991,11 +2002,24 @@ def infer_role_focus(job_description: str, cv_text: str = "") -> dict[str, Any]:
 def build_role_page(slug: str, spec: dict[str, Any]) -> dict[str, Any]:
     role = spec["role"]
     title_role = role if role.upper() == "NHS" else role
+    example_href, example_label = spec.get("example_report", ("/example-cv-report", "Example CV report"))
+    pro_checks = [
+        "UK recruiter verdict and the main shortlisting risk for this role",
+        "First-page diagnosis across the profile, recent role and evidence quality",
+        "Section rewrite plan for the profile, key skills and most relevant experience",
+        "Before/after rewrites that keep to the facts in your CV",
+        "Keyword importance split into critical gaps, supporting terms and terms already covered",
+    ]
+    search_terms = spec.get("search_terms", [
+        f"{role} CV checker",
+        f"{role} CV review",
+        f"{role} CV keywords",
+    ])
     return {
         "title": spec["title"],
         "meta_description": spec["meta_description"],
         "h1": spec["h1"],
-        "intro": f"Use this {role} CV checker guide to see whether your CV is focused on the evidence recruiters expect for this type of role. A generic CV can hide the strongest parts of your experience, even when you are a good fit.",
+        "intro": f"Use this {role} CV checker guide to see whether your CV is focused on the evidence UK recruiters expect for this type of role. A generic CV can hide the strongest parts of your experience, even when you are a good fit.",
         "who": [
             f"People applying for {role} roles with a CV that feels too generic",
             "Candidates tailoring a CV to a specific job description",
@@ -2008,13 +2032,23 @@ def build_role_page(slug: str, spec: dict[str, Any]) -> dict[str, Any]:
             "Rewrite duty-only bullets so they show context and outcome",
             "Use job-description language naturally where it matches your real experience",
         ],
+        "pro_checks": pro_checks,
+        "search_terms": search_terms,
+        "example_report": (example_href, example_label),
         "sections": [
             (f"What recruiters look for in a {title_role} CV", "Recruiters need to see relevant evidence quickly. For this role, that means making the right skills, tools, outcomes and examples easy to scan rather than expecting the reader to infer your fit."),
             ("Common CV mistakes for this role", "Common mistakes include " + ", ".join(spec["mistakes"]) + ". These issues make the CV feel less focused, even when the experience is useful."),
             ("Useful keywords and evidence to include", "Look for truthful ways to include terms such as " + ", ".join(spec["keywords"]) + ". The strongest CVs support those words with examples, numbers, scope or outcomes."),
             ("How to tailor it to a job description", "Start with the advert. Identify the repeated responsibilities and required skills, then choose the most relevant examples from your experience. Remove or shorten details that do not support this role."),
+            ("What the full Pro report checks", "The paid report goes beyond a score. It gives a recruiter-style verdict, first-page diagnosis, section rewrite plan, before/after wording examples, keyword importance and an exportable checklist for this specific application."),
+            ("Search intent this page answers", "This guide is built for searches such as " + ", ".join(search_terms) + ", and is focused on UK CV wording rather than generic resume advice."),
         ],
-        "related": [("/cv-job-description-match", "CV job description match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/10-second-cv-test", "10-Second CV Test")],
+        "related": [
+            (example_href, example_label),
+            ("/cv-job-description-match", "CV job description match"),
+            ("/cv-keyword-optimiser", "CV keyword optimiser"),
+            ("/10-second-cv-test", "10-Second CV Test"),
+        ],
         "tool": True,
         "cta_support": spec.get("cta_support") or f"Check whether your {role} CV highlights " + ", ".join(spec["keywords"][:3]) + " and relevant evidence for the job description.",
     }
@@ -7763,6 +7797,43 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         """
         for title, items in list_blocks
     )
+    pro_checks_html = ""
+    if page.get("pro_checks"):
+        pro_checks_html = f"""
+        <section class="pro-proof-section">
+          <div>
+            <p class="eyebrow">Full report</p>
+            <h2>What Pro checks for this role</h2>
+            <p>The free check gives a quick read. The paid report goes deeper into the evidence a UK recruiter is likely to scan.</p>
+          </div>
+          <div class="pro-proof-grid">
+            {"".join(f'<div class="pro-proof-card"><strong>{html.escape(item)}</strong></div>' for item in page.get("pro_checks", []))}
+          </div>
+        </section>
+        """
+    search_terms_html = ""
+    if page.get("search_terms"):
+        search_terms_html = f"""
+        <section class="seo-section">
+          <h2>Useful searches this guide covers</h2>
+          <div class="intent-chip-row">
+            {"".join(f'<span>{html.escape(item)}</span>' for item in page.get("search_terms", []))}
+          </div>
+        </section>
+        """
+    example_report_html = ""
+    if page.get("example_report"):
+        example_href, example_label = page["example_report"]
+        example_report_html = f"""
+        <section class="example-link-panel">
+          <div>
+            <p class="eyebrow">Example output</p>
+            <h2>See the report style before you run your CV</h2>
+            <p>Open the matching example to see the recruiter verdict, first-page diagnosis, section rewrite plan and before/after rewrites.</p>
+          </div>
+          <a href="{html.escape(example_href)}" class="cta cta-button">{html.escape(example_label)}</a>
+        </section>
+        """
     tool_html = ""
     if page.get("tool"):
         tool_html = """
@@ -7832,6 +7903,8 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .hero-panel,
           .tool-feature,
+          .pro-proof-section,
+          .example-link-panel,
           .bottom-cta {{
             background: rgba(15, 28, 50, 0.68);
             border: 1px solid rgba(92, 112, 150, 0.20);
@@ -7878,6 +7951,52 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .seo-card li {{
             margin-bottom: 8px;
+          }}
+          .pro-proof-section,
+          .example-link-panel {{
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 22px;
+            align-items: start;
+            margin: 28px 0;
+          }}
+          .example-link-panel {{
+            align-items: center;
+          }}
+          .pro-proof-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+          }}
+          .pro-proof-card {{
+            min-height: 82px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(92, 112, 150, 0.22);
+            background: rgba(10, 19, 35, 0.36);
+          }}
+          .pro-proof-card strong {{
+            display: block;
+            color: #EEF3FF;
+            font-size: 14px;
+            line-height: 1.45;
+          }}
+          .intent-chip-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+          }}
+          .intent-chip-row span {{
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(92, 112, 150, 0.24);
+            background: rgba(10, 19, 35, 0.42);
+            color: #DCE6FF;
+            font-size: 13px;
+            font-weight: 750;
           }}
           .seo-card,
           .checklist-section {{
@@ -7957,7 +8076,9 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           @media (max-width: 900px) {{
             .seo-hero,
-            .seo-grid {{
+            .seo-grid,
+            .pro-proof-section,
+            .example-link-panel {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -7986,6 +8107,9 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             .tool-frame {{
               min-height: 1120px;
               border-radius: 14px;
+            }}
+            .pro-proof-grid {{
+              grid-template-columns: 1fr;
             }}
             .cta,
             .cta-button {{
@@ -8017,7 +8141,10 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           {tool_html}
 
           <div class="seo-grid">{list_html}</div>
+          {pro_checks_html}
+          {example_report_html}
           {sections_html}
+          {search_terms_html}
 
           <section class="faq-section">
             <h2>Frequently asked questions</h2>
@@ -9835,6 +9962,42 @@ def make_seo_landing_handler(slug: str):
 
     handler.__name__ = f"seo_landing_{slug.replace('-', '_')}"
     return handler
+
+
+SEO_ROLE_ALIASES = {
+    "graduate-cv-review": "graduate-cv-checker",
+    "entry-level-cv-checker-uk": "graduate-cv-checker",
+    "nhs-admin-cv-help": "nhs-admin-cv-checker",
+    "nhs-administrator-cv-keywords": "nhs-admin-cv-checker",
+    "developer-cv-review-uk": "software-developer-cv-checker",
+    "tech-cv-ats-checker": "software-developer-cv-checker",
+    "marketing-cv-review": "marketing-cv-checker",
+    "marketing-cv-keywords": "marketing-cv-checker",
+    "sales-cv-review": "sales-cv-checker",
+}
+
+
+def make_seo_alias_redirect(alias_slug: str, target_slug: str):
+    def handler() -> RedirectResponse:
+        return RedirectResponse(url=f"/{target_slug}", status_code=301)
+
+    handler.__name__ = f"seo_alias_{alias_slug.replace('-', '_')}"
+    return handler
+
+
+for alias_slug, target_slug in SEO_ROLE_ALIASES.items():
+    app.add_api_route(
+        f"/{alias_slug}",
+        make_seo_alias_redirect(alias_slug, target_slug),
+        methods=["GET"],
+        include_in_schema=False,
+    )
+    app.add_api_route(
+        f"/{alias_slug}/",
+        make_seo_alias_redirect(alias_slug, target_slug),
+        methods=["GET"],
+        include_in_schema=False,
+    )
 
 
 for seo_slug in SEO_LANDING_PAGES:
