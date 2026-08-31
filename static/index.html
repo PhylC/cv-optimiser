@@ -2693,12 +2693,14 @@
   }
 
   .fix-detail-grid,
-  .keyword-importance-grid {
+  .keyword-importance-grid,
+  .rewrite-detail-grid {
     display: grid;
     gap: 12px;
   }
 
-  .fix-detail-card {
+  .fix-detail-card,
+  .rewrite-detail-card {
     display: grid;
     grid-template-columns: 34px minmax(0, 1fr);
     gap: 12px;
@@ -2720,6 +2722,7 @@
   }
 
   .fix-detail-card strong,
+  .rewrite-detail-card strong,
   .keyword-group strong,
   .rewrite-note strong {
     display: block;
@@ -2729,6 +2732,7 @@
   }
 
   .fix-detail-card p,
+  .rewrite-detail-card p,
   .keyword-group p,
   .rewrite-note p {
     color: #C6D3EC;
@@ -2736,8 +2740,17 @@
     line-height: 1.55;
   }
 
-  .fix-detail-card p + p {
+  .fix-detail-card p + p,
+  .rewrite-detail-card p + p {
     margin-top: 8px;
+  }
+
+  .rewrite-detail-before {
+    color: #FFC9C9 !important;
+  }
+
+  .rewrite-detail-after {
+    color: #D9FFE7 !important;
   }
 
   .keyword-importance-grid {
@@ -3571,6 +3584,10 @@
   }
 
   .fix-detail-card {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .rewrite-detail-card {
     grid-template-columns: 30px minmax(0, 1fr);
   }
 
@@ -4433,6 +4450,15 @@
             <ol id="priorityFixes" class="result-list ranked-fixes hidden"></ol>
           </div>
 
+          <div id="proRewriteWrap" class="result-section pro-premium hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div class="result-section-title">Before and after rewrite plan</div>
+              <span class="pro-badge">Pro</span>
+            </div>
+            <div class="result-section-subtitle">Multiple role-specific rewrites with the reason, placement and signal each one strengthens.</div>
+            <div id="proRewriteDetails" class="rewrite-detail-grid"></div>
+          </div>
+
           <div id="detailKeywordsWrap" class="result-grid-two">
             <div id="matchedKeywordsWrap" class="result-section">
               <div class="result-section-title">Matched keywords</div>
@@ -4760,6 +4786,8 @@
     const printReportBtn = document.getElementById("printReportBtn");
     const proSnapshotWrap = document.getElementById("proSnapshotWrap");
     const proSnapshotGrid = document.getElementById("proSnapshotGrid");
+    const proRewriteWrap = document.getElementById("proRewriteWrap");
+    const proRewriteDetails = document.getElementById("proRewriteDetails");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
     const resultExampleWhy = document.getElementById("resultExampleWhy");
@@ -5009,6 +5037,12 @@
       if (resultsPanel && isChecking) {
         resultsPanel.classList.add("hidden");
         resultsPanel.setAttribute("aria-hidden", "true");
+      }
+      if (isChecking && proRewriteDetails) {
+        proRewriteDetails.innerHTML = "";
+      }
+      if (isChecking && proRewriteWrap) {
+        proRewriteWrap.classList.add("hidden");
       }
 
       requestAnimationFrame(reportEmbedHeight);
@@ -5433,6 +5467,100 @@
       recruiterVerdictWrap.classList.toggle("hidden", false);
     }
 
+    function normaliseRewriteDetails(data, maxItems) {
+      const details = Array.isArray(data && data.bulletRewriteDetails) ? data.bulletRewriteDetails : [];
+      const rewrites = details.filter(Boolean).map(function(item) {
+        return {
+          before: item.before || item.original || "",
+          after: item.after || item.improved || item.rewrite || "",
+          whyBetter: item.whyBetter || item.why || item.reason || "",
+          whereToUse: item.whereToUse || item.where || item.section || "",
+          strengthens: item.strengthens || item.roleSignal || item.keyword || ""
+        };
+      }).filter(function(item) {
+        return item.after;
+      });
+
+      const freeRewrite = data && data.freeBulletRewrite ? data.freeBulletRewrite : {};
+      if (!rewrites.length && (freeRewrite.before || freeRewrite.after)) {
+        rewrites.push({
+          before: freeRewrite.before || "A vague or duty-led line from the current CV.",
+          after: freeRewrite.after || "",
+          whyBetter: freeRewrite.whyWeak || "The rewrite is more specific about action, context and value.",
+          whereToUse: "Use this style in the most relevant recent role bullet.",
+          strengthens: "Evidence strength and role alignment."
+        });
+      }
+
+      if (data && Array.isArray(data.bulletPoints)) {
+        data.bulletPoints.forEach(function(bullet) {
+          if (!bullet || rewrites.length >= maxItems) return;
+          if (rewrites.some(function(item) { return item.after === bullet; })) return;
+          rewrites.push({
+            before: "A duty-led bullet from the current CV.",
+            after: bullet,
+            whyBetter: "This version is clearer, more active and easier for a recruiter to scan.",
+            whereToUse: "Use it under the role where this work actually happened.",
+            strengthens: "Relevant experience and proof of impact."
+          });
+        });
+      }
+
+      return rewrites.slice(0, maxItems || 5);
+    }
+
+    function renderRewriteDetailsForElement(targetEl, data, maxItems) {
+      if (!targetEl) return [];
+      targetEl.innerHTML = "";
+      const rewrites = normaliseRewriteDetails(data, maxItems || 5);
+      rewrites.forEach(function(item, index) {
+        const card = document.createElement("div");
+        card.className = "rewrite-detail-card";
+
+        const number = document.createElement("span");
+        number.className = "fix-detail-number";
+        number.textContent = String(index + 1);
+
+        const body = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = "Rewrite " + String(index + 1);
+        body.appendChild(title);
+
+        if (item.before) {
+          const before = document.createElement("p");
+          before.className = "rewrite-detail-before";
+          before.textContent = "Before: " + item.before;
+          body.appendChild(before);
+        }
+
+        const after = document.createElement("p");
+        after.className = "rewrite-detail-after";
+        after.textContent = "After: " + item.after;
+        body.appendChild(after);
+
+        if (item.whyBetter) {
+          const why = document.createElement("p");
+          why.textContent = "Why better: " + item.whyBetter;
+          body.appendChild(why);
+        }
+        if (item.whereToUse) {
+          const where = document.createElement("p");
+          where.textContent = "Where to use it: " + item.whereToUse;
+          body.appendChild(where);
+        }
+        if (item.strengthens) {
+          const signal = document.createElement("p");
+          signal.textContent = "Strengthens: " + item.strengthens;
+          body.appendChild(signal);
+        }
+
+        card.appendChild(number);
+        card.appendChild(body);
+        targetEl.appendChild(card);
+      });
+      return rewrites;
+    }
+
     function renderKeywordImportance(groups, fallbackMissing, fallbackMatched) {
       if (!resultKeywordImportance) return;
       resultKeywordImportance.innerHTML = "";
@@ -5480,9 +5608,12 @@
       const firstFix = data.priorityFixDetails && data.priorityFixDetails.length
         ? data.priorityFixDetails[0].issue
         : ((data.priorityFixes && data.priorityFixes[0]) || (data.weakPoints && data.weakPoints[0]) || "Clarify role fit in the first page.");
-      const rewriteFocus = data.freeBulletRewrite && data.freeBulletRewrite.after
+      const rewriteCards = normaliseRewriteDetails(data, 1);
+      const rewriteFocus = rewriteCards.length
+        ? rewriteCards[0].after
+        : (data.freeBulletRewrite && data.freeBulletRewrite.after
         ? data.freeBulletRewrite.after
-        : ((data.bulletPoints && data.bulletPoints[0]) || "Rewrite duty-only bullets so they show action, context and value.");
+        : ((data.bulletPoints && data.bulletPoints[0]) || "Rewrite duty-only bullets so they show action, context and value."));
       const nextAction = actionPlanItems && actionPlanItems.length
         ? actionPlanItems[0]
         : (data.nextStep || "Work through the priority fixes before making smaller wording edits.");
@@ -5546,6 +5677,27 @@
         "</div></section>";
     }
 
+    function rewriteReportItems(title, items) {
+      const safeItems = Array.isArray(items) ? items.filter(Boolean).slice(0, 5) : [];
+      if (!safeItems.length) return "";
+      return "<section><h2>" + escapeReportHtml(title) + "</h2><div class=\"cards\">" +
+        safeItems.map(function(item, index) {
+          const before = item.before || item.original || "";
+          const after = item.after || item.improved || item.rewrite || String(item || "");
+          const why = item.whyBetter || item.why || item.reason || "";
+          const where = item.whereToUse || item.where || item.section || "";
+          const strengthens = item.strengthens || item.roleSignal || item.keyword || "";
+          return "<article class=\"card\"><span>" + (index + 1) + "</span><h3>Rewrite " + (index + 1) + "</h3>" +
+            (before ? "<p><strong>Before:</strong> " + escapeReportHtml(before) + "</p>" : "") +
+            "<p><strong>After:</strong> " + escapeReportHtml(after) + "</p>" +
+            (why ? "<p><strong>Why better:</strong> " + escapeReportHtml(why) + "</p>" : "") +
+            (where ? "<p><strong>Where to use it:</strong> " + escapeReportHtml(where) + "</p>" : "") +
+            (strengthens ? "<p><strong>Strengthens:</strong> " + escapeReportHtml(strengthens) + "</p>" : "") +
+            "</article>";
+        }).join("") +
+        "</div></section>";
+    }
+
     function buildReportHtml(data) {
       const score = getScoreNumber(data && data.score);
       const isFullReport = !!(data && (data.fullReportUnlocked || data.professionalSummary || data.reportAccess));
@@ -5567,6 +5719,7 @@
       const shortlistLikelihood = recruiterVerdict.shortlistLikelihood || recruiterVerdict.likelihood || (score >= 75 ? "Likely" : (score >= 55 ? "Possible" : (score > 0 ? "Unlikely" : "Unclear")));
       const mainConcern = recruiterVerdict.mainConcern || recruiterVerdict.concern || (data.weakPoints && data.weakPoints[0]) || "";
       const fixFirst = recruiterVerdict.fixFirst || recruiterVerdict.firstFix || data.nextStep || "";
+      const rewriteDetails = normaliseRewriteDetails(data, isFullReport ? 5 : 1);
 
       return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escapeReportHtml(reportTitle) + "</title>" +
         "<style>" +
@@ -5597,11 +5750,12 @@
         (data.professionalSummary ? "<section><h2>Professional summary</h2><p>" + escapeReportHtml(data.professionalSummary) + "</p></section>" : "") +
         "<section><h2>Keyword importance</h2><h3>Critical missing</h3><p class=\"chips\">" + critical.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Useful supporting</h3><p class=\"chips\">" + supporting.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Already covered</h3><p class=\"chips\">" + covered.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p></section>" +
         ((rewrite.before || rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
+        rewriteReportItems(isFullReport ? "Before and after rewrite plan" : "Rewrite detail", rewriteDetails) +
         listReportItems("Matched keywords", data.matchedKeywords || []) +
         listReportItems("Missing keywords", data.missingKeywords || []) +
         listReportItems("What works", data.strongPoints || []) +
         listReportItems("What will hold you back", data.weakPoints || []) +
-        listReportItems("Rewritten CV bullets", data.bulletPoints || []) +
+        (rewriteDetails.length ? "" : listReportItems("Rewritten CV bullets", data.bulletPoints || [])) +
         listReportItems("Suggested skills section", data.skillsSection || []) +
         listReportItems("ATS-style suggestions", data.atsTips || []) +
         listReportItems("Application risks", data.interviewRisks || []) +
@@ -6942,6 +7096,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         const hasFullPlanContent = !!(
           hasProfessionalSummary ||
           (data.priorityFixes && data.priorityFixes.length) ||
+          (data.bulletRewriteDetails && data.bulletRewriteDetails.length) ||
           (data.skillsSection && data.skillsSection.length) ||
           (data.atsTips && data.atsTips.length) ||
           (data.interviewRisks && data.interviewRisks.length)
@@ -6953,8 +7108,15 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (isCurrentlyPro) {
           renderProSnapshot(data, actionPlanItems);
           renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
+          const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
+          if (proRewriteWrap) {
+            proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
+          }
         } else if (proSnapshotWrap) {
           proSnapshotWrap.classList.add("hidden");
+          if (proRewriteWrap) {
+            proRewriteWrap.classList.add("hidden");
+          }
         }
 
         proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !((data.priorityFixDetails && data.priorityFixDetails.length) || (data.priorityFixes && data.priorityFixes.length)));
@@ -6979,7 +7141,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         }
         detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
         detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
-        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro);
+        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro || (data.bulletRewriteDetails && data.bulletRewriteDetails.length));
         bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
         resultDisclaimerWrap.classList.remove("hidden");
         if (lockedReportSections) {

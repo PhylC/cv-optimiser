@@ -667,6 +667,22 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         ],
         "weak_bullet": "Responsible for building relationships with customers and supporting sales targets.",
         "strong_bullet": "Generated qualified pipeline through targeted outreach and discovery calls, supporting improved conversion and clearer monthly forecasting.",
+        "rewrite_examples": [
+            {
+                "before": "Responsible for building relationships with customers and supporting sales targets.",
+                "after": "Generated qualified pipeline through targeted outreach and discovery calls, supporting improved conversion and clearer monthly forecasting.",
+                "why_better": "It moves from a passive duty to active sales evidence tied to pipeline, conversion and forecasting.",
+                "where_to_use": "Most recent sales role bullet.",
+                "strengthens": "Pipeline generation, discovery calls and commercial impact.",
+            },
+            {
+                "before": "Worked with customers to understand their needs.",
+                "after": "Used discovery calls to qualify customer needs, prioritise higher-value opportunities and progress prospects through the sales pipeline.",
+                "why_better": "It uses the job advert's language and shows how customer conversations supported sales progress.",
+                "where_to_use": "Sales achievements or responsibilities under the relevant role.",
+                "strengthens": "Discovery, qualification and pipeline ownership.",
+            },
+        ],
         "ats_checks": [
             "Core sales terms are present, but several high-intent keywords from the advert are missing.",
             "Sales achievements need clearer metrics so they can be scanned quickly.",
@@ -713,6 +729,22 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         ],
         "weak_bullet": "Responsible for managing customer accounts and sales targets.",
         "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+        "rewrite_examples": [
+            {
+                "before": "Responsible for managing customer accounts and sales targets.",
+                "after": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+                "why_better": "It makes ownership and commercial value clearer, instead of only listing responsibility.",
+                "where_to_use": "Recent account manager role bullet.",
+                "strengthens": "Account growth, retailer execution and commercial planning.",
+            },
+            {
+                "before": "Worked with internal teams on account plans.",
+                "after": "Coordinated cross-functional account planning with sales, supply and category teams to improve forecasting visibility and retailer execution.",
+                "why_better": "It gives the collaboration more context and connects it to account-management outcomes.",
+                "where_to_use": "Experience section under account planning or stakeholder work.",
+                "strengthens": "Stakeholder management, forecasting and cross-functional planning.",
+            },
+        ],
         "ats_checks": [
             "Core headings are readable, but the profile is too generic for the target role.",
             "Important account management language appears in the job description but not strongly enough in the CV.",
@@ -759,6 +791,22 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         ],
         "weak_bullet": "Managed project tasks and worked with stakeholders to deliver business change.",
         "strong_bullet": "Led cross-functional delivery planning across three workstreams, tracking risks, dependencies and milestones to support on-time implementation.",
+        "rewrite_examples": [
+            {
+                "before": "Managed project tasks and worked with stakeholders to deliver business change.",
+                "after": "Led cross-functional delivery planning across three workstreams, tracking risks, dependencies and milestones to support on-time implementation.",
+                "why_better": "It shows delivery ownership, project structure and the control mechanisms a project recruiter expects.",
+                "where_to_use": "Most relevant project manager role bullet.",
+                "strengthens": "Delivery planning, RAID, dependencies and implementation.",
+            },
+            {
+                "before": "Helped keep projects on track.",
+                "after": "Maintained project momentum by coordinating milestone updates, escalating delivery risks and keeping stakeholders aligned on next actions.",
+                "why_better": "It replaces vague support wording with clearer project control and stakeholder evidence.",
+                "where_to_use": "Project delivery or governance bullet.",
+                "strengthens": "Stakeholder governance, risk control and delivery cadence.",
+            },
+        ],
         "ats_checks": [
             "Project management language is present, but risk, budget and governance terms are underused.",
             "The CV should make delivery ownership easier to identify.",
@@ -2223,6 +2271,7 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
     "whyWeak": "",
     "after": ""
   },
+  "bulletRewriteDetails": [],
   "nextStep": "",
   "professionalSummary": "",
   "priorityFixes": [],
@@ -2257,6 +2306,7 @@ def build_prompt(job_description: str, cv_text: str, is_pro: bool = False) -> st
     "whyWeak": "",
     "after": ""
   },
+  "bulletRewriteDetails": [],
   "nextStep": ""
 }
 """.strip()
@@ -2296,6 +2346,15 @@ Additional Pro rules (this must feel like a senior recruiter review, not generic
   Give 4–6 stronger CV bullets where the CV gives enough source material.
   Make them concise, evidence-led and suitable to paste into a CV after human review.
   Do not invent numbers, tools, employers, industries or outcomes.
+
+- bulletRewriteDetails:
+  Give 3–5 structured before/after rewrite examples.
+  Each item must include before, after, whyBetter, whereToUse, and strengthens.
+  before must be a weak or vague line from the CV where possible.
+  after must be a stronger version that keeps to the user's real evidence.
+  whyBetter must explain why the rewrite works better for this job description.
+  whereToUse must say where it belongs in the CV.
+  strengthens must name the role signal, keyword, skill or evidence it improves.
 
 CRITICAL QUALITY RULES:
 - Be specific to THIS job, not generic advice
@@ -2342,6 +2401,10 @@ Quality rules:
 - bulletPoints must be improved CV bullet points, not advice bullets
 - bulletPoints must sound stronger, clearer, and more commercially useful than the original CV
 - freeBulletRewrite must rewrite one weak original CV bullet or sentence where possible
+- bulletRewriteDetails must include before, after, whyBetter, whereToUse, and strengthens
+- for free checks, bulletRewriteDetails should contain 1 strong example
+- for Pro checks, bulletRewriteDetails should contain 3–5 strong examples
+- rewrites must not invent facts, employers, tools, numbers, qualifications, or outcomes
 - prefer quantified impact only if supported by the CV
 - never invent responsibilities, tools, employers, achievements, or metrics
 - nextStep must be a short paragraph describing the single highest-value improvement to make next
@@ -3044,6 +3107,37 @@ def coerce_free_bullet_rewrite(value: Any) -> dict[str, str]:
     }
 
 
+def coerce_bullet_rewrite_details(value: Any, max_items: int = 5) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+
+    items: list[dict[str, str]] = []
+    for item in value:
+        if isinstance(item, dict):
+            before = coerce_string(item.get("before") or item.get("original"))
+            after = coerce_string(item.get("after") or item.get("improved") or item.get("rewrite"))
+            why_better = coerce_string(item.get("whyBetter") or item.get("why") or item.get("reason"))
+            where_to_use = coerce_string(item.get("whereToUse") or item.get("where") or item.get("section"))
+            strengthens = coerce_string(item.get("strengthens") or item.get("roleSignal") or item.get("keyword"))
+        else:
+            before = ""
+            after = coerce_string(item)
+            why_better = ""
+            where_to_use = ""
+            strengthens = ""
+        if after:
+            items.append({
+                "before": before,
+                "after": after,
+                "whyBetter": why_better,
+                "whereToUse": where_to_use,
+                "strengthens": strengthens,
+            })
+        if len(items) >= max_items:
+            break
+    return items
+
+
 def clamp_score(value: int) -> int:
     return max(0, min(100, value))
 
@@ -3237,6 +3331,46 @@ def build_free_bullet_rewrite(data: dict[str, Any]) -> dict[str, str]:
     }
 
 
+def build_bullet_rewrite_details(data: dict[str, Any], is_pro: bool) -> list[dict[str, str]]:
+    existing = coerce_bullet_rewrite_details(data.get("bulletRewriteDetails"), max_items=5 if is_pro else 1)
+    if existing:
+        polished: list[dict[str, str]] = []
+        for item in existing:
+            polished.append({
+                "before": item["before"] or "A vague or duty-led line from the current CV.",
+                "after": item["after"],
+                "whyBetter": item["whyBetter"] or "The rewrite makes action, context and role relevance easier to see.",
+                "whereToUse": item["whereToUse"] or "Use it in the most relevant recent role.",
+                "strengthens": item["strengthens"] or "Evidence strength and role alignment.",
+            })
+        return polished[:5 if is_pro else 1]
+
+    free_rewrite = build_free_bullet_rewrite(data)
+    fallback_items = [{
+        "before": free_rewrite["before"] or "Responsible for managing customer accounts.",
+        "after": free_rewrite["after"],
+        "whyBetter": free_rewrite["whyWeak"] or "The rewrite is more specific about action, context and value.",
+        "whereToUse": "Use this style in the most relevant recent role bullet.",
+        "strengthens": "Evidence strength and role alignment.",
+    }]
+
+    for bullet in data.get("bulletPoints", []):
+        text = coerce_string(bullet)
+        if not text or any(item["after"] == text for item in fallback_items):
+            continue
+        fallback_items.append({
+            "before": "A duty-led bullet from the current CV.",
+            "after": text,
+            "whyBetter": "This version is clearer, more active and easier for a recruiter to scan.",
+            "whereToUse": "Use it under the role where this work actually happened.",
+            "strengthens": "Relevant experience and proof of impact.",
+        })
+        if len(fallback_items) >= (5 if is_pro else 1):
+            break
+
+    return fallback_items[:5 if is_pro else 1]
+
+
 def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any]:
     try:
         score = int(data.get("score", 0))
@@ -3255,6 +3389,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool) -> dict[str, Any
         "weakPoints": coerce_string_list(data.get("weakPoints")),
         "bulletPoints": coerce_string_list(data.get("bulletPoints")),
         "freeBulletRewrite": build_free_bullet_rewrite(data),
+        "bulletRewriteDetails": build_bullet_rewrite_details(data, is_pro=is_pro),
         "nextStep": coerce_string(data.get("nextStep")),
     }
 
@@ -5932,6 +6067,22 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         ],
         "weak_bullet": "Responsible for managing customer accounts and sales targets.",
         "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+        "rewrite_examples": [
+            {
+                "before": "Responsible for managing customer accounts and sales targets.",
+                "after": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+                "why_better": "It turns a duty-led line into clearer evidence of ownership, action and commercial value.",
+                "where_to_use": "Recent role bullet.",
+                "strengthens": "Role alignment, commercial impact and evidence strength.",
+            },
+            {
+                "before": "Worked with different teams to deliver account plans.",
+                "after": "Coordinated account planning across internal teams to improve forecasting visibility, customer execution and follow-up on commercial priorities.",
+                "why_better": "It makes collaboration more specific and connects it to outcomes a recruiter can understand quickly.",
+                "where_to_use": "Experience section under the most relevant role.",
+                "strengthens": "Stakeholder management, forecasting and account planning.",
+            },
+        ],
         "ats_checks": [
             "Core headings are readable, but the profile is too generic for the target role.",
             "Important role language appears in the job description but not strongly enough in the CV.",
@@ -5972,6 +6123,28 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         </div>
         """
     recruiter_verdict = page.get("recruiter_verdict", {})
+    rewrite_examples = page.get("rewrite_examples") or [{
+        "before": page["weak_bullet"],
+        "after": page["strong_bullet"],
+        "why_better": "The improved version is more specific about action, context and role relevance.",
+        "where_to_use": "Use this style in the most relevant recent role bullet.",
+        "strengthens": "Evidence strength and role alignment.",
+    }]
+    rewrite_examples_html = ""
+    for index, rewrite in enumerate(rewrite_examples, start=1):
+        rewrite_examples_html += f"""
+        <div class="priority-card">
+          <span class="priority-number">{index}</span>
+          <div>
+            <strong>Rewrite {index}</strong>
+            <p><strong>Before:</strong> {html.escape(rewrite.get("before", ""))}</p>
+            <p><strong>After:</strong> {html.escape(rewrite.get("after", ""))}</p>
+            <p><strong>Why better:</strong> {html.escape(rewrite.get("why_better", "The rewrite is clearer, more specific and easier for a recruiter to scan."))}</p>
+            <p><strong>Where to use it:</strong> {html.escape(rewrite.get("where_to_use", "Use it in the most relevant recent role."))}</p>
+            <p><strong>Strengthens:</strong> {html.escape(rewrite.get("strengthens", "Evidence strength and role alignment."))}</p>
+          </div>
+        </div>
+        """
     ats_checks_html = "".join(
         f"<li>{html.escape(item)}</li>"
         for item in page["ats_checks"]
@@ -6360,16 +6533,10 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               </div>
 
               <section class="example-improvement-section">
-                <h2>Weak and improved bullet examples</h2>
-                <div class="example-improvement-grid">
-                  <div class="before-after-card">
-                    <strong>Weak bullet</strong>
-                    <p>{html.escape(page["weak_bullet"])}</p>
-                  </div>
-                  <div class="before-after-card">
-                    <strong>Improved bullet</strong>
-                    <p>{html.escape(page["strong_bullet"])}</p>
-                  </div>
+                <h2>Before and after rewrite plan</h2>
+                <p class="section-helper">The full report can show multiple rewrites, why each one is stronger, where it belongs, and which role signal it improves.</p>
+                <div class="priority-grid">
+                  {rewrite_examples_html}
                 </div>
               </section>
 
@@ -10415,7 +10582,7 @@ async def optimise(
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
             input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report),
-            max_output_tokens=2800 if should_generate_full_report else 1600,
+            max_output_tokens=3600 if should_generate_full_report else 1800,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -10448,6 +10615,7 @@ async def optimise(
             "weakPoints": data.get("weakPoints", []),
             "bulletPoints": data.get("bulletPoints", []),
             "freeBulletRewrite": data.get("freeBulletRewrite", {}),
+            "bulletRewriteDetails": data.get("bulletRewriteDetails", []),
             "nextStep": data.get("nextStep", ""),
             "professionalSummary": data.get("professionalSummary", ""),
             "priorityFixes": data.get("priorityFixes", []),
