@@ -4266,6 +4266,7 @@ def build_site_header_css() -> str:
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            color: #E8EEFC;
             text-decoration: none;
             min-width: 0;
           }
