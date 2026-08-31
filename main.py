@@ -6006,9 +6006,10 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -6426,9 +6427,10 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -6628,9 +6630,10 @@ def render_cv_checker_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -6939,9 +6942,10 @@ def render_ats_cv_checker_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -7350,9 +7354,10 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -7936,9 +7941,10 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -8212,9 +8218,10 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -8473,9 +8480,10 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page-shell {{
@@ -8794,9 +8802,10 @@ def render_ten_second_cv_test_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page-shell {{
@@ -9036,9 +9045,10 @@ def render_best_free_cv_checker_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -9402,9 +9412,10 @@ def render_faq_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -9651,9 +9662,10 @@ def render_guides_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page-shell {{
@@ -9802,9 +9814,10 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -9954,9 +9967,10 @@ def render_upgrade_page() -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -10348,9 +10362,10 @@ def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
             font-family: Inter, Arial, sans-serif;
             margin: 0;
             background:
-              radial-gradient(circle at top left, rgba(91, 120, 255, 0.18), transparent 28%),
-              radial-gradient(circle at top right, rgba(91, 120, 255, 0.10), transparent 24%),
-              #07142D;
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
             color: #E8EEFC;
           }}
           .page {{
@@ -10763,7 +10778,7 @@ def billing_page() -> str:
         {google_tag()}
         {build_footer_assets_head()}
         <style>
-          body {{ font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: #07142D; color: #E8EEFC; line-height: 1.7; }}
+          body {{ font-family: Inter, Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px 60px; background: linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px), radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%), radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%), #08111F; color: #E8EEFC; line-height: 1.7; }}
           h1,h2 {{ color: #FFFFFF; }}
           a {{ color: #9AB0FF; }}
           p, li {{ color: #C7D3EE; }}
