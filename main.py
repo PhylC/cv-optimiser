@@ -3843,6 +3843,17 @@ def clamp_score(value: int) -> int:
     return max(0, min(100, value))
 
 
+def score_visual_color(score: int) -> str:
+    value = clamp_score(score)
+    if value < 45:
+        return "#EF4444"
+    if value < 60:
+        return "#F59E0B"
+    if value < 75:
+        return "#5B78FF"
+    return "#38D996"
+
+
 def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
     existing = coerce_named_score_list(data.get("scoreBreakdown"))
     if len(existing) >= 5:
@@ -8570,6 +8581,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
     )
     score_number_match = re.search(r"(\d+)", page.get("score", ""))
     score_number = int(score_number_match.group(1)) if score_number_match else 58
+    score_color = score_visual_color(score_number)
     critical_keywords = page["keywords"][:3]
     supporting_keywords = page["keywords"][3:6] or page["keywords"][:3]
     covered_keywords = page.get("covered_keywords") or [
@@ -8644,9 +8656,10 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
     ]
     score_breakdown_html = "".join(
         f"""
-        <div class="score-breakdown-card">
+        <div class="score-breakdown-card" style="--score-color: {score_visual_color(score)};">
           <span>{html.escape(label)}</span>
           <strong>{score}/100</strong>
+          <div class="score-breakdown-meter"><span style="width: {clamp_score(score)}%;"></span></div>
           <p>{html.escape(copy)}</p>
         </div>
         """
@@ -8780,6 +8793,45 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             border: 1px solid #D8E1EF;
             margin-bottom: 18px;
           }}
+          .score-visual-block {{
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: center;
+          }}
+          .score-block-copy {{
+            min-width: 0;
+          }}
+          .score-ring {{
+            --score: 0;
+            --score-color: #5B78FF;
+            --score-track: #E5ECF6;
+            position: relative;
+            display: inline-grid;
+            place-items: center;
+            width: 132px;
+            height: 132px;
+            flex: 0 0 auto;
+            border-radius: 999px;
+            background: conic-gradient(var(--score-color) calc(var(--score) * 1%), var(--score-track) 0);
+            box-shadow: inset 0 0 0 1px rgba(16, 27, 51, 0.04);
+          }}
+          .score-ring::before {{
+            content: "";
+            position: absolute;
+            inset: 19px;
+            border-radius: inherit;
+            background: #FFFFFF;
+            box-shadow: inset 0 0 0 1px rgba(16, 27, 51, 0.04);
+          }}
+          .score-ring-value {{
+            position: relative;
+            z-index: 1;
+            color: #101B33;
+            font-size: 40px;
+            font-weight: 850;
+            line-height: 1;
+          }}
           .pro-command-centre {{
             margin-bottom: 24px;
             background:
@@ -8841,6 +8893,20 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
           .score-breakdown-card strong {{
             font-size: 28px;
+            color: var(--score-color, #101B33);
+          }}
+          .score-breakdown-meter {{
+            overflow: hidden;
+            height: 6px;
+            margin-top: 8px;
+            border-radius: 999px;
+            background: #E5ECF6;
+          }}
+          .score-breakdown-meter span {{
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #5B78FF, var(--score-color, #38D996));
           }}
           .pro-impact-card p,
           .score-breakdown-card p,
@@ -9108,6 +9174,20 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               padding: 14px;
               border-radius: 14px;
             }}
+            .score-visual-block {{
+              grid-template-columns: 1fr;
+            }}
+            .score-ring {{
+              width: 112px;
+              height: 112px;
+              margin: 4px auto 0;
+            }}
+            .score-ring::before {{
+              inset: 16px;
+            }}
+            .score-ring-value {{
+              font-size: 34px;
+            }}
             .score-value {{
               font-size: 34px;
               line-height: 1.08;
@@ -9235,6 +9315,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               padding-top: 22px !important;
             }}
             .example-report-page .score-block {{
+              grid-template-columns: 1fr !important;
               padding: 16px !important;
               border: 1px solid #D8E1EF !important;
               border-radius: 16px !important;
@@ -9320,10 +9401,15 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
               <div class="card" style="margin-top:24px;">
                 <h2>Score overview</h2>
-                <div class="score-block">
-                  <div class="score-value">{html.escape(page["score"])}</div>
-                  <p><strong>{html.escape(page["score_label"])}</strong></p>
-                  <p>{html.escape(page["score_copy"])}</p>
+                <div class="score-block score-visual-block" style="--score-color: {score_color};">
+                  <div class="score-block-copy">
+                    <div class="score-value">{html.escape(page["score"])}</div>
+                    <p><strong>{html.escape(page["score_label"])}</strong></p>
+                    <p>{html.escape(page["score_copy"])}</p>
+                  </div>
+                  <div class="score-ring" style="--score: {score_number}; --score-color: {score_color};" role="img" aria-label="Role-fit score {score_number} out of 100">
+                    <span class="score-ring-value">{score_number}</span>
+                  </div>
                 </div>
                 <div class="score-breakdown-grid">
                   {score_breakdown_html}
