@@ -4271,10 +4271,13 @@ def build_site_header_css() -> str:
             min-width: 0;
           }
           .site-logo-mark {
+            position: relative;
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
+            background:
+              linear-gradient(135deg, rgba(56, 217, 150, 0.16), rgba(72, 107, 255, 0.12)),
+              rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.18);
             display: inline-flex;
             align-items: center;
@@ -4283,6 +4286,32 @@ def build_site_header_css() -> str:
             font-weight: 800;
             font-size: 15px;
             flex-shrink: 0;
+            letter-spacing: 0;
+            overflow: hidden;
+          }
+          .site-logo-mark::before {
+            content: "";
+            position: absolute;
+            inset: 5px;
+            border-radius: 9px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+          }
+          .site-logo-mark::after {
+            content: "";
+            position: absolute;
+            left: 9px;
+            right: 9px;
+            bottom: 8px;
+            height: 2px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            pointer-events: none;
+          }
+          .site-logo-mark span {
+            position: relative;
+            z-index: 1;
+            transform: translateY(-2px);
           }
           .site-logo-title {
             color: #E8EEFC;
@@ -5850,7 +5879,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
       <div class="site-header-inner">
         <div class="site-header-main">
           <a href="/" class="site-logo">
-            <span class="site-logo-mark">CV</span>
+            <span class="site-logo-mark"><span>CV</span></span>
             <span class="site-logo-title"><strong>CV</strong> <span>Optimiser</span></span>
           </a>
           <div class="site-header-right header-actions">
@@ -6087,6 +6116,9 @@ def build_attribution_script() -> str:
 
 def build_footer_assets_head() -> str:
     return (
+        '<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">'
+        '<link rel="manifest" href="/static/site.webmanifest">'
+        '<meta name="theme-color" content="#172B4A">'
         '<link rel="stylesheet" href="/static/global-footer.css">'
         '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
         f"<script>window.CV_OPTIMISER_SUPABASE_URL = {json.dumps(SUPABASE_URL)};"
@@ -13066,6 +13098,11 @@ async def optimise(
             status_code=500,
             content={"error": "We could not analyse your CV right now. Please try again."}
         )
+
+
+@app.api_route("/favicon.ico", methods=["GET", "HEAD"], include_in_schema=False)
+def favicon_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/static/favicon.svg", status_code=307)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CV Optimiser">
+  <defs>
+    <linearGradient id="markBg" x1="8" y1="6" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#172B4A"/>
+      <stop offset="0.58" stop-color="#0B1730"/>
+      <stop offset="1" stop-color="#07111F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38D996"/>
+      <stop offset="1" stop-color="#486BFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#markBg)"/>
+  <rect x="7.5" y="7.5" width="49" height="49" rx="13" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+  <path d="M17 17h30" stroke="url(#accent)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M17 47h30" stroke="#E8EEFC" stroke-width="4" stroke-linecap="round" opacity="0.82"/>
+  <text x="32" y="39" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#FFFFFF" letter-spacing="-1">CV</text>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "name": "CV Optimiser",
+  "short_name": "CV Optimiser",
+  "description": "UK-focused CV checking and role-fit reports.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08111F",
+  "theme_color": "#172B4A",
+  "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
