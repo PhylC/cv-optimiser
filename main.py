@@ -2420,12 +2420,19 @@ def get_report_type(payload: dict[str, Any]) -> str:
 
 FUNNEL_STEPS = [
     ("free_result_shown", "Free result shown"),
-    ("unlock_clicked", "Unlock clicked"),
+    ("unlock_intent", "Unlock intent"),
     ("checkout_started", "Checkout started"),
     ("payment_success_seen", "Payment success seen"),
     ("one_time_report_activated", "One-time report activated"),
     ("one_time_report_generated", "One-time report generated"),
 ]
+
+UNLOCK_INTENT_EVENTS = {
+    "unlock_clicked",
+    "pro_unlock_clicked",
+    "unlock_full_report_clicked",
+    "upgrade_clicked",
+}
 
 
 def percent(numerator: int, denominator: int) -> float:
@@ -2450,8 +2457,10 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             unique_emails.add(email.lower())
         if event_name:
             counts[event_name] = counts.get(event_name, 0) + 1
+            if event_name in UNLOCK_INTENT_EVENTS:
+                counts["unlock_intent"] = counts.get("unlock_intent", 0) + 1
         checkout_plan = coerce_string(metadata.get("checkout_plan"))
-        if checkout_plan:
+        if checkout_plan and event_name == "checkout_started":
             checkout_counts[checkout_plan] = checkout_counts.get(checkout_plan, 0) + 1
         source = coerce_string(metadata.get("source"))
         if source:
@@ -2489,7 +2498,7 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "funnel": funnel,
         "key_metrics": {
             "free_results": counts.get("free_result_shown", 0),
-            "unlock_clicks": counts.get("unlock_clicked", 0),
+            "unlock_clicks": counts.get("unlock_intent", 0),
             "checkout_starts": counts.get("checkout_started", 0),
             "payment_successes": counts.get("payment_success_seen", 0),
             "one_time_reports_generated": counts.get("one_time_report_generated", 0),
