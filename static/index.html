@@ -339,9 +339,8 @@
   html.embed-tool-mode body {
     max-width: none;
     padding: 0;
-    background:
-      radial-gradient(circle at top left, rgba(91, 120, 255, 0.16), transparent 28%),
-      #07142D;
+    background: #F8FAFC;
+    color: #14213D;
   }
 
   html.embed-tool-mode .site-header,
@@ -362,16 +361,20 @@
 
   html.embed-tool-mode #mainToolCard,
   html.embed-tool-mode #results {
-    border-left: 0;
-    border-right: 0;
+    border: 0 !important;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: none !important;
   }
 
   html.embed-tool-mode #mainToolCard {
-    border-top: 0;
     margin-top: 0;
+    background: #F8FAFC !important;
     overflow: visible !important;
+  }
+
+  html.embed-tool-mode #results {
+    margin-top: 18px;
+    border-radius: 22px;
   }
 
   .tool-embed {
@@ -383,7 +386,7 @@
   .tool-embed-title {
     display: none;
     margin-bottom: 14px;
-    color: #EEF3FF;
+    color: #101B33;
     font-size: 18px;
     font-weight: 760;
     line-height: 1.2;
@@ -4563,13 +4566,13 @@
 
   html.embed-tool-mode body {
     padding: 0;
-    background: transparent;
+    background: #F8FAFC;
   }
 
   html.embed-tool-mode #mainToolCard {
     border: 0;
     border-radius: 0 !important;
-    background: transparent;
+    background: #F8FAFC;
     padding: 0 !important;
     box-shadow: none;
   }

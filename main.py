@@ -4772,6 +4772,86 @@ def build_site_header_css() -> str:
     """
 
 
+def build_mini_tool_consistency_css() -> str:
+    return """
+          .tool-feature,
+          .tool-card.tool-shell,
+          .card:has(.tool-frame) {
+            position: relative;
+            overflow: hidden;
+            margin: 30px 0 !important;
+            padding: 28px !important;
+            border: 1px solid rgba(210, 220, 238, 0.86) !important;
+            border-radius: 24px !important;
+            background: #F8FAFC !important;
+            color: #14213D !important;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.24) !important;
+          }
+
+          .tool-feature::before,
+          .tool-card.tool-shell::before,
+          .card:has(.tool-frame)::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, #5B78FF, #22C55E);
+            pointer-events: none;
+          }
+
+          .tool-feature h2,
+          .tool-card.tool-shell h2,
+          .card:has(.tool-frame) h2 {
+            color: #101B33 !important;
+          }
+
+          .tool-feature p,
+          .tool-card.tool-shell p,
+          .card:has(.tool-frame) p {
+            color: #53627A !important;
+          }
+
+          .tool-feature .eyebrow,
+          .tool-card.tool-shell .eyebrow,
+          .card:has(.tool-frame) .eyebrow {
+            color: #3758D8 !important;
+          }
+
+          .tool-feature .compliance-notice,
+          .tool-card.tool-shell .compliance-notice,
+          .card:has(.tool-frame) .compliance-notice {
+            background: #EEF5FF !important;
+            border-color: #D7E4F5 !important;
+            color: #43536B !important;
+          }
+
+          .tool-frame {
+            overflow: hidden !important;
+            margin-top: 20px !important;
+            border: 1px solid #DCE5F2 !important;
+            border-radius: 22px !important;
+            background: #F8FAFC !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+          }
+
+          @media (max-width: 768px) {
+            .tool-feature,
+            .tool-card.tool-shell,
+            .card:has(.tool-frame) {
+              margin: 20px 0 !important;
+              padding: 18px 14px !important;
+              border-radius: 20px !important;
+              box-shadow: 0 18px 42px rgba(3, 9, 23, 0.24) !important;
+            }
+
+            .tool-frame {
+              margin-top: 16px !important;
+              border-radius: 18px !important;
+            }
+          }
+    """
+
+
 def build_typography_css() -> str:
     return """
           h1 {
@@ -6214,6 +6294,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_mini_tool_consistency_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -6715,6 +6796,7 @@ def render_cv_checker_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_mini_tool_consistency_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -6992,6 +7074,7 @@ def render_ats_cv_checker_page() -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_mini_tool_consistency_css()}
         </style>
       </head>
       <body data-auth-state="loading">
@@ -8634,6 +8717,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             }}
           }}
 {build_mobile_layout_css()}
+{build_mini_tool_consistency_css()}
         </style>
       </head>
       <body data-auth-state="loading">
