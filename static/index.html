@@ -928,20 +928,53 @@
   .tool-form {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 16px;
     margin-top: 16px;
   }
 
   .tool-step,
   .form-section {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 8px;
     border: 0;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+    border-radius: 0;
     background: transparent;
     box-shadow: none;
-    padding: 0;
+    padding: 16px 0 0;
     margin: 0;
+  }
+
+  .paste-cv-section {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .form-step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+    color: #9FB0D4;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .form-step-label span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    height: 23px;
+    border-radius: 999px;
+    background: rgba(56, 217, 150, 0.12);
+    border: 1px solid rgba(56, 217, 150, 0.28);
+    color: #B7F7C4;
+    font-size: 11px;
   }
 
   .field-helper {
@@ -973,6 +1006,19 @@
     line-height: 1.45;
   }
 
+  .primary-action-panel {
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+  }
+
+  .primary-action-helper {
+    margin-top: -2px;
+    color: #9FB0D4;
+    font-size: 13px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
   .field-group {
     display: flex;
     flex-direction: column;
@@ -982,6 +1028,28 @@
   .tool-trust-copy {
     margin-top: 2px;
     color: #C3D1EE;
+  }
+
+  .upload-details {
+    border: 0;
+    border-top: 1px solid rgba(92, 112, 150, 0.18);
+    border-radius: 0;
+    background: transparent;
+    padding: 14px 0 0;
+  }
+
+  .upload-details summary {
+    cursor: pointer;
+    color: #DCE6FF;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .upload-details .upload-section {
+    margin-top: 14px;
+    border: 0;
+    background: transparent;
+    padding: 0;
   }
 
   .tool-free-copy {
@@ -2282,6 +2350,43 @@
     gap: 12px;
   }
 
+  .audit-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .audit-summary-card {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(4, 14, 31, 0.36);
+    border: 1px solid rgba(80, 103, 146, 0.24);
+  }
+
+  .audit-summary-card span {
+    display: block;
+    margin-bottom: 6px;
+    color: #9FB0D4;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .audit-summary-card strong {
+    display: block;
+    color: #F4F7FF;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .audit-summary-card p {
+    margin-top: 6px;
+    color: #B7C6E6;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
   .diagnosis-item {
     padding: 14px 16px;
     border-radius: 16px;
@@ -3295,6 +3400,10 @@
     min-height: 0;
   }
 
+  .audit-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
   .fix-detail-card {
     grid-template-columns: 30px minmax(0, 1fr);
   }
@@ -3756,9 +3865,9 @@
       <div id="tool"></div>
       <div id="mainToolCard" class="card section primary-tool-card tool-embed">
         <div class="tool-embed-title">Check your CV</div>
-        <h1 class="homepage-hero-title tool-hero-title">Check your CV before applying — in under 60 seconds</h1>
-        <p class="homepage-hero-subtitle tool-hero-support">Compare your CV with a job description and get practical suggestions before you apply.</p>
-        <p class="compliance-notice">Paste your CV and a job description to get AI-assisted suggestions before you apply. No job outcome is guaranteed.</p>
+        <h1 class="homepage-hero-title tool-hero-title">The UK CV checker for a real job application</h1>
+        <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the job advert to see what a recruiter or ATS may miss, what matches, and what to fix before you apply.</p>
+        <p class="compliance-notice">UK-focused, AI-assisted guidance. Your first check does not need an account, and no job outcome is guaranteed.</p>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
@@ -3768,10 +3877,11 @@
           <a class="hero-start-link" href="#cvText">Start free check</a>
         </div>
 
-        <p class="upload-intro">Paste your CV and a job description to get your personalised score and practical suggestions.</p>
+        <p class="upload-intro">Start with paste. It is fastest, easiest to review, and avoids uploading anything you do not need to share.</p>
 
         <div class="tool-form">
           <div class="paste-toggle form-section paste-cv-section">
+            <div class="form-step-label"><span>1</span> CV text</div>
             <label class="field-label" for="cvText">Paste your CV</label>
             <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here..."></textarea>
           </div>
@@ -3781,14 +3891,17 @@
           </div>
 
           <div class="tool-step form-section job-description-section">
+            <div class="form-step-label"><span>2</span> Target role</div>
             <label class="field-label" for="jobDescription">Paste the job description</label>
             <p class="field-helper field-help">Paste the job advert so we can compare your CV against the role.</p>
             <textarea id="jobDescription" class="text-field job-description-textarea" placeholder="Paste the job advert here…"></textarea>
             <p class="field-helper field-help">Don’t have a job description? You can still run a general CV check.</p>
           </div>
 
-          <div>
+          <div class="primary-action-panel">
+            <div class="form-step-label"><span>3</span> Get your audit</div>
             <button id="optimiseBtn" style="width:100%;">Check my CV</button>
+            <p class="primary-action-helper">You will get a score, missing keywords, priority fixes and an example rewrite.</p>
           </div>
           <p id="toolTrustCopy" class="small tool-trust-copy"></p>
           <p id="toolFreeCopy" class="tool-free-copy" data-free-copy><span id="toolPlanBadge" class="plan-badge hidden">Pro</span></p>
@@ -3799,17 +3912,20 @@
             <div class="loading-step">Finding missing keywords…</div>
           </div>
 
-          <div class="tool-step form-section upload-section">
-            <label for="cvFileInput">Or upload your CV</label>
-            <div class="field-helper">PDF, DOCX or TXT. Avoid national insurance numbers, bank details, passport details, or other information not needed for a CV check.</div>
-            <div id="dropzone" class="dropzone">
-              <p><strong>Upload your CV</strong></p>
-              <p class="small">PDF, DOCX or TXT</p>
-              <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
-              <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
-              <div id="fileName" class="file-note">No file selected</div>
+          <details class="upload-details">
+            <summary>Prefer to upload a file?</summary>
+            <div class="tool-step form-section upload-section">
+              <label for="cvFileInput">Upload your CV instead</label>
+              <div class="field-helper">PDF, DOCX or TXT. Avoid national insurance numbers, bank details, passport details, or other information not needed for a CV check.</div>
+              <div id="dropzone" class="dropzone">
+                <p><strong>Upload your CV</strong></p>
+                <p class="small">PDF, DOCX or TXT</p>
+                <p><label for="cvFileInput" class="linkish">Choose a file</label></p>
+                <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+                <div id="fileName" class="file-note">No file selected</div>
+              </div>
             </div>
-          </div>
+          </details>
         </div>
 
         <div class="hidden" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -3931,6 +4047,24 @@
             <div class="diagnosis-item">
               <span class="diagnosis-label">Impact</span>
               <span id="resultImpactStatus" class="diagnosis-value" data-level="weak">Weak</span>
+            </div>
+          </div>
+
+          <div id="auditSummaryGrid" class="audit-summary-grid">
+            <div class="audit-summary-card">
+              <span>Keyword gaps</span>
+              <strong id="auditKeywordCount">0</strong>
+              <p id="auditKeywordCopy">Missing role language reduces apparent fit.</p>
+            </div>
+            <div class="audit-summary-card">
+              <span>Evidence strength</span>
+              <strong id="auditEvidenceStatus">Checking</strong>
+              <p id="auditEvidenceCopy">Recruiters look for measurable impact and clear scope.</p>
+            </div>
+            <div class="audit-summary-card">
+              <span>Best action</span>
+              <strong id="auditBestAction">Fix priorities</strong>
+              <p id="auditBestActionCopy">Start with the changes most likely to lift the score.</p>
             </div>
           </div>
 
@@ -4420,6 +4554,12 @@
     const resultExampleWhyWrap = document.getElementById("resultExampleWhyWrap");
     const atsReadabilitySummary = document.getElementById("atsReadabilitySummary");
     const lockedReportSections = document.getElementById("lockedReportSections");
+    const auditKeywordCount = document.getElementById("auditKeywordCount");
+    const auditKeywordCopy = document.getElementById("auditKeywordCopy");
+    const auditEvidenceStatus = document.getElementById("auditEvidenceStatus");
+    const auditEvidenceCopy = document.getElementById("auditEvidenceCopy");
+    const auditBestAction = document.getElementById("auditBestAction");
+    const auditBestActionCopy = document.getElementById("auditBestActionCopy");
     const resultScoreBreakdown = document.getElementById("resultScoreBreakdown");
     const resultPriorityPreview = document.getElementById("resultPriorityPreview");
     const resultKeywordImportance = document.getElementById("resultKeywordImportance");
@@ -4678,6 +4818,36 @@
       [resultsUpgradeCopy, proUnlockCopy].forEach(function(el) {
         if (el) el.textContent = copy;
       });
+    }
+
+    function updateAuditSummary(data, scoreNumber) {
+      const missingCount = (data.missingKeywords || []).length;
+      const matchedCount = (data.matchedKeywords || []).length;
+      const weakCount = (data.weakPoints || []).length;
+      const bestAction = (data.previewPriorityFixes && data.previewPriorityFixes[0]) || (data.priorityFixes && data.priorityFixes[0]) || data.nextStep || "Tailor the CV to this role";
+
+      if (auditKeywordCount) {
+        auditKeywordCount.textContent = missingCount ? String(missingCount) + " missing" : "No major gaps";
+      }
+      if (auditKeywordCopy) {
+        auditKeywordCopy.textContent = missingCount
+          ? "Add the most relevant terms naturally where your experience genuinely supports them."
+          : "Your keyword coverage looks comparatively strong for this role.";
+      }
+      if (auditEvidenceStatus) {
+        auditEvidenceStatus.textContent = weakCount >= 3 || scoreNumber < 55 ? "Needs stronger proof" : (matchedCount >= 5 ? "Clear enough to scan" : "Could be clearer");
+      }
+      if (auditEvidenceCopy) {
+        auditEvidenceCopy.textContent = weakCount
+          ? "Make responsibilities more specific with scale, outcomes, tools, customers or commercial impact."
+          : "Keep the strongest achievements easy to scan in the top half of the CV.";
+      }
+      if (auditBestAction) {
+        auditBestAction.textContent = bestAction.length > 72 ? bestAction.slice(0, 69) + "..." : bestAction;
+      }
+      if (auditBestActionCopy) {
+        auditBestActionCopy.textContent = "Do this before applying, then re-run the check to see whether the match improves.";
+      }
     }
 
     function openSupportModal() {
@@ -6517,6 +6687,7 @@ passwordLoginBtn.addEventListener("click", async function() {
         if (atsReadabilitySummary) {
           atsReadabilitySummary.textContent = "Keyword match: " + keywordStatus + ". Structure: " + structureStatus + ". Impact: " + impactStatus + ". The free preview shows the main scan signals; the full report expands this into detailed ATS, readability and role-fit checks.";
         }
+        updateAuditSummary(data, scoreNumber);
         updateUnlockCtaForResult(data, scoreNumber);
 
         const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
