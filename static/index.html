@@ -4267,6 +4267,7 @@
     let currentPlan = null;
     let currentResultData = null;
     let historyLoadedForUserId = null;
+    const PENDING_REPORT_DRAFT_KEY = "cvOptimiserPendingReportDraft";
 
     const optimiseBtn = document.getElementById("optimiseBtn");
     const resultsUpgradeBtn = document.getElementById("resultsUpgradeBtn");
@@ -4426,6 +4427,9 @@
       const explicitPlan = normalizeCurrentPlan(planData);
       const bodyState = getAccountStateFromBody();
 
+      if (data && data.fullReportUnlocked) {
+        return "signed_in_pro";
+      }
       if (explicitPlan === "pro") {
         return "signed_in_pro";
       }
@@ -4648,6 +4652,49 @@
       }
       if (resultsUpgradeBtn) {
         resultsUpgradeBtn.textContent = "Unlock my full CV report";
+      }
+    }
+
+    function savePendingReportDraft() {
+      try {
+        window.sessionStorage.setItem(PENDING_REPORT_DRAFT_KEY, JSON.stringify({
+          cvText: cvTextInput.value || "",
+          jobDescription: jobDescriptionInput.value || "",
+          hadFile: !!selectedFile,
+          savedAt: Date.now()
+        }));
+      } catch (error) {
+        console.warn("Could not save pending report draft:", error);
+      }
+    }
+
+    function restorePendingReportDraft() {
+      try {
+        const raw = window.sessionStorage.getItem(PENDING_REPORT_DRAFT_KEY);
+        if (!raw) return false;
+        const draft = JSON.parse(raw);
+        if (!draft || Date.now() - Number(draft.savedAt || 0) > 1000 * 60 * 60) {
+          window.sessionStorage.removeItem(PENDING_REPORT_DRAFT_KEY);
+          return false;
+        }
+        if (draft.cvText && !cvTextInput.value.trim()) {
+          cvTextInput.value = draft.cvText;
+        }
+        if (draft.jobDescription && !jobDescriptionInput.value.trim()) {
+          jobDescriptionInput.value = draft.jobDescription;
+        }
+        return !!draft.cvText;
+      } catch (error) {
+        console.warn("Could not restore pending report draft:", error);
+        return false;
+      }
+    }
+
+    function clearPendingReportDraft() {
+      try {
+        window.sessionStorage.removeItem(PENDING_REPORT_DRAFT_KEY);
+      } catch (error) {
+        console.warn("Could not clear pending report draft:", error);
       }
     }
 
@@ -5012,7 +5059,7 @@
       trackEvent("checkout_started", { checkout_plan: plan });
 
       try {
-        const requiresSignIn = plan === "pro_monthly";
+        const requiresSignIn = plan === "pro_monthly" || plan === "one_time";
 
         if (!sbClient && requiresSignIn) {
           status.textContent = "Auth is not configured.";
@@ -5029,8 +5076,9 @@
         }
 
         if (requiresSignIn && (!token || !session)) {
-          status.textContent = "Sign in to start Pro monthly.";
-          showCheckoutError("Sign in to start Pro monthly.");
+          const signInMessage = plan === "one_time" ? "Sign in to unlock your paid report." : "Sign in to start Pro monthly.";
+          status.textContent = signInMessage;
+          showCheckoutError(signInMessage);
           if (authCard) {
             authCard.scrollIntoView({ behavior: "smooth", block: "start" });
           }
@@ -5061,6 +5109,9 @@
         }
 
         if (data.url) {
+          if (plan === "one_time") {
+            savePendingReportDraft();
+          }
           window.location.href = data.url;
           return;
         }
@@ -5237,7 +5288,7 @@
       checkoutStatus.classList.remove("hidden");
       checkoutStatus.classList.remove("success", "error");
       checkoutStatus.classList.add("info");
-      checkoutStatus.textContent = "Payment received. Activating your Pro plan now.";
+      checkoutStatus.textContent = "Payment received. Activating your access now.";
 
       try {
         const token = await getSessionToken();
@@ -5279,6 +5330,20 @@
         lastPlanJson = "";
         historyLoadedForUserId = null;
         await refreshAuthUi();
+
+        if (confirmData.report_credit_granted) {
+          const restoredDraft = restorePendingReportDraft();
+          checkoutStatus.classList.remove("info", "error");
+          checkoutStatus.classList.add("success");
+          checkoutStatus.textContent = restoredDraft
+            ? "Your paid report is ready. Check your CV again now to generate the full report."
+            : "Your paid report is ready. Paste or upload your CV again to generate the full report.";
+          trackEvent("payment_success_seen", { checkout: checkout, checkout_plan: "one_time" });
+          setTimeout(function() {
+            clearCheckoutParamsFromUrl();
+          }, 1500);
+          return;
+        }
 
         if (getAccountStateFromBody().plan === "pro") {
           checkoutStatus.classList.remove("info", "error");
@@ -6242,6 +6307,11 @@ passwordLoginBtn.addEventListener("click", async function() {
         });
         if (!isCurrentlyPro) {
           trackEvent("free_result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
+        }
+
+        if (data.reportAccess === "one_time" || data.oneTimeReportConsumed) {
+          clearPendingReportDraft();
+          trackEvent("one_time_report_generated");
         }
 
         if (isAnonymousResult) {

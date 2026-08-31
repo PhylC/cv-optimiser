@@ -2221,6 +2221,98 @@ def get_active_subscription(user_id: str) -> Optional[dict[str, Any]]:
     return rows[0] if rows else None
 
 
+def stripe_id(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        return value.get("id")
+    object_id = getattr(value, "id", None)
+    return str(object_id) if object_id else str(value)
+
+
+def get_available_report_purchase(user_id: str) -> Optional[dict[str, Any]]:
+    result = (
+        require_supabase()
+        .table("report_purchases")
+        .select("id, stripe_checkout_session_id")
+        .eq("user_id", user_id)
+        .is_("consumed_at", "null")
+        .eq("status", "paid")
+        .order("created_at", desc=False)
+        .limit(1)
+        .execute()
+    )
+    rows = result.data or []
+    return rows[0] if rows else None
+
+
+def count_available_report_purchases(user_id: str) -> int:
+    result = (
+        require_supabase()
+        .table("report_purchases")
+        .select("id", count="exact")
+        .eq("user_id", user_id)
+        .is_("consumed_at", "null")
+        .eq("status", "paid")
+        .execute()
+    )
+    return result.count or 0
+
+
+def grant_report_purchase(
+    user_id: str,
+    email: Optional[str],
+    stripe_checkout_session_id: str,
+    stripe_customer_id: Optional[str],
+    stripe_payment_intent_id: Optional[str],
+) -> None:
+    existing = (
+        require_supabase()
+        .table("report_purchases")
+        .select("id")
+        .eq("stripe_checkout_session_id", stripe_checkout_session_id)
+        .limit(1)
+        .execute()
+    )
+    if existing.data:
+        return
+
+    try:
+        require_supabase().table("report_purchases").insert({
+            "user_id": user_id,
+            "email": email,
+            "stripe_checkout_session_id": stripe_checkout_session_id,
+            "stripe_customer_id": stripe_customer_id,
+            "stripe_payment_intent_id": stripe_payment_intent_id,
+            "status": "paid",
+        }).execute()
+    except Exception:
+        duplicate = (
+            require_supabase()
+            .table("report_purchases")
+            .select("id")
+            .eq("stripe_checkout_session_id", stripe_checkout_session_id)
+            .limit(1)
+            .execute()
+        )
+        if duplicate.data:
+            return
+        raise
+
+
+def consume_report_purchase(user_id: str) -> Optional[str]:
+    purchase = get_available_report_purchase(user_id)
+    if not purchase:
+        return None
+
+    require_supabase().table("report_purchases").update({
+        "consumed_at": current_utc().isoformat(),
+    }).eq("id", purchase["id"]).execute()
+    return coerce_string(purchase.get("stripe_checkout_session_id")) or None
+
+
 def get_user_plan(user: Optional[dict[str, Any]]) -> str:
     if not user:
         return "free"
@@ -2715,10 +2807,24 @@ def build_anonymous_result_preview(data: dict[str, Any]) -> dict[str, Any]:
 def get_plan_state(user_id: str) -> dict[str, Any]:
     active_subscription = get_active_subscription(user_id)
     if active_subscription:
-        return {"plan": "pro", "is_pro": True, "remaining_free_analyses_today": None}
+        report_credits = count_available_report_purchases(user_id)
+        return {
+            "plan": "pro",
+            "is_pro": True,
+            "report_credits": report_credits,
+            "has_report_credit": report_credits > 0,
+            "remaining_free_analyses_today": None,
+        }
     used_today = count_usage_today(user_id)
     remaining = max(0, FREE_ANALYSES_PER_DAY - used_today)
-    return {"plan": "free", "is_pro": False, "remaining_free_analyses_today": remaining}
+    report_credits = count_available_report_purchases(user_id)
+    return {
+        "plan": "free",
+        "is_pro": False,
+        "report_credits": report_credits,
+        "has_report_credit": report_credits > 0,
+        "remaining_free_analyses_today": remaining,
+    }
 
 
 def build_faq_json_ld() -> str:
@@ -7763,7 +7869,7 @@ def render_upgrade_page() -> str:
                 <li>Step-by-step improvement plan</li>
               </ul>
               <button class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Buy paid report</button>
-              <p class="upgrade-helper">No account needed for one-time checkout.</p>
+              <p class="upgrade-helper">Sign in first so the paid report can be attached to your account.</p>
             </div>
 
             <div id="proCard" class="upgrade-card">
@@ -7898,7 +8004,7 @@ def render_upgrade_page() -> str:
               button.disabled = true;
               button.textContent = "Opening checkout…";
 
-              const requiresSignIn = plan === "pro_monthly";
+              const requiresSignIn = plan === "pro_monthly" || plan === "one_time";
               const account = await refreshUpgradePageState();
               const token = account.token;
               if (account.plan === "pro") {{
@@ -7911,7 +8017,7 @@ def render_upgrade_page() -> str:
                 return;
               }}
               if (requiresSignIn && !account.signedIn) {{
-                showUpgradeInlineError("Please sign in to start Pro monthly.");
+                showUpgradeInlineError(plan === "one_time" ? "Please sign in to unlock a paid report." : "Please sign in to start Pro monthly.");
                 return;
               }}
 
@@ -8603,13 +8709,15 @@ def create_checkout_session(
     checkout_user_plan = "anonymous" if not user else get_user_plan(user)
     print("CHECKOUT_PLAN:", checkout_user_plan)
 
+    if not user:
+        detail = "Please sign in to unlock a paid report." if checkout_plan == "one_time" else "Please sign in to start Pro monthly."
+        raise HTTPException(status_code=401, detail=detail)
+
     if checkout_plan == "pro_monthly":
-        if not user:
-            raise HTTPException(status_code=401, detail="Please sign in to start Pro monthly.")
         upsert_profile(user["id"], user["email"])
         if active_subscription:
             raise HTTPException(status_code=400, detail="You are already on Pro.")
-    elif user:
+    else:
         upsert_profile(user["id"], user["email"])
         if active_subscription:
             raise HTTPException(status_code=400, detail="You already have Pro access.")
@@ -8641,7 +8749,7 @@ def create_checkout_session(
 
     session = require_stripe().checkout.Session.create(
         mode=mode,
-        success_url=f"{SITE_URL}/success?session_id={{CHECKOUT_SESSION_ID}}",
+        success_url=f"{SITE_URL}/?checkout=success&session_id={{CHECKOUT_SESSION_ID}}#tool",
         cancel_url=f"{SITE_URL}/cancel",
         line_items=[{"price": price_id, "quantity": 1}],
         customer_email=user["email"] if user and user.get("email") else None,
@@ -8741,12 +8849,41 @@ def confirm_checkout_session(
             if session_email and user["email"] and session_email.lower() != user["email"].lower():
                 raise ValueError(f"Checkout email mismatch: {session_email} vs {user['email']}")
 
+            metadata = checkout_session.get("metadata") or {}
+            checkout_plan = metadata.get("checkout_plan") if hasattr(metadata, "get") else None
+            checkout_mode = checkout_session.get("mode")
             customer = checkout_session.get("customer")
             subscription = checkout_session.get("subscription")
 
-            stripe_customer_id = customer.get("id") if isinstance(customer, dict) else customer
-            stripe_subscription_id = subscription.get("id") if isinstance(subscription, dict) else subscription
-            stripe_subscription_status = subscription.get("status") if isinstance(subscription, dict) else "active"
+            stripe_customer_id = stripe_id(customer)
+
+            if checkout_plan == "one_time" or checkout_mode == "payment":
+                grant_report_purchase(
+                    user_id=user["id"],
+                    email=user["email"],
+                    stripe_checkout_session_id=checkout_session.get("id") or session_id,
+                    stripe_customer_id=stripe_customer_id,
+                    stripe_payment_intent_id=stripe_id(checkout_session.get("payment_intent")),
+                )
+                report_credits = count_available_report_purchases(user["id"])
+                track_event(
+                    event_name="one_time_report_activated",
+                    user_id=user["id"],
+                    email=user["email"],
+                    metadata={
+                        "stripe_checkout_session_id": checkout_session.get("id") or session_id,
+                        "report_credits": report_credits,
+                    }
+                )
+                return {
+                    "ok": True,
+                    "plan": "free",
+                    "report_credit_granted": True,
+                    "report_credits": report_credits,
+                }
+
+            stripe_subscription_id = stripe_id(subscription)
+            stripe_subscription_status = subscription.get("status") if hasattr(subscription, "get") else getattr(subscription, "status", "active")
 
             if not stripe_subscription_id:
                 raise ValueError("No subscription found on this checkout session.")
@@ -8824,11 +8961,20 @@ async def stripe_webhook(request: Request) -> JSONResponse:
             f"PAYMENT_EVENT: checkout_completed mode={checkout_mode} "
             f"customer_email={customer_email or ''} session_id={session_id or ''}"
         )
-        user_id = metadata.get("user_id") if isinstance(metadata, dict) else getattr(session, "client_reference_id", None)
-        stripe_subscription_id = getattr(session, "subscription", None)
-        stripe_customer_id = str(getattr(session, "customer", None)) if getattr(session, "customer", None) else None
+        user_id = metadata.get("user_id") if hasattr(metadata, "get") else getattr(session, "client_reference_id", None)
+        checkout_plan = metadata.get("checkout_plan") if hasattr(metadata, "get") else None
+        stripe_subscription_id = stripe_id(getattr(session, "subscription", None))
+        stripe_customer_id = stripe_id(getattr(session, "customer", None))
 
-        if user_id and stripe_subscription_id:
+        if user_id and (checkout_plan == "one_time" or checkout_mode == "payment"):
+            grant_report_purchase(
+                user_id=user_id,
+                email=customer_email,
+                stripe_checkout_session_id=session_id,
+                stripe_customer_id=stripe_customer_id,
+                stripe_payment_intent_id=stripe_id(getattr(session, "payment_intent", None)),
+            )
+        elif user_id and stripe_subscription_id:
             save_subscription_for_user(
                 user_id=user_id,
                 stripe_customer_id=stripe_customer_id,
@@ -8932,26 +9078,37 @@ async def optimise(
         if user:
             upsert_profile(user["id"], user["email"])
             plan = get_plan_state(user["id"])
+            has_subscription_access = bool(plan["is_pro"])
+            has_one_time_report_credit = bool(plan.get("report_credits", 0) > 0)
+            should_generate_full_report = has_subscription_access or has_one_time_report_credit
             track_event(
                 event_name="optimise_started",
                 user_id=user["id"],
                 email=user["email"],
-                metadata={"is_pro": bool(plan["is_pro"])}
+                metadata={
+                    "is_pro": has_subscription_access,
+                    "has_one_time_report_credit": has_one_time_report_credit,
+                }
             )
             track_event(
                 event_name="cv_check_started",
                 user_id=user["id"],
                 email=user["email"],
-                metadata={"is_pro": bool(plan["is_pro"])}
+                metadata={
+                    "is_pro": has_subscription_access,
+                    "has_one_time_report_credit": has_one_time_report_credit,
+                }
             )
 
-            if not plan["is_pro"] and (plan["remaining_free_analyses_today"] or 0) <= 0:
+            if not should_generate_full_report and (plan["remaining_free_analyses_today"] or 0) <= 0:
                 return {
                     "error": "You’ve used your free analyses for today. Upgrade to Pro for unlimited CV checks.",
                     "code": "PAYWALL",
                     "source": "error",
                     "plan": plan,
                 }
+        else:
+            should_generate_full_report = False
 
         if not job_description or len(job_description) < 20:
             return {"error": "Please paste a fuller job description.", "source": "error"}
@@ -8974,8 +9131,8 @@ async def optimise(
 
         raw = require_openai().responses.create(
             model=OPENAI_MODEL,
-            input=build_prompt(job_description, cv_text, is_pro=bool(plan and plan["is_pro"])),
-            max_output_tokens=2200 if bool(plan and plan["is_pro"]) else 1300,
+            input=build_prompt(job_description, cv_text, is_pro=should_generate_full_report),
+            max_output_tokens=2200 if should_generate_full_report else 1300,
         ).output_text.strip()
 
         print("OPENAI RAW OUTPUT START")
@@ -8995,7 +9152,7 @@ async def optimise(
                     content={"error": "Model returned invalid JSON"}
                 )
 
-        data = normalize_analysis_data(data, is_pro=bool(plan and plan["is_pro"]))
+        data = normalize_analysis_data(data, is_pro=should_generate_full_report)
 
         payload = {
             "score": data.get("score", 0),
@@ -9023,13 +9180,24 @@ async def optimise(
         if user:
             save_usage_event(user["id"])
             save_analysis_history(user["id"], job_description, payload)
+            consumed_report_session_id = None
+            if should_generate_full_report and plan and not plan["is_pro"] and plan.get("report_credits", 0) > 0:
+                consumed_report_session_id = consume_report_purchase(user["id"])
+                payload["oneTimeReportConsumed"] = True
+                payload["consumedReportSessionId"] = consumed_report_session_id
+                payload["fullReportUnlocked"] = True
             payload["plan"] = get_plan_state(user["id"])
+            if should_generate_full_report:
+                payload["fullReportUnlocked"] = True
+                payload["reportAccess"] = "subscription" if bool(plan and plan["is_pro"]) else "one_time"
             track_event(
                 event_name="optimise_succeeded",
                 user_id=user["id"],
                 email=user["email"],
                 metadata={
                     "is_pro": bool(plan["is_pro"]),
+                    "report_access": payload.get("reportAccess", "free"),
+                    "one_time_report_consumed": bool(consumed_report_session_id),
                     "score": payload.get("score", 0),
                 }
             )
@@ -9039,6 +9207,7 @@ async def optimise(
                 email=user["email"],
                 metadata={
                     "is_pro": bool(plan["is_pro"]),
+                    "report_access": payload.get("reportAccess", "free"),
                     "score": payload.get("score", 0),
                 }
             )

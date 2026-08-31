@@ -38,6 +38,23 @@ create table if not exists analysis_history (
 
 create index if not exists analysis_history_user_created_idx on analysis_history(user_id, created_at desc);
 
+create table if not exists report_purchases (
+  id bigint generated always as identity primary key,
+  user_id uuid not null,
+  email text,
+  stripe_checkout_session_id text not null unique,
+  stripe_customer_id text,
+  stripe_payment_intent_id text,
+  status text not null default 'paid',
+  created_at timestamptz not null default now(),
+  consumed_at timestamptz
+);
+
+alter table report_purchases enable row level security;
+
+create index if not exists report_purchases_user_available_idx
+on report_purchases(user_id, consumed_at, created_at desc);
+
 create table if not exists analytics_events (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
