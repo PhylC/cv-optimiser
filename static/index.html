@@ -4661,10 +4661,104 @@
       }
     }
 
+    const ATTRIBUTION_STORAGE_KEY = "cv_optimiser_attribution";
+
+    function safeJsonParse(value) {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function getReferrerSource() {
+      if (!document.referrer) return "";
+      try {
+        const referrerUrl = new URL(document.referrer);
+        if (referrerUrl.hostname === window.location.hostname) return "";
+        return referrerUrl.hostname.replace(/^www\./, "");
+      } catch (err) {
+        return "";
+      }
+    }
+
+    function getCurrentAttribution() {
+      const params = new URLSearchParams(window.location.search);
+      const referrerSource = getReferrerSource();
+      const utmSource = params.get("utm_source") || "";
+      const source = utmSource || referrerSource || "direct";
+      return {
+        source,
+        medium: params.get("utm_medium") || "",
+        campaign: params.get("utm_campaign") || "",
+        term: params.get("utm_term") || "",
+        content: params.get("utm_content") || "",
+        referrer: document.referrer || "",
+        landing_path: window.location.pathname,
+        landing_query: window.location.search || "",
+        captured_at: new Date().toISOString()
+      };
+    }
+
+    function getStoredAttribution() {
+      try {
+        return safeJsonParse(window.localStorage.getItem(ATTRIBUTION_STORAGE_KEY)) || null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function setStoredAttribution(value) {
+      try {
+        window.localStorage.setItem(ATTRIBUTION_STORAGE_KEY, JSON.stringify(value));
+      } catch (err) {
+        // Attribution is useful, but never worth blocking the product flow.
+      }
+    }
+
+    function getAttributionMetadata() {
+      const current = getCurrentAttribution();
+      let firstTouch = getStoredAttribution();
+      const hasCampaignSignal = Boolean(
+        current.source !== "direct" ||
+        current.medium ||
+        current.campaign ||
+        current.term ||
+        current.content
+      );
+
+      if (!firstTouch || (firstTouch.source === "direct" && hasCampaignSignal)) {
+        firstTouch = current;
+        setStoredAttribution(firstTouch);
+      }
+
+      return {
+        source: firstTouch.source || current.source || "direct",
+        first_source: firstTouch.source || "direct",
+        first_medium: firstTouch.medium || "",
+        first_campaign: firstTouch.campaign || "",
+        first_term: firstTouch.term || "",
+        first_content: firstTouch.content || "",
+        first_landing_path: firstTouch.landing_path || "",
+        first_landing_query: firstTouch.landing_query || "",
+        first_referrer: firstTouch.referrer || "",
+        current_source: current.source || "direct",
+        current_medium: current.medium || "",
+        current_campaign: current.campaign || "",
+        current_path: window.location.pathname,
+        current_query: window.location.search || ""
+      };
+    }
+
     async function trackEvent(eventName, metadata = {}) {
       try {
+        const enrichedMetadata = {
+          ...getAttributionMetadata(),
+          ...(metadata || {})
+        };
+
         if (typeof window.gtag === "function") {
-          window.gtag("event", eventName, metadata || {});
+          window.gtag("event", eventName, enrichedMetadata);
         }
 
         const token = await getSessionToken();
@@ -4681,7 +4775,7 @@
           headers,
           body: JSON.stringify({
             event_name: eventName,
-            metadata
+            metadata: enrichedMetadata
           })
         });
       } catch (err) {

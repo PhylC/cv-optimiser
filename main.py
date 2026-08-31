@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+import secrets
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -19,6 +20,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pypdf import PdfReader
+from starlette.middleware.sessions import SessionMiddleware
 import stripe
 from supabase import Client, create_client
 
@@ -192,6 +194,30 @@ STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "").strip()
 STRIPE_PRICE_ONE_TIME = os.getenv("STRIPE_PRICE_ONE_TIME", "").strip()
 STRIPE_PRICE_PRO_MONTHLY = os.getenv("STRIPE_PRICE_PRO_MONTHLY", os.getenv("STRIPE_PRICE_ID", "")).strip()
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "").strip()
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "").strip()
+ADMIN_SESSION_SECRET = (
+    os.getenv("ADMIN_SESSION_SECRET")
+    or os.getenv("SECRET_KEY")
+    or SUPABASE_SERVICE_ROLE_KEY
+    or OPENAI_API_KEY
+    or "local-dev-admin-session-secret"
+).strip()
+ADMIN_COOKIE_SECURE_SETTING = os.getenv("ADMIN_COOKIE_SECURE", "auto").strip().lower()
+ADMIN_COOKIE_SECURE = (
+    ADMIN_COOKIE_SECURE_SETTING in {"1", "true", "yes"}
+    or (
+        ADMIN_COOKIE_SECURE_SETTING == "auto"
+        and (APP_BASE_URL.startswith("https://") or os.getenv("RENDER", "").lower() == "true")
+    )
+)
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=ADMIN_SESSION_SECRET,
+    same_site="lax",
+    https_only=ADMIN_COOKIE_SECURE,
+    max_age=60 * 60 * 12,
+)
 
 if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
@@ -1951,6 +1977,131 @@ def require_stripe():
         raise HTTPException(status_code=500, detail="Stripe not configured.")
     stripe.api_key = STRIPE_SECRET_KEY
     return stripe
+
+
+def is_admin_authenticated(request: Request) -> bool:
+    return bool(request.session.get("admin_authenticated"))
+
+
+def require_admin(request: Request) -> None:
+    if not is_admin_authenticated(request):
+        raise HTTPException(status_code=401, detail="Admin authentication required.")
+
+
+def render_admin_login(error: str = "") -> str:
+    error_html = (
+        f"<p class='error'>{html.escape(error)}</p>"
+        if error
+        else ""
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Admin Login | CV Optimiser</title>
+        <meta name="robots" content="noindex,nofollow">
+        <style>
+          body {{
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            font-family: Inter, Arial, sans-serif;
+            background: #07142D;
+            color: #E8EEFC;
+          }}
+          main {{
+            width: min(420px, calc(100vw - 36px));
+            border: 1px solid rgba(80, 103, 146, 0.28);
+            border-radius: 18px;
+            background: rgba(10, 20, 40, 0.86);
+            padding: 24px;
+          }}
+          h1 {{
+            margin: 0 0 8px;
+            font-size: 28px;
+          }}
+          p {{
+            margin: 0 0 18px;
+            color: #B7C6E6;
+            line-height: 1.55;
+          }}
+          label {{
+            display: block;
+            margin-bottom: 8px;
+            color: #9FB0D4;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+          }}
+          input {{
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 46px;
+            border-radius: 12px;
+            border: 1px solid rgba(160, 180, 230, 0.24);
+            background: rgba(3, 10, 24, 0.72);
+            color: #EEF3FF;
+            padding: 10px 12px;
+            font-size: 16px;
+          }}
+          button {{
+            width: 100%;
+            min-height: 46px;
+            margin-top: 14px;
+            border: 0;
+            border-radius: 12px;
+            background: #38D996;
+            color: #041423;
+            cursor: pointer;
+            font-weight: 900;
+          }}
+          .error {{
+            border-radius: 12px;
+            background: rgba(58, 18, 29, 0.72);
+            border: 1px solid rgba(192, 102, 112, 0.34);
+            color: #FFD8DD;
+            padding: 12px;
+          }}
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>Analytics Login</h1>
+          <p>Enter the admin password to view internal conversion data.</p>
+          {error_html}
+          <form method="post" action="/admin-analytics/login">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" autofocus>
+            <button type="submit">Open dashboard</button>
+          </form>
+        </main>
+      </body>
+    </html>
+    """
+
+
+def mask_email(email: Optional[str]) -> str:
+    clean = coerce_string(email)
+    if not clean or "@" not in clean:
+        return ""
+    name, domain = clean.split("@", 1)
+    if not name or not domain:
+        return ""
+    visible = name[:1]
+    return f"{visible}***@{domain}"
+
+
+def sanitize_analytics_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    sanitized = []
+    for item in items:
+        row = dict(item)
+        row["email"] = mask_email(row.get("email"))
+        sanitized.append(row)
+    return sanitized
 
 
 def parse_bearer_token(authorization: Optional[str]) -> str:
@@ -4063,6 +4214,98 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
     """
 
 
+def build_attribution_script() -> str:
+    return """
+        <script>
+          (function() {
+            if (window.location.pathname.indexOf("/admin") === 0) return;
+            var storageKey = "cv_optimiser_attribution";
+
+            function parseStored(value) {
+              try { return JSON.parse(value); } catch (error) { return null; }
+            }
+
+            function referrerSource() {
+              if (!document.referrer) return "";
+              try {
+                var referrerUrl = new URL(document.referrer);
+                if (referrerUrl.hostname === window.location.hostname) return "";
+                return referrerUrl.hostname.replace(/^www\\./, "");
+              } catch (error) {
+                return "";
+              }
+            }
+
+            function currentAttribution() {
+              var params = new URLSearchParams(window.location.search);
+              var source = params.get("utm_source") || referrerSource() || "direct";
+              return {
+                source: source,
+                medium: params.get("utm_medium") || "",
+                campaign: params.get("utm_campaign") || "",
+                term: params.get("utm_term") || "",
+                content: params.get("utm_content") || "",
+                referrer: document.referrer || "",
+                landing_path: window.location.pathname,
+                landing_query: window.location.search || "",
+                captured_at: new Date().toISOString()
+              };
+            }
+
+            function storedAttribution() {
+              try { return parseStored(window.localStorage.getItem(storageKey)); } catch (error) { return null; }
+            }
+
+            function saveAttribution(value) {
+              try { window.localStorage.setItem(storageKey, JSON.stringify(value)); } catch (error) {}
+            }
+
+            function metadata() {
+              var current = currentAttribution();
+              var first = storedAttribution();
+              var hasCampaignSignal = Boolean(
+                current.source !== "direct" ||
+                current.medium ||
+                current.campaign ||
+                current.term ||
+                current.content
+              );
+              if (!first || (first.source === "direct" && hasCampaignSignal)) {
+                first = current;
+                saveAttribution(first);
+              }
+              return {
+                source: first.source || current.source || "direct",
+                first_source: first.source || "direct",
+                first_medium: first.medium || "",
+                first_campaign: first.campaign || "",
+                first_term: first.term || "",
+                first_content: first.content || "",
+                first_landing_path: first.landing_path || "",
+                first_landing_query: first.landing_query || "",
+                first_referrer: first.referrer || "",
+                current_source: current.source || "direct",
+                current_medium: current.medium || "",
+                current_campaign: current.campaign || "",
+                current_path: window.location.pathname,
+                current_query: window.location.search || "",
+                page_type: "content"
+              };
+            }
+
+            window.CV_OPTIMISER_ATTRIBUTION = metadata;
+            window.addEventListener("load", function() {
+              fetch("/api/track", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ event_name: "content_page_view", metadata: metadata() })
+              }).catch(function() {});
+            });
+          })();
+        </script>
+    """
+
+
 def build_footer_assets_head() -> str:
     return (
         '<link rel="stylesheet" href="/static/global-footer.css">'
@@ -4070,6 +4313,7 @@ def build_footer_assets_head() -> str:
         f"<script>window.CV_OPTIMISER_SUPABASE_URL = {json.dumps(SUPABASE_URL)};"
         f"window.CV_OPTIMISER_SUPABASE_ANON_KEY = {json.dumps(SUPABASE_ANON_KEY)};</script>"
         '<script src="/static/global-account.js"></script>'
+        + build_attribution_script()
     )
 
 
@@ -8622,6 +8866,8 @@ async def api_track(request: Request) -> dict[str, Any]:
         body = await request.json()
         event_name = (body.get("event_name") or "").strip()
         metadata = body.get("metadata") or {}
+        if not isinstance(metadata, dict):
+            metadata = {}
 
         if not event_name:
             return {"error": "Missing event_name"}
@@ -8653,8 +8899,28 @@ async def api_track(request: Request) -> dict[str, Any]:
         return {"error": "tracking_unavailable"}
 
 
+@app.post("/admin-analytics/login", response_class=HTMLResponse)
+async def admin_analytics_login(request: Request, password: str = Form("")) -> Response:
+    if not ADMIN_PASSWORD:
+        return HTMLResponse(
+            render_admin_login("ADMIN_PASSWORD is not configured yet."),
+            status_code=503,
+        )
+    if not secrets.compare_digest(password, ADMIN_PASSWORD):
+        return HTMLResponse(render_admin_login("That password was not recognised."), status_code=401)
+    request.session["admin_authenticated"] = True
+    return RedirectResponse(url="/admin-analytics", status_code=303)
+
+
+@app.post("/admin-analytics/logout")
+async def admin_analytics_logout(request: Request) -> Response:
+    request.session.pop("admin_authenticated", None)
+    return RedirectResponse(url="/admin-analytics", status_code=303)
+
+
 @app.get("/api/admin/analytics")
-def admin_analytics(limit: int = 250, days: int = 30) -> dict[str, Any]:
+def admin_analytics(request: Request, limit: int = 250, days: int = 30) -> dict[str, Any]:
+    require_admin(request)
     try:
         limit = max(20, min(limit, 1000))
         days = max(1, min(days, 365))
@@ -8673,7 +8939,7 @@ def admin_analytics(limit: int = 250, days: int = 30) -> dict[str, Any]:
             "window_days": days,
             "limit": limit,
             "summary": build_analytics_summary(items),
-            "items": items,
+            "items": sanitize_analytics_items(items),
         }
     except Exception as e:
         print("ADMIN ANALYTICS ERROR:", repr(e))
@@ -8681,7 +8947,9 @@ def admin_analytics(limit: int = 250, days: int = 30) -> dict[str, Any]:
 
 
 @app.get("/admin-analytics", response_class=HTMLResponse)
-def admin_analytics_page() -> str:
+def admin_analytics_page(request: Request) -> str:
+    if not is_admin_authenticated(request):
+        return render_admin_login()
     return f"""
     <!doctype html>
     <html lang="en">
@@ -8727,6 +8995,9 @@ def admin_analytics_page() -> str:
             gap: 10px;
             flex-wrap: wrap;
           }}
+          .logout-form {{
+            margin: 0;
+          }}
           select,
           button {{
             min-height: 40px;
@@ -8739,6 +9010,9 @@ def admin_analytics_page() -> str:
           }}
           button {{
             cursor: pointer;
+          }}
+          .secondary-button {{
+            background: rgba(10, 20, 40, 0.82);
           }}
           .grid {{
             display: grid;
@@ -8873,6 +9147,9 @@ def admin_analytics_page() -> str:
                 <option value="90">Last 90 days</option>
               </select>
               <button id="refreshBtn" type="button">Refresh</button>
+              <form class="logout-form" method="post" action="/admin-analytics/logout">
+                <button class="secondary-button" type="submit">Logout</button>
+              </form>
             </div>
           </div>
 
@@ -8893,6 +9170,10 @@ def admin_analytics_page() -> str:
                   <h2>Checkout Split</h2>
                   <div id="checkoutCounts" class="count-list"></div>
                 </div>
+                <div class="panel">
+                  <h2>Traffic Sources</h2>
+                  <div id="sourceCounts" class="count-list"></div>
+                </div>
               </div>
             </div>
             <div class="panel recent-events">
@@ -8908,6 +9189,7 @@ def admin_analytics_page() -> str:
           const funnelTable = document.getElementById("funnelTable");
           const eventCounts = document.getElementById("eventCounts");
           const checkoutCounts = document.getElementById("checkoutCounts");
+          const sourceCounts = document.getElementById("sourceCounts");
           const recentEvents = document.getElementById("recentEvents");
           const windowSelect = document.getElementById("windowSelect");
           const refreshBtn = document.getElementById("refreshBtn");
@@ -8968,6 +9250,7 @@ def admin_analytics_page() -> str:
 
             renderCountList(eventCounts, summary.counts || {{}});
             renderCountList(checkoutCounts, summary.checkout_counts || {{}});
+            renderCountList(sourceCounts, summary.source_counts || {{}});
 
             recentEvents.innerHTML = "<table><thead><tr><th>Time</th><th>Event</th><th>Email</th><th>Metadata</th></tr></thead><tbody>" +
               (data.items || []).slice(0, 40).map((item) => (
