@@ -8193,6 +8193,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             background: #FFFFFF !important;
             border: 1px solid #D8E1EF !important;
             border-radius: 18px !important;
+            padding: 24px !important;
             color: #101B33 !important;
             box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
           }}
@@ -8256,11 +8257,14 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               flex: 0 0 auto !important;
               max-width: 96px !important;
             }}
+            .page.example-report-page > .hero-card,
+            .page.seo-page.example-report-page > .card,
+            .page.content-page.seo-page.example-report-page > .card,
+            .page.example-report-page .report-grid > div > .card,
             .example-report-page .hero-card,
-            .example-report-page .report-grid > div > .card,
             .example-report-page .card {{
               width: 100% !important;
-              padding: 18px 14px !important;
+              padding: 22px !important;
               border: 1px solid #D8E1EF !important;
               border-radius: 18px !important;
               background: #FFFFFF !important;
@@ -8268,7 +8272,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             }}
             .example-report-page .report-grid > div > .card:first-child {{
               border-top: 1px solid #D8E1EF !important;
-              padding-top: 18px !important;
+              padding-top: 22px !important;
             }}
             .example-report-page .score-block {{
               padding: 16px !important;
