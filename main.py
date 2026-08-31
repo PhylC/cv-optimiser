@@ -507,7 +507,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "title": "Pricing | CV Optimiser",
         "description": "See CV Optimiser pricing options for free checks, paid reports and Pro access.",
         "h1": "Pricing",
-        "intro": "Free checks help you review your CV match. Paid reports and Pro access unlock fuller guidance before you apply.",
+        "intro": "Start with a free CV check, unlock one detailed report, or use Pro when you are tailoring several UK applications.",
         "sections": [
             {
                 "title": "Free check",
@@ -521,22 +521,22 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "title": "Paid report",
-                "copy": "Unlock fuller report details for one CV result based on the existing product logic.",
+                "copy": "Unlock the full report for one CV result when you are applying for an important role.",
                 "bullets": [
-                    "More detailed improvement suggestions",
-                    "Keyword gaps and role-match guidance",
-                    "Rewritten examples and priority fixes where available",
-                    "One-time report access currently shown as £7.99",
+                    "£7.99 one-time payment",
+                    "UK recruiter verdict and main shortlisting risk",
+                    "First-page diagnosis, keyword gaps and section rewrite plan",
+                    "Line-by-line fixes, rewritten examples and exportable checklist",
                 ],
             },
             {
                 "title": "Pro access",
                 "copy": "Pro access is for users who want ongoing checks and full reports while actively preparing applications.",
                 "bullets": [
-                    "Ongoing CV checks",
+                    "£9.99/month",
                     "Full reports included with your plan",
-                    "Saved results where account history is available",
-                    "Pro access currently shown as £9.99/month",
+                    "Ongoing CV checks across multiple jobs",
+                    "Saved results, downloads and copied checklists where account history is available",
                 ],
             },
             {
@@ -11717,6 +11717,323 @@ def render_support_page(slug: str, page: dict[str, Any]) -> str:
     """
 
 
+def render_pricing_page() -> str:
+    page_url = canonical_url("/pricing")
+    plans = [
+        {
+            "label": "Start here",
+            "name": "Free check",
+            "price": "Free",
+            "copy": "A quick way to see whether your CV matches a real job description before you spend more time editing.",
+            "bullets": [
+                "Role-fit score",
+                "Missing keyword summary",
+                "Priority fixes",
+                "No signup needed for your first check",
+            ],
+            "cta": "Check my CV",
+            "href": "/#tool",
+            "featured": False,
+        },
+        {
+            "label": "Best for one role",
+            "name": "Paid report",
+            "price": "£7.99",
+            "copy": "Unlock the full report for one CV result when a specific application matters.",
+            "bullets": [
+                "UK recruiter verdict and shortlisting risk",
+                "First-page diagnosis",
+                "Section rewrite plan",
+                "Line-by-line fixes and exportable checklist",
+            ],
+            "cta": "Unlock full report",
+            "href": "/upgrade",
+            "featured": True,
+        },
+        {
+            "label": "Best for active searching",
+            "name": "Pro access",
+            "price": "£9.99/month",
+            "copy": "For users tailoring multiple UK applications and checking several versions of their CV.",
+            "bullets": [
+                "Ongoing CV checks",
+                "Full Pro reports included",
+                "Saved results where account history is available",
+                "Downloads and copied checklists",
+            ],
+            "cta": "Go Pro",
+            "href": "/upgrade",
+            "featured": False,
+        },
+    ]
+    cards_html = "".join(
+        f"""
+        <article class="pricing-card{' pricing-card-featured' if plan['featured'] else ''}">
+          <p class="pricing-label">{html.escape(plan['label'])}</p>
+          <h2>{html.escape(plan['name'])}</h2>
+          <div class="pricing-price">{html.escape(plan['price'])}</div>
+          <p class="pricing-copy">{html.escape(plan['copy'])}</p>
+          <ul class="pricing-list">
+            {''.join(f"<li>{html.escape(item)}</li>" for item in plan['bullets'])}
+          </ul>
+          <a href="{html.escape(plan['href'])}" class="pricing-cta{' pricing-cta-secondary' if not plan['featured'] else ''}">{html.escape(plan['cta'])}</a>
+        </article>
+        """
+        for plan in plans
+    )
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Pricing | CV Optimiser</title>
+        <meta name="description" content="See CV Optimiser pricing options for free checks, paid reports and Pro access.">
+        {canonical_link_tag("/pricing")}
+        {google_tag()}
+        <meta property="og:title" content="Pricing | CV Optimiser">
+        <meta property="og:description" content="Start with a free CV check, unlock one detailed report, or use Pro when you are tailoring several UK applications.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Pricing | CV Optimiser">
+        <meta name="twitter:description" content="Start with a free CV check, unlock one detailed report, or use Pro when you are tailoring several UK applications.">
+        {build_footer_assets_head()}
+        <style>
+          html,
+          body {{
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+          }}
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              linear-gradient(180deg, rgba(245, 248, 255, 0.07), transparent 360px),
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.16), transparent 28%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 26%),
+              #08111F;
+            color: #E8EEFC;
+          }}
+          .page {{
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+            box-sizing: border-box;
+          }}
+{build_site_header_css()}
+{build_typography_css()}
+{build_compliance_notice_css()}
+          .pricing-hero {{
+            display: grid;
+            gap: 18px;
+            margin: 30px 0 28px;
+            max-width: 840px;
+          }}
+          .pricing-hero p {{
+            max-width: 720px;
+          }}
+          .pricing-choice-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+          }}
+          .pricing-choice-row span {{
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(199, 210, 254, 0.28);
+            background: rgba(15, 28, 50, 0.48);
+            color: #E8EEFC;
+            font-size: 13px;
+            font-weight: 800;
+          }}
+          .pricing-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            align-items: stretch;
+          }}
+          .pricing-card {{
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            padding: 26px 24px 24px;
+            border: 1px solid #D8E1EF;
+            border-radius: 24px;
+            background: #FFFFFF;
+            color: #14213D;
+            box-shadow: 0 24px 60px rgba(3, 9, 23, 0.20);
+          }}
+          .pricing-card::before {{
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, #5B78FF, #22C55E);
+          }}
+          .pricing-card-featured {{
+            border-color: #B9C7FF;
+            box-shadow: 0 28px 70px rgba(35, 64, 180, 0.26);
+          }}
+          .pricing-label {{
+            margin: 0 0 10px;
+            color: #3758D8;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }}
+          .pricing-card h2 {{
+            margin: 0;
+            color: #101B33;
+            font-size: 24px;
+            line-height: 1.16;
+          }}
+          .pricing-price {{
+            margin: 12px 0 14px;
+            color: #101B33;
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 850;
+          }}
+          .pricing-copy {{
+            margin: 0;
+            color: #334155;
+            font-size: 15px;
+            line-height: 1.58;
+          }}
+          .pricing-list {{
+            display: grid;
+            gap: 10px;
+            margin: 20px 0 0;
+            padding: 0;
+            list-style: none;
+          }}
+          .pricing-list li {{
+            position: relative;
+            margin: 0;
+            padding-left: 24px;
+            color: #334155;
+            font-size: 15px;
+            line-height: 1.5;
+          }}
+          .pricing-list li::before {{
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #059669;
+            font-weight: 900;
+          }}
+          .pricing-cta {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            margin-top: auto;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 850;
+            text-decoration: none;
+            box-sizing: border-box;
+          }}
+          .pricing-copy + .pricing-list {{
+            margin-bottom: 22px;
+          }}
+          .pricing-cta-secondary {{
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            color: #1E3A8A;
+          }}
+          .pricing-footnote {{
+            margin: 28px 0 44px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            border: 1px solid rgba(199, 210, 254, 0.38);
+            background: rgba(15, 28, 50, 0.62);
+          }}
+          .pricing-footnote p {{
+            color: #C7D4F1;
+            font-size: 14px;
+            line-height: 1.6;
+          }}
+          @media (max-width: 900px) {{
+            .pricing-grid {{
+              grid-template-columns: 1fr;
+            }}
+          }}
+          @media (max-width: 768px) {{
+            .page {{
+              padding: 16px;
+            }}
+            .pricing-hero {{
+              gap: 16px;
+              margin: 24px 0 22px;
+            }}
+            .pricing-choice-row span {{
+              width: 100%;
+              box-sizing: border-box;
+              justify-content: center;
+            }}
+            .pricing-card {{
+              padding: 24px 22px;
+              border-radius: 22px;
+            }}
+            .pricing-card h2 {{
+              font-size: 23px;
+            }}
+            .pricing-price {{
+              font-size: 32px;
+            }}
+            .pricing-note,
+            .pricing-footnote {{
+              border-radius: 18px;
+            }}
+          }}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page">
+          {build_site_header("upgrade")}
+          <section class="pricing-hero">
+            <div>
+              <h1>Pricing</h1>
+              <p>Start with a free CV check, unlock one detailed report, or use Pro when you are tailoring several UK applications.</p>
+              <div class="pricing-choice-row" aria-label="Pricing summary">
+                <span>Free check</span>
+                <span>Paid report £7.99</span>
+                <span>Pro £9.99/month</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="pricing-grid" aria-label="CV Optimiser pricing plans">
+            {cards_html}
+          </section>
+
+          <section class="pricing-footnote">
+            <p>CV Optimiser provides AI-assisted CV checks and practical suggestions. It does not guarantee interviews, job offers, ATS acceptance, or employer responses. Results are guidance only and should be reviewed before you apply.</p>
+          </section>
+
+          {build_site_footer()}
+        </div>
+      </body>
+    </html>
+    """
+
+
 def render_upgrade_page() -> str:
     page_url = canonical_url("/upgrade")
     return f"""
@@ -12541,7 +12858,7 @@ def features_page() -> str:
 
 @app.get("/pricing", response_class=HTMLResponse)
 def pricing_page() -> str:
-    return render_support_page("pricing", SUPPORT_PAGES["pricing"])
+    return render_pricing_page()
 
 
 @app.get("/contact", response_class=HTMLResponse)
