@@ -395,20 +395,27 @@
     line-height: 1.2;
   }
 
-  html.embed-tool-mode.compact-tool-mode .tool-embed-title {
-    display: block;
-  }
-
-  html.embed-tool-mode.compact-tool-mode .tool-hero-title {
-    display: none;
-  }
-
-  html.embed-tool-mode.compact-tool-mode .tool-hero-support {
+  html.embed-tool-mode.compact-tool-mode .tool-embed-title,
+  html.embed-tool-mode.compact-tool-mode .tool-hero-title,
+  html.embed-tool-mode.compact-tool-mode .tool-hero-support,
+  html.embed-tool-mode.compact-tool-mode #mainToolCard::before,
+  html.embed-tool-mode.compact-tool-mode #mainToolCard > .compliance-notice,
+  html.embed-tool-mode.compact-tool-mode #mainToolCard > .conversion-trust-row,
+  html.embed-tool-mode.compact-tool-mode #mainToolCard > .journey-preview-strip,
+  html.embed-tool-mode.compact-tool-mode #mainToolCard > .upload-intro {
     display: none;
   }
 
   html.embed-tool-mode.compact-tool-mode #mainToolCard {
-    padding-top: 20px;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html.embed-tool-mode.compact-tool-mode .tool-form {
+    margin-top: 0;
   }
 
   .main-column {
