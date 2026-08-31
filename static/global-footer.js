@@ -14,6 +14,11 @@ function renderFooter() {
           <a href="/cv-score-checker">CV Score Checker</a>
           <a href="/cv-keyword-optimiser">CV Keyword Optimiser</a>
           <a href="/job-description-cv-match">Job Description CV Match</a>
+          <a href="/graduate-cv-checker">Graduate CV Checker</a>
+          <a href="/sales-cv-checker">Sales CV Checker</a>
+          <a href="/project-manager-cv-checker">Project Manager CV Checker</a>
+          <a href="/retail-manager-cv-checker">Retail Manager CV Checker</a>
+          <a href="/nhs-admin-cv-checker">NHS Admin CV Checker</a>
         </div>
         <div class="site-footer-links-group">
           <div class="site-footer-title">Resources</div>
@@ -22,6 +27,7 @@ function renderFooter() {
           <a href="/sales-cv-example-report">Sales CV Example</a>
           <a href="/account-manager-cv-example-report">Account Manager Example</a>
           <a href="/project-manager-cv-example-report">Project Manager Example</a>
+          <a href="/retail-manager-cv-example-report">Retail Manager Example</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
           <a href="/cv-optimiser-vs-jobscan">CV Optimiser vs Jobscan</a>

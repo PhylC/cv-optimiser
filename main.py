@@ -823,6 +823,68 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             ("/best-cv-format-for-ats", "Best CV format for ATS"),
         ],
     },
+    "retail-manager-cv-example-report": {
+        "title": "Retail Manager CV Example Report | CV Optimiser",
+        "description": "See a retail manager CV example report with store KPI, team leadership, stock control, customer experience and commercial performance feedback.",
+        "h1": "Retail manager CV example report",
+        "intro": "See how CV Optimiser reviews a retail manager CV for store performance, team leadership, standards and customer experience.",
+        "role_label": "Retail Store Manager",
+        "cv_snippet": "with experience leading shop-floor teams, supporting store standards and helping customers in a busy retail environment.",
+        "job_snippet": "We are looking for a retail manager with team leadership, KPI ownership, rota planning, stock control, merchandising, customer experience and store performance experience.",
+        "score": "Role-fit score: 62/100",
+        "score_label": "Strong retail background, but management evidence needs more proof",
+        "score_copy": "The CV shows useful retail experience, but team size, KPI ownership, stock control and measurable store performance need to be clearer.",
+        "recruiter_verdict": {
+            "shortlist_likelihood": "Possible",
+            "main_concern": "A recruiter may see retail experience, but not enough evidence of store leadership scope, KPI performance or operational control.",
+            "fix_first": "Rewrite the profile and recent retail bullets around team leadership, KPIs, standards and measurable store outcomes.",
+        },
+        "keywords": ["KPIs", "team leadership", "rota planning", "stock control", "merchandising", "customer experience", "store standards"],
+        "unclear": [
+            "Store KPI ownership is not visible enough.",
+            "Team leadership is mentioned but team size and scope are unclear.",
+            "Stock control and merchandising evidence needs stronger detail.",
+            "Customer experience needs clearer examples of service standards or complaints handling.",
+        ],
+        "fixes": [
+            ("Show management scope", "Add team size, shift responsibility, training or supervision evidence where truthful.", "Profile and recent retail manager role bullets."),
+            ("Make KPIs specific", "Include sales, conversion, basket value, stock accuracy, shrinkage or service scores where available.", "Achievements under the most recent retail role."),
+            ("Strengthen operational evidence", "Name rota planning, stock control, merchandising and store standards if they match your experience.", "Key skills and operations-focused bullets."),
+        ],
+        "weak_bullet": "Responsible for running shifts and helping the team meet targets.",
+        "strong_bullet": "Led daily store shifts, coordinating rota cover, shop-floor standards and team priorities to support KPI delivery and a consistent customer experience.",
+        "rewrite_examples": [
+            {
+                "before": "Responsible for running shifts and helping the team meet targets.",
+                "after": "Led daily store shifts, coordinating rota cover, shop-floor standards and team priorities to support KPI delivery and a consistent customer experience.",
+                "why_better": "It shows leadership, operational control and KPI relevance rather than a general duty.",
+                "where_to_use": "Most recent retail manager role bullet.",
+                "strengthens": "Team leadership, rota planning, store standards and KPIs.",
+            },
+            {
+                "before": "Dealt with stock and customer issues.",
+                "after": "Managed stock checks, merchandising standards and customer escalations to keep the shop floor accurate, presentable and service-focused.",
+                "why_better": "It names the operational areas and explains the store-level result.",
+                "where_to_use": "Operations or customer service bullet.",
+                "strengthens": "Stock control, merchandising and customer experience.",
+            },
+        ],
+        "ats_checks": [
+            "Retail management keywords should be tied to real store examples, not left as a generic skills list.",
+            "KPI and team leadership evidence should appear near the top of the CV.",
+            "Operational terms such as stock control, merchandising and rota planning should be included where truthful.",
+        ],
+        "action_plan": [
+            "Rewrite the profile around retail management scope, team leadership and store performance.",
+            "Add truthful KPI, team size, stock or customer service evidence to recent bullets.",
+            "Move the most relevant retail manager keywords into the skills and experience sections.",
+        ],
+        "related": [
+            ("/retail-manager-cv-checker", "Retail manager CV checker"),
+            ("/retail-manager-cv-example", "Retail manager CV example"),
+            ("/cv-checker-for-management-jobs", "CV checker for management jobs"),
+        ],
+    },
     "graduate-cv-example-report": {
         "title": "Graduate CV Example Report | CV Optimiser",
         "description": "See a graduate CV example report with education, placement, project, internship and transferable skill feedback.",
@@ -1804,6 +1866,18 @@ ROLE_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "keywords": ["delivery", "stakeholders", "risk", "budget", "dependencies", "governance", "outcomes"],
         "example_report": ("/project-manager-cv-example-report", "Project manager CV example report"),
         "cta_support": "Check whether your project manager CV proves delivery, stakeholder control, risk management and outcomes.",
+    },
+    "retail-manager-cv-checker": {
+        "role": "retail manager",
+        "title": "Retail Manager CV Checker | CV Optimiser",
+        "meta_description": "Check your retail manager CV for store KPIs, team leadership, stock control, merchandising, rota planning, customer experience and commercial performance.",
+        "h1": "Retail manager CV checker",
+        "signals": ["store KPIs and commercial performance", "team leadership, training and supervision", "stock control, standards and merchandising", "customer experience, complaints and service recovery"],
+        "mistakes": ["listing store duties without KPIs", "not showing team size or leadership scope", "missing stock, standards or customer experience evidence"],
+        "keywords": ["KPIs", "sales performance", "team leadership", "stock control", "merchandising", "rota planning", "customer experience"],
+        "example_report": ("/retail-manager-cv-example-report", "Retail manager CV example report"),
+        "search_terms": ["retail manager CV checker", "retail manager CV review UK", "store manager CV keywords"],
+        "cta_support": "Check whether your retail manager CV proves store performance, team leadership, standards and customer experience.",
     },
     "graduate-cv-checker": {
         "role": "graduate",
@@ -3235,6 +3309,7 @@ ROLE_ANALYTICS_LABELS = {
     "/sales-cv-checker": "Sales CV checker",
     "/account-manager-cv-checker": "Account manager CV checker",
     "/project-manager-cv-checker": "Project manager CV checker",
+    "/retail-manager-cv-checker": "Retail manager CV checker",
     "/admin-cv-checker": "Admin CV checker",
     "/career-change-cv-checker": "Career change CV checker",
 }
@@ -6761,6 +6836,7 @@ def build_attribution_script() -> str:
               "/sales-cv-checker": "sales",
               "/account-manager-cv-checker": "account_manager",
               "/project-manager-cv-checker": "project_manager",
+              "/retail-manager-cv-checker": "retail_manager",
               "/admin-cv-checker": "admin",
               "/career-change-cv-checker": "career_change"
             };
@@ -11415,6 +11491,7 @@ def render_guides_page() -> str:
             ("sales-cv-checker", "/sales-cv-checker", SEO_LANDING_PAGES["sales-cv-checker"]["title"], SEO_LANDING_PAGES["sales-cv-checker"]["intro"]),
             ("account-manager-cv-checker", "/account-manager-cv-checker", SEO_LANDING_PAGES["account-manager-cv-checker"]["title"], SEO_LANDING_PAGES["account-manager-cv-checker"]["intro"]),
             ("project-manager-cv-checker", "/project-manager-cv-checker", SEO_LANDING_PAGES["project-manager-cv-checker"]["title"], SEO_LANDING_PAGES["project-manager-cv-checker"]["intro"]),
+            ("retail-manager-cv-checker", "/retail-manager-cv-checker", SEO_LANDING_PAGES["retail-manager-cv-checker"]["title"], SEO_LANDING_PAGES["retail-manager-cv-checker"]["intro"]),
             ("sales-director-cv-example", "/sales-director-cv-example", SEO_LANDING_PAGES["sales-director-cv-example"]["title"], SEO_LANDING_PAGES["sales-director-cv-example"]["intro"]),
             ("retail-manager-cv-example", "/retail-manager-cv-example", SEO_LANDING_PAGES["retail-manager-cv-example"]["title"], SEO_LANDING_PAGES["retail-manager-cv-example"]["intro"]),
         ]),
@@ -12960,6 +13037,9 @@ SEO_ROLE_ALIASES = {
     "marketing-cv-review": "marketing-cv-checker",
     "marketing-cv-keywords": "marketing-cv-checker",
     "sales-cv-review": "sales-cv-checker",
+    "retail-manager-cv-review": "retail-manager-cv-checker",
+    "store-manager-cv-checker": "retail-manager-cv-checker",
+    "store-manager-cv-keywords": "retail-manager-cv-checker",
 }
 
 
