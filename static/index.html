@@ -3167,6 +3167,47 @@
     color: #265D3C;
   }
 
+  .readiness-label {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 2px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: #EEF2FF;
+    border: 1px solid #C7D2FE;
+    color: #3157D5;
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .readiness-label.is-low {
+    background: #FEF2F2;
+    border-color: #FECACA;
+    color: #B42318;
+  }
+
+  .readiness-label.is-medium {
+    background: #FFF7ED;
+    border-color: #FDBA74;
+    color: #9A5B00;
+  }
+
+  .readiness-label.is-good {
+    background: #EEF2FF;
+    border-color: #C7D2FE;
+    color: #3157D5;
+  }
+
+  .readiness-label.is-strong {
+    background: #EAFBF0;
+    border-color: #B7F7C4;
+    color: #17623B;
+  }
+
   .score-meta {
     display: flex;
     flex-wrap: wrap;
@@ -3395,6 +3436,26 @@
 
   .score-breakdown-card {
     padding: 12px;
+  }
+
+  .score-breakdown-card[data-level="low"] {
+    background: #FFF8F8;
+    border-color: #FECACA;
+  }
+
+  .score-breakdown-card[data-level="medium"] {
+    background: #FFFBF2;
+    border-color: #FED7AA;
+  }
+
+  .score-breakdown-card[data-level="good"] {
+    background: #F8FAFF;
+    border-color: #C7D2FE;
+  }
+
+  .score-breakdown-card[data-level="strong"] {
+    background: #F5FFF8;
+    border-color: #B7F7C4;
   }
 
   .score-breakdown-label {
@@ -4070,6 +4131,63 @@
     font-size: 13px;
     font-weight: 820;
     box-shadow: none;
+  }
+
+  .rewrite-decision-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .rewrite-detail-card > .rewrite-decision-row,
+  .line-feedback-card > .rewrite-decision-row,
+  .rewrite-detail-card > .rewrite-decision-note,
+  .line-feedback-card > .rewrite-decision-note {
+    grid-column: 2;
+  }
+
+  .rewrite-decision-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin: 0;
+    padding: 7px 10px;
+    border: 1px solid #D8E1EF;
+    border-radius: 999px;
+    background: #FFFFFF;
+    color: #3157D5;
+    font-size: 13px;
+    font-weight: 820;
+    box-shadow: none;
+  }
+
+  .rewrite-decision-btn.is-copy {
+    border-color: #C7D2FE;
+    background: #EEF2FF;
+    color: #1D4ED8;
+  }
+
+  .rewrite-detail-card.is-accepted,
+  .line-feedback-card.is-accepted,
+  .before-after-card.is-accepted {
+    border-color: #86EFAC;
+    background: #F5FFF8;
+  }
+
+  .rewrite-detail-card.needs-editing,
+  .line-feedback-card.needs-editing,
+  .before-after-card.needs-editing {
+    border-color: #FDBA74;
+    background: #FFFBF2;
+  }
+
+  .rewrite-decision-note {
+    margin-top: 8px;
+    color: #526179;
+    font-size: 12px;
+    font-weight: 700;
   }
 
   .recheck-copy {
@@ -5905,6 +6023,7 @@
               <div class="score-label">Role-fit score</div>
               <div id="score" class="score-value"></div>
               <div id="resultStatusHeadline" class="score-headline"></div>
+              <div id="cvReadinessLabel" class="readiness-label">Checking readiness</div>
               <div id="resultStatusCopy" class="score-subtext"></div>
               <div id="resultPotentialCopy" class="score-potential"></div>
             </div>
@@ -6059,7 +6178,12 @@
               <div class="before-after-card">
                 <strong>After</strong>
                 <p id="resultExampleAfter"></p>
-                <button id="resultExampleCopyBtn" class="copy-rewrite-btn" type="button">Copy stronger line</button>
+                <div class="rewrite-decision-row">
+                  <button class="rewrite-decision-btn" data-rewrite-action="accept" type="button">Use rewrite</button>
+                  <button id="resultExampleCopyBtn" class="rewrite-decision-btn is-copy" type="button">Copy</button>
+                  <button class="rewrite-decision-btn" data-rewrite-action="edit" type="button">Needs editing</button>
+                </div>
+                <div class="rewrite-decision-note" aria-live="polite"></div>
               </div>
             </div>
             <div id="resultExampleWhyWrap" class="rewrite-note hidden">
@@ -6171,7 +6295,8 @@
               <p>Download the report, copy the action checklist, or print it before editing your CV and re-running the role match.</p>
             </div>
             <div class="pro-report-button-row">
-              <button id="downloadReportBtn" class="pro-report-button" type="button">Download report</button>
+              <button id="downloadReportBtn" class="pro-report-button" type="button">Download HTML report</button>
+              <button id="downloadDocReportBtn" class="pro-report-button" type="button">Download Word report</button>
               <button id="copyChecklistBtn" class="pro-report-button" type="button">Copy checklist</button>
               <button id="printReportBtn" class="pro-report-button" type="button">Print / save PDF</button>
             </div>
@@ -6639,6 +6764,7 @@
     const proImpactGrid = document.getElementById("proImpactGrid");
     const proReportActions = document.getElementById("proReportActions");
     const downloadReportBtn = document.getElementById("downloadReportBtn");
+    const downloadDocReportBtn = document.getElementById("downloadDocReportBtn");
     const copyChecklistBtn = document.getElementById("copyChecklistBtn");
     const printReportBtn = document.getElementById("printReportBtn");
     const proReportStatus = document.getElementById("proReportStatus");
@@ -6687,6 +6813,7 @@
     const scoreRingValue = document.getElementById("scoreRingValue");
     const resultPlanBadge = document.getElementById("resultPlanBadge");
     const resultStatusHeadline = document.getElementById("resultStatusHeadline");
+    const cvReadinessLabel = document.getElementById("cvReadinessLabel");
     const resultStatusCopy = document.getElementById("resultStatusCopy");
     const resultPotentialCopy = document.getElementById("resultPotentialCopy");
     const resultKeywordStatus = document.getElementById("resultKeywordStatus");
@@ -7376,11 +7503,24 @@
       }
     }
 
-    function savePreviousScoreSnapshot(scoreNumber, data) {
+    function buildJobFingerprint(jobDescription) {
+      const text = String(jobDescription || "").trim().toLowerCase().replace(/\s+/g, " ");
+      if (!text) return "";
+      let hash = 0;
+      for (let index = 0; index < Math.min(text.length, 500); index += 1) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(index);
+        hash |= 0;
+      }
+      return String(text.length) + ":" + String(Math.abs(hash));
+    }
+
+    function savePreviousScoreSnapshot(scoreNumber, data, jobDescription) {
       try {
         window.localStorage.setItem(PREVIOUS_SCORE_KEY, JSON.stringify({
           score: scoreNumber,
           role: data && data.roleFocus && data.roleFocus.label ? data.roleFocus.label : "",
+          roleKey: data && data.roleFocus && data.roleFocus.key ? data.roleFocus.key : "",
+          jobFingerprint: buildJobFingerprint(jobDescription),
           savedAt: Date.now()
         }));
       } catch (error) {}
@@ -7404,7 +7544,7 @@
       scoreDeltaValue.textContent = (delta > 0 ? "+" : "") + String(delta);
       scoreDeltaValue.style.color = delta > 0 ? "#15803D" : (delta < 0 ? "#B91C1C" : "#526179");
       scoreDeltaLabel.textContent = delta > 0
-        ? "Nice lift. Keep the changes truthful and role-specific."
+        ? "You improved from " + previous.score + " to " + scoreNumber + ". Keep the changes truthful and role-specific."
         : (delta < 0 ? "Score dropped. Check whether useful evidence was removed." : "No movement yet. Try the priority fixes first.");
       scoreComparisonWrap.classList.remove("hidden");
     }
@@ -7508,6 +7648,52 @@
       return "#38D996";
     }
 
+    function getScoreLevel(score) {
+      const value = Math.max(0, Math.min(100, Number(score || 0)));
+      if (value < 45) return "low";
+      if (value < 60) return "medium";
+      if (value < 75) return "good";
+      return "strong";
+    }
+
+    function getCvReadiness(score) {
+      const value = Math.max(0, Math.min(100, Number(score || 0)));
+      if (value < 45) {
+        return {
+          label: "Not ready to send",
+          level: "low",
+          copy: "This CV needs clearer role alignment before it is used for this application."
+        };
+      }
+      if (value < 65) {
+        return {
+          label: "Needs targeted edits",
+          level: "medium",
+          copy: "There is useful evidence here, but the CV needs focused edits before applying."
+        };
+      }
+      if (value < 80) {
+        return {
+          label: "Nearly ready",
+          level: "good",
+          copy: "This is close enough to refine. Fix the priority gaps and re-check before sending."
+        };
+      }
+      return {
+        label: "Strong match",
+        level: "strong",
+        copy: "This looks competitive for the role. Review the final wording and keep every claim truthful."
+      };
+    }
+
+    function updateReadinessLabel(score) {
+      if (!cvReadinessLabel) return;
+      const readiness = getCvReadiness(score);
+      cvReadinessLabel.textContent = readiness.label;
+      cvReadinessLabel.className = "readiness-label is-" + readiness.level;
+      cvReadinessLabel.title = readiness.copy;
+    }
+
     function updateScoreRing(score) {
       if (!scoreRing || !scoreRingValue) return;
       const value = Math.max(0, Math.min(100, Math.round(Number(score || 0))));
@@ -7570,22 +7756,54 @@
       updateChecklistProgress();
     }
 
-    function renderScoreBreakdown(items, fallbackScore) {
-      if (!resultScoreBreakdown) return;
-      resultScoreBreakdown.innerHTML = "";
+    function getCanonicalScoreBreakdown(items, fallbackScore) {
       const fallbackItems = [
         { label: "Role alignment", score: fallbackScore, detail: "How clearly the CV matches this role." },
         { label: "Keyword coverage", score: fallbackScore, detail: "How many important role terms are covered." },
         { label: "Evidence strength", score: fallbackScore, detail: "How well claims are supported by examples." },
-        { label: "ATS readability", score: fallbackScore, detail: "How easy the CV is to scan." },
-        { label: "Structure and clarity", score: fallbackScore, detail: "How quickly the strongest points are visible." }
+        { label: "First-page clarity", score: fallbackScore, detail: "How quickly the strongest role-fit proof is visible." },
+        { label: "ATS readability", score: fallbackScore, detail: "How easy the CV is to scan." }
       ];
-      const breakdown = Array.isArray(items) && items.length ? items.slice(0, 5) : fallbackItems;
+      const sourceItems = Array.isArray(items) && items.length ? items : [];
+      const labelAliases = {
+        "role alignment": "Role alignment",
+        "relevance": "Role alignment",
+        "keyword coverage": "Keyword coverage",
+        "keyword match": "Keyword coverage",
+        "evidence strength": "Evidence strength",
+        "impact": "Evidence strength",
+        "first-page clarity": "First-page clarity",
+        "first page clarity": "First-page clarity",
+        "structure and clarity": "First-page clarity",
+        "structure": "First-page clarity",
+        "ats readability": "ATS readability",
+        "ats": "ATS readability"
+      };
+      const byLabel = {};
+      sourceItems.forEach(function(item) {
+        const rawLabel = String(item.label || item.name || "").toLowerCase();
+        const canonical = labelAliases[rawLabel] || "";
+        if (canonical && !byLabel[canonical]) byLabel[canonical] = item;
+      });
+      const breakdown = fallbackItems.map(function(fallback) {
+        const source = byLabel[fallback.label] || {};
+        return {
+          label: fallback.label,
+          score: source.score || fallback.score,
+          detail: source.detail || source.reason || fallback.detail
+        };
+      });
+    }
 
+    function renderScoreBreakdown(items, fallbackScore) {
+      if (!resultScoreBreakdown) return;
+      resultScoreBreakdown.innerHTML = "";
+      const breakdown = getCanonicalScoreBreakdown(items, fallbackScore);
       breakdown.forEach(function(item) {
         const score = Math.max(0, Math.min(100, Number(item.score || fallbackScore || 0)));
         const card = document.createElement("div");
         card.className = "score-breakdown-card";
+        card.dataset.level = getScoreLevel(score);
         card.style.setProperty("--score-color", getScoreVisualColor(score));
 
         const label = document.createElement("div");
@@ -7726,6 +7944,40 @@
       return rewrites.slice(0, maxItems || 5);
     }
 
+    function createRewriteDecisionRow(card, rewriteText) {
+      const row = document.createElement("div");
+      row.className = "rewrite-decision-row";
+
+      const useButton = document.createElement("button");
+      useButton.className = "rewrite-decision-btn";
+      useButton.type = "button";
+      useButton.dataset.rewriteAction = "accept";
+      useButton.textContent = "Use rewrite";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = "rewrite-decision-btn is-copy";
+      copyButton.type = "button";
+      copyButton.dataset.copyRewrite = rewriteText || "";
+      copyButton.textContent = "Copy";
+
+      const editButton = document.createElement("button");
+      editButton.className = "rewrite-decision-btn";
+      editButton.type = "button";
+      editButton.dataset.rewriteAction = "edit";
+      editButton.textContent = "Needs editing";
+
+      row.appendChild(useButton);
+      row.appendChild(copyButton);
+      row.appendChild(editButton);
+      card.appendChild(row);
+
+      const note = document.createElement("div");
+      note.className = "rewrite-decision-note";
+      note.setAttribute("aria-live", "polite");
+      card.appendChild(note);
+      return row;
+    }
+
     function renderRewriteDetailsForElement(targetEl, data, maxItems) {
       if (!targetEl) return [];
       targetEl.innerHTML = "";
@@ -7755,13 +8007,6 @@
         after.textContent = "After: " + item.after;
         body.appendChild(after);
 
-        const copyButton = document.createElement("button");
-        copyButton.className = "copy-rewrite-btn";
-        copyButton.type = "button";
-        copyButton.dataset.copyRewrite = item.after;
-        copyButton.textContent = "Copy stronger line";
-        body.appendChild(copyButton);
-
         if (item.whyBetter) {
           const why = document.createElement("p");
           why.textContent = "Why better: " + item.whyBetter;
@@ -7780,6 +8025,7 @@
 
         card.appendChild(number);
         card.appendChild(body);
+        createRewriteDecisionRow(card, item.after);
         targetEl.appendChild(card);
       });
       return rewrites;
@@ -8039,13 +8285,6 @@
         after.textContent = "Stronger line: " + item.improvedLine;
         body.appendChild(after);
 
-        const copyButton = document.createElement("button");
-        copyButton.className = "copy-rewrite-btn";
-        copyButton.type = "button";
-        copyButton.dataset.copyRewrite = item.improvedLine;
-        copyButton.textContent = "Copy stronger line";
-        body.appendChild(copyButton);
-
         const why = document.createElement("p");
         why.textContent = "Why better: " + item.whyBetter;
         body.appendChild(why);
@@ -8056,6 +8295,7 @@
 
         card.appendChild(number);
         card.appendChild(body);
+        createRewriteDecisionRow(card, item.improvedLine);
         proLineFeedbackGrid.appendChild(card);
       });
       proLineFeedbackWrap.classList.toggle("hidden", !items.length);
@@ -8272,7 +8512,8 @@
         hour: "2-digit",
         minute: "2-digit"
       });
-      const scoreBreakdown = Array.isArray(data.scoreBreakdown) ? data.scoreBreakdown : [];
+      const scoreBreakdown = getCanonicalScoreBreakdown(data.scoreBreakdown || [], score);
+      const readiness = getCvReadiness(score);
       const critical = keywordGroups.criticalMissing || (data.missingKeywords || []).slice(0, 3);
       const supporting = keywordGroups.supportingKeywords || (data.missingKeywords || []).slice(3, 8);
       const covered = keywordGroups.coveredKeywords || (data.matchedKeywords || []).slice(0, 6);
@@ -8318,7 +8559,7 @@
         "@media print{body{background:#fff;}main{max-width:none;padding:0;}header,section{break-inside:avoid;box-shadow:none;}}" +
         "@media(max-width:760px){.header-grid,.breakdown,.rewrite,.impact{grid-template-columns:1fr;}.score-ring{width:130px;}}" +
         "</style></head><body><main>" +
-        "<header><div class=\"brand\"><span class=\"brand-mark\">CV</span><span>CV Optimiser</span></div><div class=\"header-grid\"><div><span class=\"report-type\">" + escapeReportHtml(reportSubtitle) + "</span><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></div><div class=\"score-ring\" role=\"img\" aria-label=\"Role-fit score " + escapeReportHtml(score || 0) + " out of 100\"><span>" + escapeReportHtml(score || 0) + "</span></div></div></header>" +
+        "<header><div class=\"brand\"><span class=\"brand-mark\">CV</span><span>CV Optimiser</span></div><div class=\"header-grid\"><div><span class=\"report-type\">" + escapeReportHtml(reportSubtitle) + "</span><h1>" + escapeReportHtml(reportTitle) + "</h1><div class=\"meta\">Generated " + escapeReportHtml(generatedAt) + "</div><p><strong>Readiness:</strong> " + escapeReportHtml(readiness.label) + "</p><p>" + escapeReportHtml(data.shortSummary || data.nextStep || "Role-specific CV analysis based on your CV and the job description.") + "</p></div><div class=\"score-ring\" role=\"img\" aria-label=\"Role-fit score " + escapeReportHtml(score || 0) + " out of 100\"><span>" + escapeReportHtml(score || 0) + "</span></div></div></header>" +
         (isFullReport ? "<section><h2>Executive summary</h2><p>" + escapeReportHtml(executiveSummary) + "</p><div class=\"impact\">" + impactCards.map(function(item) {
           return "<article><span>" + escapeReportHtml(item[0]) + "</span><strong>" + escapeReportHtml(item[1]) + "</strong><p>" + escapeReportHtml(item[2]) + "</p></article>";
         }).join("") + "</div></section>" : "") +
@@ -8331,9 +8572,9 @@
         (mainConcern ? "<p><strong>Main concern:</strong> " + escapeReportHtml(mainConcern) + "</p>" : "") +
         (fixFirst ? "<p><strong>Fix first:</strong> " + escapeReportHtml(fixFirst) + "</p>" : "") +
         "</section>" +
-        (scoreBreakdown.length ? "<section><h2>Score breakdown</h2><div class=\"breakdown\">" + scoreBreakdown.map(function(item) {
+        "<section><h2>Score breakdown</h2><div class=\"breakdown\">" + scoreBreakdown.map(function(item) {
           return "<div class=\"mini\"><strong>" + escapeReportHtml(item.label || item.name || "CV signal") + "</strong><b>" + escapeReportHtml(item.score || 0) + "</b><p>" + escapeReportHtml(item.detail || item.reason || "") + "</p></div>";
-        }).join("") + "</div></section>" : "") +
+        }).join("") + "</div></section>" +
         cardReportItems("Top priority fixes", data.priorityFixDetails || []) +
         (isFullReport ? sectionRewriteReportItems(data.sectionRewritePlan || []) : "") +
         (isFullReport ? lineFeedbackReportItems(data) : "") +
@@ -8463,6 +8704,25 @@
       link.remove();
       URL.revokeObjectURL(url);
       trackEvent("report_downloaded");
+    }
+
+    function downloadCurrentWordReport() {
+      if (!currentResultData) return;
+      const html = buildReportHtml(currentResultData);
+      const blob = new Blob([html], { type: "application/msword;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = "cv-optimiser-report-" + stamp + ".doc";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      if (proReportStatus) {
+        proReportStatus.textContent = "Word report downloaded. Open it in Word or Google Docs before making final edits.";
+      }
+      trackEvent("report_word_downloaded");
     }
 
     function printCurrentReport() {
@@ -9259,6 +9519,25 @@ const result = await sbClient.auth.signInWithOtp({
     });
 
     document.addEventListener("click", async function(event) {
+      const decisionButton = event.target.closest("[data-rewrite-action]");
+      if (decisionButton) {
+        event.preventDefault();
+        const card = decisionButton.closest(".rewrite-detail-card, .line-feedback-card, .before-after-card");
+        if (!card) return;
+        const note = card.querySelector(".rewrite-decision-note");
+        card.classList.remove("is-accepted", "needs-editing");
+        if (decisionButton.dataset.rewriteAction === "accept") {
+          card.classList.add("is-accepted");
+          if (note) note.textContent = "Marked to use. Review the wording before pasting it into your CV.";
+          trackEvent("rewrite_marked_to_use");
+        } else {
+          card.classList.add("needs-editing");
+          if (note) note.textContent = "Marked for editing. Keep the idea, but adapt the wording to your exact experience.";
+          trackEvent("rewrite_marked_needs_editing");
+        }
+        return;
+      }
+
       const copyButton = event.target.closest("[data-copy-rewrite]");
       if (!copyButton) return;
       event.preventDefault();
@@ -9272,7 +9551,7 @@ const result = await sbClient.auth.signInWithOtp({
         copyButton.textContent = "Select and copy this line";
       }
       window.setTimeout(function() {
-        copyButton.textContent = "Copy stronger line";
+        copyButton.textContent = copyButton.classList.contains("rewrite-decision-btn") ? "Copy" : "Copy stronger line";
       }, 1600);
     });
 
@@ -9451,6 +9730,10 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     if (downloadReportBtn) {
       downloadReportBtn.addEventListener("click", downloadCurrentReport);
+    }
+
+    if (downloadDocReportBtn) {
+      downloadDocReportBtn.addEventListener("click", downloadCurrentWordReport);
     }
 
     if (copyChecklistBtn) {
@@ -9708,6 +9991,8 @@ passwordLoginBtn.addEventListener("click", async function() {
 
         document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
         updateScoreRing(scoreNumber);
+        updateReadinessLabel(scoreNumber);
+        const cvReadiness = getCvReadiness(scoreNumber);
         renderScoreComparison(previousScoreSnapshot, scoreNumber);
         document.getElementById("nextStep").textContent = data.nextStep || "";
         document.getElementById("source").textContent = data.source || "unknown";
@@ -9725,7 +10010,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           : narrative.copy;
         resultPotentialCopy.textContent = isCurrentlyPro
           ? "Use the full guidance below to improve role fit, clarity, and keyword coverage."
-          : narrative.potential;
+          : cvReadiness.copy;
         if (resultKeywordTitle) {
           resultKeywordTitle.textContent = isCurrentlyPro ? "Add these keywords to match the role" : "Missing keywords";
         }
@@ -9984,7 +10269,7 @@ passwordLoginBtn.addEventListener("click", async function() {
           priority_fixes_top: (data.priorityFixes || data.previewPriorityFixes || []).slice(0, 5),
           ats_tips_top: (data.atsTips || []).slice(0, 5)
         });
-        savePreviousScoreSnapshot(scoreNumber, data);
+        savePreviousScoreSnapshot(scoreNumber, data, effectiveJobDescription);
         if (!isCurrentlyPro) {
           trackEvent("free_result_shown", { anonymous_result: isAnonymousResult, account_state: accountState });
         }

@@ -36,6 +36,8 @@ function renderFooter() {
           <a href="/it-helpdesk-cv-example-report">IT Helpdesk Example</a>
           <a href="/customer-success-cv-example-report">Customer Success Example</a>
           <a href="/career-change-cv-example-report">Career Change Example</a>
+          <a href="/sample-cv-reports-by-sector">Sample Reports by Sector</a>
+          <a href="/uk-cv-examples-by-role">UK CV Examples by Role</a>
           <a href="/how-it-works">How it works</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
           <a href="/cv-optimiser-vs-jobscan">CV Optimiser vs Jobscan</a>
@@ -49,6 +51,8 @@ function renderFooter() {
           <a href="/pricing">Pricing</a>
           <a href="/how-cv-optimiser-handles-your-cv">How CVs are handled</a>
           <a href="/how-cv-optimiser-scores-your-cv">How scoring works</a>
+          <a href="/cv-score-bands-methodology">Score bands</a>
+          <a href="/what-cv-optimiser-checks-that-free-ai-prompts-miss">What free prompts miss</a>
           <a href="/cv-optimiser-vs-human-cv-review">AI vs human CV review</a>
           <a href="/can-an-ats-checker-guarantee-interviews">ATS checker limits</a>
           <a href="/privacy">Privacy Policy</a>

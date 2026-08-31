@@ -652,6 +652,157 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    "sample-cv-reports-by-sector": {
+        "title": "Sample CV Reports by Sector | CV Optimiser",
+        "description": "Explore realistic CV Optimiser sample reports for UK sales, project management, retail, NHS admin, IT helpdesk, customer success and graduate roles.",
+        "h1": "Sample CV reports by sector",
+        "intro": "These fictional sample reports show the kind of role-specific feedback CV Optimiser gives before you use your own CV.",
+        "sections": [
+            {
+                "title": "Why sample reports matter",
+                "copy": "Before trusting a CV checker, you should be able to see the shape of the output. The example reports show the score, recruiter verdict, first-page diagnosis, rewrite plan and keyword guidance a paid report can include.",
+            },
+            {
+                "title": "Sales and account management",
+                "copy": "These examples focus on revenue evidence, pipeline ownership, forecasting, customer relationships and commercial outcomes.",
+                "links": [
+                    ("/sales-cv-example-report", "Sales CV example report"),
+                    ("/account-manager-cv-example-report", "Account manager CV example report"),
+                ],
+            },
+            {
+                "title": "Operations, project and retail management",
+                "copy": "These examples focus on delivery, stakeholder management, process improvement, store operations, rota planning, stock control and team leadership.",
+                "links": [
+                    ("/project-manager-cv-example-report", "Project manager CV example report"),
+                    ("/retail-manager-cv-example-report", "Retail manager CV example report"),
+                ],
+            },
+            {
+                "title": "Public sector, admin and support roles",
+                "copy": "These examples focus on accuracy, confidentiality, systems, service delivery, ticketing, escalation and calm communication.",
+                "links": [
+                    ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
+                    ("/admin-cv-example-report", "Admin CV example report"),
+                    ("/it-helpdesk-cv-example-report", "IT helpdesk CV example report"),
+                ],
+            },
+            {
+                "title": "Early career and customer success",
+                "copy": "These examples show how the report adapts for transferable skills, graduate evidence, onboarding, customer health, adoption and retention language.",
+                "links": [
+                    ("/graduate-cv-example-report", "Graduate CV example report"),
+                    ("/customer-success-cv-example-report", "Customer success CV example report"),
+                    ("/career-change-cv-example-report", "Career change CV example report"),
+                ],
+            },
+        ],
+    },
+    "cv-score-bands-methodology": {
+        "title": "CV Score Bands and Methodology | CV Optimiser",
+        "description": "Understand CV Optimiser score bands, readiness labels and the five signals behind every role-fit score.",
+        "h1": "CV score bands and methodology",
+        "intro": "The CV Optimiser score is designed to help you decide what to fix before applying, not to promise an interview or replace human judgement.",
+        "sections": [
+            {
+                "title": "The four readiness labels",
+                "bullets": [
+                    "0-44: Not ready to send. The CV needs clearer role alignment before applying.",
+                    "45-64: Needs targeted edits. Useful evidence exists, but the CV needs focused improvements.",
+                    "65-79: Nearly ready. The CV is close, but priority gaps should be fixed and checked again.",
+                    "80-100: Strong match. The CV looks competitive, but every claim still needs human review.",
+                ],
+            },
+            {
+                "title": "The five score signals",
+                "bullets": [
+                    "Role alignment: how clearly the CV maps to the responsibilities and seniority of the advert",
+                    "Keyword coverage: whether important job-description terms appear naturally",
+                    "Evidence strength: whether claims are backed by examples, scope or outcomes",
+                    "First-page clarity: whether the top of the CV earns a closer read",
+                    "ATS readability: whether the CV is likely to be easy to scan and parse",
+                ],
+            },
+            {
+                "title": "How to use the score",
+                "copy": "Treat the score as a prioritisation tool. Start with the recruiter verdict and first-page issues, then fix missing keywords only where your experience genuinely supports them.",
+            },
+            {
+                "title": "What the score cannot do",
+                "copy": "The score cannot guarantee interviews, ATS acceptance, employer responses or job offers. It reflects likely CV clarity and role fit based on the information supplied.",
+                "links": [
+                    ("/can-an-ats-checker-guarantee-interviews", "Read about ATS checker limits"),
+                    ("/how-cv-optimiser-scores-your-cv", "How our CV score works"),
+                ],
+            },
+        ],
+    },
+    "what-cv-optimiser-checks-that-free-ai-prompts-miss": {
+        "title": "What CV Optimiser Checks That Free AI Prompts Miss",
+        "description": "See why CV Optimiser is more useful than a generic AI prompt for checking a UK CV against a real job description.",
+        "h1": "What we check that free AI prompts miss",
+        "intro": "A free AI prompt can give broad CV advice. CV Optimiser is built around a repeatable UK CV-to-job check with scoring, role signals, recruiter verdicts and exportable next steps.",
+        "sections": [
+            {
+                "title": "A consistent scoring structure",
+                "copy": "Generic prompts often change their criteria from one answer to the next. CV Optimiser keeps the same five score signals across results so users can understand what changed.",
+            },
+            {
+                "title": "Job-description matching",
+                "copy": "The tool is designed around the exact advert, not generic CV quality. It separates matched terms, missing terms, critical gaps and supporting keywords.",
+            },
+            {
+                "title": "Recruiter-style judgement",
+                "copy": "The UK recruiter verdict asks the question that matters: would this earn a closer shortlist read, and what is the main reason a recruiter may hesitate?",
+            },
+            {
+                "title": "Safe rewrite workflow",
+                "copy": "Rewrites are framed as suggestions to review, copy, use or edit. The product repeatedly reminds users not to invent skills, employers, numbers or achievements.",
+            },
+            {
+                "title": "Exportable improvement plan",
+                "copy": "A Pro report gives a tangible checklist, line-level fixes and export options so the user can keep working outside the browser.",
+            },
+        ],
+    },
+    "uk-cv-examples-by-role": {
+        "title": "UK CV Examples by Role | CV Optimiser",
+        "description": "Browse UK CV example report pages by role, including graduate, NHS admin, sales, project manager, retail manager, IT helpdesk and customer success.",
+        "h1": "UK CV examples by role",
+        "intro": "Use these role examples to see what stronger CV evidence looks like before checking your own CV against a job description.",
+        "sections": [
+            {
+                "title": "Role-specific checker pages",
+                "links": [
+                    ("/graduate-cv-checker", "Graduate CV checker"),
+                    ("/nhs-admin-cv-checker", "NHS admin CV checker"),
+                    ("/sales-cv-checker", "Sales CV checker"),
+                    ("/project-manager-cv-checker", "Project manager CV checker"),
+                    ("/retail-manager-cv-checker", "Retail manager CV checker"),
+                    ("/it-helpdesk-cv-checker", "IT helpdesk CV checker"),
+                    ("/customer-success-cv-checker", "Customer success CV checker"),
+                    ("/career-change-cv-checker", "Career change CV checker"),
+                ],
+            },
+            {
+                "title": "Example report pages",
+                "links": [
+                    ("/graduate-cv-example-report", "Graduate CV example report"),
+                    ("/nhs-admin-cv-example-report", "NHS admin CV example report"),
+                    ("/sales-cv-example-report", "Sales CV example report"),
+                    ("/project-manager-cv-example-report", "Project manager CV example report"),
+                    ("/retail-manager-cv-example-report", "Retail manager CV example report"),
+                    ("/it-helpdesk-cv-example-report", "IT helpdesk CV example report"),
+                    ("/customer-success-cv-example-report", "Customer success CV example report"),
+                    ("/career-change-cv-example-report", "Career change CV example report"),
+                ],
+            },
+            {
+                "title": "How to use the examples",
+                "copy": "Do not copy example wording blindly. Use the structure: clear role fit, truthful keywords, specific evidence, and stronger bullets based on your own experience.",
+            },
+        ],
+    },
     "features": {
         "title": "Features | CV Optimiser",
         "description": "Explore the main CV Optimiser features including CV scoring, keyword gap detection, ATS checks and AI-assisted CV suggestions.",
@@ -2947,6 +3098,10 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": canonical_url("/how-cv-optimiser-handles-your-cv"), "priority": "0.7"},
     {"loc": canonical_url("/cv-optimiser-vs-human-cv-review"), "priority": "0.7"},
     {"loc": canonical_url("/can-an-ats-checker-guarantee-interviews"), "priority": "0.7"},
+    {"loc": canonical_url("/sample-cv-reports-by-sector"), "priority": "0.7"},
+    {"loc": canonical_url("/cv-score-bands-methodology"), "priority": "0.7"},
+    {"loc": canonical_url("/what-cv-optimiser-checks-that-free-ai-prompts-miss"), "priority": "0.7"},
+    {"loc": canonical_url("/uk-cv-examples-by-role"), "priority": "0.7"},
     {"loc": canonical_url("/faq"), "priority": "0.5"},
     {"loc": canonical_url("/pricing"), "priority": "0.5"},
     {"loc": canonical_url("/privacy"), "priority": "0.3"},
@@ -3427,7 +3582,7 @@ Quality rules:
 - recruiterVerdict.fixFirst must state the first section or evidence gap to fix before applying
 - matchedKeywords must be short phrases clearly supported by the CV
 - missingKeywords must be genuinely important role terms missing or weak in the CV
-- scoreBreakdown must include role alignment, keyword coverage, evidence strength, ATS readability, and structure and clarity
+- scoreBreakdown must include exactly these five labelled signals in this order: Role alignment, Keyword coverage, Evidence strength, First-page clarity, ATS readability
 - keywordImportance must separate critical missing keywords, useful supporting keywords, and keywords already covered
 - strongPoints must explain what already helps this CV for this role
 - weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
@@ -4417,11 +4572,35 @@ def score_visual_color(score: int) -> str:
     return "#38D996"
 
 
+def build_readiness_label(score: int) -> dict[str, str]:
+    value = clamp_score(score)
+    if value < 45:
+        return {
+            "label": "Not ready to send",
+            "level": "low",
+            "copy": "This CV needs clearer role alignment before it is used for this application.",
+        }
+    if value < 65:
+        return {
+            "label": "Needs targeted edits",
+            "level": "medium",
+            "copy": "There is useful evidence here, but the CV needs focused edits before applying.",
+        }
+    if value < 80:
+        return {
+            "label": "Nearly ready",
+            "level": "good",
+            "copy": "This is close enough to refine. Fix the priority gaps and re-check before sending.",
+        }
+    return {
+        "label": "Strong match",
+        "level": "strong",
+        "copy": "This looks competitive for the role. Review the final wording and keep every claim truthful.",
+    }
+
+
 def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
     existing = coerce_named_score_list(data.get("scoreBreakdown"))
-    if len(existing) >= 5:
-        return existing[:5]
-
     score = int(data.get("score", 0) or 0)
     matched = len(data.get("matchedKeywords", []))
     missing = len(data.get("missingKeywords", []))
@@ -4431,7 +4610,7 @@ def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
     total_keywords = max(1, matched + missing)
     keyword_score = clamp_score(round((matched / total_keywords) * 100))
 
-    return [
+    fallback = [
         {
             "label": "Role alignment",
             "score": clamp_score(score + (strong * 3) - (weak * 4)),
@@ -4448,16 +4627,48 @@ def build_score_breakdown(data: dict[str, Any]) -> list[dict[str, Any]]:
             "detail": "How well the CV proves impact with relevant examples rather than duty-only wording.",
         },
         {
+            "label": "First-page clarity",
+            "score": clamp_score(score + (strong * 2) - (weak * 2)),
+            "detail": "Whether the opening profile, recent role and strongest proof are clear enough to earn a closer read.",
+        },
+        {
             "label": "ATS readability",
             "score": clamp_score(score + 4 - (missing * 3)),
             "detail": "How easy the CV is likely to be for screening tools and recruiters to scan.",
         },
-        {
-            "label": "Structure and clarity",
-            "score": clamp_score(score + (strong * 2) - (weak * 2)),
-            "detail": "Whether the strongest information is clear, specific, and easy to find.",
-        },
     ]
+    if not existing:
+        return fallback
+
+    aliases = {
+        "role alignment": "Role alignment",
+        "relevance": "Role alignment",
+        "keyword coverage": "Keyword coverage",
+        "keyword match": "Keyword coverage",
+        "evidence strength": "Evidence strength",
+        "impact": "Evidence strength",
+        "first-page clarity": "First-page clarity",
+        "first page clarity": "First-page clarity",
+        "structure and clarity": "First-page clarity",
+        "structure": "First-page clarity",
+        "ats readability": "ATS readability",
+        "ats": "ATS readability",
+    }
+    by_label: dict[str, dict[str, Any]] = {}
+    for item in existing:
+        canonical = aliases.get(coerce_string(item.get("label")).lower())
+        if canonical and canonical not in by_label:
+            by_label[canonical] = item
+
+    canonical_breakdown = []
+    for item in fallback:
+        source = by_label.get(item["label"], {})
+        canonical_breakdown.append({
+            "label": item["label"],
+            "score": clamp_score(int(source.get("score", item["score"]) or 0)),
+            "detail": coerce_string(source.get("detail")) or item["detail"],
+        })
+    return canonical_breakdown
 
 
 def build_recruiter_verdict(data: dict[str, Any]) -> dict[str, str]:
@@ -4827,6 +5038,7 @@ def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Opti
 
     normalized = {
         "score": score,
+        "readiness": build_readiness_label(score),
         "roleFocus": build_role_focus_payload(role_focus or data.get("roleFocus")),
         "scoreBreakdown": build_score_breakdown(data),
         "recruiterVerdict": build_recruiter_verdict(data),
@@ -12015,11 +12227,15 @@ def render_guides_page() -> str:
             ("customer-success-cv-example-report", "/customer-success-cv-example-report", ROLE_EXAMPLE_REPORTS["customer-success-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["customer-success-cv-example-report"]["intro"]),
             ("marketing-cv-example-report", "/marketing-cv-example-report", ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["marketing-cv-example-report"]["intro"]),
             ("software-developer-cv-example-report", "/software-developer-cv-example-report", ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["title"], ROLE_EXAMPLE_REPORTS["software-developer-cv-example-report"]["intro"]),
+            ("sample-cv-reports-by-sector", "/sample-cv-reports-by-sector", SUPPORT_PAGES["sample-cv-reports-by-sector"]["title"], SUPPORT_PAGES["sample-cv-reports-by-sector"]["intro"]),
+            ("uk-cv-examples-by-role", "/uk-cv-examples-by-role", SUPPORT_PAGES["uk-cv-examples-by-role"]["title"], SUPPORT_PAGES["uk-cv-examples-by-role"]["intro"]),
             ("how-it-works", "/how-it-works", SUPPORT_PAGES["how-it-works"]["title"], SUPPORT_PAGES["how-it-works"]["intro"]),
             ("how-cv-optimiser-scores-your-cv", "/how-cv-optimiser-scores-your-cv", SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-scores-your-cv"]["intro"]),
             ("how-cv-optimiser-handles-your-cv", "/how-cv-optimiser-handles-your-cv", SUPPORT_PAGES["how-cv-optimiser-handles-your-cv"]["title"], SUPPORT_PAGES["how-cv-optimiser-handles-your-cv"]["intro"]),
             ("cv-optimiser-vs-human-cv-review", "/cv-optimiser-vs-human-cv-review", SUPPORT_PAGES["cv-optimiser-vs-human-cv-review"]["title"], SUPPORT_PAGES["cv-optimiser-vs-human-cv-review"]["intro"]),
             ("can-an-ats-checker-guarantee-interviews", "/can-an-ats-checker-guarantee-interviews", SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"]["title"], SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"]["intro"]),
+            ("cv-score-bands-methodology", "/cv-score-bands-methodology", SUPPORT_PAGES["cv-score-bands-methodology"]["title"], SUPPORT_PAGES["cv-score-bands-methodology"]["intro"]),
+            ("what-cv-optimiser-checks-that-free-ai-prompts-miss", "/what-cv-optimiser-checks-that-free-ai-prompts-miss", SUPPORT_PAGES["what-cv-optimiser-checks-that-free-ai-prompts-miss"]["title"], SUPPORT_PAGES["what-cv-optimiser-checks-that-free-ai-prompts-miss"]["intro"]),
         ]),
         ("Comparisons", [
             ("cv-optimiser-vs-jobscan", "/cv-optimiser-vs-jobscan", COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["title"], COMPARISON_PAGES["cv-optimiser-vs-jobscan"]["intro"]),
@@ -13645,6 +13861,37 @@ def cv_optimiser_vs_human_review_page(request: Request) -> str:
 def ats_checker_guarantee_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_support_page("can-an-ats-checker-guarantee-interviews", SUPPORT_PAGES["can-an-ats-checker-guarantee-interviews"])
+
+
+@app.get("/sample-cv-reports-by-sector", response_class=HTMLResponse)
+@app.get("/sample-cv-reports-by-sector/", response_class=HTMLResponse, include_in_schema=False)
+def sample_cv_reports_by_sector_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("sample-cv-reports-by-sector", SUPPORT_PAGES["sample-cv-reports-by-sector"])
+
+
+@app.get("/cv-score-bands-methodology", response_class=HTMLResponse)
+@app.get("/cv-score-bands-methodology/", response_class=HTMLResponse, include_in_schema=False)
+def cv_score_bands_methodology_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("cv-score-bands-methodology", SUPPORT_PAGES["cv-score-bands-methodology"])
+
+
+@app.get("/what-cv-optimiser-checks-that-free-ai-prompts-miss", response_class=HTMLResponse)
+@app.get("/what-cv-optimiser-checks-that-free-ai-prompts-miss/", response_class=HTMLResponse, include_in_schema=False)
+def free_ai_prompts_miss_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page(
+        "what-cv-optimiser-checks-that-free-ai-prompts-miss",
+        SUPPORT_PAGES["what-cv-optimiser-checks-that-free-ai-prompts-miss"],
+    )
+
+
+@app.get("/uk-cv-examples-by-role", response_class=HTMLResponse)
+@app.get("/uk-cv-examples-by-role/", response_class=HTMLResponse, include_in_schema=False)
+def uk_cv_examples_by_role_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_support_page("uk-cv-examples-by-role", SUPPORT_PAGES["uk-cv-examples-by-role"])
 
 
 @app.get("/cv-statistics", response_class=HTMLResponse)
