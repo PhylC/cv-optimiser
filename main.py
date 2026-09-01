@@ -5444,6 +5444,9 @@ def build_site_header_css() -> str:
           .mobile-nav-panel {
             display: none;
           }
+          .mobile-quick-nav {
+            display: none;
+          }
           .site-header-account-row {
             display: flex;
             align-items: center;
@@ -5753,6 +5756,32 @@ def build_site_header_css() -> str:
             }
             .mobile-menu-toggle {
               display: inline-flex;
+            }
+            .mobile-quick-nav {
+              display: flex;
+              gap: 8px;
+              margin-top: 12px;
+              width: 100%;
+            }
+            .mobile-quick-nav a {
+              flex: 1;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 42px;
+              padding: 9px 12px;
+              border-radius: 14px;
+              border: 1px solid rgba(199, 210, 254, 0.28);
+              background: rgba(255, 255, 255, 0.07);
+              color: #E8EEFC;
+              font-size: 13px;
+              font-weight: 800;
+              text-decoration: none;
+            }
+            .mobile-quick-nav a[data-upgrade-link] {
+              background: linear-gradient(135deg, #5B78FF, #3E5EFF);
+              border-color: rgba(199, 210, 254, 0.42);
+              color: #FFFFFF;
             }
             .mobile-nav-panel {
               display: none;
@@ -7381,6 +7410,38 @@ def build_public_content_surface_css() -> str:
             color: #3758D8 !important;
           }
 
+          .guides-page .guides-hero {
+            position: relative !important;
+            overflow: hidden !important;
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 22px !important;
+            color: #14213D !important;
+            padding: 28px !important;
+            box-shadow: 0 18px 44px rgba(3, 9, 23, 0.16) !important;
+          }
+
+          .guides-page .guides-hero::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 0 auto !important;
+            height: 4px !important;
+            background: linear-gradient(90deg, #5B78FF, #22C55E) !important;
+            pointer-events: none !important;
+          }
+
+          .guides-page .guides-hero h1 {
+            color: #101B33 !important;
+            opacity: 1 !important;
+          }
+
+          .guides-page .guides-hero p {
+            color: #334155 !important;
+            opacity: 1 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }
+
           @media (max-width: 768px) {
             .faq-page .summary-box,
             .faq-page > .faq-list,
@@ -7403,6 +7464,7 @@ def build_public_content_surface_css() -> str:
             .content-page .panel,
             .content-page .check-card,
             .content-page .score-card,
+            .guides-page .guides-hero,
             .guides-page .guide-group {
               padding: 22px !important;
               border-radius: 18px !important;
@@ -7601,8 +7663,13 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
             </div>
           </div>
         </div>
+        <nav class="mobile-quick-nav" aria-label="Priority navigation">
+          <a href="/guides">Guides</a>
+          <a href="/upgrade" data-upgrade-link>Upgrade</a>
+        </nav>
         <nav id="mobileNavPanel" class="mobile-nav-panel" aria-label="Mobile primary navigation">
           <a href="/#tool">Check CV</a>
+          <a href="/guides">Guides</a>
           <a href="/upgrade" data-upgrade-link>Pricing / Upgrade</a>
           <a href="/example-cv-report">Example Report</a>
           <a href="/how-it-works">How it works</a>
@@ -8719,10 +8786,83 @@ def render_article_page(slug: str, page: dict[str, Any]) -> str:
           }}
 {build_mobile_layout_css()}
 {build_public_content_surface_css()}
+          .article-guide-page .page-hero,
+          .article-guide-page .section-block,
+          .article-guide-page .final-cta {{
+            position: relative;
+            overflow: hidden;
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 22px !important;
+            color: #14213D !important;
+            padding: 26px !important;
+            box-shadow: 0 18px 44px rgba(3, 9, 23, 0.16) !important;
+          }}
+          .article-guide-page .page-hero::before,
+          .article-guide-page .final-cta::before {{
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, #5B78FF, #22C55E);
+            pointer-events: none;
+          }}
+          .article-guide-page .section-block + .section-block {{
+            margin-top: 18px !important;
+            padding-top: 26px !important;
+            border-top: 1px solid #D8E1EF !important;
+          }}
+          .article-guide-page h1,
+          .article-guide-page h2,
+          .article-guide-page h3,
+          .article-guide-page strong {{
+            color: #101B33 !important;
+            opacity: 1 !important;
+            letter-spacing: 0 !important;
+          }}
+          .article-guide-page p,
+          .article-guide-page li,
+          .article-guide-page .example-row span {{
+            color: #334155 !important;
+            opacity: 1 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }}
+          .article-guide-page h1 {{
+            font-size: clamp(34px, 5vw, 58px) !important;
+            line-height: 1.04 !important;
+          }}
+          .article-guide-page h2 {{
+            font-size: clamp(22px, 3vw, 28px) !important;
+            line-height: 1.16 !important;
+            margin: 0 0 12px !important;
+          }}
+          .article-guide-page .summary-box,
+          .article-guide-page .example-row {{
+            background: #F8FBFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 16px !important;
+            box-shadow: none !important;
+          }}
+          .article-guide-page .text-link {{
+            color: #1D4ED8 !important;
+            font-weight: 750 !important;
+          }}
+          @media (max-width: 768px) {{
+            .article-guide-page .page-hero,
+            .article-guide-page .section-block,
+            .article-guide-page .final-cta {{
+              padding: 22px !important;
+              border-radius: 18px !important;
+            }}
+            .article-guide-page h1 {{
+              font-size: clamp(36px, 10vw, 46px) !important;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page content-page landing-page">
+        <div class="page content-page landing-page article-guide-page">
           {build_site_header()}
           <section class="page-hero">
             <h1>{html.escape(page["h1"])}</h1>
@@ -11388,10 +11528,137 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
 {build_mobile_layout_css()}
 {build_public_content_surface_css()}
 {build_mini_tool_consistency_css()}
+          .seo-guide-page .seo-hero,
+          .seo-guide-page .seo-grid,
+          .seo-guide-page .seo-section,
+          .seo-guide-page .faq-section,
+          .seo-guide-page .bottom-cta {{
+            position: relative;
+            overflow: hidden;
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 22px !important;
+            color: #14213D !important;
+            box-shadow: 0 18px 44px rgba(3, 9, 23, 0.16) !important;
+          }}
+          .seo-guide-page .seo-hero,
+          .seo-guide-page .seo-section,
+          .seo-guide-page .faq-section,
+          .seo-guide-page .bottom-cta {{
+            padding: 26px !important;
+          }}
+          .seo-guide-page .seo-hero::before,
+          .seo-guide-page .seo-section::before,
+          .seo-guide-page .faq-section::before,
+          .seo-guide-page .bottom-cta::before {{
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, #5B78FF, #22C55E);
+            pointer-events: none;
+          }}
+          .seo-guide-page .seo-hero {{
+            align-items: stretch;
+          }}
+          .seo-guide-page .seo-hero .hero-panel {{
+            align-self: stretch;
+            background: #F8FBFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 18px !important;
+            box-shadow: none !important;
+            padding: 20px !important;
+          }}
+          .seo-guide-page .seo-grid {{
+            gap: 0;
+            padding: 0 !important;
+          }}
+          .seo-guide-page .seo-grid .checklist-section {{
+            border: 0 !important;
+            border-right: 1px solid #E2E8F0 !important;
+            padding: 24px !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+          }}
+          .seo-guide-page .seo-grid .checklist-section:last-child {{
+            border-right: 0 !important;
+          }}
+          .seo-guide-page h1,
+          .seo-guide-page h2,
+          .seo-guide-page h3,
+          .seo-guide-page strong,
+          .seo-guide-page .faq-item strong {{
+            color: #101B33 !important;
+            opacity: 1 !important;
+            letter-spacing: 0 !important;
+          }}
+          .seo-guide-page p,
+          .seo-guide-page li,
+          .seo-guide-page .faq-item p,
+          .seo-guide-page .hero-panel p {{
+            color: #334155 !important;
+            opacity: 1 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }}
+          .seo-guide-page h1 {{
+            font-size: clamp(34px, 5vw, 58px) !important;
+            line-height: 1.04 !important;
+            margin-bottom: 16px !important;
+          }}
+          .seo-guide-page h2 {{
+            font-size: clamp(22px, 3vw, 28px) !important;
+            line-height: 1.16 !important;
+            margin: 0 0 12px !important;
+          }}
+          .seo-guide-page h3 {{
+            font-size: clamp(17px, 2vw, 20px) !important;
+            line-height: 1.22 !important;
+          }}
+          .seo-guide-page .eyebrow {{
+            color: #3758D8 !important;
+          }}
+          .seo-guide-page .intent-chip-row span,
+          .seo-guide-page .related-links a {{
+            background: #EEF2FF !important;
+            border: 1px solid #C7D2FE !important;
+            color: #3157D5 !important;
+          }}
+          .seo-guide-page .faq-item {{
+            border-color: #E2E8F0 !important;
+          }}
+          @media (max-width: 900px) {{
+            .seo-guide-page .seo-grid .checklist-section {{
+              border-right: 0 !important;
+              border-bottom: 1px solid #E2E8F0 !important;
+            }}
+            .seo-guide-page .seo-grid .checklist-section:last-child {{
+              border-bottom: 0 !important;
+            }}
+          }}
+          @media (max-width: 768px) {{
+            .seo-guide-page .seo-hero,
+            .seo-guide-page .seo-section,
+            .seo-guide-page .faq-section,
+            .seo-guide-page .bottom-cta {{
+              padding: 22px !important;
+              border-radius: 18px !important;
+            }}
+            .seo-guide-page .seo-grid {{
+              border-radius: 18px !important;
+            }}
+            .seo-guide-page .seo-grid .checklist-section {{
+              padding: 22px !important;
+            }}
+            .seo-guide-page h1 {{
+              font-size: clamp(36px, 10vw, 46px) !important;
+            }}
+          }}
         </style>
       </head>
       <body data-auth-state="loading">
-        <div class="page-shell content-page">
+        <div class="page-shell content-page seo-guide-page">
           {build_site_header(None)}
 
           <section class="seo-hero">
