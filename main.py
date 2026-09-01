@@ -5505,9 +5505,6 @@ def build_site_header_css() -> str:
           body[data-auth-state="loading"] #accountMenuWrap {
             display: none !important;
           }
-          body[data-auth-state="pro"] #upgradeLink {
-            visibility: hidden;
-          }
           body[data-auth-state="loading"] .site-header-cta,
           body[data-auth-state="pro"] .site-header-cta {
             visibility: hidden;

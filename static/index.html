@@ -678,10 +678,6 @@
     display: none !important;
   }
 
-  body[data-auth-state="pro"] #upgradeLink {
-    visibility: hidden;
-  }
-
   body[data-auth-state="loading"] .site-header-cta,
   body[data-auth-state="pro"] .site-header-cta {
     visibility: hidden;
@@ -7108,21 +7104,9 @@
       }
 
       document.querySelectorAll("[data-upgrade-link]").forEach(function(el) {
-        const planKnown = !!currentPlan;
-        if (el.id === "upgradeLink" && !planKnown) {
-          el.classList.remove("hidden");
-          el.style.display = "";
-          el.style.visibility = "";
-          return;
-        }
-        if (el.id === "upgradeLink") {
-          el.classList.remove("hidden");
-          el.style.display = "";
-          el.style.visibility = currentPlan === "pro" ? "hidden" : "";
-          return;
-        }
-        el.classList.toggle("hidden", planKnown && currentPlan === "pro");
-        el.style.display = planKnown && currentPlan === "pro" ? "none" : "";
+        el.classList.remove("hidden");
+        el.style.display = "";
+        el.style.visibility = "";
       });
 
       updateToolHelperCopy(

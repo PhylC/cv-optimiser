@@ -120,14 +120,9 @@
 
   function setUpgradeVisibility(plan) {
     document.querySelectorAll("[data-upgrade-link]").forEach(function (el) {
-      if (el.id === "upgradeLink") {
-        el.classList.remove("hidden");
-        el.style.display = "";
-        el.style.visibility = plan === "pro" ? "hidden" : "";
-        return;
-      }
-      el.classList.toggle("hidden", plan === "pro");
-      el.style.display = plan === "pro" ? "none" : "";
+      el.classList.remove("hidden");
+      el.style.display = "";
+      el.style.visibility = "";
     });
   }
 
