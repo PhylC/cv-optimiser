@@ -7602,6 +7602,138 @@ def build_public_content_surface_css() -> str:
               padding-left: 20px !important;
             }
           }
+
+          .content-page .content-section,
+          .content-page .seo-section,
+          .content-page .flat-section,
+          .content-page .plain-section,
+          .landing-page .content-section,
+          .landing-page .seo-section,
+          .landing-page .flat-section,
+          .landing-page .plain-section,
+          .seo-page .content-section,
+          .seo-page .seo-section,
+          .seo-page .flat-section,
+          .seo-page .plain-section {
+            position: relative !important;
+            overflow: hidden !important;
+            background: #FFFFFF !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 22px !important;
+            color: #14213D !important;
+            padding: 26px !important;
+            margin: 18px 0 !important;
+            box-shadow: 0 18px 44px rgba(3, 9, 23, 0.16) !important;
+          }
+
+          .content-page .content-section::before,
+          .content-page .seo-section::before,
+          .content-page .flat-section::before,
+          .content-page .plain-section::before,
+          .landing-page .content-section::before,
+          .landing-page .seo-section::before,
+          .landing-page .flat-section::before,
+          .landing-page .plain-section::before,
+          .seo-page .content-section::before,
+          .seo-page .seo-section::before,
+          .seo-page .flat-section::before,
+          .seo-page .plain-section::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 0 auto !important;
+            height: 4px !important;
+            background: linear-gradient(90deg, #5B78FF, #22C55E) !important;
+            pointer-events: none !important;
+          }
+
+          .content-page .content-section h1,
+          .content-page .content-section h2,
+          .content-page .content-section h3,
+          .content-page .seo-section h1,
+          .content-page .seo-section h2,
+          .content-page .seo-section h3,
+          .content-page .flat-section h1,
+          .content-page .flat-section h2,
+          .content-page .flat-section h3,
+          .content-page .plain-section h1,
+          .content-page .plain-section h2,
+          .content-page .plain-section h3,
+          .landing-page .content-section h1,
+          .landing-page .content-section h2,
+          .landing-page .content-section h3,
+          .landing-page .seo-section h1,
+          .landing-page .seo-section h2,
+          .landing-page .seo-section h3,
+          .landing-page .flat-section h1,
+          .landing-page .flat-section h2,
+          .landing-page .flat-section h3,
+          .landing-page .plain-section h1,
+          .landing-page .plain-section h2,
+          .landing-page .plain-section h3,
+          .seo-page .content-section h1,
+          .seo-page .content-section h2,
+          .seo-page .content-section h3,
+          .seo-page .seo-section h1,
+          .seo-page .seo-section h2,
+          .seo-page .seo-section h3,
+          .seo-page .flat-section h1,
+          .seo-page .flat-section h2,
+          .seo-page .flat-section h3,
+          .seo-page .plain-section h1,
+          .seo-page .plain-section h2,
+          .seo-page .plain-section h3 {
+            color: #101B33 !important;
+            opacity: 1 !important;
+            letter-spacing: 0 !important;
+          }
+
+          .content-page .content-section p,
+          .content-page .content-section li,
+          .content-page .seo-section p,
+          .content-page .seo-section li,
+          .content-page .flat-section p,
+          .content-page .flat-section li,
+          .content-page .plain-section p,
+          .content-page .plain-section li,
+          .landing-page .content-section p,
+          .landing-page .content-section li,
+          .landing-page .seo-section p,
+          .landing-page .seo-section li,
+          .landing-page .flat-section p,
+          .landing-page .flat-section li,
+          .landing-page .plain-section p,
+          .landing-page .plain-section li,
+          .seo-page .content-section p,
+          .seo-page .content-section li,
+          .seo-page .seo-section p,
+          .seo-page .seo-section li,
+          .seo-page .flat-section p,
+          .seo-page .flat-section li,
+          .seo-page .plain-section p,
+          .seo-page .plain-section li {
+            color: #334155 !important;
+            opacity: 1 !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+          }
+
+          @media (max-width: 768px) {
+            .content-page .content-section,
+            .content-page .seo-section,
+            .content-page .flat-section,
+            .content-page .plain-section,
+            .landing-page .content-section,
+            .landing-page .seo-section,
+            .landing-page .flat-section,
+            .landing-page .plain-section,
+            .seo-page .content-section,
+            .seo-page .seo-section,
+            .seo-page .flat-section,
+            .seo-page .plain-section {
+              padding: 22px !important;
+              border-radius: 18px !important;
+            }
+          }
     """
 
 
