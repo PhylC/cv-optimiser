@@ -5444,9 +5444,6 @@ def build_site_header_css() -> str:
           .mobile-nav-panel {
             display: none;
           }
-          .mobile-quick-nav {
-            display: none;
-          }
           .site-header-account-row {
             display: flex;
             align-items: center;
@@ -5753,32 +5750,6 @@ def build_site_header_css() -> str:
             }
             .mobile-menu-toggle {
               display: inline-flex;
-            }
-            .mobile-quick-nav {
-              display: flex;
-              gap: 8px;
-              margin-top: 12px;
-              width: 100%;
-            }
-            .mobile-quick-nav a {
-              flex: 1;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 42px;
-              padding: 9px 12px;
-              border-radius: 14px;
-              border: 1px solid rgba(199, 210, 254, 0.28);
-              background: rgba(255, 255, 255, 0.07);
-              color: #E8EEFC;
-              font-size: 13px;
-              font-weight: 800;
-              text-decoration: none;
-            }
-            .mobile-quick-nav a[data-upgrade-link] {
-              background: linear-gradient(135deg, #5B78FF, #3E5EFF);
-              border-color: rgba(199, 210, 254, 0.42);
-              color: #FFFFFF;
             }
             .mobile-nav-panel {
               display: none;
@@ -7792,10 +7763,6 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
             </div>
           </div>
         </div>
-        <nav class="mobile-quick-nav" aria-label="Priority navigation">
-          <a href="/guides">Guides</a>
-          <a href="/upgrade" data-upgrade-link>Upgrade</a>
-        </nav>
         <nav id="mobileNavPanel" class="mobile-nav-panel" aria-label="Mobile primary navigation">
           <a href="/#tool">Check CV</a>
           <a href="/guides">Guides</a>
