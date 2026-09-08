@@ -10277,6 +10277,33 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .report-action-card p {{
             margin: 0;
           }}
+          .proof-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+          }}
+          .proof-card {{
+            padding: 16px;
+            border-radius: 16px;
+            background: #F8FAFC;
+            border: 1px solid #D8E1EF;
+          }}
+          .proof-card strong {{
+            display: block;
+            color: #101B33;
+            font-size: 15px;
+            margin-bottom: 6px;
+          }}
+          .proof-card p {{
+            margin: 0;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.6;
+          }}
+          .locked-list p {{
+            margin: 0 0 10px;
+          }}
           .cta-panel {{
             margin-top: 24px;
             text-align: center;
@@ -10287,7 +10314,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
 
           @media (max-width: 900px) {{
-            .report-grid, .before-after, .diagnosis-grid, .pro-impact-grid, .pro-snapshot-grid, .score-breakdown-grid {{
+            .report-grid, .before-after, .diagnosis-grid, .pro-impact-grid, .pro-snapshot-grid, .score-breakdown-grid, .proof-grid {{
               grid-template-columns: 1fr;
             }}
           }}
@@ -10312,7 +10339,8 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             .pro-snapshot-card,
             .score-breakdown-card,
             .keyword-group,
-            .report-action-card {{
+            .report-action-card,
+            .proof-card {{
               padding: 14px;
               border-radius: 14px;
             }}
@@ -10527,6 +10555,30 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
               <span class="report-action-chip">Print / save PDF</span>
             </div>
           </div>
+
+          <section class="card example-improvement-section" aria-labelledby="methodology-heading">
+            <div class="eyebrow">Methodology</div>
+            <h2 id="methodology-heading">What the report checks before recommending changes</h2>
+            <p>
+              CV Optimiser compares the CV against the target role rather than scoring it in isolation. The useful
+              output is the gap between the advert, the evidence already in the CV and the changes most likely to make
+              the application clearer.
+            </p>
+            <div class="proof-grid">
+              <div class="proof-card">
+                <strong>Role alignment</strong>
+                <p>Checks whether the first page makes the target role, seniority and relevant experience obvious.</p>
+              </div>
+              <div class="proof-card">
+                <strong>Evidence quality</strong>
+                <p>Looks for measurable outcomes, scope, tools, customers, markets and responsibilities that support the keywords.</p>
+              </div>
+              <div class="proof-card">
+                <strong>Priority fixes</strong>
+                <p>Separates urgent content gaps from cosmetic wording changes so the next edit is clear.</p>
+              </div>
+            </div>
+          </section>
 
           <div class="report-grid">
             <div>
