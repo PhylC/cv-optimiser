@@ -8057,7 +8057,7 @@ def build_lead_capture_css() -> str:
     return """
           .lead-capture-panel {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            grid-template-columns: 1fr;
             gap: 20px;
             align-items: center;
             margin: 28px 0;
@@ -9923,8 +9923,17 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
           .report-grid {{
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
+            grid-template-columns: 1fr;
             gap: 24px;
+          }}
+          .report-grid > div {{
+            display: grid;
+            gap: 24px;
+            align-content: start;
+          }}
+          .report-grid > div > .card,
+          .report-grid > div > section {{
+            margin-top: 0 !important;
           }}
           .score-block {{
             padding: 18px 20px;
@@ -9995,11 +10004,11 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             gap: 14px;
           }}
           .pro-impact-grid {{
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }}
           .pro-snapshot-grid,
           .score-breakdown-grid {{
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
           }}
           .keyword-importance-grid {{
             grid-template-columns: 1fr;
@@ -10218,7 +10227,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           }}
           .diagnosis-grid {{
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
             margin-top: 14px;
           }}
@@ -10427,6 +10436,28 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           .page.example-report-page .cta {{
             max-width: 100% !important;
             box-sizing: border-box !important;
+          }}
+          .page.example-report-page .report-grid {{
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+            margin: 0 !important;
+          }}
+          .page.example-report-page .report-grid > div {{
+            display: grid !important;
+            gap: 24px !important;
+            align-content: start !important;
+          }}
+          .page.example-report-page .report-grid > div > .card,
+          .page.example-report-page .report-grid > div > section {{
+            margin: 0 !important;
+          }}
+          .page.example-report-page .example-improvement-section {{
+            padding: 24px !important;
+            border: 1px solid #D8E1EF !important;
+            border-radius: 18px !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 14px 34px rgba(3, 9, 23, 0.14) !important;
           }}
           @media (max-width: 768px) {{
             .page.example-report-page,
@@ -10827,7 +10858,7 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .comparison-grid {{
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: 1fr;
             gap: 22px;
             margin: 30px 0;
           }}
@@ -10835,7 +10866,7 @@ def render_comparison_page(slug: str, page: dict[str, Any]) -> str:
             position: relative;
             overflow: hidden;
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+            grid-template-columns: 1fr;
             gap: 22px;
             margin: 30px 0;
             padding: 24px;
@@ -11191,7 +11222,7 @@ def render_seo_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .layout {{
             display: grid;
-            grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+            grid-template-columns: 1fr;
             gap: 24px;
           }}
           .card {{
@@ -13651,7 +13682,7 @@ def render_upgrade_page() -> str:
           }}
           .upgrade-grid {{
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-columns: 1fr;
             gap: 24px;
           }}
           .upgrade-card {{
