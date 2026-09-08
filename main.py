@@ -5935,6 +5935,7 @@ def build_mini_tool_consistency_css() -> str:
           .tool-frame {
             overflow: hidden !important;
             margin-top: 20px !important;
+            min-height: 1320px !important;
             border: 1px solid #DCE5F2 !important;
             border-radius: 22px !important;
             background: #F8FAFC !important;
@@ -5953,6 +5954,7 @@ def build_mini_tool_consistency_css() -> str:
 
             .tool-frame {
               margin-top: 16px !important;
+              min-height: 1120px !important;
               border-radius: 18px !important;
             }
           }
@@ -8359,7 +8361,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .tool-frame {{
             width: 100%;
-            min-height: 980px;
+            min-height: 1320px;
             height: auto;
             max-height: none;
             border: 0;
@@ -8371,7 +8373,7 @@ def render_tool_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .content-grid {{
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
+            grid-template-columns: 1fr;
             gap: 24px;
             margin-top: 24px;
             align-items: start;
@@ -11396,7 +11398,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
 {build_lead_capture_css()}
           .seo-hero {{
             display: grid;
-            grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.85fr);
+            grid-template-columns: 1fr;
             gap: 24px;
             align-items: end;
             margin: 30px 0 28px;
@@ -11458,7 +11460,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           .pro-proof-section,
           .example-link-panel {{
             display: grid;
-            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            grid-template-columns: 1fr;
             gap: 22px;
             align-items: start;
             margin: 28px 0;
@@ -11468,7 +11470,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .pro-proof-grid {{
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
           }}
           .pro-proof-card {{
@@ -11524,7 +11526,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           }}
           .tool-frame {{
             width: 100%;
-            min-height: 980px;
+            min-height: 1320px;
             height: auto;
             border: 0;
             border-radius: 18px;
@@ -12099,7 +12101,7 @@ def render_best_free_cv_checker_page() -> str:
 {build_cta_spacing_css()}
           .hero {{
             display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+            grid-template-columns: 1fr;
             gap: 28px;
             align-items: start;
             padding: 30px 0 34px;
@@ -12161,7 +12163,7 @@ def render_best_free_cv_checker_page() -> str:
           }}
           .split-grid {{
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: 1fr;
             gap: 28px;
           }}
           .section-list {{
