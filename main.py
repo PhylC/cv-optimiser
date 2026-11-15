@@ -3251,6 +3251,10 @@ example_cv_report_loc = canonical_url("/example-cv-report")
 if not any(entry["loc"] == example_cv_report_loc for entry in SITEMAP_URLS):
     SITEMAP_URLS.append({"loc": example_cv_report_loc, "priority": "0.7"})
 
+case_study_loc = canonical_url("/cv-improvement-case-study")
+if not any(entry["loc"] == case_study_loc for entry in SITEMAP_URLS):
+    SITEMAP_URLS.append({"loc": case_study_loc, "priority": "0.8"})
+
 for role_example_slug in ROLE_EXAMPLE_REPORTS:
     role_example_loc = canonical_url(f"/{role_example_slug}")
     if not any(entry["loc"] == role_example_loc for entry in SITEMAP_URLS):
@@ -3693,7 +3697,7 @@ Use this exact JSON structure:
 {role_focus_block}
 
 Quality rules:
-- score must be realistic, not inflated
+- score must be a realistic integer from 0 to 100, not a 1-to-10 rating and not inflated
 - use the detected role lens to judge what matters for this specific UK application
 - roleFocus must summarise the detected role lens and must not invent a sector unrelated to the advert
 - prioritise the role-specific signals, keywords, concerns and proof points above generic CV advice
@@ -3704,6 +3708,7 @@ Quality rules:
 - matchedKeywords must be short phrases clearly supported by the CV
 - missingKeywords must be genuinely important role terms missing or weak in the CV
 - scoreBreakdown must include exactly these five labelled signals in this order: Role alignment, Keyword coverage, Evidence strength, First-page clarity, ATS readability
+- every scoreBreakdown score must be an integer from 0 to 100, not a 1-to-10 rating
 - keywordImportance must separate critical missing keywords, useful supporting keywords, and keywords already covered
 - strongPoints must explain what already helps this CV for this role
 - weakPoints must explain what is vague, weak, missing, or likely to hurt shortlist chances
@@ -4460,6 +4465,17 @@ def coerce_string_list(value: Any, max_items: int = 5) -> list[str]:
     return items
 
 
+def normalize_model_score(value: Any) -> int:
+    """Normalise occasional model 1-10 ratings to the public 0-100 contract."""
+    try:
+        score = float(value)
+    except (TypeError, ValueError):
+        return 0
+    if 0 < score <= 10:
+        score *= 10
+    return max(0, min(100, round(score)))
+
+
 def coerce_named_score_list(value: Any, max_items: int = 5) -> list[dict[str, Any]]:
     if not isinstance(value, list):
         return []
@@ -4470,11 +4486,7 @@ def coerce_named_score_list(value: Any, max_items: int = 5) -> list[dict[str, An
             continue
         label = coerce_string(item.get("label") or item.get("name") or item.get("area"))
         detail = coerce_string(item.get("detail") or item.get("reason") or item.get("copy"))
-        try:
-            score = int(item.get("score", 0))
-        except Exception:
-            score = 0
-        score = max(0, min(100, score))
+        score = normalize_model_score(item.get("score", 0))
         if label:
             items.append({"label": label, "score": score, "detail": detail})
         if len(items) >= max_items:
@@ -5156,11 +5168,7 @@ def build_guided_workflow(data: dict[str, Any]) -> list[dict[str, str]]:
 
 
 def normalize_analysis_data(data: dict[str, Any], is_pro: bool, role_focus: Optional[dict[str, Any]] = None) -> dict[str, Any]:
-    try:
-        score = int(data.get("score", 0))
-    except Exception:
-        score = 0
-    score = max(0, min(100, score))
+    score = normalize_model_score(data.get("score", 0))
 
     normalized = {
         "score": score,
@@ -10567,6 +10575,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             <h1>{html.escape(page["h1"])}</h1>
             <p>{html.escape(page["intro"])}</p>
             <p class="example-truth-note">This page uses fictional sample data, but the report layout, section names and upgrade workflow mirror the full CV Optimiser report.</p>
+            <p><a class="text-link" href="/cv-improvement-case-study">See the controlled before-and-after proof case</a></p>
             {build_compliance_notice()}
             <div class="cta-row cta-block-tight">
               <a href="/#tool" class="cta cta-button">Check your CV now</a>
@@ -10788,6 +10797,217 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
           {build_site_footer()}
         </div>
         {build_lead_capture_script()}
+      </body>
+    </html>
+    """
+
+
+def render_cv_improvement_case_study_page() -> str:
+    page_url = canonical_url("/cv-improvement-case-study")
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Controlled CV Improvement Case Study | CV Optimiser</title>
+        <meta name="description" content="A transparent controlled CV Optimiser demonstration showing the same fictional account-manager case before and after truthful, evidence-led edits.">
+        {canonical_link_tag("/cv-improvement-case-study")}
+        {google_tag()}
+        <meta property="og:title" content="Controlled CV improvement case: 50 to 70">
+        <meta property="og:description" content="See the fixed inputs, exact edits, measured score movement and limits of this controlled CV Optimiser demonstration.">
+        <meta property="og:url" content="{page_url}">
+        <meta property="og:type" content="article">
+        {build_footer_assets_head()}
+        <style>
+          body {{
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            background:
+              radial-gradient(circle at top left, rgba(56, 217, 150, 0.15), transparent 30%),
+              radial-gradient(circle at top right, rgba(91, 120, 255, 0.16), transparent 28%),
+              #08111f;
+            color: #e8eefc;
+          }}
+          .page {{ max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; box-sizing: border-box; }}
+          {build_site_header_css()}
+          {build_typography_css()}
+          {build_cta_spacing_css()}
+          .hero, .panel {{
+            background: rgba(15, 28, 50, 0.82);
+            border: 1px solid rgba(139, 157, 197, 0.22);
+            border-radius: 22px;
+            padding: 28px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+          }}
+          .hero {{ margin-top: 24px; }}
+          .eyebrow {{ color: #77e4b5; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }}
+          h1 {{ max-width: 820px; margin: 10px 0 14px; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; }}
+          h2 {{ margin: 0 0 14px; font-size: clamp(24px, 3vw, 34px); }}
+          h3 {{ margin: 0 0 8px; }}
+          p, li {{ color: #cbd6ee; line-height: 1.65; }}
+          .truth-badge {{
+            display: inline-flex; margin-top: 12px; padding: 8px 12px; border-radius: 999px;
+            background: rgba(56, 217, 150, .12); border: 1px solid rgba(56, 217, 150, .34);
+            color: #bdf5da; font-weight: 800; font-size: 13px;
+          }}
+          .score-row {{ display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; margin-top: 24px; }}
+          .score-card {{ background: #f8fafc; color: #0f172a; border-radius: 18px; padding: 22px; }}
+          .score-card p, .score-card li {{ color: #475569; }}
+          .score-value {{ font-size: 52px; line-height: 1; font-weight: 900; margin: 10px 0; }}
+          .score-before {{ color: #d97706; }}
+          .score-after {{ color: #12805c; }}
+          .score-arrow {{ display: grid; place-items: center; color: #77e4b5; font-size: 30px; font-weight: 900; }}
+          .grid-2 {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 22px; }}
+          .panel {{ margin-top: 22px; }}
+          .input-box {{ background: rgba(4, 12, 26, .56); border: 1px solid rgba(139, 157, 197, .2); border-radius: 14px; padding: 18px; }}
+          .input-box p {{ margin: 0; white-space: pre-line; }}
+          .edit-list {{ display: grid; gap: 12px; margin-top: 16px; }}
+          .edit {{ background: rgba(4, 12, 26, .5); border-left: 3px solid #77e4b5; border-radius: 10px; padding: 14px 16px; }}
+          .edit strong {{ display: block; margin-bottom: 4px; }}
+          table {{ width: 100%; border-collapse: collapse; margin-top: 16px; }}
+          th, td {{ padding: 13px 12px; text-align: left; border-bottom: 1px solid rgba(139, 157, 197, .2); }}
+          th {{ color: #aebddd; font-size: 13px; }}
+          td strong {{ color: #fff; }}
+          .delta {{ color: #77e4b5; font-weight: 900; }}
+          .limits {{ border-color: rgba(245, 158, 11, .38); background: rgba(83, 49, 7, .24); }}
+          .cta-row {{ display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }}
+          .cta {{ display: inline-flex; padding: 14px 18px; border-radius: 13px; background: #5b78ff; color: #fff; font-weight: 800; text-decoration: none; }}
+          .text-link {{ color: #b9c8ff; font-weight: 700; text-underline-offset: 3px; }}
+          @media (max-width: 760px) {{
+            .page {{ padding: 20px 14px 48px; }}
+            .hero, .panel {{ padding: 20px; }}
+            .score-row, .grid-2 {{ grid-template-columns: 1fr; }}
+            .score-arrow {{ transform: rotate(90deg); min-height: 38px; }}
+            table {{ font-size: 14px; }}
+            th, td {{ padding: 10px 7px; }}
+          }}
+          {build_mobile_layout_css()}
+          {build_public_content_surface_css()}
+        </style>
+      </head>
+      <body data-auth-state="loading">
+        <div class="page content-page">
+          {build_site_header("example-cv-report")}
+
+          <main>
+            <section class="hero">
+              <div class="eyebrow">Controlled proof case</div>
+              <h1>The same fictional CV moved from 50 to 70 after evidence-led edits</h1>
+              <p>This is a transparent product demonstration using one fixed job advert and a fictional composite account manager. It shows what changed, why it changed and what the result does—and does not—prove.</p>
+              <span class="truth-badge">Controlled demonstration · fictional composite · not a customer testimonial</span>
+              <div class="score-row" aria-label="Role-fit score improved from 50 to 70">
+                <article class="score-card">
+                  <span>Before</span>
+                  <div class="score-value score-before">50/100</div>
+                  <strong>Relevant, but too vague</strong>
+                  <p>The first version mentioned the right themes but gave no quantified proof of commercial impact.</p>
+                </article>
+                <div class="score-arrow" aria-hidden="true">→</div>
+                <article class="score-card">
+                  <span>After</span>
+                  <div class="score-value score-after">70/100</div>
+                  <strong>Clearer evidence and role fit</strong>
+                  <p>The revision made revenue, forecasting, retention, P&amp;L ownership and retailer execution easier to verify.</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="eyebrow">Fixed test method</div>
+              <h2>What stayed constant</h2>
+              <ul>
+                <li>The same job advert was used for both checks.</li>
+                <li>The candidate profile remained an account manager with eight years of retail experience.</li>
+                <li>The revised version adds fictional achievements assumed to be true within the same composite candidate; the original short version omitted them.</li>
+                <li>Both results were captured from the live free checker on 15 November 2026.</li>
+              </ul>
+              <div class="input-box">
+                <h3>Target job advert</h3>
+                <p>We are looking for an account manager with experience in stakeholder management, forecasting, commercial planning, sales growth, customer relationship management, P&amp;L ownership, and retailer execution.</p>
+              </div>
+            </section>
+
+            <div class="grid-2">
+              <section class="panel">
+                <div class="eyebrow">Original input</div>
+                <h2>Before: broad claims</h2>
+                <div class="input-box"><p>Experienced account manager with 8 years of experience managing retail customers, delivering sales growth, building customer plans, forecasting demand, improving commercial performance, and working with senior stakeholders.</p></div>
+                <h3 style="margin-top:18px;">Live diagnosis</h3>
+                <ul>
+                  <li>No quantified commercial results.</li>
+                  <li>No explicit P&amp;L or retailer-execution evidence.</li>
+                  <li>Customer relationship language was not tied to outcomes.</li>
+                </ul>
+              </section>
+              <section class="panel">
+                <div class="eyebrow">Revised input</div>
+                <h2>After: specific proof</h2>
+                <div class="input-box"><p>Account Manager | Retail &amp; Commercial Growth
+
+Account manager with 8 years of retail experience managing national customers and delivering sales growth through customer plans, forecasting and retailer execution.
+
+• Grew annual account revenue by 12% to £4.2m by identifying distribution gaps and agreeing joint customer plans.
+• Improved forecast accuracy from 68% to 86%, reducing stock-outs and strengthening monthly demand planning.
+• Retained 96% of account revenue while renewing two key agreements through quarterly stakeholder reviews.
+• Owned customer P&amp;L and promotional investment, reallocating £120k toward activity with stronger measured returns.
+• Coordinated sales, supply chain and marketing teams to deliver retailer launches on time.</p></div>
+              </section>
+            </div>
+
+            <section class="panel">
+              <div class="eyebrow">Exact changes</div>
+              <h2>Why the score moved</h2>
+              <div class="edit-list">
+                <div class="edit"><strong>Commercial impact became measurable</strong><span>“Delivering sales growth” became a stated 12% increase and £4.2m account scale.</span></div>
+                <div class="edit"><strong>Forecasting became evidence</strong><span>The revision showed a change from 68% to 86% and linked it to fewer stock-outs.</span></div>
+                <div class="edit"><strong>Retention and stakeholders were connected</strong><span>Quarterly reviews were tied to 96% retained revenue and two renewals.</span></div>
+                <div class="edit"><strong>P&amp;L ownership became explicit</strong><span>The revised version named promotional investment and the scale of the reallocation.</span></div>
+                <div class="edit"><strong>Retailer execution became concrete</strong><span>Cross-functional launch delivery replaced a general reference to working with stakeholders.</span></div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="eyebrow">Measured comparison</div>
+              <h2>Score breakdown</h2>
+              <table>
+                <thead><tr><th>Signal</th><th>Before</th><th>After</th><th>Movement</th></tr></thead>
+                <tbody>
+                  <tr><td>Role alignment</td><td><strong>60</strong></td><td><strong>80</strong></td><td class="delta">+20</td></tr>
+                  <tr><td>Keyword coverage</td><td><strong>50</strong></td><td><strong>70</strong></td><td class="delta">+20</td></tr>
+                  <tr><td>Evidence strength</td><td><strong>40</strong></td><td><strong>80</strong></td><td class="delta">+40</td></tr>
+                  <tr><td>First-page clarity</td><td><strong>70</strong></td><td><strong>70</strong></td><td>0</td></tr>
+                  <tr><td>ATS readability</td><td><strong>80</strong></td><td><strong>70</strong></td><td>−10</td></tr>
+                </tbody>
+              </table>
+              <p>The useful signal is not that every sub-score rose. Evidence strength improved substantially, while ATS readability moved down in this run. That mixed result is why the product presents a diagnosis rather than claiming a guaranteed outcome.</p>
+            </section>
+
+            <section class="panel limits">
+              <div class="eyebrow">Important limits</div>
+              <h2>What this case does not prove</h2>
+              <ul>
+                <li>It is not a real customer result or an endorsement.</li>
+                <li>It does not prove that a score of 70 will produce interviews, pass an employer's ATS or lead to a job offer.</li>
+                <li>AI-assisted scoring is directional and can vary between runs as models and product logic change.</li>
+                <li>The figures are fictional composite data. Never add a number, responsibility or achievement to your own CV unless it is true and you can defend it.</li>
+              </ul>
+              <p><strong>What it does show:</strong> when the underlying evidence exists, making it specific, role-relevant and easy to scan can materially change the tool's diagnosis.</p>
+            </section>
+
+            <section class="panel">
+              <h2>Run the same kind of check on your CV</h2>
+              <p>Use your real CV and a real job advert. Treat the result as an editing guide, keep every claim truthful and re-check after making changes.</p>
+              <div class="cta-row">
+                <a class="cta cta-button" href="/#tool">Check your CV now</a>
+                <a class="text-link" href="/how-cv-optimiser-scores-your-cv">Read the scoring methodology</a>
+                <a class="text-link" href="/example-cv-report">View the full example report</a>
+              </div>
+            </section>
+          </main>
+
+          {build_site_footer()}
+        </div>
       </body>
     </html>
     """
@@ -14216,6 +14436,13 @@ def cv_improvement_tool_page(request: Request) -> str:
 def example_cv_report_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
     return render_example_report_page("example-cv-report")
+
+
+@app.get("/cv-improvement-case-study", response_class=HTMLResponse)
+@app.get("/cv-improvement-case-study/", response_class=HTMLResponse, include_in_schema=False)
+def cv_improvement_case_study_page(request: Request) -> str:
+    log_seo_page_hit(request.url.path)
+    return render_cv_improvement_case_study_page()
 
 
 def make_role_example_report_handler(slug: str):
