@@ -34,3 +34,14 @@ def test_controlled_case_study_is_linked_and_transparent() -> None:
     assert "Controlled demonstration · fictional composite · not a customer testimonial" in main_source
     assert "does not prove that a score of 70 will produce interviews" in main_source
     assert 'href="/cv-improvement-case-study"' in index_source
+
+
+def test_best_uk_cv_checker_page_matches_search_intent() -> None:
+    source = MAIN_PY.read_text(encoding="utf-8")
+
+    assert '"title": "Best CV Checker UK: What to Look For Before Applying"' in source
+    assert '"h1": "Best CV checker UK: what to look for before applying"' in source
+    assert '"Quick answer: what makes a good UK CV checker?"' in source
+    assert '"What is the best CV checker in the UK?"' in source
+    assert '"last_updated": "November 2026"' in source
+    assert '("/best-cv-checker-for-uk-job-applications", "How to choose the best CV checker UK")' in source

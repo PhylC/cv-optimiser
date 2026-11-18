@@ -2315,19 +2315,31 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
 
 CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
     "best-cv-checker-for-uk-job-applications": {
-        "title": "Best CV Checker for UK Job Applications | CV Optimiser",
-        "meta_description": "Learn what to look for in a UK CV checker, including job-description matching, recruiter-style feedback, ATS readability and practical rewrite guidance.",
-        "h1": "Best CV checker for UK job applications",
-        "intro": "The best CV checker for a UK job application should do more than spot spelling issues. It should compare your CV with the actual advert, explain the score and show what to improve before you apply.",
-        "who": ["UK job seekers applying to specific roles", "Candidates who want focused feedback before submitting", "People comparing free CV checkers, ATS tools and AI prompts"],
-        "looks_for": ["Role-fit against the job description", "Missing keywords used naturally", "Evidence strength and first-page clarity", "ATS-readable structure and honest limitations"],
-        "manual": ["Check whether the tool asks for the job description", "Look for score criteria, not just a single number", "Make sure examples show the real type of output", "Avoid tools that promise guaranteed interviews or guaranteed ATS success"],
+        "title": "Best CV Checker UK: What to Look For Before Applying",
+        "meta_description": "Compare what a useful UK CV checker should assess: job-description match, ATS readability, missing keywords, evidence and practical improvements.",
+        "h1": "Best CV checker UK: what to look for before applying",
+        "intro": "The best CV checker for a UK job application should do more than spot spelling issues. It should compare your CV with the actual job description, explain the result and show which improvements matter before you apply.",
+        "who": ["UK job seekers applying to a specific advertised role", "Candidates who want a useful CV check before submitting", "People comparing free CV checkers, ATS tools and general AI prompts"],
+        "looks_for": ["Role fit against the job description", "Missing keywords used naturally and supported by evidence", "Achievement strength and first-page clarity", "ATS-readable structure", "Clear limitations instead of guaranteed outcomes"],
+        "manual": ["Check whether the tool asks for the job description", "Look for explained criteria, not just a single unexplained score", "Make sure examples show the real type of output", "Check whether suggestions preserve truthful experience", "Avoid tools that promise guaranteed interviews or guaranteed ATS success"],
         "sections": [
-            ("What a strong UK CV checker should include", "Look for a clear role-fit score, role-specific missing keywords, recruiter-style verdicts, practical rewrite guidance and transparent guidance on what the tool can and cannot know."),
-            ("Why CV Optimiser is focused", "CV Optimiser is built around the job application moment: paste your CV, paste the advert, see whether the CV is ready and know what to fix first."),
+            ("Quick answer: what makes a good UK CV checker?", "A useful checker should assess the CV against the role you actually want. It should identify missing job-description language, weak or unsupported evidence, unclear positioning and formatting that makes the CV harder to scan. It should also explain its limitations rather than promising an interview."),
+            ("Why a job-matched CV check is more useful", "A generic CV can look polished and still be a weak application. Comparing it with the job description shows whether the employer's priorities are visible in your profile, recent experience, achievements and skills."),
+            ("How to run a practical CV check before applying", "Paste the CV you intend to send and the full job advert. Review the role-fit result, missing keywords and priority fixes, then change only what is accurate. Re-run the same check after editing so you can see whether relevance and evidence have become clearer."),
+            ("Why CV Optimiser is focused", "CV Optimiser is built around the application moment: paste your CV, paste the advert, see the role-fit score and know what to fix first. The first check does not require an account, and the guidance does not guarantee an interview or an ATS outcome."),
         ],
-        "related": [("/cv-checker", "CV checker"), ("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/cv-optimiser-vs-chatgpt", "CV Optimiser vs ChatGPT")],
+        "related": [("/cv-checker", "Run the CV checker"), ("/best-free-cv-checker-uk", "Best free CV checker UK"), ("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/cv-optimiser-vs-chatgpt", "CV Optimiser vs ChatGPT")],
         "tool": True,
+        "cta_label": "Check my CV against a job description",
+        "cta_support": "Use the guide to compare CV checkers, then run CV Optimiser against a real advert to find role-fit, keyword and evidence gaps.",
+        "last_updated": "November 2026",
+        "faqs": [
+            ("What is the best CV checker in the UK?", "The best option depends on your need, but a useful UK CV checker should compare your CV with the job description, explain its criteria and give practical improvements without guaranteeing an interview."),
+            ("Can I check my CV against a job description?", "Yes. A job-matched check is usually more useful than a generic review because it tests whether your CV makes the right skills, keywords and evidence visible for that role."),
+            ("Is CV Optimiser free to try?", "Your first CV Optimiser check does not require an account. Paste your CV and a job description to see the initial role-fit result and priority fixes."),
+            ("Can a CV checker guarantee that an ATS will accept my CV?", "No. Employer systems and settings vary. A checker can identify practical readability, keyword and role-match risks, but it cannot guarantee an ATS or recruitment outcome."),
+            ("What should I change after a CV check?", "Start with unclear target-role positioning, missing truthful evidence and weak achievement bullets. Use only suggestions that accurately reflect your experience, then recheck the same CV against the same advert."),
+        ],
     },
     "is-it-safe-to-upload-your-cv-to-an-ai-checker": {
         "title": "Is It Safe to Upload Your CV to an AI Checker? | CV Optimiser",
@@ -11652,6 +11664,11 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         "seo_role" if page.get("pro_checks") else "seo_content",
         role_label,
     )
+    freshness_html = (
+        f'<p class="page-freshness">Updated {html.escape(page["last_updated"])}</p>'
+        if page.get("last_updated")
+        else ""
+    )
     return f"""
     <!doctype html>
     <html lang="en">
@@ -12065,6 +12082,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
           <section class="seo-hero">
             <div>
               <p class="eyebrow">CV Optimiser guide</p>
+              {freshness_html}
               <h1>{html.escape(page["h1"])}</h1>
               <p>{html.escape(page["intro"])}</p>
               <div class="cta-block-tight">{cta}</div>
@@ -12322,6 +12340,7 @@ def render_best_free_cv_checker_page() -> str:
     internal_links = [
         ("/", "CV checker"),
         ("/cv-checker", "Free CV checker"),
+        ("/best-cv-checker-for-uk-job-applications", "How to choose the best CV checker UK"),
         ("/ats-cv-checker", "ATS CV checker"),
         ("/cv-score-checker", "CV score checker"),
         ("/cv-keyword-optimiser", "CV keyword optimiser"),
