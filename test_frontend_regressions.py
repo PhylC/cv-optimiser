@@ -45,3 +45,21 @@ def test_best_uk_cv_checker_page_matches_search_intent() -> None:
     assert '"What is the best CV checker in the UK?"' in source
     assert '"last_updated": "November 2026"' in source
     assert '("/best-cv-checker-for-uk-job-applications", "How to choose the best CV checker UK")' in source
+
+
+def test_homepage_search_snippet_leads_with_brand_and_free_value() -> None:
+    source = INDEX_HTML.read_text(encoding="utf-8")
+
+    title = "CV Optimiser: Free UK CV Checker &amp; Job Match Score"
+    description = (
+        "CV Optimiser checks your CV against a job description for free. "
+        "Get a UK role-fit score, missing keywords and practical fixes before you apply."
+    )
+
+    assert f"<title>{title}</title>" in source
+    assert f'<meta name="description" content="{description}">' in source
+    assert f'<meta property="og:title" content="{title}">' in source
+    assert f'<meta name="twitter:title" content="{title}">' in source
+    assert '<link rel="canonical" href="https://www.cv-optimiser.com/">' in source
+    assert '"price": "0"' in source
+    assert '"priceCurrency": "GBP"' in source
