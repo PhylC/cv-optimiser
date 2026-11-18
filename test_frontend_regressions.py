@@ -63,3 +63,12 @@ def test_homepage_search_snippet_leads_with_brand_and_free_value() -> None:
     assert '<link rel="canonical" href="https://www.cv-optimiser.com/">' in source
     assert '"price": "0"' in source
     assert '"priceCurrency": "GBP"' in source
+
+
+def test_sitemap_dates_only_the_pages_changed_today() -> None:
+    source = MAIN_PY.read_text(encoding="utf-8")
+
+    assert 'canonical_url("/"): "2026-11-18"' in source
+    assert 'canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-18"' in source
+    assert 'canonical_url("/best-free-cv-checker-uk"): "2026-11-18"' in source
+    assert 'lastmod = SITEMAP_LASTMOD_BY_LOC.get(entry["loc"])' in source

@@ -3277,6 +3277,12 @@ for comparison_slug in COMPARISON_PAGES:
     if not any(entry["loc"] == comparison_loc for entry in SITEMAP_URLS):
         SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
+SITEMAP_LASTMOD_BY_LOC = {
+    canonical_url("/"): "2026-11-18",
+    canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-18",
+    canonical_url("/best-free-cv-checker-uk"): "2026-11-18",
+}
+
 
 def require_openai() -> OpenAI:
     if not openai_client:
@@ -14531,9 +14537,11 @@ def sitemap() -> Response:
     for entry in SITEMAP_URLS:
         if entry.get("group"):
             parts.append(f"  <!-- {html.escape(entry['group'])} -->")
+        lastmod = SITEMAP_LASTMOD_BY_LOC.get(entry["loc"])
+        lastmod_xml = f"\n    <lastmod>{lastmod}</lastmod>" if lastmod else ""
         parts.append(
             f"""  <url>
-    <loc>{html.escape(entry["loc"])}</loc>
+    <loc>{html.escape(entry["loc"])}</loc>{lastmod_xml}
     <priority>{html.escape(entry["priority"])}</priority>
   </url>"""
         )
