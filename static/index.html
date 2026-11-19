@@ -1192,12 +1192,23 @@
     line-height: 1.35;
   }
 
+  .tool-upload-shortcut {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #24324B;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   .upload-details {
     border: 0;
     border-top: 1px solid rgba(148, 163, 184, 0.24);
     border-radius: 0;
     background: transparent;
     padding: 14px 0 0;
+    scroll-margin-top: 96px;
   }
 
   .upload-details summary {
@@ -5727,6 +5738,7 @@
         <h1 class="homepage-hero-title tool-hero-title">Check your CV against the job</h1>
         <p class="homepage-hero-subtitle tool-hero-support">Paste your CV and the advert to get a UK-focused role-fit score, missing keywords, recruiter-style verdict and priority fixes for serious job applications.</p>
         <p class="compliance-notice">UK-focused, AI-assisted guidance. Your first check does not need an account, and no job outcome is guaranteed.</p>
+        <a id="uploadCvShortcut" class="tool-upload-shortcut" href="#cv-upload">Upload a CV file</a>
         <div class="conversion-trust-row" aria-label="CV check details">
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>No signup required</span></div>
           <div class="conversion-trust-item"><span class="conversion-trust-icon">✓</span><span>CV handling explained</span></div>
@@ -5747,22 +5759,12 @@
           </div>
         </div>
 
-        <p class="upload-intro">Start with paste. It keeps the check focused and avoids uploading anything you do not need to share.</p>
+        <p class="upload-intro">Upload a file or paste your CV text. You can remove personal details before running the check.</p>
 
         <div class="tool-form">
-          <div class="paste-toggle form-section paste-cv-section">
-            <div class="form-step-label"><span>1</span> CV text</div>
-            <label class="field-label" for="cvText">Paste your CV</label>
-            <p class="field-helper field-help">Paste the CV you would actually send. You can remove phone numbers, addresses or anything sensitive first.</p>
-            <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here..."></textarea>
-          </div>
-
-          <div class="tool-actions-row">
-            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try an example CV</button>
-          </div>
-
-          <details class="upload-details">
-            <summary>Upload a CV file instead <span>PDF, DOCX or TXT</span></summary>
+          <div class="form-step-label"><span>1</span> Add your CV</div>
+          <details id="cv-upload" class="upload-details">
+            <summary>Upload a CV file <span>PDF, DOCX or TXT</span></summary>
             <div class="tool-step form-section upload-section">
               <label for="cvFileInput">Upload your CV</label>
               <div class="field-helper">Avoid national insurance numbers, bank details, passport details, or other information not needed for a CV check.</div>
@@ -5775,6 +5777,16 @@
               </div>
             </div>
           </details>
+
+          <div class="paste-toggle form-section paste-cv-section">
+            <label class="field-label" for="cvText">Or paste your CV</label>
+            <p class="field-helper field-help">Paste the CV you would actually send. You can remove phone numbers, addresses or anything sensitive first.</p>
+            <textarea id="cvText" class="text-field cv-textarea" placeholder="Paste your CV text here..."></textarea>
+          </div>
+
+          <div class="tool-actions-row">
+            <button id="sampleCvBtn" class="text-link-btn sample-cv-btn" data-action="sample-cv" type="button">Try an example CV</button>
+          </div>
 
           <div class="tool-step form-section job-description-section">
             <div class="form-step-label"><span>2</span> Target role</div>
@@ -9753,6 +9765,13 @@ passwordLoginBtn.addEventListener("click", async function() {
 
     const uploadDetails = document.querySelector(".upload-details");
     if (uploadDetails) {
+      const uploadShortcut = document.getElementById("uploadCvShortcut");
+      if (uploadShortcut) {
+        uploadShortcut.addEventListener("click", function() {
+          uploadDetails.open = true;
+          uploadDetails.querySelector("summary").focus({ preventScroll: true });
+        });
+      }
       uploadDetails.addEventListener("toggle", function() {
         if (uploadDetails.open) {
           trackEvent("upload_cv_revealed");
