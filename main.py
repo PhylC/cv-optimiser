@@ -2316,23 +2316,22 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
 
 CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
     "best-cv-checker-for-uk-job-applications": {
-        "title": "Best CV Checker UK: What to Look For Before Applying",
-        "meta_description": "Compare what a useful UK CV checker should assess: job-description match, ATS readability, missing keywords, evidence and practical improvements.",
-        "h1": "Best CV checker UK: what to look for before applying",
-        "intro": "The best CV checker for a UK job application should do more than spot spelling issues. It should compare your CV with the actual job description, explain the result and show which improvements matter before you apply.",
+        "title": "How to Choose a CV Checker for UK Job Applications",
+        "meta_description": "Compare job-matching CV checkers, ATS scans and human CV reviews. See what each can tell you and how to choose for a UK job application.",
+        "h1": "How to choose a CV checker for UK job applications",
+        "intro": "Choose a CV checker based on what you need to find out. A job-matching checker can show gaps against an advert, an ATS scan can flag readability issues, and a human reviewer can help with more complex career decisions.",
         "who": ["UK job seekers applying to a specific advertised role", "Candidates who want a useful CV check before submitting", "People comparing free CV checkers, ATS tools and general AI prompts"],
         "looks_for": ["Role fit against the job description", "Missing keywords used naturally and supported by evidence", "Achievement strength and first-page clarity", "ATS-readable structure", "Clear limitations instead of guaranteed outcomes"],
         "manual": ["Check whether the tool asks for the job description", "Look for explained criteria, not just a single unexplained score", "Make sure examples show the real type of output", "Check whether suggestions preserve truthful experience", "Avoid tools that promise guaranteed interviews or guaranteed ATS success"],
         "sections": [
             ("Quick answer: what makes a good UK CV checker?", "A useful checker should assess the CV against the role you actually want. It should identify missing job-description language, weak or unsupported evidence, unclear positioning and formatting that makes the CV harder to scan. It should also explain its limitations rather than promising an interview."),
-            ("Why a job-matched CV check is more useful", "A generic CV can look polished and still be a weak application. Comparing it with the job description shows whether the employer's priorities are visible in your profile, recent experience, achievements and skills."),
-            ("How to run a practical CV check before applying", "Paste the CV you intend to send and the full job advert. Review the role-fit result, missing keywords and priority fixes, then change only what is accurate. Re-run the same check after editing so you can see whether relevance and evidence have become clearer."),
-            ("Why CV Optimiser is focused", "CV Optimiser is built around the application moment: paste your CV, paste the advert, see the role-fit score and know what to fix first. The first check does not require an account, and the guidance does not guarantee an interview or an ATS outcome."),
+            ("Job match or ATS scan?", "Use a job-matching checker when you have a specific advert and want to see where your CV lacks relevant evidence. Use an ATS scan to check headings, formatting and readability. An ATS scan alone cannot tell you whether your experience fits the role."),
+            ("When a human review is worth it", "Consider a human reviewer for a career change, a senior role or a specialist application. Bring the job advert and ask which parts of your work history best support the application."),
+            ("What to compare before paying", "Try the same CV and job advert in each tool. Look for specific, accurate feedback and an explanation of what the first result includes. Check whether any detailed rewrites, exports or follow-up checks cost extra."),
         ],
-        "related": [("/cv-checker", "Run the CV checker"), ("/best-free-cv-checker-uk", "Best free CV checker UK"), ("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/cv-optimiser-vs-chatgpt", "CV Optimiser vs ChatGPT")],
-        "tool": True,
-        "cta_label": "Check my CV against a job description",
-        "cta_support": "Use the guide to compare CV checkers, then run CV Optimiser against a real advert to find role-fit, keyword and evidence gaps.",
+        "related": [("/#tool", "Run the CV checker"), ("/best-free-cv-checker-uk", "See what the free CV check includes"), ("/best-ats-cv-checker-uk", "Best ATS CV checker UK"), ("/cv-optimiser-vs-chatgpt", "CV Optimiser vs ChatGPT")],
+        "cta_label": "Try the CV checker on a job advert",
+        "cta_support": "Test a job-matching checker with one real advert and see which gaps it identifies in your CV.",
         "last_updated": "November 2026",
         "faqs": [
             ("What is the best CV checker in the UK?", "The best option depends on your need, but a useful UK CV checker should compare your CV with the job description, explain its criteria and give practical improvements without guaranteeing an interview."),
@@ -3194,7 +3193,7 @@ SEO_LANDING_PAGES["cv-improvement-tool"] = {
 BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
     (
         "Is CV Optimiser free?",
-        "You can run an initial CV check without needing to create an account. Paid options may be available for deeper guidance, saved results or additional features.",
+        "Your first check gives you a role-fit score and a preview of the changes to prioritise without creating an account. Create a free account to save the result. Unlocking the full report is a paid option.",
     ),
     (
         "Does a CV checker guarantee interviews?",
@@ -3279,9 +3278,9 @@ for comparison_slug in COMPARISON_PAGES:
         SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
 SITEMAP_LASTMOD_BY_LOC = {
-    canonical_url("/"): "2026-11-18",
-    canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-18",
-    canonical_url("/best-free-cv-checker-uk"): "2026-11-18",
+    canonical_url("/"): "2026-11-20",
+    canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-20",
+    canonical_url("/best-free-cv-checker-uk"): "2026-11-20",
 }
 
 
@@ -12359,10 +12358,10 @@ def render_ten_second_cv_test_page() -> str:
 
 def render_best_free_cv_checker_page() -> str:
     page_url = canonical_url("/best-free-cv-checker-uk")
-    meta_title = "Best Free CV Checker UK | Check Your CV Against a Job Description"
+    meta_title = "Free CV Check UK: What’s Included | CV Optimiser"
     meta_description = (
-        "Use CV Optimiser to check your CV against a job description, find missing keywords, "
-        "improve weak bullet points and spot ATS issues before you apply."
+        "See what CV Optimiser’s free UK CV check includes: a role-fit score and priority fixes, "
+        "with no signup for the first result. Compare it with the paid report."
     )
     trust_bullets = [
         "No signup needed for your first result",
@@ -12406,16 +12405,14 @@ def render_best_free_cv_checker_page() -> str:
         "Includes example reports so you can see the output before using your own CV",
         "Keeps the first check focused, with no signup needed for the first result",
     ]
-    comparison_rows = [
-        ("CV Optimiser", "UK CV checks against a real job description, with score, missing keywords and practical next fixes", "It is automated, so important applications may still benefit from human review"),
-        ("Generic CV templates", "Improving layout and structure", "They do not check fit against a specific role"),
-        ("Paid CV writing services", "Full rewrite and human judgement", "More expensive and slower"),
-        ("Manual self-review", "Quick final checks", "Easy to miss keyword gaps and weak evidence"),
+    access_rows = [
+        ("Free check", "Role-fit score and a preview of the priority fixes for your chosen job", "No account or payment for the first result"),
+        ("Save your result", "Keep the check so you can return to it later", "Free account"),
+        ("Full report", "Detailed keyword and ATS checks, rewrite guidance and line-by-line feedback", "Paid unlock"),
     ]
     internal_links = [
-        ("/", "CV checker"),
-        ("/cv-checker", "Free CV checker"),
-        ("/best-cv-checker-for-uk-job-applications", "How to choose the best CV checker UK"),
+        ("/#tool", "Run a free CV check"),
+        ("/best-cv-checker-for-uk-job-applications", "How to choose a UK CV checker"),
         ("/ats-cv-checker", "ATS CV checker"),
         ("/cv-score-checker", "CV score checker"),
         ("/cv-keyword-optimiser", "CV keyword optimiser"),
@@ -12440,15 +12437,15 @@ def render_best_free_cv_checker_page() -> str:
         """
         for question, answer in BEST_FREE_CV_CHECKER_FAQS
     )
-    comparison_rows_html = "".join(
+    access_rows_html = "".join(
         f"""
                   <tr>
                     <td data-label="Option"><strong>{html.escape(option)}</strong></td>
-                    <td data-label="Best for">{html.escape(best)}</td>
-                    <td data-label="Limitations">{html.escape(limit)}</td>
+                    <td data-label="What you get">{html.escape(included)}</td>
+                    <td data-label="What you need">{html.escape(requirements)}</td>
                   </tr>
         """
-        for option, best, limit in comparison_rows
+        for option, included, requirements in access_rows
     )
     return f"""
     <!doctype html>
@@ -12763,10 +12760,10 @@ def render_best_free_cv_checker_page() -> str:
 
           <section class="hero">
             <div class="hero-copy">
-              <h1>Best free CV checker for UK job seekers</h1>
-              <p>CV Optimiser helps you check your CV against a real job description before you apply. It highlights missing keywords, weak bullet points, ATS issues and practical ways to improve your match.</p>
+              <h1>What’s included in the free CV check?</h1>
+              <p>Check your CV against a job advert to see your role-fit score and the changes to work on first. You can see the first result without signing up. The full report is a paid unlock.</p>
               <div class="hero-actions">
-                <a href="/#tool" class="cta cta-button">Check my CV</a>
+                <a href="/#tool" class="cta cta-button">Run a free CV check</a>
                 <a href="/example-cv-report" class="cta secondary-cta">See example report</a>
               </div>
             </div>
@@ -12779,9 +12776,8 @@ def render_best_free_cv_checker_page() -> str:
           </section>
 
           <section class="content-section">
-            <h2>Quick answer: what is the best free CV checker?</h2>
-            <p>The best free CV checker is one that compares your CV against the role you are applying for, not just against generic formatting rules. CV Optimiser is useful because it checks your CV against a job description and shows where your wording, keywords and evidence could be stronger.</p>
-            <p>It is best suited for people who want quick, practical, role-specific feedback before applying. It is not a replacement for every type of human CV review.</p>
+            <h2>What you see in your first result</h2>
+            <p>You’ll see how your CV matches the advert and a preview of the fixes to prioritise. That could mean making a relevant achievement easier to find or showing evidence for a skill the employer asks for.</p>
           </section>
 
           <section class="content-section">
@@ -12822,17 +12818,17 @@ def render_best_free_cv_checker_page() -> str:
           </section>
 
           <section class="content-section">
-            <h2>CV Optimiser compared with other options</h2>
+            <h2>Free check and paid report</h2>
             <div class="comparison-wrap">
               <table class="comparison-table">
                 <thead>
                   <tr>
                     <th>Option</th>
-                    <th>Best for</th>
-                    <th>Limitations</th>
+                    <th>What you get</th>
+                    <th>What you need</th>
                   </tr>
                 </thead>
-                <tbody>{comparison_rows_html}</tbody>
+                <tbody>{access_rows_html}</tbody>
               </table>
             </div>
           </section>
@@ -13061,7 +13057,7 @@ def render_guides_page() -> str:
     groups = [
         ("CV checking tools", [
             ("best-cv-checker-for-uk-job-applications", "/best-cv-checker-for-uk-job-applications", SEO_LANDING_PAGES["best-cv-checker-for-uk-job-applications"]["title"], SEO_LANDING_PAGES["best-cv-checker-for-uk-job-applications"]["intro"]),
-            ("best-free-cv-checker-uk", "/best-free-cv-checker-uk", "Best Free CV Checker UK", "Compare your CV with a job description and see where keywords, evidence and role fit could be stronger."),
+            ("best-free-cv-checker-uk", "/best-free-cv-checker-uk", "What’s included in the free CV check?", "See what your first result includes, how to save it and what the paid report adds."),
             ("cv-checker", "/cv-checker", TOOL_LANDING_PAGES["cv-checker"]["title"], "Run a general CV check and see your score, missing keywords and priority fixes."),
             ("ats-cv-checker", "/ats-cv-checker", SEO_LANDING_PAGES["ats-cv-checker"]["title"], SEO_LANDING_PAGES["ats-cv-checker"]["intro"]),
             ("cv-score-checker", "/cv-score-checker", SEO_LANDING_PAGES["cv-score-checker"]["title"], SEO_LANDING_PAGES["cv-score-checker"]["intro"]),
