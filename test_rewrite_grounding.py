@@ -83,6 +83,8 @@ class RewriteGroundingTests(unittest.TestCase):
 
         output = ground_cv_rewrites(data, cv, review)
         self.assertEqual(output["bulletPoints"], ["Built a Google Sheets tracker."])
+        self.assertEqual(output["freeBulletRewrite"]["before"], "I built a Google Sheets tracker.")
+        self.assertEqual(output["freeBulletRewrite"]["after"], "Built a Google Sheets tracker.")
 
     def test_missing_model_rewrites_do_not_create_unrelated_examples(self):
         result = main.normalize_analysis_data({"score": 48, "missingKeywords": ["Refund approvals"]}, is_pro=True)

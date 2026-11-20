@@ -25,6 +25,7 @@ GRAMMAR_WORDS = frozenset(
 )
 WORD_PATTERN = re.compile(r"[^\W\d_]+", re.UNICODE)
 NEGATION_PATTERN = re.compile(r"\b(?:no|not|never|without)\b|n't\b")
+FIRST_PERSON_ACTION = re.compile(r"I ([a-z]+ed|built|held|kept|led|made|ran|sent|set|wrote)\b")
 
 
 def comparable(text: str) -> str:
@@ -63,6 +64,18 @@ class Rewrite:
             and quantities(self.before) <= proposed
             and preserves_negation(self.before, self.text)
         )
+
+
+def first_person_example(cv: str, bullets: list[str]) -> dict[str, str]:
+    bullet_texts = {comparable(text) for text in bullets}
+    for line in cv.splitlines():
+        before = line.strip().lstrip("•*- ")
+        if not FIRST_PERSON_ACTION.match(before) or NEGATION_PATTERN.search(comparable(before)):
+            continue
+        after = before[2].upper() + before[3:]
+        if {comparable(before), comparable(after)} & bullet_texts:
+            return {"before": before, "after": after, "whyWeak": "Starts the bullet with the action while keeping the original details."}
+    return {"before": "", "after": "", "whyWeak": ""}
 
 
 def ground_cv_rewrites(
@@ -144,7 +157,7 @@ def ground_cv_rewrites(
         first = output["bulletRewriteDetails"][0]
         output["freeBulletRewrite"] = {"before": first["before"], "after": first["after"], "whyWeak": first["whyBetter"]}
     else:
-        output["freeBulletRewrite"] = {"before": "", "after": "", "whyWeak": ""}
+        output["freeBulletRewrite"] = first_person_example(cv, output["bulletPoints"])
 
     output["sectionRewritePlan"] = [
         {**item, "exampleLine": candidate.text if approved(candidate) else ""}
