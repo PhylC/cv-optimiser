@@ -19,6 +19,14 @@ NUMBER_PATTERN = re.compile(
 )
 
 
+GRAMMAR_WORDS = frozenset(
+    "a an and as at both during each for from i in it its my of on or over per the their them "
+    "then they this those to using was were when while with".split()
+)
+WORD_PATTERN = re.compile(r"[^\W\d_]+", re.UNICODE)
+NEGATION_PATTERN = re.compile(r"\b(?:no|not|never|without)\b|n't\b")
+
+
 def comparable(text: str) -> str:
     return " ".join(normalize("NFKC", text).translate(str.maketrans("’‘“”", "\x27\x27\x22\x22")).casefold().split())
 
@@ -30,19 +38,30 @@ def quantities(text: str) -> set[str]:
     }
 
 
+def content_words(text: str) -> set[str]:
+    # Leave factual vocabulary intact. Only ordinary joining words and number spelling are flexible.
+    return set(WORD_PATTERN.findall(comparable(text))) - GRAMMAR_WORDS - NUMBER_WORDS.keys()
+
+
+def preserves_negation(evidence: str, suggestion: str) -> bool:
+    return not NEGATION_PATTERN.search(comparable(evidence)) or bool(NEGATION_PATTERN.search(comparable(suggestion)))
+
+
 @dataclass(frozen=True)
 class Rewrite:
     text: str
     before: str = ""
 
-    def can_review(self, source: str, source_quantities: set[str]) -> bool:
+    def can_review(self, source: str, source_quantities: set[str], source_words: set[str]) -> bool:
         if not self.text.strip():
             return False
         proposed = quantities(self.text)
-        if not proposed <= source_quantities:
+        if not proposed <= source_quantities or not content_words(self.text) <= source_words:
             return False
         return not self.before or (
-            comparable(self.before) in source and quantities(self.before) <= proposed
+            comparable(self.before) in source
+            and quantities(self.before) <= proposed
+            and preserves_negation(self.before, self.text)
         )
 
 
@@ -61,10 +80,11 @@ def ground_cv_rewrites(
     list_fields = ("bulletPoints", "skillsSection", "strongerBullets")
     source = comparable(cv)
     source_quantities = quantities(cv)
+    source_words = content_words(cv)
     candidates: dict[Rewrite, int] = {}
 
     def add(candidate: Rewrite) -> Rewrite:
-        if candidate not in candidates and candidate.can_review(source, source_quantities):
+        if candidate not in candidates and candidate.can_review(source, source_quantities, source_words):
             candidates[candidate] = len(candidates) + 1
         return candidate
 
@@ -87,15 +107,23 @@ def ground_cv_rewrites(
             {"id": identifier, "suggestion": candidate.text, "original": candidate.before}
             for candidate, identifier in candidates.items()
         ]
+        indexed = {identifier: candidate for candidate, identifier in candidates.items()}
         verdicts = review(cv, entries)
         if isinstance(verdicts, list):
             for verdict in verdicts:
                 if not isinstance(verdict, dict) or type(verdict.get("id")) is not int:
                     continue
+                candidate = indexed.get(verdict["id"])
                 evidence = verdict.get("evidence")
-                if isinstance(evidence, list) and evidence and all(
-                    isinstance(quote, str) and comparable(quote) and comparable(quote) in source
-                    for quote in evidence
+                if not candidate or not isinstance(evidence, list) or not evidence:
+                    continue
+                if not all(isinstance(quote, str) and comparable(quote) and comparable(quote) in source for quote in evidence):
+                    continue
+                quoted_text = " ".join(evidence)
+                if (
+                    content_words(candidate.text) <= content_words(quoted_text)
+                    and quantities(candidate.text) <= quantities(quoted_text)
+                    and preserves_negation(quoted_text, candidate.text)
                 ):
                     approved_ids.add(verdict["id"])
 

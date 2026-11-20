@@ -35,7 +35,7 @@ class RewriteGroundingTests(unittest.TestCase):
             ],
             "bulletPoints": ["Reduced delays by 20%.", OUTCOME, "Passed escalations to the duty manager."],
             "professionalSummary": "Customer Support Assistant. Improved escalation performance.",
-            "skillsSection": ["Refund approvals", "Escalation forwarding"],
+            "skillsSection": ["Approve refunds", "Escalations"],
             "sectionRewritePlan": [
                 {"section": "Recent experience", "rewriteDirection": "Describe what you did.", "exampleLine": OUTCOME},
             ],
@@ -47,22 +47,42 @@ class RewriteGroundingTests(unittest.TestCase):
             suggestions = {entry["suggestion"]: entry["id"] for entry in entries}
             self.assertNotIn(INFLATED, suggestions)
             self.assertNotIn("Reduced delays by 20%.", suggestions)
+            self.assertNotIn(OUTCOME, suggestions)
             self.assertNotIn("Managed a customer support team.", suggestions)
             return [
                 {"id": suggestions[GROUNDED], "evidence": [BEFORE]},
                 {"id": suggestions["Passed escalations to the duty manager."], "evidence": ["I passed escalations to the duty manager."]},
-                {"id": suggestions["Escalation forwarding"], "evidence": ["I passed escalations to the duty manager."]},
-                {"id": suggestions["Refund approvals"], "evidence": ["I was authorised to approve refunds."]},
+                {"id": suggestions["Escalations"], "evidence": ["I passed escalations to the duty manager."]},
+                {"id": suggestions["Approve refunds"], "evidence": ["I was authorised to approve refunds."]},
+                {"id": suggestions["Approve refunds"], "evidence": ["I did not delegate tasks or approve refunds."]},
             ]
 
         output = ground_cv_rewrites(data, SOURCE, review)
         self.assertEqual(output["score"], 62)
         self.assertEqual(output["freeBulletRewrite"]["after"], GROUNDED)
         self.assertEqual(output["bulletPoints"], ["Passed escalations to the duty manager."])
-        self.assertEqual(output["skillsSection"], ["Escalation forwarding"])
+        self.assertEqual(output["skillsSection"], ["Escalations"])
         self.assertEqual(output["professionalSummary"], "")
         self.assertEqual([item["improvedLine"] for item in output["lineFeedback"]], [GROUNDED])
         self.assertTrue(all(item["exampleLine"] == "" for item in output["sectionRewritePlan"]))
+
+    def test_verifier_cannot_approve_an_added_action_or_use_an_unrelated_quote(self):
+        cv = "I built a Google Sheets tracker.\nI used it to flag jobs waiting for parts."
+        raw = {
+            "bulletPoints": [
+                "Built and maintained a Google Sheets tracker.",
+                "Used the tracker to flag jobs waiting for parts.",
+                "Built a Google Sheets tracker.",
+            ],
+        }
+        data = main.normalize_analysis_data(raw, is_pro=False)
+
+        def review(cv, entries):
+            self.assertEqual(len(entries), 2)
+            return [{"id": entry["id"], "evidence": ["I built a Google Sheets tracker."]} for entry in entries]
+
+        output = ground_cv_rewrites(data, cv, review)
+        self.assertEqual(output["bulletPoints"], ["Built a Google Sheets tracker."])
 
     def test_missing_model_rewrites_do_not_create_unrelated_examples(self):
         result = main.normalize_analysis_data({"score": 48, "missingKeywords": ["Refund approvals"]}, is_pro=True)
