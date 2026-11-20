@@ -64,6 +64,13 @@ create table if not exists analytics_events (
   metadata jsonb not null default '{}'::jsonb
 );
 
+alter table analytics_events enable row level security;
+
+drop policy if exists "Only the server records Stripe conversions" on analytics_events;
+create policy "Only the server records Stripe conversions"
+on analytics_events as restrictive for insert to anon, authenticated
+with check (event_name not in ('checkout_started', 'payment_success_seen', 'purchase'));
+
 create index if not exists analytics_events_created_at_idx
 on analytics_events(created_at desc);
 

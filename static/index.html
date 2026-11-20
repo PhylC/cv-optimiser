@@ -8726,7 +8726,6 @@
       const defaultText = button ? button.textContent : "";
       hideCheckoutError();
       setCheckoutButtonState(button, true, "Opening checkout…", defaultText);
-      trackEvent("checkout_started", { checkout_plan: plan });
 
       try {
         const requiresSignIn = plan === "pro_monthly" || plan === "one_time";
@@ -8779,6 +8778,9 @@
         }
 
         if (data.url) {
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "checkout_started", { checkout_plan: plan });
+          }
           if (plan === "one_time") {
             savePendingReportDraft();
           }
@@ -9013,7 +9015,9 @@
           checkoutStatus.textContent = restoredDraft
             ? "Your paid report is ready. Check your CV again now to generate the full report."
             : "Your paid report is ready. Paste or upload your CV again to generate the full report.";
-          trackEvent("payment_success_seen", { checkout: checkout, checkout_plan: "one_time" });
+          if (confirmData.purchase && typeof window.gtag === "function") {
+            window.gtag("event", "purchase", confirmData.purchase);
+          }
           setTimeout(function() {
             clearCheckoutParamsFromUrl();
           }, 1500);
@@ -9024,7 +9028,9 @@
           checkoutStatus.classList.remove("info", "error");
           checkoutStatus.classList.add("success");
           checkoutStatus.textContent = "Your Pro plan is now active.";
-          trackEvent("payment_success_seen", { checkout: checkout });
+          if (confirmData.purchase && typeof window.gtag === "function") {
+            window.gtag("event", "purchase", confirmData.purchase);
+          }
           setTimeout(function() {
             checkoutStatus.classList.add("hidden");
             checkoutStatus.classList.remove("success", "error", "info");

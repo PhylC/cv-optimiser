@@ -12,6 +12,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Optional
+from uuid import NAMESPACE_URL, uuid5
 
 from docx import Document
 from fastapi import Body, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
@@ -3995,6 +3996,70 @@ def track_event(
         print("TRACK EVENT ERROR:", repr(e))
 
 
+def record_confirmed_purchase(session: Any, user_id: str) -> dict[str, Any] | None:
+    if session.get("payment_status") != "paid":
+        return None
+
+    session_id = session.get("id")
+    amount = session.get("amount_total")
+    currency = coerce_string(session.get("currency")).upper()
+    if not session_id or not isinstance(amount, int) or amount <= 0 or not currency:
+        return None
+
+    plan = {"payment": "one_time", "subscription": "pro_monthly"}.get(session.get("mode"))
+    if plan is None:
+        return None
+
+    # Stripe reports charge amounts in minor units. ISK and UGX are represented
+    # by Stripe as two-decimal amounts even though neither supports fractions.
+    zero_decimal = {
+        "BIF", "CLP", "DJF", "GNF", "JPY", "KMF", "KRW", "MGA", "PYG",
+        "RWF", "VND", "VUV", "XAF", "XOF", "XPF",
+    }
+    transaction_id = str(uuid5(NAMESPACE_URL, f"cv-optimiser:stripe:purchase:{session_id}"))
+    value = amount / (1 if currency in zero_decimal else 100)
+    purchase = {
+        "transaction_id": transaction_id,
+        "currency": currency,
+        "value": value,
+        "items": [{
+            "item_id": plan,
+            "item_name": "Full CV report" if plan == "one_time" else "CV Optimiser Pro monthly",
+            "price": value,
+            "quantity": 1,
+        }],
+    }
+
+    # Both the Stripe webhook and the return page can confirm payment. The
+    # existing primary key makes concurrent deliveries and retries idempotent.
+    require_supabase().table("analytics_events").upsert(
+        {
+            "id": transaction_id,
+            "user_id": user_id,
+            "event_name": "purchase",
+            "metadata": {
+                "transaction_id": transaction_id,
+                "stripe_checkout_session_id": session_id,
+                "checkout_plan": plan,
+                "amount_total": amount,
+                "currency": currency,
+                "stripe_livemode": session.get("livemode"),
+            },
+        },
+        on_conflict="id",
+        ignore_duplicates=True,
+    ).execute()
+    return purchase
+
+
+def purchase_for_return(session: Any, user_id: str) -> dict[str, Any] | None:
+    try:
+        return record_confirmed_purchase(session, user_id)
+    except Exception:
+        logger.exception("Could not record a verified Stripe purchase on return")
+        return None
+
+
 def is_valid_email(value: str) -> bool:
     return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", value or ""))
 
@@ -4046,7 +4111,7 @@ FUNNEL_STEPS = [
     ("free_result_shown", "Free result shown"),
     ("unlock_intent", "Unlock intent"),
     ("checkout_started", "Checkout started"),
-    ("payment_success_seen", "Payment success seen"),
+    ("purchase", "Confirmed purchase"),
     ("one_time_report_activated", "One-time report activated"),
     ("one_time_report_generated", "One-time report generated"),
 ]
@@ -4067,7 +4132,7 @@ TREND_EVENTS = {
     "free_result_shown",
     "unlock_intent",
     "checkout_started",
-    "payment_success_seen",
+    "purchase",
     "one_time_report_generated",
 }
 
@@ -4265,6 +4330,10 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     for row in rows:
         event_name = coerce_string(row.get("event_name"))
         metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+        if event_name == "checkout_started" and not metadata.get("stripe_checkout_session_id"):
+            continue
+        if event_name == "purchase" and not metadata.get("transaction_id"):
+            continue
         event_keys = [event_name] if event_name else []
         if event_name in UNLOCK_INTENT_EVENTS:
             event_keys.append("unlock_intent")
@@ -4372,7 +4441,7 @@ def build_analytics_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "leads": counts.get("lead_captured", 0),
             "unlock_clicks": counts.get("unlock_intent", 0),
             "checkout_starts": counts.get("checkout_started", 0),
-            "payment_successes": counts.get("payment_success_seen", 0),
+            "payment_successes": counts.get("purchase", 0),
             "one_time_reports_generated": counts.get("one_time_report_generated", 0),
             "saved_report_downloads": counts.get("saved_report_downloaded", 0),
             "report_downloads": counts.get("report_downloaded", 0),
@@ -14275,6 +14344,9 @@ def render_upgrade_page() -> str:
                 throw new Error(data.detail || data.error || "Checkout could not be opened");
               }}
 
+              if (typeof window.gtag === "function") {{
+                window.gtag("event", "checkout_started", {{ checkout_plan: plan }});
+              }}
               window.location.href = data.url;
               shouldResetButton = false;
             }} catch (error) {{
@@ -14313,20 +14385,6 @@ def render_upgrade_page() -> str:
 
 def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
     page_url = canonical_url(path)
-    success_script = """
-        <script>
-          (function () {
-            if (!/payment successful/i.test(document.title)) return;
-            try {
-              fetch("/api/track", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({event_name: "payment_success_seen", metadata: {source: "success_page"}})
-              }).catch(function () {});
-            } catch (error) {}
-          })();
-        </script>
-    """ if "successful" in title.lower() else ""
     return f"""
     <!doctype html>
     <html lang="en">
@@ -14396,7 +14454,6 @@ def render_status_page(path: str, title: str, heading: str, copy: str) -> str:
           </div>
           {build_site_footer()}
         </div>
-        {success_script}
       </body>
     </html>
     """
@@ -14902,6 +14959,9 @@ async def api_track(request: Request) -> dict[str, Any]:
 
         if not event_name:
             return {"error": "Missing event_name"}
+
+        if event_name in {"checkout_started", "payment_success_seen", "purchase"}:
+            return {"ok": True}
 
         if event_name == "signup_prompt_shown_after_result":
             print("CONVERSION_EVENT: signup_prompt_shown_after_result")
@@ -15769,13 +15829,6 @@ def create_checkout_session(
         email=user["email"] if user else None,
         metadata={**attribution_metadata, "checkout_plan": checkout_plan}
     )
-    track_event(
-        event_name="checkout_started",
-        user_id=user["id"] if user else None,
-        email=user["email"] if user else None,
-        metadata={**attribution_metadata, "checkout_plan": checkout_plan}
-    )
-
     if checkout_plan == "one_time":
         print("CHECKOUT_SESSION_REQUEST: one_time")
         price_id = STRIPE_PRICE_ONE_TIME
@@ -15802,6 +15855,15 @@ def create_checkout_session(
             "landing_path": attribution_metadata.get("first_landing_path", ""),
             "source": attribution_metadata.get("source", "direct"),
         },
+    )
+    if not session.id or not session.url:
+        raise HTTPException(status_code=502, detail="Stripe did not return a checkout session.")
+
+    track_event(
+        event_name="checkout_started",
+        user_id=user["id"],
+        email=user["email"],
+        metadata={**attribution_metadata, "checkout_plan": checkout_plan, "stripe_checkout_session_id": session.id},
     )
     return {"url": session.url}
 
@@ -15889,11 +15951,17 @@ def confirm_checkout_session(
             if payment_status not in ["paid", "no_payment_required"]:
                 raise ValueError(f"Checkout session not paid yet (status: {payment_status}).")
 
-            session_email = checkout_session.get("customer_details", {}).get("email") or checkout_session.get("customer_email")
+            customer_details = checkout_session.get("customer_details") or {}
+            session_email = customer_details.get("email") or checkout_session.get("customer_email")
             if session_email and user["email"] and session_email.lower() != user["email"].lower():
                 raise ValueError(f"Checkout email mismatch: {session_email} vs {user['email']}")
 
             metadata = checkout_session.get("metadata") or {}
+            session_user_id = metadata.get("user_id") or checkout_session.get("client_reference_id")
+            if session_user_id and session_user_id != user["id"]:
+                raise ValueError("Checkout session belongs to another account.")
+            if not session_user_id and not session_email:
+                raise ValueError("Checkout session ownership could not be verified.")
             checkout_plan = metadata.get("checkout_plan") if hasattr(metadata, "get") else None
             checkout_mode = checkout_session.get("mode")
             customer = checkout_session.get("customer")
@@ -15924,6 +15992,7 @@ def confirm_checkout_session(
                     "plan": "free",
                     "report_credit_granted": True,
                     "report_credits": report_credits,
+                    "purchase": purchase_for_return(checkout_session, user["id"]),
                 }
 
             stripe_subscription_id = stripe_id(subscription)
@@ -15961,6 +16030,7 @@ def confirm_checkout_session(
                 "plan": "pro",
                 "subscription_status": fresh.get("status"),
                 "stripe_subscription_id": fresh.get("stripe_subscription_id"),
+                "purchase": purchase_for_return(checkout_session, user["id"]),
             }
 
         return retry_transient(load_and_save, attempts=4, delay_seconds=1.2)
@@ -15980,16 +16050,16 @@ async def stripe_webhook(request: Request) -> JSONResponse:
     if not sig_header:
         raise HTTPException(status_code=400, detail="Missing Stripe signature.")
 
-    event = require_stripe().webhooks.construct_event(
+    event = require_stripe().Webhook.construct_event(
         payload=payload,
         sig_header=sig_header,
         secret=STRIPE_WEBHOOK_SECRET,
     )
 
-    sb = require_supabase()
-
-    if event.type == "checkout.session.completed":
+    if event.type in {"checkout.session.completed", "checkout.session.async_payment_succeeded"}:
         session = event.data.object
+        if session.get("payment_status") not in {"paid", "no_payment_required"}:
+            return JSONResponse({"received": True})
         metadata = getattr(session, "metadata", None) or {}
         checkout_mode = getattr(session, "mode", None)
         session_id = getattr(session, "id", None)
@@ -16001,11 +16071,7 @@ async def stripe_webhook(request: Request) -> JSONResponse:
                 customer_email = customer_details.get("email")
         if customer_email is None:
             customer_email = getattr(session, "customer_email", None)
-        print(
-            f"PAYMENT_EVENT: checkout_completed mode={checkout_mode} "
-            f"customer_email={customer_email or ''} session_id={session_id or ''}"
-        )
-        user_id = metadata.get("user_id") if hasattr(metadata, "get") else getattr(session, "client_reference_id", None)
+        user_id = metadata.get("user_id") or session.get("client_reference_id")
         checkout_plan = metadata.get("checkout_plan") if hasattr(metadata, "get") else None
         stripe_subscription_id = stripe_id(getattr(session, "subscription", None))
         stripe_customer_id = stripe_id(getattr(session, "customer", None))
@@ -16026,6 +16092,9 @@ async def stripe_webhook(request: Request) -> JSONResponse:
                 status="active",
             )
 
+        if user_id:
+            record_confirmed_purchase(session, user_id)
+
     elif event.type in {"customer.subscription.deleted", "customer.subscription.updated"}:
         subscription = event.data.object
         stripe_subscription_id = getattr(subscription, "id", None)
@@ -16034,7 +16103,7 @@ async def stripe_webhook(request: Request) -> JSONResponse:
 
         if stripe_subscription_id:
             existing = (
-                sb.table("subscriptions")
+                require_supabase().table("subscriptions")
                 .select("user_id")
                 .eq("stripe_subscription_id", stripe_subscription_id)
                 .limit(1)
