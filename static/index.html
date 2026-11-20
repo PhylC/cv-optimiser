@@ -6140,6 +6140,11 @@
             </div>
           </div>
 
+          <div id="resultRewriteUnavailable" class="result-section hidden">
+            <div class="result-section-title">Example rewrite</div>
+            <p class="result-section-subtitle">No example rewrite is available for this check. Use the priority fixes to guide your edits.</p>
+          </div>
+
           <div id="lockedReportSections" class="locked-report-grid hidden">
             <div class="locked-report-card">
               <span class="locked-preview-label">UK recruiter verdict</span>
@@ -6730,6 +6735,7 @@
     const proRewriteDetails = document.getElementById("proRewriteDetails");
     const resultExampleBefore = document.getElementById("resultExampleBefore");
     const resultExampleAfter = document.getElementById("resultExampleAfter");
+    const resultRewriteUnavailable = document.getElementById("resultRewriteUnavailable");
     const resultExampleCopyBtn = document.getElementById("resultExampleCopyBtn");
     const resultExampleWhy = document.getElementById("resultExampleWhy");
     const resultExampleWhyWrap = document.getElementById("resultExampleWhyWrap");
@@ -7507,7 +7513,8 @@
       const roleLabel = roleFocus.label || "this UK role";
       const firstFix = verdict.fixFirst || verdict.firstFix || (data && data.nextStep) || "Tighten the strongest role-fit evidence on page one.";
       const rewrite = (data && data.freeBulletRewrite) || {};
-      const rewriteText = rewrite.after || (data && data.bulletPoints && data.bulletPoints[0]) || "Turn one vague duty into a clearer action, context and outcome bullet.";
+      const rewriteText = rewrite.after || (data && data.bulletPoints && data.bulletPoints[0]) || "";
+      const rewriteAdvice = "Choose one relevant line and make the action clearer using facts from your CV.";
       const missing = data && Array.isArray(data.missingKeywords) ? data.missingKeywords.slice(0, 3).join(", ") : "";
       const unlockStep = isFullReport
         ? "Use the guided workflow, export the checklist, then re-run after editing."
@@ -7520,7 +7527,7 @@
       const steps = [
         ["1", "Fix first", firstFix],
         ["2", "Work in truthful keywords", missing ? "Add " + missing + " only where your CV genuinely supports them." : "Use the job description language only where your experience supports it."],
-        ["3", "Copy one stronger line", rewriteText],
+        ["3", rewriteText ? "Use one stronger line" : "Revise one line", rewriteText || rewriteAdvice],
         ["4", isFullReport ? "Export and re-check" : "Decide whether to go deeper", unlockStep]
       ];
 
@@ -7865,31 +7872,17 @@
           strengthens: item.strengthens || item.roleSignal || item.keyword || ""
         };
       }).filter(function(item) {
-        return item.after;
+        return item.before && item.after;
       });
 
       const freeRewrite = data && data.freeBulletRewrite ? data.freeBulletRewrite : {};
-      if (!rewrites.length && (freeRewrite.before || freeRewrite.after)) {
+      if (!rewrites.length && freeRewrite.before && freeRewrite.after) {
         rewrites.push({
-          before: freeRewrite.before || "A vague or duty-led line from the current CV.",
-          after: freeRewrite.after || "",
+          before: freeRewrite.before,
+          after: freeRewrite.after,
           whyBetter: freeRewrite.whyWeak || "The rewrite is more specific about action, context and value.",
           whereToUse: "Use this style in the most relevant recent role bullet.",
           strengthens: "Evidence strength and role alignment."
-        });
-      }
-
-      if (data && Array.isArray(data.bulletPoints)) {
-        data.bulletPoints.forEach(function(bullet) {
-          if (!bullet || rewrites.length >= maxItems) return;
-          if (rewrites.some(function(item) { return item.after === bullet; })) return;
-          rewrites.push({
-            before: "A duty-led bullet from the current CV.",
-            after: bullet,
-            whyBetter: "This version is clearer, more active and easier for a recruiter to scan.",
-            whereToUse: "Use it under the role where this work actually happened.",
-            strengthens: "Relevant experience and proof of impact."
-          });
         });
       }
 
@@ -8179,10 +8172,11 @@
       source.forEach(function(item) {
         if (!item || typeof item !== "object") return;
         const improvedLine = item.improvedLine || item.after || item.rewrite || "";
-        if (!improvedLine) return;
+        const originalLine = item.originalLine || item.before || item.original || "";
+        if (!originalLine || !improvedLine) return;
         items.push({
           section: item.section || item.cvSection || item.whereToUse || "Relevant CV section",
-          originalLine: item.originalLine || item.before || item.original || "A vague or duty-led line from the current CV.",
+          originalLine: originalLine,
           issue: item.issue || item.problem || item.whyWeak || "The current wording does not make role fit or evidence clear enough.",
           improvedLine: improvedLine,
           whyBetter: item.whyBetter || item.why || item.reason || "This version makes the action, context and relevance easier to scan.",
@@ -8194,7 +8188,7 @@
         normaliseRewriteDetails(data || {}, maxItems || 4).forEach(function(item) {
           items.push({
             section: item.whereToUse || "Recent experience",
-            originalLine: item.before || "A vague or duty-led line from the current CV.",
+            originalLine: item.before,
             issue: item.whyBetter || "The line needs clearer action, context and role relevance.",
             improvedLine: item.after,
             whyBetter: item.whyBetter || "It turns a broad duty into clearer role-fit evidence.",
@@ -8533,7 +8527,7 @@
         (isFullReport ? guidedWorkflowReportItems(data, actionPlanItems) : "") +
         (data.professionalSummary ? "<section><h2>Professional summary</h2><p>" + escapeReportHtml(data.professionalSummary) + "</p></section>" : "") +
         "<section><h2>Keyword importance</h2><h3>Critical missing</h3><p class=\"chips\">" + critical.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Useful supporting</h3><p class=\"chips\">" + supporting.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p><h3>Already covered</h3><p class=\"chips\">" + covered.map(function(item) { return "<span class=\"chip\">" + escapeReportHtml(item) + "</span>"; }).join("") + "</p></section>" +
-        ((rewrite.before || rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
+        ((rewrite.before && rewrite.after) ? "<section><h2>Example rewrite</h2><div class=\"rewrite\"><div class=\"card\"><h3>Before</h3><p>" + escapeReportHtml(rewrite.before) + "</p></div><div class=\"card\"><h3>After</h3><p>" + escapeReportHtml(rewrite.after) + "</p></div></div><div class=\"card note\"><h3>Why this is stronger</h3><p>" + escapeReportHtml(rewrite.whyWeak || "The improved version is more specific about action, context and value.") + "</p></div></section>" : "") +
         rewriteReportItems(isFullReport ? "Before and after rewrite plan" : "Rewrite detail", rewriteDetails) +
         listReportItems("Matched keywords", data.matchedKeywords || []) +
         listReportItems("Missing keywords", data.missingKeywords || []) +
@@ -10060,15 +10054,14 @@ passwordLoginBtn.addEventListener("click", async function() {
         resultKeywordTail.classList.toggle("hidden", isCurrentlyPro || !(data.missingKeywords && data.missingKeywords.length > keywordPreviewItems.length));
 
         const freeRewrite = data.freeBulletRewrite || {};
-        resultExampleBefore.textContent = freeRewrite.before || "Responsible for managing customer accounts.";
-        resultExampleAfter.textContent = freeRewrite.after || ((data.bulletPoints && data.bulletPoints.length && data.bulletPoints[0])
-          ? data.bulletPoints[0]
-          : "Managed key customer accounts and turned plans into measurable commercial opportunities.");
+        const hasExampleRewrite = Boolean(freeRewrite.before && freeRewrite.after);
+        resultExampleBefore.textContent = hasExampleRewrite ? freeRewrite.before : "";
+        resultExampleAfter.textContent = hasExampleRewrite ? freeRewrite.after : "";
         if (resultExampleCopyBtn) {
-          resultExampleCopyBtn.dataset.copyRewrite = resultExampleAfter.textContent || "";
+          resultExampleCopyBtn.dataset.copyRewrite = resultExampleAfter.textContent;
         }
         if (resultExampleWhy && resultExampleWhyWrap) {
-          resultExampleWhy.textContent = freeRewrite.whyWeak || "The improved version is more specific about action, context, and value.";
+          resultExampleWhy.textContent = hasExampleRewrite ? freeRewrite.whyWeak || "" : "";
           resultExampleWhyWrap.classList.toggle("hidden", !resultExampleWhy.textContent);
         }
 
@@ -10186,11 +10179,12 @@ passwordLoginBtn.addEventListener("click", async function() {
           resultPriorityPreviewWrap.classList.toggle("hidden", isCurrentlyPro);
         }
         if (resultExampleWrap) {
-          resultExampleWrap.classList.toggle("hidden", isCurrentlyPro && data.bulletRewriteDetails && data.bulletRewriteDetails.length);
+          resultExampleWrap.classList.toggle("hidden", !hasExampleRewrite || Boolean(isCurrentlyPro && data.bulletRewriteDetails?.length));
         }
+        resultRewriteUnavailable.classList.toggle("hidden", isCurrentlyPro || hasExampleRewrite);
         detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
         detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
-        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro || (data.bulletRewriteDetails && data.bulletRewriteDetails.length));
+        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro || !bulletCount || Boolean(data.bulletRewriteDetails?.length));
         bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
         resultDisclaimerWrap.classList.remove("hidden");
         if (lockedReportSections) {
