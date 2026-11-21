@@ -2934,9 +2934,15 @@ SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
     },
     "cv-score-checker": {
         "title": "CV Score Checker | CV Optimiser",
-        "meta_description": "Check your CV score based on clarity, relevance, evidence, formatting and role fit against a job description.",
+        "meta_description": "Check your CV score against a job advert and see what to improve. Follow a sample scorecard from 50 to 70 and see the evidence behind the change.",
         "h1": "CV score checker",
-        "intro": "A CV score is useful only when it reflects role fit. CV Optimiser checks whether your CV is clear, relevant and supported by evidence for the job you want.",
+        "intro": "A CV score shows how clearly your experience matches a specific job advert. See how evidence changed the score in this fictional example, then use the checker with your own CV and advert.",
+        "opening_comparison_heading": "Sample CV scorecard for the same job advert",
+        "opening_comparison": [
+            ("50/100 before the edits", "The fictional account manager mentioned sales growth and forecasting in broad terms. The CV gave no figures, and ownership of the customer P&L was unclear."),
+            ("70/100 after the edits", "The revised CV gave figures for revenue growth, forecast accuracy and retention. It also made responsibility for the customer P&L and promotional investment explicit."),
+        ],
+        "opening_comparison_source": ("/cv-improvement-case-study", "See the full fictional CV and the changes behind both scores"),
         "who": ["Applicants who want a quick quality check", "People comparing several CV versions", "Candidates trying to improve role fit before applying"],
         "looks_for": ["Job-description relevance", "Missing keywords", "Evidence and measurable outcomes", "Readable structure"],
         "manual": ["Score each requirement as clear, weak or missing", "Check whether bullets show outcomes", "Look for generic wording in the profile", "Make sure page one carries the strongest evidence"],
@@ -3291,6 +3297,7 @@ SITEMAP_LASTMOD_BY_LOC = {
     canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
     canonical_url("/best-free-cv-checker-uk"): "2026-11-20",
     canonical_url("/admin-cv-example-report"): "2026-11-21",
+    canonical_url("/cv-score-checker"): "2026-11-21",
 }
 
 
@@ -11669,10 +11676,18 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
     )
     opening_comparison_html = ""
     if page.get("opening_comparison"):
-        opening_comparison_html = '<section class="seo-section"><h2>Compare CV checks by use case</h2><dl>' + "".join(
+        heading = page.get("opening_comparison_heading", "Compare CV checks by use case")
+        items = "".join(
             f"<dt><strong>{html.escape(label)}</strong></dt><dd>{html.escape(detail)}</dd>"
             for label, detail in page["opening_comparison"]
-        ) + "</dl></section>"
+        )
+        source_html = ""
+        if page.get("opening_comparison_source"):
+            href, label = page["opening_comparison_source"]
+            source_html = f'<p><a href="{html.escape(href)}">{html.escape(label)}</a></p>'
+        opening_comparison_html = (
+            f'<section class="seo-section"><h2>{html.escape(heading)}</h2><dl>{items}</dl>{source_html}</section>'
+        )
     list_blocks = [
         ("Who this is for", page.get("who", [])),
         ("What the checker looks for", page.get("looks_for", [])),
