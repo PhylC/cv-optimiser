@@ -448,6 +448,10 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "intro": "CV Optimiser gives a role-fit score by comparing your CV with the job description you paste in, then looking for the signals that help recruiters and applicant tracking systems understand your fit.",
         "sections": [
             {
+                "title": "Read the score alongside the evidence it flagged",
+                "copy": "If the report flags a weak requirement, open the advert and check its importance. For a forecasting example, look for the forecast you owned, the time window and the result. Add the evidence near the relevant role, then recheck the same advert and compare the written feedback.",
+            },
+            {
                 "title": "The score is role-specific",
                 "copy": "A strong CV for one job can be weak for another. CV Optimiser does not give a generic CV grade. It checks how clearly your CV matches the job description you paste in.",
                 "bullets": [
@@ -579,6 +583,10 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "CV Optimiser vs human CV review",
         "intro": "CV Optimiser and a human CV review solve different problems. The tool is built for role-specific CV feedback before you apply; a human reviewer can still help with judgement, positioning and specialist career context.",
         "sections": [
+            {
+                "title": "Decide what to ask a human reviewer to check",
+                "copy": "For a career change, use the tool to identify where the target advert calls for evidence your CV leaves implicit. If you work with a reviewer, take the advert and two possible examples. Ask which example makes the strongest transferable case and what context would make it clearer.",
+            },
             {
                 "title": "Where CV Optimiser is strongest",
                 "copy": "Use CV Optimiser when you want to check one CV against one job description and see what to improve first.",
@@ -1410,8 +1418,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Worked on SEO updates for the website.",
-                "after": "Updated SEO content across priority web pages, improving keyword relevance and supporting clearer organic search reporting.",
-                "why_better": "It connects SEO activity to keyword relevance and reporting, which fits the advert more closely.",
+                "after": "Compared sign-ups from the two landing-page variants during the same campaign, checked traffic sources and shared the results with the campaign lead before the next send.",
+                "why_better": "It identifies the outcome and explains how the candidate interpreted and shared a comparison. Add a number only if the denominator and period are clear.",
                 "where_to_use": "Digital marketing or content bullet.",
                 "strengthens": "SEO, content optimisation and reporting.",
             },
@@ -1472,8 +1480,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Fixed bugs and helped with testing.",
-                "after": "Resolved defects and supported test coverage across web features, helping the team release more stable updates.",
-                "why_better": "It makes quality contribution clearer without inventing metrics.",
+                "after": "Added regression tests for date and filter combinations after fixing a reporting issue. Summarised the affected cases for the reviewer and documented the behaviour change in the release notes.",
+                "why_better": "It shows the defect scope, verification and handover without relying on an unsupported stability claim.",
                 "where_to_use": "Technical achievements or project responsibilities.",
                 "strengthens": "Testing, debugging and delivery quality.",
             },
@@ -1918,6 +1926,10 @@ TOOL_LANDING_PAGES: dict[str, dict[str, Any]] = {
         ],
         "tool_heading": "Check my CV",
         "sections": [
+            {
+                "title": "What to have ready before running a CV check",
+                "copy": "Have the current CV and the full advert ready, including responsibilities and essential criteria. A job title alone gives the comparison less context. Use a copy without contact details if you prefer. When the result is ready, start with one missing or unclear requirement you can genuinely evidence.",
+            },
             {
                 "title": "Why use CV Optimiser instead of a generic CV checker?",
                 "copy": "CV Optimiser is built around one practical job-search moment: you have a CV, you have a job description, and you need to know whether the CV is strong enough before you apply.",
@@ -3467,6 +3479,59 @@ SEO_LANDING_PAGES["cv-keywords-for-job-applications"].update({
         ("Link each term to real evidence", "Record where the evidence appears in your CV or where you can add a genuine example. If you have no experience with a named tool, leave it out."),
         ("Tailor from the bank", "Use matching terms only where they accurately describe your work. Keep the CV and evidence bank separate so each application shows the most relevant examples."),
     ],
+})
+
+SEO_LANDING_PAGES["software-developer-cv-checker"].update({
+    "opening_comparison_heading": "Show what you shipped and how you verified it",
+    "opening_comparison": [
+        ("Shipped feature", "Name the user problem, the part you owned and the change that reached users. A simple example is a filter that made internal reports easier to search."),
+        ("Verification", "Explain which cases you tested and how you checked the release, such as validating date ranges or watching for support queries."),
+        ("Impact", "Use a measured result if you have one. Otherwise describe what the team could do after the change and how you knew the feature solved the problem."),
+    ],
+    "opening_comparison_source": ("/software-developer-cv-example-report", "See the software developer CV example report"),
+})
+SEO_LANDING_PAGES["civil-service-cv-checker"].update({
+    "opening_comparison_heading": "Check what the Civil Service advert asks you to submit",
+    "opening_comparison": [
+        ("Read the advert first", "Check what documents are requested and which Success Profile elements the advert assesses. Follow any instructions for an anonymised CV."),
+        ("Map your evidence", "For a fictional advert asking for accurate case administration, describe how you checked a handover log, resolved discrepancies and passed on outstanding actions."),
+        ("Use the requested format", "If the advert asks for a separate behaviour example or statement, use the format and word limit it specifies. Keep the CV focused on the experience and skills it asks for."),
+    ],
+    "opening_comparison_source": ("https://www.gov.uk/government/publications/success-profiles/success-profiles-civil-service-behaviours", "Read the official Civil Service behaviours guidance"),
+})
+SEO_LANDING_PAGES["admin-assistant-cv-checker"].update({
+    "opening_comparison_heading": "Show how you kept an admin task on track",
+    "opening_comparison": [
+        ("Diary or scheduling", "Fictional example: checked meeting requests against room and colleague availability, confirmed changes and sent the current agenda before the meeting."),
+        ("Records or documents", "State what you kept accurate and who used the record. If you worked with confidential material, describe your process without sharing records or names."),
+        ("Handover", "Show how you marked open tasks, who owned the next action and how you flagged a deadline that might slip."),
+    ],
+})
+SEO_LANDING_PAGES["cv-summary-examples-uk"].update({
+    "opening_comparison_heading": "Choose a CV summary that fits your career stage",
+    "opening_comparison": [
+        ("Graduate", "Recent business graduate who analysed survey responses in Excel for a team project and presented findings to the project tutor."),
+        ("Experienced applicant", "Retail supervisor who planned shift cover and tracked stock exceptions for a high-footfall branch."),
+        ("Career changer", "Customer support adviser moving into operations coordination, with experience maintaining a shared handover log and tracking unresolved cases."),
+    ],
+})
+SEO_LANDING_PAGES["best-cv-format-uk"].update({
+    "opening_comparison_heading": "Choose a section order for your experience",
+    "opening_comparison": [
+        ("Relevant recent experience", "Lead with your recent roles in reverse date order when the most relevant evidence is already in them."),
+        ("Graduate or first role", "Move education or a relevant project higher if it provides your strongest evidence. Keep dates and responsibilities easy to find."),
+        ("Career change", "Use the profile and a small skills section to point to transferable evidence, then keep a clear work history underneath."),
+    ],
+    "opening_comparison_source": ("/ats-cv-format-uk", "Check how the layout reads in plain text"),
+})
+SEO_LANDING_PAGES["retail-manager-cv-example"].update({
+    "opening_comparison_heading": "Lead a retail manager CV with a store decision",
+    "opening_comparison": [
+        ("Before", "Responsible for rotas and serving customers."),
+        ("After, fictional example", "Replanned Saturday cover after reviewing the previous month’s busy periods, moved a trained colleague to tills for the peak hour and agreed a stock-replenishment handover with the closing shift."),
+        ("What to include", "State the size of the store or team when it helps explain the decision. Add an outcome or service measure only if you can verify it."),
+    ],
+    "opening_comparison_source": ("/retail-manager-cv-example-report", "See the retail manager example report"),
 })
 
 BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
