@@ -1016,12 +1016,13 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         ],
     },
     "account-manager-cv-example-report": {
-        "title": "Account Manager CV Example Report | CV Optimiser",
-        "description": "See an account manager CV example report with stakeholder, forecasting, retention, growth and commercial planning feedback.",
-        "h1": "Account manager CV example report",
+        "title": "Account Manager CV Example UK | Profile and Bullets",
+        "description": "See a fictional UK account manager CV profile and example bullets for account ownership, renewals, retention and forecasting, with a worked CV review.",
+        "h1": "Account manager CV example for a UK retail role",
         "intro": "See how CV Optimiser reviews an account manager CV for retention, growth, stakeholders and role fit.",
         "role_label": "Account Manager",
-        "cv_snippet": "with experience managing retail customers, coordinating account plans and supporting commercial targets.",
+        "cv_snippet": "responsible for retail customer accounts and renewal planning. Ran quarterly reviews, renewed two supply agreements and worked with sales and supply teams on monthly forecasts.",
+        "opening_cv_example_heading": "Example account manager CV profile",
         "job_snippet": "We are looking for an account manager with stakeholder management, forecasting, commercial planning, retailer execution and P&L ownership experience.",
         "score": "Role-fit score: 58/100",
         "score_label": "Needs clearer role alignment",
@@ -1044,19 +1045,19 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy.", "Key skills and the most relevant experience entry."),
         ],
         "weak_bullet": "Responsible for managing customer accounts and sales targets.",
-        "strong_bullet": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
+        "strong_bullet": "Managed retail customer accounts, ran quarterly customer reviews and renewed two supply agreements.",
         "rewrite_examples": [
             {
                 "before": "Responsible for managing customer accounts and sales targets.",
-                "after": "Drove account growth by turning customer plans into measurable revenue opportunities, improving retailer execution and strengthening commercial performance.",
-                "why_better": "It makes ownership and commercial value clearer, instead of only listing responsibility.",
+                "after": "Managed retail customer accounts, ran quarterly customer reviews and renewed two supply agreements.",
+                "why_better": "It shows the account responsibilities and gives a concrete renewal outcome.",
                 "where_to_use": "Recent account manager role bullet.",
-                "strengthens": "Account growth, retailer execution and commercial planning.",
+                "strengthens": "Account ownership, customer reviews and renewals.",
             },
             {
                 "before": "Worked with internal teams on account plans.",
-                "after": "Coordinated cross-functional account planning with sales, supply and category teams to improve forecasting visibility and retailer execution.",
-                "why_better": "It gives the collaboration more context and connects it to account-management outcomes.",
+                "after": "Coordinated monthly forecasts and account plans with sales and supply teams.",
+                "why_better": "It names the teams, the work and its frequency.",
                 "where_to_use": "Experience section under account planning or stakeholder work.",
                 "strengthens": "Stakeholder management, forecasting and cross-functional planning.",
             },
@@ -1456,7 +1457,7 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         "intro": "Use this fictional office administrator CV to see how a profile and experience bullets can show scheduling, record-keeping and inbox support.",
         "role_label": "Office Administrator",
         "cv_snippet": "with experience arranging meetings, sending calendar invitations and updating the team diary. Updates customer records in Excel and handles routine queries in the shared office inbox.",
-        "show_cv_example_first": True,
+        "opening_cv_example_heading": "Example administrator CV profile",
         "job_snippet": "We are looking for an administrator with scheduling, accurate records, documentation, customer service, Microsoft Office and process support experience.",
         "score": "Role-fit score: 59/100",
         "score_label": "Relevant admin work, but evidence is too generic",
@@ -2383,6 +2384,12 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "meta_description": "Compare your CV against a job description and see whether your evidence, keywords and experience match the role you want.",
         "h1": "CV job description match",
         "intro": "A strong CV is not just well written. It is clearly matched to the job description. This page helps you understand whether your CV gives recruiters enough evidence for the role.",
+        "opening_comparison_heading": "Worked example of matching a CV to a job advert",
+        "opening_comparison": [
+            ("The advert asks for Excel reporting", "The CV says “Compiled weekly Excel reports for the service manager”. Put that bullet near the top of the relevant job."),
+            ("The advert asks for scheduling", "The CV says “Booked appointments and updated the shared team diary”. Use that specific example to show scheduling experience."),
+            ("The advert asks for Salesforce", "The CV only describes Excel and the shared diary. Leave Salesforce off the CV unless you have actually used it."),
+        ],
         "who": ["Anyone applying to a specific advertised role", "Candidates tailoring a CV before submitting", "Job seekers who want a focused relevance check"],
         "looks_for": ["Skills and responsibilities from the advert", "Examples that prove you have used those skills", "Language that mirrors the job naturally", "Gaps between the role requirements and your CV evidence"],
         "manual": ["Copy the essential requirements into a checklist", "Mark where each requirement appears in your CV", "Rewrite generic bullets around the employer's priorities", "Check whether your profile reflects this role, not every possible role"],
@@ -2455,6 +2462,12 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "meta_description": "Check whether your CV and cover letter tell a consistent story for the role without repeating each other exactly.",
         "h1": "CV cover letter match",
         "intro": "Your CV and cover letter should support the same application story. The cover letter can explain motivation and fit, while the CV proves the evidence.",
+        "opening_comparison_heading": "Worked example of a CV and cover letter that agree",
+        "opening_comparison": [
+            ("Job advert", "The employer asks for meeting coordination and accurate records."),
+            ("CV evidence", "“Booked weekly project meetings and updated the shared actions log after each meeting.”"),
+            ("Cover letter", "“I’d bring the same approach to keeping your project meetings and action records organised. In my current role I book the team’s weekly meetings and keep the shared actions log up to date.”"),
+        ],
         "who": ["Applicants sending both a CV and cover letter", "Candidates unsure whether their message is consistent", "People tailoring applications for competitive roles"],
         "looks_for": ["A consistent target role", "Cover letter examples backed by CV evidence", "No contradictions in dates, skills or focus", "Natural language from the job description"],
         "manual": ["Check whether the cover letter claims are proved in the CV", "Remove repeated paragraphs that add no new value", "Use the cover letter to explain why this role, not to rewrite the CV", "Make sure both documents point to the same strengths"],
@@ -2912,6 +2925,12 @@ SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "meta_description": "Check your CV for ATS readability, plain text parsing, headings, formatting, keywords and job-description match.",
         "h1": "ATS CV checker",
         "intro": "ATS systems vary, but the practical risks are consistent: unclear structure, missing job-description language and weak evidence. CV Optimiser focuses on the things you can improve before applying.",
+        "opening_comparison_heading": "An ATS readability check you can try",
+        "opening_comparison": [
+            ("When the text comes out in the wrong order", "A two-column CV might paste as “Customer Support · Excel · Adviser · North Street Services”, separating the job title from the employer. The exact order varies by software."),
+            ("A clear single-column result", "Keep the title and employer together: “Customer Support Adviser | North Street Services | 2022–2025”. Put the experience bullet on the next line and copy it back into plain text to check the order."),
+        ],
+        "opening_comparison_source": ("/ats-cv-format-uk", "See a complete single-column UK example"),
         "who": ["People applying through online application systems", "Candidates using designed CV templates", "Job seekers who want to check keyword and formatting risks"],
         "looks_for": ["Plain text readability", "Standard headings and logical order", "Relevant keywords used naturally", "Experience that matches the advert", "Evidence behind important skills rather than unsupported keyword lists"],
         "manual": ["Paste your CV into plain text and check the reading order", "Avoid tables or graphics for essential content", "Use clear headings such as Experience and Education", "Compare your skills section with the job description", "Check whether the first page clearly proves the target role"],
@@ -3062,6 +3081,12 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "meta_description": "Use an ATS-friendly CV format for UK applications with clear headings, simple structure and readable keyword placement.",
         "h1": "ATS CV format UK",
         "intro": "ATS-friendly formatting is mostly about making your CV easy to parse. Good design is fine, but essential content must remain readable in plain text.",
+        "opening_comparison_heading": "Single-column UK CV example and plain-text result",
+        "opening_comparison": [
+            ("Example document layout", "Put the name and contact details on separate lines, followed by Profile, Experience and Education. Within Experience, use one line for “Office Administrator | North Street Services | 2022–2025” and a bullet below for “Updated customer records in Excel”."),
+            ("What should appear when copied as plain text", "Profile → Experience → Office Administrator | North Street Services | 2022–2025 → Updated customer records in Excel → Education. The arrows show reading order. Check that your own copied text keeps the job title, employer, dates and bullet together."),
+        ],
+        "opening_comparison_source": ("/ats-cv-checker", "Check your CV with the ATS checker"),
         "practical": "Use standard headings, reverse chronological experience, simple bullet points and a clear skills section. Keep job titles, employers and dates easy to scan. Save decorative elements for non-essential details.",
         "mistakes": "Avoid putting key content inside images, icons, text boxes or complex tables. Also avoid clever headings that ATS systems and recruiters may not recognise.",
         "helps": "CV Optimiser checks readability, structure and keyword match so you can spot formatting and relevance issues before applying.",
@@ -3295,9 +3320,14 @@ for comparison_slug in COMPARISON_PAGES:
 SITEMAP_LASTMOD_BY_LOC = {
     canonical_url("/"): "2026-11-21",
     canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
-    canonical_url("/best-free-cv-checker-uk"): "2026-11-20",
+    canonical_url("/best-free-cv-checker-uk"): "2026-11-21",
     canonical_url("/admin-cv-example-report"): "2026-11-21",
     canonical_url("/cv-score-checker"): "2026-11-21",
+    canonical_url("/ats-cv-checker"): "2026-11-21",
+    canonical_url("/cv-job-description-match"): "2026-11-21",
+    canonical_url("/cv-cover-letter-match"): "2026-11-21",
+    canonical_url("/ats-cv-format-uk"): "2026-11-21",
+    canonical_url("/account-manager-cv-example-report"): "2026-11-21",
 }
 
 
@@ -9672,18 +9702,18 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         "where_to_use": "Use this style in the most relevant recent role bullet.",
         "strengthens": "Evidence strength and role alignment.",
     }]
-    show_cv_example_first = page.get("show_cv_example_first", False)
+    opening_cv_example_heading = page.get("opening_cv_example_heading")
     cv_example_bullets = ""
-    if show_cv_example_first:
+    if opening_cv_example_heading:
         cv_example_bullets = "<h3>Example experience bullets</h3><ul>" + "".join(
             f'<li>{html.escape(rewrite["after"])}</li>' for rewrite in rewrite_examples
         ) + "</ul>"
     cv_example_html = f"""
         <section class="card" aria-labelledby="example-cv-profile">
-          <h2 id="example-cv-profile">{"Example administrator CV profile" if show_cv_example_first else "Example CV snippet"}</h2>
+          <h2 id="example-cv-profile">{html.escape(opening_cv_example_heading or "Example CV snippet")}</h2>
           <p><strong>{html.escape(page["role_label"])}</strong> {html.escape(page["cv_snippet"])}</p>
           {cv_example_bullets}
-          <p class="section-helper">{"Adapt these examples to experience you can support." if show_cv_example_first else "This is a short fictional snippet used to show the type of analysis a paid report can include."}</p>
+          <p class="section-helper">{"Adapt these examples to experience you can support." if opening_cv_example_heading else "This is a short fictional snippet used to show the type of analysis a paid report can include."}</p>
         </section>
     """
     rewrite_examples_html = ""
@@ -10677,7 +10707,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             </div>
           </div>
 
-          {cv_example_html if show_cv_example_first else ""}
+          {cv_example_html if opening_cv_example_heading else ""}
           <div class="card pro-command-centre">
             <div class="eyebrow">Pro report command centre</div>
             <h2>Executive summary</h2>
@@ -10718,7 +10748,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
           <div class="report-grid">
             <div>
-              {cv_example_html if not show_cv_example_first else ""}
+              {cv_example_html if not opening_cv_example_heading else ""}
 
               <div class="card" style="margin-top:24px;">
                 <h2>Example job description snippet</h2>
@@ -12799,6 +12829,8 @@ def render_best_free_cv_checker_page() -> str:
           <section class="content-section">
             <h2>What you see in your first result</h2>
             <p>You’ll see how your CV matches the advert and a preview of the fixes to prioritise. That could mean making a relevant achievement easier to find or showing evidence for a skill the employer asks for.</p>
+            <p><strong>Example from the free checker.</strong> A fictional account manager scored 50/100 against a fixed job advert. The result flagged that broad claims about growth and forecasting lacked evidence. The first edit was to put the account revenue and the change in forecast accuracy into the experience section.</p>
+            <p><a href="/cv-improvement-case-study">See the fictional CV and both free check results</a>.</p>
           </section>
 
           <section class="content-section">

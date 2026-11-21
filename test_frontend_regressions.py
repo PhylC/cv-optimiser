@@ -70,5 +70,5 @@ def test_sitemap_dates_only_the_pages_changed_today() -> None:
 
     assert 'canonical_url("/"): "2026-11-21"' in source
     assert 'canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21"' in source
-    assert 'canonical_url("/best-free-cv-checker-uk"): "2026-11-20"' in source
+    assert 'canonical_url("/best-free-cv-checker-uk"): "2026-11-21"' in source
     assert 'lastmod = SITEMAP_LASTMOD_BY_LOC.get(entry["loc"])' in source
