@@ -1646,8 +1646,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Answered calls and logged support requests.",
-                "after": "Logged support requests accurately, captured symptoms and kept users updated while incidents moved through first-line resolution or escalation.",
-                "why_better": "It makes service quality and helpdesk process clearer.",
+                "after": "Recorded the affected device and error message in the ticket, checked whether other users were affected and escalated the unresolved issue with the troubleshooting steps already tried.",
+                "why_better": "It shows what first-line support checked and the information the next team received. Name the ticketing system only if you used it.",
                 "where_to_use": "Helpdesk responsibilities bullet.",
                 "strengthens": "Customer support, documentation and SLA awareness.",
             },
@@ -3348,6 +3348,51 @@ SEO_LANDING_PAGES["sales-cv-checker"].update({
         ("Team leadership", "Show what you changed in coaching, coverage or forecasting and how you measured it. Separate team results from your personal target."),
     ],
     "opening_comparison_source": ("/sales-cv-example-report", "See a worked sales CV example report"),
+})
+SEO_LANDING_PAGES["account-manager-cv-checker"].update({
+    "opening_comparison_heading": "Show account retention and growth on the same CV",
+    "opening_comparison": [
+        ("Account scope", "State which accounts or customer segment you owned and the period you managed them. Use a count or range if you can share it."),
+        ("Retention", "Describe your role in a renewal, such as resolving an issue or preparing the commercial review. Make clear whether you owned the renewal or contributed to it."),
+        ("Expansion", "Give the baseline and comparison period for a growth figure, and explain the change you led. Keep revenue or account names confidential where necessary."),
+    ],
+    "opening_comparison_source": ("/account-manager-cv-example-report", "See the account manager CV example report"),
+})
+SEO_LANDING_PAGES["project-coordinator-cv-checker"].update({
+    "opening_comparison_heading": "Show project coordination with a dependency and a handover",
+    "opening_comparison": [
+        ("Track the dependency", "For a fictional office move, maintained the move checklist and flagged that equipment testing depended on delivery confirmation."),
+        ("Keep the handover moving", "Agreed the delivery date with the supplier contact, updated the task owners and sent a handover checklist before the move."),
+        ("Describe your level of ownership", "Make clear whether you maintained the tracker, escalated the dependency or approved the revised plan. Use the responsibility you actually held."),
+    ],
+    "opening_comparison_source": ("/project-manager-cv-example-report", "See how a project manager report assesses delivery evidence"),
+})
+SEO_LANDING_PAGES["retail-manager-cv-checker"].update({
+    "opening_comparison_heading": "Use store results to show how you managed the shift",
+    "opening_comparison": [
+        ("Set the context", "Use store type, shift or team size to show the scale. For example, an eight-person Saturday team in a busy branch."),
+        ("Show the decision", "For a fictional queue issue, moved one trained colleague to tills during the busiest hour after checking when queues formed."),
+        ("Show the result", "If you measured the effect, provide the measure and period. Otherwise, describe what you checked with the team before keeping the rota change."),
+    ],
+    "opening_comparison_source": ("/retail-manager-cv-example-report", "See the retail manager CV example report"),
+})
+SEO_LANDING_PAGES["customer-success-cv-checker"].update({
+    "opening_comparison_heading": "Separate onboarding, adoption and renewal evidence",
+    "opening_comparison": [
+        ("Onboarding", "Give the type or number of customers you onboarded and the agreed milestone, such as completing the first setup or training session."),
+        ("Adoption", "Name the activity you measured, explain what you changed and state the time window. Define what counts as an active user before sharing a percentage."),
+        ("Renewal", "Show whether you owned the renewal, prepared a success plan or surfaced a risk for another team. Describe a credible outcome within your remit."),
+    ],
+    "opening_comparison_source": ("/customer-success-cv-example-report", "See the customer success CV example report"),
+})
+SEO_LANDING_PAGES["sales-manager-cv-checker"].update({
+    "opening_comparison_heading": "Show the coaching behind a team sales result",
+    "opening_comparison": [
+        ("Team context", "State your team size, sales segment and period of responsibility. Give personal results separately if you continued selling."),
+        ("Coaching decision", "In a fictional eight-person team, identified late qualification as a cause of stalled deals, reviewed call notes with colleagues and introduced a short weekly deal clinic."),
+        ("Evidence to include", "Give the period and compare a measure you actually tracked, such as the share of deals with a documented next step. State how many opportunities you reviewed if that helps interpret the result."),
+    ],
+    "opening_comparison_source": ("/sales-cv-example-report", "See an example of measurable sales evidence"),
 })
 SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "slug": "cv-improvement-tool",
