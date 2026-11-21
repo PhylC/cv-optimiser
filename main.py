@@ -2322,7 +2322,12 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
         "title": "How to Choose a CV Checker for UK Job Applications",
         "meta_description": "Compare job-matching CV checkers, ATS scans and human CV reviews. See what each can tell you and how to choose for a UK job application.",
         "h1": "How to choose a CV checker for UK job applications",
-        "intro": "Choose a CV checker based on what you need to find out. A job-matching checker can show gaps against an advert, an ATS scan can flag readability issues, and a human reviewer can help with more complex career decisions.",
+        "intro": "Choose the type of CV check that answers your question. Compare what each option can tell you before you send a UK job application.",
+        "opening_comparison": [
+            ("Job-match check", "You have a specific advert and want to see which requirements your CV supports and where evidence is missing."),
+            ("ATS readability scan", "You want to see whether headings, dates and experience come through clearly when the CV is read as text."),
+            ("Human CV review", "You need judgement on how to present a career change, a senior role or specialist experience."),
+        ],
         "who": ["UK job seekers applying to a specific advertised role", "Candidates who want a useful CV check before submitting", "People comparing free CV checkers, ATS tools and general AI prompts"],
         "looks_for": ["Role fit against the job description", "Missing keywords used naturally and supported by evidence", "Achievement strength and first-page clarity", "ATS-readable structure", "Clear limitations instead of guaranteed outcomes"],
         "manual": ["Check whether the tool asks for the job description", "Look for explained criteria, not just a single unexplained score", "Make sure examples show the real type of output", "Check whether suggestions preserve truthful experience", "Avoid tools that promise guaranteed interviews or guaranteed ATS success"],
@@ -3281,8 +3286,8 @@ for comparison_slug in COMPARISON_PAGES:
         SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
 SITEMAP_LASTMOD_BY_LOC = {
-    canonical_url("/"): "2026-11-20",
-    canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-20",
+    canonical_url("/"): "2026-11-21",
+    canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
     canonical_url("/best-free-cv-checker-uk"): "2026-11-20",
 }
 
@@ -11649,6 +11654,12 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
         """
         for title, copy in page.get("sections", [])
     )
+    opening_comparison_html = ""
+    if page.get("opening_comparison"):
+        opening_comparison_html = '<section class="seo-section"><h2>Compare CV checks by use case</h2><dl>' + "".join(
+            f"<dt><strong>{html.escape(label)}</strong></dt><dd>{html.escape(detail)}</dd>"
+            for label, detail in page["opening_comparison"]
+        ) + "</dl></section>"
     list_blocks = [
         ("Who this is for", page.get("who", [])),
         ("What the checker looks for", page.get("looks_for", [])),
@@ -12148,6 +12159,7 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             </aside>
           </section>
 
+          {opening_comparison_html}
           {tool_html}
           {lead_capture_html}
 

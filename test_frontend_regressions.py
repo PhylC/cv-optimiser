@@ -47,13 +47,13 @@ def test_best_uk_cv_checker_page_matches_search_intent() -> None:
     assert '("/best-cv-checker-for-uk-job-applications", "How to choose a UK CV checker")' in source
 
 
-def test_homepage_search_snippet_leads_with_brand_and_free_value() -> None:
+def test_homepage_search_snippet_describes_the_free_job_advert_check() -> None:
     source = INDEX_HTML.read_text(encoding="utf-8")
 
-    title = "CV Optimiser: Free UK CV Checker &amp; Job Match Score"
+    title = "Free UK CV Checker for Your Job Advert | CV Optimiser"
     description = (
-        "CV Optimiser checks your CV against a job description for free. "
-        "Get a UK role-fit score, missing keywords and practical fixes before you apply."
+        "Check your CV against a UK job advert. "
+        "Get a free role-fit score, missing keywords and priority fixes before you apply."
     )
 
     assert f"<title>{title}</title>" in source
@@ -68,7 +68,7 @@ def test_homepage_search_snippet_leads_with_brand_and_free_value() -> None:
 def test_sitemap_dates_only_the_pages_changed_today() -> None:
     source = MAIN_PY.read_text(encoding="utf-8")
 
-    assert 'canonical_url("/"): "2026-11-20"' in source
-    assert 'canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-20"' in source
+    assert 'canonical_url("/"): "2026-11-21"' in source
+    assert 'canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21"' in source
     assert 'canonical_url("/best-free-cv-checker-uk"): "2026-11-20"' in source
     assert 'lastmod = SITEMAP_LASTMOD_BY_LOC.get(entry["loc"])' in source
