@@ -526,6 +526,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "How CV Optimiser handles your CV",
         "intro": "CVs can contain personal information, so this page explains what the tool needs, how it is used, and what you should avoid sharing.",
         "sections": [
+            {"title": "Keep a separate copy for a CV check", "copy": "Leave the evidence that helps match the role. Use neutral descriptions in place of client or patient names and remove unrelated personal details. Review the current privacy notice before you submit the copy."},
             {
                 "title": "What you provide",
                 "copy": "To run a useful check, CV Optimiser needs your CV content and the job description you want to apply for.",
@@ -927,6 +928,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "Contact",
         "intro": "For questions about CV Optimiser, payments, privacy, or account access, contact us at:",
         "sections": [
+            {"title": "What to include in a support request", "copy": "Describe the feature, what you expected, what happened and roughly when. Include the error text if you have it. If you attach a screenshot, remove CV text, account credentials and payment details that support does not need."},
             ("Email", "support@cv-optimiser.com"),
             ("Billing", "Subscription and payment management is handled through Stripe from the account menu when available."),
             ("Privacy", "Do not send sensitive personal details unless they are needed to resolve your support request."),
@@ -1778,6 +1780,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("Proof before use", "Includes methodology, limitations, privacy notes and realistic example reports.", "You need to decide the method, privacy approach and output structure yourself."),
         ],
         "choose_us": [
+            "Compare the feedback against the same job advert. Start with the same CV and advert in both tools. Read which findings identify an actual CV line and which edits you could justify in an interview.",
             "You want a repeatable score and clear readiness label for a specific job advert.",
             "You want UK recruiter-style feedback without building your own prompt.",
             "You want missing keywords, priority fixes and report-style output in one place.",
@@ -1809,6 +1812,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("Best use case", "Quickly deciding whether your CV is ready for a specific UK role.", "Optimising a resume within a broader ATS and job-search workflow."),
         ],
         "choose_us": [
+            "Test whether each report explains a missing requirement. Use one unchanged CV and advert. Check whether feedback identifies the actual requirement, where you already show it and what edit would make the evidence easier to see.",
             "You write and apply with a UK CV rather than a US-style resume.",
             "You want a role-specific score, missing keywords and top fixes without a heavy workflow.",
             "You want to see role-specific example reports before trusting the tool.",
@@ -1842,6 +1846,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("Best use case", "Checking one application before you submit it.", "Improving a resume/LinkedIn profile across a wider job-search toolkit."),
         ],
         "choose_us": [
+            "Compare broad CV feedback and advert-specific feedback. Use the same CV and advert, then label each finding as a general writing issue or a gap for this specific role. Start with the finding that affects the application you are working on.",
             "You want job-description matching rather than general resume polish.",
             "You want UK CV terminology and role-specific CV example reports.",
             "You want a lightweight check before deciding whether to unlock a fuller report.",
@@ -1875,6 +1880,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("Trust", "Shows methodology, limitations, privacy notes and example reports so users know what they are getting.", "Look for clear explanations, not magic-score promises."),
         ],
         "choose_us": [
+            "Test whether a checker explains its result. Check whether it points to a real CV line, identifies a reading-order issue you can reproduce and gives you a change you can verify.",
             "You want UK CV language and a simple application-focused check.",
             "You want a score plus missing keywords and priority fixes.",
             "You care about seeing examples before uploading your own CV.",
@@ -2280,9 +2286,10 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
                 ],
             },
             {
-                "title": "How many keywords should you include?",
+                "title": "Choose keywords from the actual responsibilities in the advert",
                 "paragraphs": [
-                    "Usually 10 to 30 relevant keywords, used naturally across your CV. More is not better if the wording starts sounding forced.",
+                    "Start with the requirements the employer lists as essential. Match each relevant term to something you can substantiate in your experience or qualifications.",
+                    "For example, an advert asking for stock reconciliation needs evidence of what you reconciled and how you handled a discrepancy. Pick the terms that describe real work or skills, and follow any instructions in the advert.",
                 ],
             },
             {
@@ -2316,6 +2323,13 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         "top_cta": "Fix your CV now",
         "bottom_cta": "Fix your CV now",
         "sections": [
+            {
+                "title": "Run a final accuracy check before you submit",
+                "paragraphs": [
+                    "Read the CV once for dates, employer names and contact details. Then check achievements and qualifications against a source you can trust, and correct estimates that you cannot explain.",
+                    "Open the file you plan to submit, especially after editing a copy for another role. Check that the profile and filename refer to the role you are applying for.",
+                ],
+            },
             {
                 "title": "The mistakes",
                 "bullets": [
@@ -3564,6 +3578,39 @@ SEO_LANDING_PAGES["admin-cv-checker"].update({
         ("Records", "Fictional example: checked order records against delivery notes, corrected discrepancies you could verify and logged questions for the team."),
         ("Deadlines", "Show how you set reminders or checked priorities against the team’s schedule. Describe what happened when requests conflicted."),
         ("Handover", "Name what another colleague needed to continue the task, such as a current document, a decision or an owner for an outstanding query."),
+    ],
+})
+
+SEO_LANDING_PAGES["free-cv-review"].update({
+    "opening_comparison_heading": "What to review first after a free CV check",
+    "opening_comparison": [
+        ("Pick a specific vacancy", "Use the CV you plan to send and the full job advert. Start with the most important responsibility the report says is unclear."),
+        ("Decide whether you can show it", "If you have relevant experience, add the project, action or outcome to the appropriate role. Keep the original evidence if it already makes the case."),
+        ("Use the next result", "After the edit, check the same advert and compare the written finding. Decide whether the new wording makes the relevant evidence easier to find."),
+    ],
+})
+SEO_LANDING_PAGES["cv-checker-for-sales-jobs"].update({
+    "opening_comparison_heading": "Check whether your sales bullet has a comparable result",
+    "opening_comparison": [
+        ("Set the period", "State if your result is for a month, quarter or financial year. Give the scope of the territory or accounts when it helps."),
+        ("Use a denominator", "If you give a conversion rate, say which stage and how many opportunities the rate covers. Name the baseline if you claim a change."),
+        ("Name your contribution", "Describe what you owned and what the team delivered. Use a number only when you can verify it and are allowed to share it."),
+    ],
+})
+SEO_LANDING_PAGES["cv-mistakes-uk"].update({
+    "opening_comparison_heading": "Check dates, role titles and file instructions together",
+    "opening_comparison": [
+        ("Career history", "Check dates and job titles against the application form. Explain relevant periods clearly and follow the employer’s requested level of detail."),
+        ("Naming and contact", "Use a consistent name and a current email address. Follow separate instructions if the employer requests an anonymised CV."),
+        ("File and attachments", "Open the final file and check its contents. Follow the advert’s naming convention and include any separately requested statement."),
+    ],
+})
+SEO_LANDING_PAGES["is-it-safe-to-upload-your-cv-to-an-ai-checker"].update({
+    "opening_comparison_heading": "Check the CV and the privacy notice before uploading",
+    "opening_comparison": [
+        ("Keep the evidence", "Preserve the role dates, work you did and qualifications that a comparison needs. Remove information unrelated to the check, such as full contact details or identifiable third-party data."),
+        ("Read the service’s notice", "Check how the service says it uses input, whether it stores the CV and how to contact it. Check the policy for the specific feature you are using."),
+        ("Review the file itself", "Look at headers, comments and any linked documents. Use a clean copy or paste only the text needed for the comparison."),
     ],
 })
 
@@ -15253,7 +15300,24 @@ def tailor_cv_to_job_description_alias_page(request: Request) -> str:
 @app.get("/how-to-tailor-your-cv/", response_class=HTMLResponse, include_in_schema=False)
 def tailor_cv_to_job_description_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_article_page("how-to-tailor-your-cv", BLOG_ARTICLES["how-to-tailor-cv-to-job-description"])
+    article = BLOG_ARTICLES["how-to-tailor-cv-to-job-description"]
+    return render_article_page("how-to-tailor-your-cv", {
+        **article,
+        "title": "How to Tailor Your CV for Different Jobs | CV Optimiser",
+        "h1": "How to tailor your CV for different jobs",
+        "meta_description": "Keep one master CV and tailor relevant examples for different job adverts without losing track of your versions.",
+        "intro": "Keep a complete record of your experience, then use it to create a version for each vacancy.",
+        "sections": [
+            {
+                "title": "Keep one master CV and tailor copies for each role",
+                "paragraphs": [
+                    "Keep an unsubmitted master with your dates, achievements and examples. Save one copy per vacancy. Use a filename that helps you identify the role and version later.",
+                    "For a customer support advert, bring complaint handling to page one. For an operations advert, use your strongest handover or process example instead. Keep the history accurate in both copies and choose evidence based on each advert.",
+                ],
+            },
+            *article["sections"],
+        ],
+    })
 
 
 @app.get("/ats-cv-keywords", response_class=HTMLResponse)
