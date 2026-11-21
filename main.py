@@ -1149,8 +1149,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Helped keep projects on track.",
-                "after": "Maintained project momentum by coordinating milestone updates, escalating delivery risks and keeping stakeholders aligned on next actions.",
-                "why_better": "It replaces vague support wording with clearer project control and stakeholder evidence.",
+                "after": "In this fictional example, tracked weekly spend against the £48,000 rollout budget. Flagged a £3,000 overspend forecast at the steering meeting and agreed a revised delivery sequence that kept the forecast within budget.",
+                "why_better": "It connects the budget baseline to a forecast variance, an escalation and a decision. Keep the figures only if you can verify and share them.",
                 "where_to_use": "Project delivery or governance bullet.",
                 "strengthens": "Stakeholder governance, risk control and delivery cadence.",
             },
@@ -3295,6 +3295,42 @@ SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"] = {
     "faqs": guide_faqs("tailoring a CV to a job description", "job-description match"),
     "related": [("/job-description-cv-match", "Job description CV match"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/cv-score-checker", "CV score checker"), ("/example-cv-report", "Example CV report")],
 }
+SEO_LANDING_PAGES["how-to-tailor-cv-to-job-description"].update({
+    "opening_comparison_heading": "Tailor the first page using three requirements from an advert",
+    "opening_comparison_columns": ("Fictional advert requirement", "Edit to make"),
+    "opening_comparison": [
+        ("Run weekly stock reports", "Move the stock reporting bullet into the first two bullets under the current role. State who used the report and what they did with it."),
+        ("Coordinate deadlines with suppliers", "Move a genuine supplier follow-up example above unrelated duties. Keep the employer, job title and dates as they are."),
+        ("Own the forecasting system", "If you supplied stock data but never owned forecasting, say what you supplied and to whom. Decide whether the ownership requirement is essential."),
+    ],
+})
+SEO_LANDING_PAGES["graduate-cv-checker"].update({
+    "opening_comparison_heading": "Graduate CV evidence from projects and part-time work",
+    "opening_comparison": [
+        ("University project", "Fictional example: Cleaned the survey data for a four-person research project, resolved duplicate responses and summarised the findings in a presentation. State your own contribution to group work."),
+        ("Part-time job", "Fictional example: As the opening-shift assistant, checked the stock handover and flagged missing items before the team opened. Use the example for an advert asking for accuracy or organisation."),
+        ("Choose what to lead with", "Put the project first for a role asking for analysis. Put the part-time work first when the advert prioritises customer service or day-to-day operations."),
+    ],
+    "opening_comparison_source": ("/graduate-cv-example-report", "See the graduate CV example report"),
+})
+SEO_LANDING_PAGES["career-change-cv-checker"].update({
+    "opening_comparison_heading": "Translate retail experience for a project coordinator role",
+    "opening_comparison": [
+        ("Fictional evidence", "Coordinated an overnight store refit by agreeing the delivery schedule with contractors, tracking task owners and preparing the handover for the opening shift."),
+        ("Transferable skills", "Use scheduling, stakeholder coordination and handover when the advert asks for them. Keep your actual retail job title and describe your own role in the work."),
+        ("Remaining gap", "If formal project reporting is essential and you have only used store checklists, say what you have used and leave specialised tools off unless you can show real experience."),
+    ],
+    "opening_comparison_source": ("/career-change-cv-example-report", "See the career-change example report"),
+})
+SEO_LANDING_PAGES["nhs-admin-cv-checker"].update({
+    "opening_comparison_heading": "Show booking and record-handling evidence on an NHS admin CV",
+    "opening_comparison": [
+        ("Appointments", "Fictional example from a community service: Managed changes to the appointment diary, confirmed new times and recorded cancellations so colleagues could offer available slots."),
+        ("Confidential records", "Describe the system you used and how you checked access or handed records over. Keep identifiable patient or service-user details out of examples."),
+        ("Enquiries and escalation", "Show which requests you could resolve, what you passed to a colleague and how you recorded the next step. Name a clinical system only if you actually used it."),
+    ],
+    "opening_comparison_source": ("/nhs-admin-cv-example-report", "See the NHS admin example report"),
+})
 SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "slug": "cv-improvement-tool",
     "group": "CV checking tools",
