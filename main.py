@@ -367,6 +367,18 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "intro": "CV Optimiser compares your CV against a job description to show how well it matches, what recruiters may miss, and what to improve.",
         "sections": [
             {
+                "title": "Worked example from advert to first result",
+                "copy": "In a documented test using a fictional retail account manager, the CV Optimiser free check returned a role-fit score of 50/100.",
+                "bullets": [
+                    "Advert: the employer asked for forecasting, commercial planning and P&L ownership.",
+                    "CV excerpt: the candidate mentioned forecasting demand and delivering sales growth, with few specifics.",
+                    "First result: the check flagged weak evidence for commercial impact and gaps in how the CV showed P&L ownership.",
+                    "First edit: make existing achievements and responsibilities easy to find, then recheck against the same advert.",
+                ],
+                "link_href": "/cv-improvement-case-study",
+                "link_label": "See the full fictional CV and both check results",
+            },
+            {
                 "title": "What this tool does",
                 "bullets": [
                     "Compares your CV to a job description",
@@ -384,7 +396,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                     "Structure: clarity, organisation and readability",
                     "Recruiter best practices: how clearly your impact and achievements are shown",
                 ],
-                "helper": "The score is designed to reflect how likely your CV is to pass initial screening and attract attention.",
+                "helper": "The score estimates how clearly the submitted CV matches this particular advert. It reflects relevance, evidence and readability. Employers use their own screening criteria.",
             },
             {
                 "title": "What ATS systems and recruiters look for",
@@ -3033,6 +3045,14 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "meta_description": "Use the right sales CV keywords for UK roles, including revenue, pipeline, CRM, forecasting, negotiation and account growth.",
         "h1": "Sales CV keywords",
         "intro": "Sales CVs are screened for commercial evidence. If your CV talks about being personable but misses revenue, pipeline and target language, it can look weaker than your actual performance.",
+        "opening_comparison_heading": "Sales CV keywords with evidence",
+        "opening_comparison_columns": ("Keyword or skill", "Fictional CV bullet"),
+        "opening_comparison": [
+            ("New business", "Won eight new B2B accounts in a year through outbound prospecting and product demos."),
+            ("Pipeline generation", "Built a £420,000 qualified pipeline across two territories and reviewed next steps weekly in the CRM."),
+            ("Quota attainment", "Reached 108% of a £600,000 annual sales quota in 2025."),
+            ("Account growth", "Increased annual sales across 12 existing accounts by 9% through range expansion."),
+        ],
         "practical": "Use keywords that match the sales model in the advert: new business, account growth, CRM, forecasting, quota, negotiation, pipeline generation, conversion and retention. Pair each term with proof such as targets, deal size, territory, account value or percentage growth.",
         "mistakes": "The common mistake is listing soft skills without commercial evidence. Avoid vague phrases such as strong communicator unless they are tied to outcomes like revenue, renewals, margin, meetings booked or pipeline created.",
         "helps": "CV Optimiser compares your sales CV with the job description and shows which commercial keywords are missing, weak or unsupported.",
@@ -3045,6 +3065,14 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "meta_description": "Find account manager CV keywords for UK applications, including retention, renewals, stakeholder management, forecasting and account growth.",
         "h1": "Account manager CV keywords",
         "intro": "Account manager CVs need to prove ownership, retention and growth. A generic relationship-led CV can undersell you if it does not show portfolio size, stakeholders and commercial outcomes.",
+        "opening_comparison_heading": "Account manager CV keywords with evidence",
+        "opening_comparison_columns": ("Keyword or skill", "Fictional CV bullet"),
+        "opening_comparison": [
+            ("Retention", "Retained 18 of 20 retail accounts over the year and planned follow-ups for accounts at risk."),
+            ("Renewals", "Led contract reviews and agreed renewals for two national retail accounts."),
+            ("Forecasting", "Maintained a rolling 12-week forecast across 30 SKUs and reviewed variance monthly with supply planning."),
+            ("Stakeholder management", "Ran quarterly reviews with buyers and supply leads, recorded decisions and assigned follow-up actions."),
+        ],
         "practical": "Look for account ownership keywords in the advert: retention, renewals, upsell, cross-sell, forecasting, QBRs, stakeholder management, customer success, portfolio growth and commercial planning. Support them with account value, retention rate, growth percentage or renewal outcomes.",
         "mistakes": "Do not describe accounts without ownership or results. Recruiters need to see the size, complexity and outcome of your accounts, not just that you maintained relationships.",
         "helps": "CV Optimiser highlights gaps between your account management evidence and the terms recruiters are scanning for in the specific role.",
@@ -3160,6 +3188,11 @@ SEO_GUIDE_PAGE_DEFINITIONS: list[dict[str, Any]] = [
         "meta_description": "Check a management CV for leadership scope, team results, operations, stakeholder evidence and role-specific keywords.",
         "h1": "CV checker for management jobs",
         "intro": "Management CVs need to show scope, judgement and outcomes. If your CV only lists responsibilities, it may not prove leadership level quickly enough.",
+        "opening_comparison_heading": "First-line and senior management CV evidence",
+        "opening_comparison": [
+            ("First-line manager", "“Supervised eight advisers, scheduled shift cover and reviewed service targets weekly.” Show who you supervised, what you controlled and which outcomes you can evidence."),
+            ("Senior manager", "“Led three team leads across a 40-person service, managed a £1.2m operating budget and reduced the overdue case backlog from 180 to 120 in six months.” Use budget and outcome figures only where you can support them."),
+        ],
         "practical": "Check for team size, budget, KPIs, operational improvements, stakeholder management, hiring, coaching and delivery outcomes. Match the evidence to the management level in the advert.",
         "mistakes": "Avoid sounding senior without proof. Management CVs need context: scale, people, process, performance and measurable change.",
         "helps": "CV Optimiser compares your management CV with the role and shows missing leadership or operational signals.",
@@ -3196,6 +3229,14 @@ for guide_page in SEO_GUIDE_PAGE_DEFINITIONS:
     guide_page["cta_support"] = guide_page.get("cta_support", "Use the guide to tighten your CV, then run a real job-description match before you apply.")
     SEO_LANDING_PAGES[guide_page["slug"]] = guide_page
 
+SEO_LANDING_PAGES["it-helpdesk-cv-checker"].update({
+    "opening_comparison_heading": "First-line IT helpdesk CV evidence example",
+    "opening_comparison": [
+        ("Ticket triage", "Fictional CV excerpt: Logged incoming Microsoft 365 and Windows tickets in ServiceNow and prioritised them using the team’s impact and urgency guide."),
+        ("Escalation", "Recorded troubleshooting steps and escalated permissions issues to second-line support with the information they needed to continue."),
+        ("Service targets", "Checked the first-response queue against a four-hour target and flagged tickets due to breach it. State the target or a measured result only if you can support it."),
+    ],
+})
 SEO_LANDING_PAGES["cv-keywords-for-job-applications"]["related"].append(("/guides", "All CV guides"))
 SEO_LANDING_PAGES["cv-score-checker"]["faqs"] = guide_faqs("a CV score checker", "your CV score")
 SEO_LANDING_PAGES["ats-cv-checker"]["faqs"] = SEO_LANDING_PAGES["ats-cv-checker"].get("faqs") or guide_faqs("an ATS CV checker", "ATS readability and role fit")
@@ -3318,6 +3359,11 @@ for comparison_slug in COMPARISON_PAGES:
         SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
 SITEMAP_LASTMOD_BY_LOC = {
+    canonical_url("/sales-cv-keywords"): "2026-11-21",
+    canonical_url("/account-manager-cv-keywords"): "2026-11-21",
+    canonical_url("/it-helpdesk-cv-checker"): "2026-11-21",
+    canonical_url("/cv-checker-for-management-jobs"): "2026-11-21",
+    canonical_url("/how-it-works"): "2026-11-21",
     canonical_url("/"): "2026-11-21",
     canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
     canonical_url("/best-free-cv-checker-uk"): "2026-11-21",
@@ -11707,16 +11753,26 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
     opening_comparison_html = ""
     if page.get("opening_comparison"):
         heading = page.get("opening_comparison_heading", "Compare CV checks by use case")
-        items = "".join(
-            f"<dt><strong>{html.escape(label)}</strong></dt><dd>{html.escape(detail)}</dd>"
-            for label, detail in page["opening_comparison"]
-        )
+        columns = page.get("opening_comparison_columns")
+        if columns:
+            headers = "".join(f'<th scope="col">{html.escape(column)}</th>' for column in columns)
+            rows = "".join(
+                f'<tr><th scope="row">{html.escape(label)}</th><td>{html.escape(detail)}</td></tr>'
+                for label, detail in page["opening_comparison"]
+            )
+            content = f'<table class="keyword-evidence-table"><thead><tr>{headers}</tr></thead><tbody>{rows}</tbody></table>'
+        else:
+            items = "".join(
+                f"<dt><strong>{html.escape(label)}</strong></dt><dd>{html.escape(detail)}</dd>"
+                for label, detail in page["opening_comparison"]
+            )
+            content = f"<dl>{items}</dl>"
         source_html = ""
         if page.get("opening_comparison_source"):
             href, label = page["opening_comparison_source"]
             source_html = f'<p><a href="{html.escape(href)}">{html.escape(label)}</a></p>'
         opening_comparison_html = (
-            f'<section class="seo-section"><h2>{html.escape(heading)}</h2><dl>{items}</dl>{source_html}</section>'
+            f'<section class="seo-section"><h2>{html.escape(heading)}</h2>{content}{source_html}</section>'
         )
     list_blocks = [
         ("Who this is for", page.get("who", [])),
@@ -11889,6 +11945,19 @@ def render_seo_landing_page(slug: str, page: dict[str, Any]) -> str:
             margin: 24px 0;
           }}
           .seo-card h2,
+          .keyword-evidence-table {{
+            width: 100%;
+            border-collapse: collapse;
+            overflow-wrap: anywhere;
+          }}
+          .keyword-evidence-table th,
+          .keyword-evidence-table td {{
+            border-bottom: 1px solid #E2E8F0;
+            padding: 0.65rem 0.45rem;
+            text-align: left;
+            vertical-align: top;
+          }}
+          .keyword-evidence-table th:first-child {{ width: 34%; }}
           .seo-section h2,
           .tool-feature h2,
           .bottom-cta h2 {{
