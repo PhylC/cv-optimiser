@@ -1024,8 +1024,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Worked with customers to understand their needs.",
-                "after": "Used discovery calls to qualify customer needs, prioritise higher-value opportunities and progress prospects through the sales pipeline.",
-                "why_better": "It uses the job advert's language and shows how customer conversations supported sales progress.",
+                "after": "Qualified 24 enquiries in one quarter using discovery calls and logged the next step in the CRM. Eight progressed to proposal stage.",
+                "why_better": "It gives the period, activity and stage conversion in place of a broad claim about relationships.",
                 "where_to_use": "Sales achievements or responsibilities under the relevant role.",
                 "strengthens": "Discovery, qualification and pipeline ownership.",
             },
@@ -1273,8 +1273,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Worked part time in retail while studying.",
-                "after": "Balanced part-time retail work with full-time study, developing customer communication, prioritisation and problem-solving skills in a busy store environment.",
-                "why_better": "It turns part-time work into transferable evidence without pretending it is senior experience.",
+                "after": "During term-time weekend shifts, checked incoming stock against the delivery list and flagged discrepancies to the supervisor before the shop opened.",
+                "why_better": "It links part-time work to an observable task, a handover and an outcome. Keep a number only if you can explain where it came from.",
                 "where_to_use": "Experience section.",
                 "strengthens": "Communication, teamwork and reliability.",
             },
@@ -1335,8 +1335,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Helped with appointments and office work.",
-                "after": "Supported appointment scheduling, document handling and front-office administration in a busy service environment.",
-                "why_better": "It makes the admin tasks more specific and easier to match to the advert.",
+                "after": "Updated the appointment diary when cancellations came in, confirmed revised times by phone and flagged changes needing clinical review to the appropriate colleague.",
+                "why_better": "It shows administrative ownership, escalation and communication while keeping individual patient details out of the CV.",
                 "where_to_use": "Experience section.",
                 "strengthens": "Scheduling, documentation and service support.",
             },
@@ -1584,8 +1584,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Helped customers and solved problems each day.",
-                "after": "Resolved customer queries by coordinating information across teams, tracking follow-up actions and keeping communication clear under pressure.",
-                "why_better": "It turns customer service into coordination and stakeholder evidence.",
+                "after": "Introduced a shared tracker for unresolved customer queries, recorded the owner and due date for each handover, and checked open cases with the operations team each morning.",
+                "why_better": "It gives a concrete operations example drawn from customer service and shows how the candidate managed follow-up.",
                 "where_to_use": "Recent experience bullet.",
                 "strengthens": "Stakeholder communication, problem solving and process support.",
             },
@@ -3330,6 +3330,24 @@ SEO_LANDING_PAGES["nhs-admin-cv-checker"].update({
         ("Enquiries and escalation", "Show which requests you could resolve, what you passed to a colleague and how you recorded the next step. Name a clinical system only if you actually used it."),
     ],
     "opening_comparison_source": ("/nhs-admin-cv-example-report", "See the NHS admin example report"),
+})
+SEO_LANDING_PAGES["cv-mistakes-that-cost-interviews"].update({
+    "opening_comparison_heading": "Three CV mistakes you can check in ten minutes",
+    "opening_comparison": [
+        ("Generic profile", "Underline one requirement from the advert and find a line on page one that proves it. Replace vague profile language with a relevant fact."),
+        ("A duty without evidence", "Pick one bullet starting with responsible for. Add what you did, who used the result and what changed, using only details you can substantiate."),
+        ("A broken reading order", "Paste the CV into a text editor. Check that each employer, title, date and bullet still belongs together. Simplify the layout if they are out of order."),
+    ],
+    "opening_comparison_source": ("/10-second-cv-test", "Try the ten-second first-page check"),
+})
+SEO_LANDING_PAGES["sales-cv-checker"].update({
+    "opening_comparison_heading": "Match sales CV evidence to the kind of sales role",
+    "opening_comparison": [
+        ("New business", "Use a real prospecting or pipeline example. Say which stage you owned and give the period and result, such as qualified meetings booked."),
+        ("Account growth", "Show how you grew or retained existing business, what changed and which part you owned. Give the comparison period when quoting a percentage."),
+        ("Team leadership", "Show what you changed in coaching, coverage or forecasting and how you measured it. Separate team results from your personal target."),
+    ],
+    "opening_comparison_source": ("/sales-cv-example-report", "See a worked sales CV example report"),
 })
 SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "slug": "cv-improvement-tool",
@@ -13442,6 +13460,12 @@ def render_guides_page() -> str:
           <section class="guides-hero">
             <h1>CV guides and resources</h1>
             <p>Practical UK CV advice for checking role fit, improving ATS readability, finding keywords and making your CV more credible before you apply.</p>
+            <h2>Find the CV guide for your next step</h2>
+            <ul>
+              <li><a href="/how-to-tailor-cv-to-job-description">Tailor a CV to a job description</a> when you have a specific advert.</li>
+              <li><a href="/ats-cv-format-uk">Check ATS readability</a> when you are unsure about the layout or file.</li>
+              <li><a href="/uk-cv-examples-by-role">Browse UK CV examples by role</a> when you need to see what strong evidence looks like.</li>
+            </ul>
           </section>
           {groups_html}
           {build_site_footer()}
