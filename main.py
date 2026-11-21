@@ -636,6 +636,10 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "intro": "No ATS checker can guarantee interviews. A good checker can help you make your CV clearer, more relevant and easier to scan, but final hiring decisions are made by employers.",
         "sections": [
             {
+                "title": "What to do after an ATS check flags a problem",
+                "copy": "For a reading-order problem, simplify the layout and open the final file to check that the content still reads correctly. For weak evidence, add a true example from your work. If you are missing an essential qualification or shift requirement, check the advert before spending time rewriting.",
+            },
+            {
                 "title": "What an ATS checker can do",
                 "bullets": [
                     "Compare your CV wording with a job description",
@@ -789,6 +793,10 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "What we check that free AI prompts miss",
         "intro": "A free AI prompt can give broad CV advice. CV Optimiser is built around a repeatable UK CV-to-job check with scoring, role signals, recruiter verdicts and exportable next steps.",
         "sections": [
+            {
+                "title": "Compare two versions against one fixed job advert",
+                "copy": "Save the original CV and the advert. Make one evidence edit, keep the advert the same and compare the written feedback on that requirement. If the comparison uses a different role, read it as a separate assessment.",
+            },
             {
                 "title": "A consistent scoring structure",
                 "copy": "Generic prompts often change their criteria from one answer to the next. CV Optimiser keeps the same five score signals across results so users can understand what changed.",
@@ -1898,7 +1906,7 @@ COMPARISON_PAGES: dict[str, dict[str, Any]] = {
             ("Best use case", "Checking each application against a job description.", "Repositioning a CV, resolving career story issues or preparing for important roles."),
         ],
         "choose_us": [
-            "You want to know what is missing before you spend money.",
+            "Start with a free check when you have one advert and one specific question, such as whether a required skill is visible in your recent experience.",
             "You apply to multiple roles and need repeatable checks.",
             "You want role-specific feedback in under a minute.",
         ],
@@ -3532,6 +3540,31 @@ SEO_LANDING_PAGES["retail-manager-cv-example"].update({
         ("What to include", "State the size of the store or team when it helps explain the decision. Add an outcome or service measure only if you can verify it."),
     ],
     "opening_comparison_source": ("/retail-manager-cv-example-report", "See the retail manager example report"),
+})
+
+SEO_LANDING_PAGES["job-description-cv-match"].update({
+    "opening_comparison_heading": "Check the essential requirements in a job description first",
+    "opening_comparison": [
+        ("Essential experience", "If a fictional advert asks for weekly reporting, point to the role and bullet showing what you reported and who used it."),
+        ("Essential responsibility", "If the role asks for ownership of a handover, show where you were responsible for tracking actions and confirming the next owner."),
+        ("Desirable tool", "Treat a named tool as a separate check. Include it if you used it, and use the strongest evidence first when you revise the CV."),
+    ],
+})
+SEO_LANDING_PAGES["best-cv-format-for-ats"].update({
+    "opening_comparison_heading": "Check how your CV reads after copying it to plain text",
+    "opening_comparison": [
+        ("Copy and read in order", "Paste the CV into a plain-text editor. Check that each employer, job title, date and bullet still reads in the intended order."),
+        ("Check the layout", "If text from columns is interleaved or headings disappear, try a single column and descriptive section headings before re-exporting."),
+        ("Use the requested file type", "Follow the advert’s file instructions and try selecting and copying text from the final file before submitting."),
+    ],
+})
+SEO_LANDING_PAGES["admin-cv-checker"].update({
+    "opening_comparison_heading": "Show the records, deadlines and handovers you handled",
+    "opening_comparison": [
+        ("Records", "Fictional example: checked order records against delivery notes, corrected discrepancies you could verify and logged questions for the team."),
+        ("Deadlines", "Show how you set reminders or checked priorities against the team’s schedule. Describe what happened when requests conflicted."),
+        ("Handover", "Name what another colleague needed to continue the task, such as a current document, a decision or an owner for an outstanding query."),
+    ],
 })
 
 BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
@@ -9942,7 +9975,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             "Important role keywords are missing or buried.",
         ],
         "fixes": [
-            ("Add measurable impact", "Replace vague responsibilities with outcomes, numbers and commercial results.", "Recent role bullets."),
+            ("Make one forecast responsibility verifiable", "Name the forecast you helped prepare, the product or account scope, and how the result was checked. Use a measured improvement only if you can explain the comparison.", "Most relevant account manager bullet."),
             ("Rewrite the summary around the target role", "The summary should immediately show why this CV fits the job description.", "Professional profile."),
             ("Mirror important job description language", "Use relevant role keywords naturally so the CV feels aligned to the vacancy.", "Key skills and recent experience."),
         ],
@@ -13423,6 +13456,8 @@ def render_faq_page() -> str:
             <p>If your CV keeps getting ignored, these are the questions that actually matter.</p>
           </section>
           <section class="summary-box quick-answers-card">
+            <h2>Should I check my CV again for a different advert?</h2>
+            <p>Yes. Keep useful evidence from the earlier edits, then compare the new advert with the version you plan to submit. Requirements can change even when two adverts use the same job title.</p>
             <strong>Quick answers:</strong>
             <ul>
               <li>ATS systems filter weak matches before recruiters see them</li>
@@ -14291,6 +14326,8 @@ def render_pricing_page() -> str:
             <div>
               <h1>Pricing</h1>
               <p>Start with a free CV check, unlock one detailed report, or use Pro when you are tailoring several UK applications.</p>
+              <h2>Choose a CV check, a full report or Pro</h2>
+              <p>Use Free to find the first gaps for an advert. Use a paid report for detailed edits to one result. Consider Pro when you are checking several applications and want repeat access to fuller reports.</p>
               <div class="pricing-choice-row" aria-label="Pricing summary">
                 <span>Free check</span>
                 <span>Paid report £7.99</span>
