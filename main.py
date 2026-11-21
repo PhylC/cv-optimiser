@@ -312,50 +312,27 @@ SEO_PAGES: dict[str, dict[str, Any]] = {
 
 SUPPORT_PAGES: dict[str, dict[str, Any]] = {
     "cv-statistics": {
-        "title": "CV Statistics 2026 | Job Application, ATS and Hiring Data",
-        "description": "Key CV and hiring statistics including ATS filtering rates, recruiter behaviour and job application trends.",
-        "h1": "CV Statistics (2026)",
-        "intro": "This page summarises key CV and hiring statistics to help job seekers understand how recruitment works today.",
+        "title": "UK CV and Job Application Statistics | CV Optimiser",
+        "description": "Read the November 2026 ONS vacancy estimate and see which measures tell you about the UK job market, employer screening and CV feedback.",
+        "h1": "UK CV and job application statistics",
+        "intro": "Use dated figures for the UK job market, and check what they measure before applying them to a CV or a specific vacancy.",
         "sections": [
             {
-                "title": "Key CV statistics",
+                "title": "UK vacancies in the November 2026 release",
+                "copy": "The Office for National Statistics estimated 690,000 UK vacancies for August to October 2026. That was 22,000 fewer than in May to July 2026. The estimate was published on 17 November 2026.",
+                "link_href": "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/bulletins/jobsandvacanciesintheuk/november2026",
+                "link_label": "Read the November 2026 ONS vacancies bulletin",
+            },
+            {
+                "title": "How to read recruitment statistics",
                 "bullets": [
-                    "Recruiters often spend only 6 to 10 seconds on an initial CV scan",
-                    "A large share of CVs are filtered by ATS systems before a recruiter reviews them properly",
-                    "Tailored CVs perform better than generic versions because relevance is easier to see",
+                    "A vacancy estimate describes unfilled jobs across the economy. Your response rate depends on the roles you applied to and the requirements of those employers.",
+                    "When a source quotes a CV reading time or ATS rejection rate, check who was observed, the sample size, the date and which step of recruitment was measured.",
+                    "For a specific role, follow the employer’s instructions and make the requested evidence easy to find on your CV.",
                 ],
-            },
-            {
-                "title": "ATS statistics",
-                "bullets": [
-                    "Many companies use Applicant Tracking Systems (ATS) to filter candidates",
-                    "CVs missing relevant keywords are less likely to pass initial screening",
-                    "Keyword alignment is one of the biggest factors in CV success",
-                ],
-            },
-            {
-                "title": "Job application statistics",
-                "bullets": [
-                    "Most job seekers apply to multiple roles before receiving employer responses",
-                    "Response rates usually improve when CVs are tailored to the role instead of reused unchanged",
-                ],
-            },
-            {
-                "title": "Why these stats matter",
-                "copy": "These patterns shape what happens in real job applications. If your CV is generic, missing the job language, or unclear about impact, it is easier for ATS systems and recruiters to skip. A stronger match, clearer structure, and better keyword coverage give your application a better chance of surviving that first screening stage.",
-            },
-            {
-                "title": "Use the tool",
-                "copy": "Want to see how your CV performs?",
-                "cta_href": "/#tool",
-                "cta_label": "Check your CV →",
-            },
-            {
-                "title": "Related pages",
-                "copy": "Use these pages if you want to understand the tool better or run your own check.",
                 "links": [
-                    ("/cv-checker", "CV Checker"),
-                    ("/how-it-works", "How CV Optimiser works"),
+                    ("/how-cv-optimiser-scores-your-cv", "How CV Optimiser’s role-fit score works"),
+                    ("/10-second-cv-test", "Try a short first-page readability exercise"),
                 ],
             },
         ],
@@ -874,6 +851,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "CV Optimiser features",
         "intro": "CV Optimiser focuses on the parts of CV feedback that matter most when you are applying for a real job and need clear next steps.",
         "sections": [
+            {"title": "Find the right CV feature for the issue you are fixing", "copy": "Use the role-fit score to orient yourself, then use keyword feedback to check whether important requirements are visible. For an unclear finding, open the sample report to see how evidence, wording and priorities work together.", "links": [("/example-cv-report", "See a sample CV report"), ("/how-it-works", "See how the features work together")]},
             ("CV role-fit score", "See how closely your CV aligns with the role before you apply."),
             ("Missing keyword detection", "Spot the role-specific terms your CV is missing or not supporting strongly enough."),
             ("Priority fixes", "Get priority improvements for clearer role fit."),
@@ -940,6 +918,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "About CV Optimiser",
         "intro": "CV Optimiser was built for job seekers who want quick, useful CV feedback before applying. Instead of generic advice, the goal is to help you compare your CV against a specific role and see what needs to improve first.",
         "sections": [
+            {"title": "See the evidence behind a CV Optimiser result", "copy": "The sample report uses fictional evidence so you can read the output before sharing a CV. The scoring guide explains how to read a result for one advert.", "links": [("/example-cv-report", "See the fictional sample report"), ("/how-cv-optimiser-scores-your-cv", "Read the scoring guide")]},
             ("Built for real applications", "The tool is designed around the way recruiters and ATS systems evaluate relevance, clarity and evidence of fit."),
             ("Practical before perfect", "The focus is on actionable improvements you can actually use, not bloated reports or vague encouragement."),
             ("Free first value", "You can run a free check before deciding whether you want to save your result or unlock the full report."),
@@ -2366,6 +2345,13 @@ BLOG_ARTICLES: dict[str, dict[str, Any]] = {
         "bottom_cta": "Check your CV score",
         "sections": [
             {
+                "title": "Change one evidence gap and check it again",
+                "paragraphs": [
+                    "Pick a requirement the report says is unclear and identify the strongest true example you have. Move it into the first relevant role and show your action, the scope and an outcome you can verify.",
+                    "Run the same advert again and read the written feedback for that requirement. Keep the version that explains your experience more clearly and use a separate comparison for a different job.",
+                ],
+            },
+            {
                 "title": "Add measurable results",
                 "paragraphs": [
                     "Use numbers, outcomes, and evidence of impact. Responsibilities don’t move the score much. Results do.",
@@ -2475,7 +2461,7 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
             ("Why matching matters", "Recruiters usually scan for fit before they study detail. If your relevant experience is buried, vague or written in different language from the advert, it is easier to overlook."),
             ("How to improve the match", "Use the job description to choose which achievements to lead with. Add missing evidence where truthful, remove unrelated detail, and use role language naturally rather than forcing keywords into every line."),
         ],
-        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/ats-cv-checker", "ATS CV checker")],
+        "related": [("/how-to-tailor-cv-to-job-description", "How to tailor a CV"), ("/cv-keyword-optimiser", "CV keyword optimiser"), ("/ats-cv-checker", "ATS CV checker")],
         "tool": True,
     },
     "free-cv-review": {
@@ -2553,7 +2539,7 @@ CORE_SEO_PAGE_SPECS: dict[str, dict[str, Any]] = {
             ("How the two documents should work together", "The CV should carry the evidence: roles, outcomes, skills and achievements. The cover letter should connect that evidence to the employer's priorities and explain why the role makes sense."),
             ("Common mismatch", "A CV aimed at one role and a cover letter aimed at another makes the application feel unfocused. Align both documents before applying."),
         ],
-        "related": [("/cv-job-description-match", "CV job description match"), ("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/marketing-cv-checker", "Marketing CV checker")],
+        "related": [("/cv-job-description-match", "CV job description match"), ("/how-to-tailor-cv-to-job-description", "How to tailor a CV"), ("/marketing-cv-checker", "Marketing CV checker")],
     },
 }
 
@@ -3044,7 +3030,7 @@ SEO_LANDING_PAGES: dict[str, dict[str, Any]] = {
         "looks_for": ["Job-description relevance", "Missing keywords", "Evidence and measurable outcomes", "Readable structure"],
         "manual": ["Score each requirement as clear, weak or missing", "Check whether bullets show outcomes", "Look for generic wording in the profile", "Make sure page one carries the strongest evidence"],
         "sections": [("What the score should mean", "A good score should not reward keyword stuffing. It should reflect whether a recruiter can quickly see the role you want, the evidence you offer and the fit with the advert."), ("How to improve it", "Improve the score by tightening the profile, adding relevant evidence, strengthening bullets and making the CV easier to scan.")],
-        "related": [("/how-to-tailor-cv-to-a-job-description", "How to tailor a CV"), ("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses")],
+        "related": [("/how-to-tailor-cv-to-job-description", "How to tailor a CV"), ("/why-is-my-cv-not-getting-interviews", "Why your CV may not be getting responses")],
         "tool": True,
     },
     "cv-keyword-optimiser": {
@@ -3664,9 +3650,15 @@ SITEMAP_URLS: list[dict[str, str]] = [
     {"loc": canonical_url("/privacy"), "priority": "0.3"},
     {"loc": canonical_url("/terms"), "priority": "0.3"},
     {"loc": canonical_url("/contact"), "priority": "0.3"},
+    {"loc": canonical_url("/features"), "priority": "0.6"},
+    {"loc": canonical_url("/about"), "priority": "0.6"},
+    {"loc": canonical_url("/cv-statistics"), "priority": "0.6"},
+    {"loc": canonical_url("/how-to-improve-cv-score"), "priority": "0.6"},
 ]
 
 for slug in SEO_LANDING_PAGES:
+    if slug == "how-to-tailor-cv-to-a-job-description":
+        continue
     priority = "0.85" if slug in {
         "why-is-my-cv-not-getting-interviews",
         "ats-cv-checker",
@@ -3702,6 +3694,10 @@ for comparison_slug in COMPARISON_PAGES:
         SITEMAP_URLS.append({"loc": comparison_loc, "priority": "0.8"})
 
 SITEMAP_LASTMOD_BY_LOC = {
+    canonical_url("/features"): "2026-11-21",
+    canonical_url("/about"): "2026-11-21",
+    canonical_url("/cv-statistics"): "2026-11-21",
+    canonical_url("/how-to-improve-cv-score"): "2026-11-21",
     canonical_url("/sales-cv-keywords"): "2026-11-21",
     canonical_url("/account-manager-cv-keywords"): "2026-11-21",
     canonical_url("/it-helpdesk-cv-checker"): "2026-11-21",
@@ -15135,6 +15131,7 @@ SEO_ROLE_ALIASES = {
     "admin-assistant-cv-review": "admin-assistant-cv-checker",
     "office-assistant-cv-checker": "admin-assistant-cv-checker",
     "career-change-cv-review": "career-change-cv-checker",
+    "how-to-tailor-cv-to-a-job-description": "how-to-tailor-cv-to-job-description",
     "change-career-cv-checker": "career-change-cv-checker",
     "it-helpdesk-cv-review": "it-helpdesk-cv-checker",
     "service-desk-cv-checker": "it-helpdesk-cv-checker",
