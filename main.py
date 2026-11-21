@@ -675,6 +675,19 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "intro": "These fictional sample reports show the kind of role-specific feedback CV Optimiser gives before you use your own CV.",
         "sections": [
             {
+                "title": "Choose a sample report by the evidence you want to improve",
+                "bullets": [
+                    "Commercial results: look for a defined period, a sales stage and the candidate’s own contribution.",
+                    "Project delivery: look for scope, dependency or budget evidence that explains a decision.",
+                    "Service or support: look for the issue, action, escalation and handover.",
+                ],
+                "links": [
+                    ("/sales-cv-example-report", "Sales evidence example"),
+                    ("/project-manager-cv-example-report", "Project delivery example"),
+                    ("/it-helpdesk-cv-example-report", "Troubleshooting and handover example"),
+                ],
+            },
+            {
                 "title": "Why sample reports matter",
                 "copy": "Before trusting a CV checker, you should be able to see the shape of the output. The example reports show the score, recruiter verdict, first-page diagnosis, rewrite plan and keyword guidance a paid report can include.",
             },
@@ -1211,8 +1224,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Dealt with stock and customer issues.",
-                "after": "Managed stock checks, merchandising standards and customer escalations to keep the shop floor accurate, presentable and service-focused.",
-                "why_better": "It names the operational areas and explains the store-level result.",
+                "after": "Reviewed the stock variance log before opening, agreed a recount with the shift lead and showed a colleague how to record the correction for the next handover.",
+                "why_better": "It shows how the manager investigated a stock issue and made the handover usable. Add a measured result only if you have it.",
                 "where_to_use": "Operations or customer service bullet.",
                 "strengthens": "Stock control, merchandising and customer experience.",
             },
@@ -1708,8 +1721,8 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             },
             {
                 "before": "Kept in touch with accounts and built relationships.",
-                "after": "Maintained regular account contact, identifying customer needs and coordinating internal follow-up to support retention and product value.",
-                "why_better": "It ties relationship management to retention and value rather than generic contact.",
+                "after": "Started a weekly review of accounts missing their first setup milestone, agreed next actions with the support team and recorded the owner before the next customer check-in.",
+                "why_better": "It identifies a customer-health signal and shows how the candidate organised follow-up. Use a retention or adoption result only if you can verify it.",
                 "where_to_use": "Account management or customer success bullet.",
                 "strengthens": "Retention, stakeholder management and customer value.",
             },
@@ -3414,6 +3427,47 @@ SEO_LANDING_PAGES["cv-improvement-tool"] = {
     "tool": True,
     "cta_support": "Use CV Optimiser to move from general polish to role-specific CV fixes.",
 }
+
+SEO_LANDING_PAGES["sales-director-cv-example"].update({
+    "opening_comparison_heading": "Show a sales strategy decision and its board-level outcome",
+    "opening_comparison": [
+        ("Scope", "Open with the size of the team and the markets or channels the director owned. Be specific about the part of the business you can describe."),
+        ("Decision", "Fictional example: shifted account planning to two priority channels after reviewing margin and renewal data with finance."),
+        ("Outcome", "Show the board measure you tracked and the period it covers. Use a true revenue or margin result only when you can attribute your contribution and share the figure."),
+    ],
+})
+SEO_LANDING_PAGES["customer-service-cv-checker"].update({
+    "opening_comparison_heading": "Show how you handled one customer complaint",
+    "opening_comparison": [
+        ("Check the issue", "Fictional example: checked a customer’s delayed order against dispatch records and explained the options they could choose."),
+        ("Escalate within your remit", "Sent a missing parcel case to the fulfilment team, recorded what was already checked and gave the customer a time for the next update."),
+        ("Show closure", "Describe whether you resolved the issue or handed it over, and how the customer knew the next step. Use actual ticket counts or response targets only when available."),
+    ],
+})
+SEO_LANDING_PAGES["marketing-cv-checker"].update({
+    "opening_comparison_heading": "Show a campaign decision and how you measured it",
+    "opening_comparison": [
+        ("Define the measure", "Name the campaign goal and the denominator. Explain whether the conversion is an enquiry, sign-up, purchase or something else."),
+        ("Describe the decision", "Fictional example: tested a shorter landing-page form for a lead campaign and compared the resulting qualified enquiries with the previous version."),
+        ("Give context", "Record the dates, audience and spend where you can. If the audience or budget changed at the same time, explain the comparison rather than attributing the whole change to the form."),
+    ],
+})
+SEO_LANDING_PAGES["cv-improvement-tool"].update({
+    "opening_comparison_heading": "Turn a CV report into a three-edit plan",
+    "opening_comparison": [
+        ("Edit the priority gap", "Pick the most important requirement in the advert that your CV can genuinely evidence. Add it where the recruiter can find it quickly."),
+        ("Strengthen one bullet", "Rewrite one related achievement to include your action and the result. Verify any number and keep wording you can explain at interview."),
+        ("Recheck the same advert", "Compare the original and revised report and record which evidence gap changed. Use a separate check for a different role."),
+    ],
+})
+SEO_LANDING_PAGES["cv-keywords-for-job-applications"].update({
+    "opening_comparison_heading": "Keep an evidence bank for repeated job keywords",
+    "opening_comparison": [
+        ("Record the advert terms", "For each relevant vacancy, note essential duties separately from desirable tools."),
+        ("Link each term to real evidence", "Record where the evidence appears in your CV or where you can add a genuine example. If you have no experience with a named tool, leave it out."),
+        ("Tailor from the bank", "Use matching terms only where they accurately describe your work. Keep the CV and evidence bank separate so each application shows the most relevant examples."),
+    ],
+})
 
 BEST_FREE_CV_CHECKER_FAQS: list[tuple[str, str]] = [
     (
@@ -11270,6 +11324,8 @@ Account manager with 8 years of retail experience managing national customers an
             <section class="panel">
               <div class="eyebrow">Exact changes</div>
               <h2>Why the score moved</h2>
+              <h3>Compare your own CV versions against the same advert</h3>
+              <p>Save the job advert and the first report. Edit one evidence gap at a time, then check the revised CV against the same advert. Compare the feedback for that requirement before looking at the overall score.</p>
               <div class="edit-list">
                 <div class="edit"><strong>Commercial impact became measurable</strong><span>“Delivering sales growth” became a stated 12% increase and £4.2m account scale.</span></div>
                 <div class="edit"><strong>Forecasting became evidence</strong><span>The revision showed a change from 68% to 86% and linked it to fewer stock-outs.</span></div>
@@ -12599,6 +12655,10 @@ def render_ten_second_cv_test_page() -> str:
             </section>
             <section class="panel">
               <h2>What to fix first</h2>
+              <h3>Try the test on a fictional CV opening</h3>
+              <p><strong>Before.</strong> “Hard-working professional with great communication skills.”</p>
+              <p><strong>After.</strong> “Customer service assistant with two years in a retail contact centre, handling order queries and recording escalations for the fulfilment team.”</p>
+              <p>Ask someone to scan the first few lines, then tell you the target role and one piece of evidence they saw. Use your actual experience when you revise the opening.</p>
               <ul>
                 <li>Target role clarity</li>
                 <li>Top-third positioning</li>
