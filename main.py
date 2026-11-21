@@ -744,6 +744,15 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                 "copy": "Treat the score as a prioritisation tool. Start with the recruiter verdict and first-page issues, then fix missing keywords only where your experience genuinely supports them.",
             },
             {
+                "title": "What the same CV score can mean for two adverts",
+                "copy": "A fictional CV scores 60 against both a project coordinator advert and a service desk advert. Both are in the targeted-edits band. The first priority depends on the gaps the report identifies.",
+                "bullets": [
+                    "Project coordinator: the candidate tracked dependencies but left that work off page one. Add one genuine example showing a dependency, the action taken and the outcome.",
+                    "Service desk: the advert requires hands-on second-line support but the candidate has only first-line experience. Check whether the requirement is essential before spending time on the application.",
+                ],
+                "helper": "After editing, recheck against the same advert and compare the priority findings. A score from a different advert answers a different role-fit question.",
+            },
+            {
                 "title": "What the score cannot do",
                 "copy": "The score cannot guarantee interviews, ATS acceptance, employer responses or job offers. It reflects likely CV clarity and role fit based on the information supplied.",
                 "links": [
@@ -787,6 +796,16 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
         "h1": "UK CV examples by role",
         "intro": "Use these role examples to see what stronger CV evidence looks like before checking your own CV against a job description.",
         "sections": [
+            {
+                "title": "Find the right CV example for your application",
+                "bullets": [
+                    "Graduate or career change: look for projects, placements or transferable examples that prove a requirement in the target advert.",
+                    "Sales or customer success: look for the target, the candidate’s own contribution and the outcome, such as a renewal or an increase in adoption.",
+                    "Project or retail management: look for the size of the project or team, the decision the candidate owned and the result.",
+                    "IT helpdesk or NHS admin: look for the enquiry or ticket, how the candidate prioritised it and what happened next.",
+                ],
+                "helper": "Open an example report to see how evidence is assessed. Use the role-specific checker to compare your own CV against the advert.",
+            },
             {
                 "title": "Role-specific checker pages",
                 "links": [
@@ -3229,6 +3248,32 @@ for guide_page in SEO_GUIDE_PAGE_DEFINITIONS:
     guide_page["cta_support"] = guide_page.get("cta_support", "Use the guide to tighten your CV, then run a real job-description match before you apply.")
     SEO_LANDING_PAGES[guide_page["slug"]] = guide_page
 
+SEO_LANDING_PAGES["cv-keyword-optimiser"].update({
+    "opening_comparison_heading": "Match CV keywords to evidence from a sample job advert",
+    "opening_comparison_columns": ("Fictional advert requirement", "What to put in the CV"),
+    "opening_comparison": [
+        ("Weekly reporting", "Supported: Prepared the weekly order-delay report from dispatch records and flagged overdue orders at the operations meeting."),
+        ("Excel pivot tables", "Use the specific term if you used it. If you built the report with filters and formulas, describe that work accurately."),
+        ("Power BI dashboards", "Leave this term out if you did not use Power BI. Check whether it is essential or listed as desirable."),
+    ],
+})
+SEO_LANDING_PAGES["project-manager-cv-checker"].update({
+    "opening_comparison_heading": "Before and after: a project manager CV bullet",
+    "opening_comparison": [
+        ("Before", "Managed a software rollout and kept stakeholders updated."),
+        ("After, for the same fictional project", "Led a £45,000 booking-system rollout across four sites. When a supplier delay put the date at risk, moved staff training ahead of migration and agreed a staged cutover with site leads, keeping all four sites on the original go-live schedule."),
+        ("What to check", "Keep scope, risk, decision and outcome in the bullet. Use the budget or timeline only if it is accurate and appropriate to share."),
+    ],
+    "opening_comparison_source": ("/project-manager-cv-example-report", "See the project manager example report"),
+})
+SEO_LANDING_PAGES["why-is-my-cv-not-getting-interviews"].update({
+    "opening_comparison_heading": "What to check first when applications get no replies",
+    "opening_comparison": [
+        ("Check role fit", "Pick three recent adverts. Check essential requirements, location and level first. If the same requirement keeps coming up, see whether you can show it or want to target different roles."),
+        ("Check the evidence", "Pick the strongest matching advert. Read page one and find a specific example for each of the most important requirements. Move relevant evidence up if it is buried."),
+        ("Check readability", "Copy the CV into a plain-text editor and check that job titles, dates and bullets appear in order. If they do not, simplify the layout and follow the employer’s file instructions."),
+    ],
+})
 SEO_LANDING_PAGES["it-helpdesk-cv-checker"].update({
     "opening_comparison_heading": "First-line IT helpdesk CV evidence example",
     "opening_comparison": [
