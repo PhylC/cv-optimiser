@@ -1450,12 +1450,13 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
         ],
     },
     "admin-cv-example-report": {
-        "title": "Admin CV Example Report | CV Optimiser",
-        "description": "See an admin CV example report with accuracy, scheduling, records, systems, customer service and process support feedback.",
-        "h1": "Admin CV example report",
-        "intro": "See how CV Optimiser reviews an admin CV for organisation, accuracy, systems and office support.",
+        "title": "Administrator CV Example UK | Profile and Bullets",
+        "description": "See a fictional UK office administrator CV profile and example bullets for meeting schedules, Excel records and shared inboxes, with a worked CV review.",
+        "h1": "Administrator CV example for a UK office role",
+        "intro": "Use this fictional office administrator CV to see how a profile and experience bullets can show scheduling, record-keeping and inbox support.",
         "role_label": "Office Administrator",
-        "cv_snippet": "with experience updating records, arranging meetings, handling inboxes and supporting day-to-day office administration.",
+        "cv_snippet": "with experience arranging meetings, sending calendar invitations and updating the team diary. Updates customer records in Excel and handles routine queries in the shared office inbox.",
+        "show_cv_example_first": True,
         "job_snippet": "We are looking for an administrator with scheduling, accurate records, documentation, customer service, Microsoft Office and process support experience.",
         "score": "Role-fit score: 59/100",
         "score_label": "Relevant admin work, but evidence is too generic",
@@ -1478,19 +1479,19 @@ ROLE_EXAMPLE_REPORTS: dict[str, dict[str, Any]] = {
             ("Make support work specific", "Replace broad office support wording with scheduling, inbox, meeting or customer examples.", "Profile and experience bullets."),
         ],
         "weak_bullet": "Helped with general office admin and supported the team.",
-        "strong_bullet": "Coordinated meeting schedules, maintained accurate records and supported team inboxes to keep daily office administration running smoothly.",
+        "strong_bullet": "Arranged internal meetings, sent calendar invitations and updated the team diary when meeting times changed.",
         "rewrite_examples": [
             {
                 "before": "Helped with general office admin and supported the team.",
-                "after": "Coordinated meeting schedules, maintained accurate records and supported team inboxes to keep daily office administration running smoothly.",
-                "why_better": "It names the admin tasks and shows reliability, accuracy and organisation.",
+                "after": "Arranged internal meetings, sent calendar invitations and updated the team diary when meeting times changed.",
+                "why_better": "It shows what the administrator did to organise meetings.",
                 "where_to_use": "Recent administrator role bullet.",
-                "strengthens": "Scheduling, records accuracy and office support.",
+                "strengthens": "Scheduling and diary management.",
             },
             {
                 "before": "Used office systems and answered queries.",
-                "after": "Used office systems to update records, track queries and provide clear customer support across routine administration tasks.",
-                "why_better": "It connects systems use to records and service outcomes.",
+                "after": "Updated customer records in Excel and answered routine queries in the shared office inbox.",
+                "why_better": "It names the tool, records and type of customer support.",
                 "where_to_use": "Key responsibilities or systems bullet.",
                 "strengthens": "Systems, documentation and customer service.",
             },
@@ -3289,6 +3290,7 @@ SITEMAP_LASTMOD_BY_LOC = {
     canonical_url("/"): "2026-11-21",
     canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
     canonical_url("/best-free-cv-checker-uk"): "2026-11-20",
+    canonical_url("/admin-cv-example-report"): "2026-11-21",
 }
 
 
@@ -9663,6 +9665,20 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
         "where_to_use": "Use this style in the most relevant recent role bullet.",
         "strengthens": "Evidence strength and role alignment.",
     }]
+    show_cv_example_first = page.get("show_cv_example_first", False)
+    cv_example_bullets = ""
+    if show_cv_example_first:
+        cv_example_bullets = "<h3>Example experience bullets</h3><ul>" + "".join(
+            f'<li>{html.escape(rewrite["after"])}</li>' for rewrite in rewrite_examples
+        ) + "</ul>"
+    cv_example_html = f"""
+        <section class="card" aria-labelledby="example-cv-profile">
+          <h2 id="example-cv-profile">{"Example administrator CV profile" if show_cv_example_first else "Example CV snippet"}</h2>
+          <p><strong>{html.escape(page["role_label"])}</strong> {html.escape(page["cv_snippet"])}</p>
+          {cv_example_bullets}
+          <p class="section-helper">{"Adapt these examples to experience you can support." if show_cv_example_first else "This is a short fictional snippet used to show the type of analysis a paid report can include."}</p>
+        </section>
+    """
     rewrite_examples_html = ""
     for index, rewrite in enumerate(rewrite_examples, start=1):
         rewrite_examples_html += f"""
@@ -10654,6 +10670,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
             </div>
           </div>
 
+          {cv_example_html if show_cv_example_first else ""}
           <div class="card pro-command-centre">
             <div class="eyebrow">Pro report command centre</div>
             <h2>Executive summary</h2>
@@ -10694,11 +10711,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
 
           <div class="report-grid">
             <div>
-              <div class="card">
-                <h2>Example CV snippet</h2>
-                <p><strong>{html.escape(page["role_label"])}</strong> {html.escape(page["cv_snippet"])}</p>
-                <p class="section-helper">This is a short fictional snippet used to show the type of analysis a paid report can include.</p>
-              </div>
+              {cv_example_html if not show_cv_example_first else ""}
 
               <div class="card" style="margin-top:24px;">
                 <h2>Example job description snippet</h2>
