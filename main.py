@@ -11365,6 +11365,23 @@ def render_cv_improvement_case_study_page() -> str:
           .score-before {{ color: #d97706; }}
           .score-after {{ color: #12805c; }}
           .score-arrow {{ display: grid; place-items: center; color: #77e4b5; font-size: 30px; font-weight: 900; }}
+          .case-video {{ margin-top: 26px; max-width: 720px; }}
+          .case-video-stage {{
+            position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+            border-radius: 14px; background: #08111f;
+          }}
+          .case-video-preview, .case-video iframe {{ display: block; width: 100%; height: 100%; }}
+          .case-video-preview:focus-visible {{ outline: 3px solid #77e4b5; outline-offset: -5px; }}
+          .case-video-preview img {{ display: block; width: 100%; height: 100%; object-fit: cover; }}
+          .case-video iframe {{ border: 0; }}
+          .case-video-play {{
+            position: absolute; left: 7%; bottom: 11%; padding: 10px 14px;
+            border: 1px solid #77e4b5; border-radius: 10px; background: #08111f;
+            color: #fff; font-weight: 800; line-height: 1.4;
+          }}
+          .case-video-preview:hover .case-video-play {{ background: #163547; }}
+          .case-video p {{ margin-bottom: 0; }}
+          .content-page .case-video .text-link {{ color: #b9c8ff; }}
           .grid-2 {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 22px; }}
           .panel {{ margin-top: 22px; }}
           .input-box {{ background: rgba(4, 12, 26, .56); border: 1px solid rgba(139, 157, 197, .2); border-radius: 14px; padding: 18px; }}
@@ -11418,6 +11435,31 @@ def render_cv_improvement_case_study_page() -> str:
                   <p>The revision made revenue, forecasting, retention, P&amp;L ownership and retailer execution easier to verify.</p>
                 </article>
               </div>
+              <section class="case-video" id="walkthrough" aria-labelledby="case-video-heading">
+                <h2 id="case-video-heading">Watch the 47-second walkthrough</h2>
+                <div class="case-video-stage">
+                  <a class="case-video-preview" href="https://www.youtube.com/watch?v=moNjLBeBL6w" data-video-src="https://www.youtube-nocookie.com/embed/moNjLBeBL6w?autoplay=1">
+                    <img src="/static/cv-walkthrough-poster.webp" width="960" height="540" alt="">
+                    <span class="case-video-play"><span aria-hidden="true">▶ </span>Play walkthrough</span>
+                  </a>
+                </div>
+                <p><a class="text-link" href="https://www.youtube.com/watch?v=moNjLBeBL6w">Watch on YouTube</a></p>
+              </section>
+              <script>
+                const caseVideoPreview = document.querySelector('.case-video-preview');
+                caseVideoPreview.addEventListener('click', (event) => {{
+                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
+                  const player = document.createElement('iframe');
+                  player.title = 'How to check your CV against a job advert';
+                  player.src = caseVideoPreview.dataset.videoSrc;
+                  player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+                  player.allowFullscreen = true;
+                  player.referrerPolicy = 'strict-origin-when-cross-origin';
+                  caseVideoPreview.replaceWith(player);
+                  player.focus();
+                }});
+              </script>
             </section>
 
             <section class="panel">
