@@ -367,6 +367,14 @@
     display: none !important;
   }
 
+  html.embed-tool-mode.report-sign-in .helper-column {
+    display: block !important;
+  }
+
+  html.embed-tool-mode.report-sign-in .helper-column > :not(#authCard) {
+    display: none;
+  }
+
   html.embed-tool-mode .main-grid {
     grid-template-columns: 1fr;
     gap: 0;
@@ -6443,7 +6451,8 @@
   </div>
   <div class="result-trust-note">Scores are practical signals, not guarantees. The report is designed to help you make clearer, truthful edits before applying.</div>
   <div class="checkout-option-stack">
-    <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
+    <p class="small report-unlock-note" data-report-unlock-note aria-live="polite">Sign in with a free account, then return to this report. £7.99 is a one-off payment.</p>
+    <button id="resultsUpgradeBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Sign in to unlock · £7.99</button>
     <button id="resultsUpgradeMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
   </div>
   <div id="checkoutError" class="checkout-error hidden">Could not open checkout. Please try again.</div>
@@ -6472,9 +6481,12 @@
   </div>
   <div class="result-trust-note">Scores are practical signals, not guarantees. The report is designed to help you make clearer, truthful edits before applying.</div>
   <div class="checkout-option-stack">
-    <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Unlock my full CV report</button>
+    <p class="small report-unlock-note" data-report-unlock-note aria-live="polite">Sign in with a free account, then return to this report. £7.99 is a one-off payment.</p>
+    <button id="unlockFullReportBtn" class="checkout-btn unlock-report" data-checkout-plan="one_time" type="button">Sign in to unlock · £7.99</button>
+    <button id="generateUnlockedReportBtn" class="checkout-btn hidden" type="button">Generate my full report</button>
     <button id="proMonthlyBtn" class="checkout-btn secondary checkout-option-secondary pro-monthly" data-checkout-plan="pro_monthly" type="button">Applying to lots of jobs? Get unlimited checks with Pro.</button>
   </div>
+  <div id="reportCheckoutError" class="checkout-error hidden" role="status"></div>
 </div>
 
 <div id="lockedPreviewCard" class="results-upgrade-cta locked-preview hidden">
@@ -6620,6 +6632,7 @@
 
   <div id="siteFooter"></div>
   <script src="/static/global-footer.js" defer></script>
+  <script src="/static/report-draft.js"></script>
   <script>
     const sbClient = typeof window.getCvOptimiserSupabaseClient === "function"
       ? window.getCvOptimiserSupabaseClient()
@@ -6634,11 +6647,19 @@
     let currentUser = null;
     let currentPlan = null;
     let currentResultData = null;
+    let currentReportDraft = null;
+    let reportAwaitingSignIn = null;
+    let restoringReportSignIn = false;
+    let sentReportSignInKey = null;
+    let expectedReportSignInKey = null;
     let historyLoadedForUserId = null;
     const PENDING_REPORT_DRAFT_KEY = "cvOptimiserPendingReportDraft";
+    const REPORT_CHECKOUT_KEY = "cvOptimiserReportCheckout";
 
     const optimiseBtn = document.getElementById("optimiseBtn");
     const resultsUpgradeBtn = document.getElementById("resultsUpgradeBtn");
+    const generateUnlockedReportBtn = document.getElementById("generateUnlockedReportBtn");
+    const reportCheckoutError = document.getElementById("reportCheckoutError");
     const resultsUpgradeMonthlyBtn = document.getElementById("resultsUpgradeMonthlyBtn");
     const resultsUpgradeCta = document.getElementById("resultsUpgradeCta");
     const resultsUpgradeTitle = document.getElementById("resultsUpgradeTitle");
@@ -7014,6 +7035,7 @@
     function applyUserUi(plan, account) {
       const accountState = account || getAccountStateFromBody();
       const resolvedPlan = normalizeCurrentPlan(plan || accountState.plan);
+      updateReportUnlockButtons(accountState.signedIn);
       if (resolvedPlan) {
         currentPlan = resolvedPlan;
       }
@@ -7043,6 +7065,7 @@
         const account = await window.getAccountState();
         currentPlan = normalizeCurrentPlan(account.plan) || (account.signedIn ? "free" : null);
         applyUserUi(null, account);
+        await restoreReportAfterSignIn(account);
         return;
       }
       currentUser = null;
@@ -7350,32 +7373,162 @@
       }
     }
 
-    function updateUpgradeAccess(passwordAlreadySet) {
-      if (resultsUpgradeBtn) {
-        resultsUpgradeBtn.disabled = false;
+    function updateReportUnlockButtons(signedIn) {
+      const label = signedIn ? "Unlock this report · £7.99" : "Sign in to unlock · £7.99";
+      const note = signedIn
+        ? "£7.99 one-off payment for this CV and job advert."
+        : "Sign in with a free account, then return to this report. £7.99 is a one-off payment.";
+      for (const button of [resultsUpgradeBtn, unlockFullReportBtn]) {
+        if (!button.disabled) button.textContent = label;
       }
-
-      if (upgradeBtn) {
-        upgradeBtn.textContent = "Unlock my full CV report";
-      }
-      if (menuUpgradeBtn) {
-        menuUpgradeBtn.textContent = "Unlock my full CV report";
-      }
-      if (resultsUpgradeBtn) {
-        resultsUpgradeBtn.textContent = "Unlock my full CV report";
+      for (const element of document.querySelectorAll("[data-report-unlock-note]")) {
+        element.textContent = note;
       }
     }
 
-    function savePendingReportDraft() {
+    function reportSignInKey(email) {
+      return email ? "sign-in:" + email.trim().toLowerCase() : null;
+    }
+
+    function openReportSignIn() {
+      reportAwaitingSignIn = currentReportDraft;
+      authSubtitle.textContent = "Sign in to return to this CV result and unlock the full report for £7.99. Open your email link in this browser.";
+      document.documentElement.classList.add("report-sign-in");
+      authCard.classList.remove("hidden");
+      authCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      emailInput.focus({ preventScroll: true });
+      reportEmbedHeight();
+    }
+
+    async function submitReportMagicLink(email) {
+      const key = reportAwaitingSignIn ? reportSignInKey(email) : null;
+      if (key) {
+        expectedReportSignInKey = key;
+        if (await window.cvReportDraft.save(key, reportAwaitingSignIn)) {
+          if (sentReportSignInKey && sentReportSignInKey !== key) {
+            await window.cvReportDraft.remove(sentReportSignInKey);
+          }
+          sentReportSignInKey = key;
+        } else {
+          authSubtitle.textContent = "Keep this tab open. If the email link opens another tab in this browser, come back here after signing in.";
+        }
+      }
+      const result = await sbClient.auth.signInWithOtp({
+        email: email,
+        options: { emailRedirectTo: "https://www.cv-optimiser.com" }
+      });
+      if (result.error && key) {
+        await window.cvReportDraft.remove(key);
+        if (sentReportSignInKey === key) sentReportSignInKey = null;
+      }
+      return result;
+    }
+
+    function restoreReportInputs(draft) {
+      cvTextInput.value = draft.cvText;
+      jobDescriptionInput.value = draft.jobDescription;
+      selectedFile = draft.file || null;
+      fileInput.value = "";
+      fileName.textContent = selectedFile ? "Selected file: " + selectedFile.name : "No file selected";
+      if (rolePresetSelect) {
+        rolePresetSelect.value = draft.rolePreset;
+        const preset = getSelectedRolePreset();
+        rolePresetHint.textContent = preset?.hint || "Leave this on auto unless you want a specific UK role lens.";
+      }
+    }
+
+    function showReportContinuation(account) {
+      const credits = account.profile?.plan_state?.report_credits || 0;
+      const reportAlreadyIncluded = account.plan === "pro" || credits > 0;
+      document.documentElement.classList.remove("report-sign-in");
+      authCard.classList.add("hidden");
+      unlockFullReportBtn.classList.toggle("hidden", reportAlreadyIncluded);
+      generateUnlockedReportBtn.classList.toggle("hidden", !reportAlreadyIncluded);
+      proMonthlyBtn.classList.toggle("hidden", reportAlreadyIncluded);
+      for (const element of document.querySelectorAll("[data-report-unlock-note]")) {
+        element.textContent = reportAlreadyIncluded
+          ? "Your account already includes access to the full report."
+          : "You’re signed in. Continue with this CV and job advert for £7.99.";
+      }
+      requestAnimationFrame(function() {
+        proUnlockPrompt.scrollIntoView({ behavior: "smooth", block: "start" });
+        const action = reportAlreadyIncluded ? generateUnlockedReportBtn : unlockFullReportBtn;
+        action.focus({ preventScroll: true });
+      });
+    }
+
+    async function restoreReportAfterSignIn(account) {
+      const key = reportSignInKey(account.user?.email || account.email);
+      if (!account.signedIn || !key || restoringReportSignIn ||
+          new URLSearchParams(window.location.search).get("checkout") === "success") return;
+      if (currentReportDraft && !reportAwaitingSignIn) return;
+
+      restoringReportSignIn = true;
       try {
-        window.sessionStorage.setItem(PENDING_REPORT_DRAFT_KEY, JSON.stringify({
-          cvText: cvTextInput.value || "",
-          jobDescription: jobDescriptionInput.value || "",
-          hadFile: !!selectedFile,
-          savedAt: Date.now()
-        }));
+        if (reportAwaitingSignIn && expectedReportSignInKey === key) {
+          currentReportDraft = reportAwaitingSignIn;
+          reportAwaitingSignIn = null;
+          restoreReportInputs(currentReportDraft);
+          renderAnalysisResult(currentReportDraft.result, currentReportDraft.previousScore, "signed_in_free");
+          showReportContinuation(account);
+          return;
+        }
+        if (reportAwaitingSignIn && expectedReportSignInKey !== key) {
+          await window.cvReportDraft.remove(sentReportSignInKey);
+          sentReportSignInKey = null;
+          expectedReportSignInKey = null;
+          reportAwaitingSignIn = null;
+          currentReportDraft = null;
+          resultsPanel.classList.add("hidden");
+          resultsPanel.setAttribute("aria-hidden", "true");
+          cvTextInput.value = "";
+          jobDescriptionInput.value = "";
+          resetSelectedFile();
+        }
+        const draft = await window.cvReportDraft.read(key);
+        if (!draft) return;
+        await window.cvReportDraft.remove(key);
+        currentReportDraft = draft;
+        reportAwaitingSignIn = null;
+        restoreReportInputs(draft);
+        renderAnalysisResult(draft.result, draft.previousScore, "signed_in_free");
+        showReportContinuation(account);
+      } finally {
+        restoringReportSignIn = false;
+      }
+    }
+
+    async function saveReportBeforeCheckout(user, sessionId) {
+      if (!currentReportDraft || !sessionId) return;
+      try {
+        const key = "checkout:" + sessionId;
+        const existingKey = window.sessionStorage.getItem(REPORT_CHECKOUT_KEY);
+        const saved = await window.cvReportDraft.save(key, { ...currentReportDraft, userId: user.id });
+        if (saved) {
+          window.sessionStorage.setItem(REPORT_CHECKOUT_KEY, key);
+          await window.cvReportDraft.remove(existingKey);
+          await window.cvReportDraft.remove(reportSignInKey(user.email));
+        }
       } catch (error) {
-        console.warn("Could not save pending report draft:", error);
+        // The buyer can submit the same application again after checkout.
+      }
+    }
+
+    async function restoreCheckoutReport(user, sessionId) {
+      try {
+        const key = window.sessionStorage.getItem(REPORT_CHECKOUT_KEY);
+        if (!key) return restorePendingReportDraft();
+        if (key !== "checkout:" + sessionId) return false;
+        const draft = await window.cvReportDraft.read(key);
+        if (!draft || draft.userId !== user?.id) {
+          await window.cvReportDraft.remove(key);
+          window.sessionStorage.removeItem(REPORT_CHECKOUT_KEY);
+          return false;
+        }
+        restoreReportInputs(draft);
+        return true;
+      } catch (error) {
+        return false;
       }
     }
 
@@ -7403,6 +7556,9 @@
 
     function clearPendingReportDraft() {
       try {
+        const key = window.sessionStorage.getItem(REPORT_CHECKOUT_KEY);
+        window.cvReportDraft.remove(key);
+        window.sessionStorage.removeItem(REPORT_CHECKOUT_KEY);
         window.sessionStorage.removeItem(PENDING_REPORT_DRAFT_KEY);
       } catch (error) {
         console.warn("Could not clear pending report draft:", error);
@@ -7568,16 +7724,16 @@
     }
 
     function showCheckoutError(message) {
-      if (checkoutError) {
-        checkoutError.textContent = message || "Could not open checkout. Please try again.";
-        checkoutError.classList.remove("hidden");
+      for (const error of [checkoutError, reportCheckoutError]) {
+        error.textContent = message || "Could not open checkout. Please try again.";
+        error.classList.remove("hidden");
       }
     }
 
     function hideCheckoutError() {
-      if (checkoutError) {
-        checkoutError.classList.add("hidden");
-        checkoutError.textContent = "Could not open checkout. Please try again.";
+      for (const error of [checkoutError, reportCheckoutError]) {
+        error.classList.add("hidden");
+        error.textContent = "";
       }
     }
 
@@ -8741,6 +8897,10 @@
         }
 
         if (requiresSignIn && (!token || !session)) {
+          if (plan === "one_time" && currentReportDraft) {
+            openReportSignIn();
+            return;
+          }
           const signInMessage = plan === "one_time" ? "Sign in to unlock your paid report." : "Sign in to start Pro monthly.";
           status.textContent = signInMessage;
           showCheckoutError(signInMessage);
@@ -8758,7 +8918,12 @@
             "Content-Type": "application/json",
             Authorization: "Bearer " + (token || "")
           },
-          body: JSON.stringify({ type: plan, attribution: getAttributionMetadata() })
+          body: JSON.stringify({
+            type: plan,
+            attribution: plan === "one_time" && currentReportDraft?.attribution
+              ? currentReportDraft.attribution
+              : getAttributionMetadata()
+          })
         });
 
         const raw = await res.text();
@@ -8778,7 +8943,7 @@
             window.gtag("event", "checkout_started", { checkout_plan: plan });
           }
           if (plan === "one_time") {
-            savePendingReportDraft();
+            await saveReportBeforeCheckout(session.user, data.session_id);
           }
           window.location.href = data.url;
           return;
@@ -8798,6 +8963,7 @@
         showCheckoutError("Could not open checkout. Please try again.");
       } finally {
         setCheckoutButtonState(button, false, "Opening checkout…", defaultText);
+        updateReportUnlockButtons(getAccountStateFromBody().signedIn);
       }
     }
 
@@ -9005,7 +9171,8 @@
         await refreshAuthUi();
 
         if (confirmData.report_credit_granted) {
-          const restoredDraft = restorePendingReportDraft();
+          const { data: { session } } = await sbClient.auth.getSession();
+          const restoredDraft = await restoreCheckoutReport(session?.user, sessionId);
           checkoutStatus.classList.remove("info", "error");
           checkoutStatus.classList.add("success");
           checkoutStatus.textContent = restoredDraft
@@ -9246,8 +9413,18 @@
       }
     }
 
+    function clearReportOnSignOut() {
+      window.cvReportDraft.remove(sentReportSignInKey || reportSignInKey(currentUser?.email));
+      currentReportDraft = null;
+      reportAwaitingSignIn = null;
+      sentReportSignInKey = null;
+      expectedReportSignInKey = null;
+      clearPendingReportDraft();
+    }
+
     async function signOutUser() {
       if (!sbClient) return;
+      clearReportOnSignOut();
       await sbClient.auth.signOut();
       clearAccountSnapshot();
       currentUser = null;
@@ -9292,7 +9469,9 @@
           currentUser = null;
           currentPlan = null;
           authTitle.textContent = "Create a free account to save your results";
-          authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
+          if (!reportAwaitingSignIn) {
+            authSubtitle.textContent = "You can try the CV Optimiser first, then sign up to save results and unlock the full report.";
+          }
           authStatus.textContent = "Not signed in. You can still run a free CV check.";
 
           authCard.classList.remove("hidden");
@@ -9342,6 +9521,7 @@
 
         const isPro = account.plan === "pro";
         currentPlan = isPro ? "pro" : "free";
+        await restoreReportAfterSignIn(account);
 
         // IMPORTANT:
         // First-time magic-link users with no password must be pushed into password creation
@@ -9405,10 +9585,7 @@ if (shouldPromptPasswordSetup) {
         return;
       }
 
-const result = await sbClient.auth.signInWithOtp({
-  email: email,
-  options: { emailRedirectTo: "https://www.cv-optimiser.com" }
-});
+      const result = await submitReportMagicLink(email);
 
       if (!result.error) {
         sessionStorage.setItem(MAGIC_LINK_PASSWORD_SETUP_KEY, email);
@@ -9421,6 +9598,7 @@ const result = await sbClient.auth.signInWithOtp({
 
     async function handleSignOut() {
       if (!sbClient) return;
+      clearReportOnSignOut();
       await sbClient.auth.signOut();
       clearAccountSnapshot();
       passwordStatus.textContent = "";
@@ -9632,6 +9810,7 @@ passwordLoginBtn.addEventListener("click", async function() {
     return;
   }
 
+  if (reportAwaitingSignIn) expectedReportSignInKey = reportSignInKey(email);
   const result = await sbClient.auth.signInWithPassword({
     email: email,
     password: password
@@ -9661,6 +9840,12 @@ passwordLoginBtn.addEventListener("click", async function() {
   status.textContent = "Ready when you are.";
   await refreshAuthUi();
 });
+
+    generateUnlockedReportBtn.addEventListener("click", function() {
+      if (!currentReportDraft) return;
+      restoreReportInputs(currentReportDraft);
+      optimiseBtn.click();
+    });
 
     clearFileBtn.addEventListener("click", function() {
       resetSelectedFile();
@@ -9846,6 +10031,269 @@ passwordLoginBtn.addEventListener("click", async function() {
       });
     })();
 
+    function renderAnalysisResult(data, previousScoreSnapshot, accountState) {
+      const scoreNumber = getScoreNumber(data.score);
+      const narrative = buildResultNarrative(scoreNumber, data);
+      const isCurrentlyPro = accountState === "signed_in_pro";
+      const isAnonymousResult = !!data.isAnonymousResult;
+      const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
+      currentResultData = isCurrentlyPro ? data : null;
+
+      document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
+      updateScoreRing(scoreNumber);
+      updateReadinessLabel(scoreNumber);
+      const cvReadiness = getCvReadiness(scoreNumber);
+      renderScoreComparison(previousScoreSnapshot, scoreNumber);
+      document.getElementById("nextStep").textContent = data.nextStep || "";
+      document.getElementById("source").textContent = data.source || "unknown";
+      resultStatusHeadline.textContent = narrative.headline;
+      if (scoreKicker) {
+        scoreKicker.textContent = accountState === "loading"
+          ? "Your CV analysis"
+          : (isCurrentlyPro ? "Your full CV analysis" : "Your free CV check");
+      }
+      if (resultPlanBadge) {
+        resultPlanBadge.classList.toggle("hidden", !isCurrentlyPro);
+      }
+      resultStatusCopy.textContent = isCurrentlyPro
+        ? "Full analysis based on your CV and the job description."
+        : narrative.copy;
+      resultPotentialCopy.textContent = isCurrentlyPro
+        ? "Use the full guidance below to improve role fit, clarity, and keyword coverage."
+        : cvReadiness.copy;
+      if (resultKeywordTitle) {
+        resultKeywordTitle.textContent = isCurrentlyPro ? "Add these keywords to match the role" : "Missing keywords";
+      }
+      if (resultKeywordSubtitle) {
+        resultKeywordSubtitle.textContent = isCurrentlyPro
+          ? "Use these terms naturally across your summary, experience, and skills sections."
+          : "These missing terms make your CV look less aligned with the role.";
+      }
+
+      const sections = [
+        ["matchedKeywords", data.matchedKeywords || []],
+        ["keywords", data.missingKeywords || []],
+        ["strongPoints", data.strongPoints || []],
+        ["weakPoints", data.weakPoints || []],
+        ["bullets", data.bulletPoints || []],
+        ["priorityFixes", data.priorityFixes || []],
+        ["skillsSection", data.skillsSection || []],
+        ["atsTips", data.atsTips || []],
+        ["interviewRisks", data.interviewRisks || []]
+      ];
+
+      sections.forEach(function(pair) {
+        const id = pair[0];
+        const items = pair[1];
+        const el = document.getElementById(id);
+        el.innerHTML = "";
+        items.forEach(function(item) {
+          appendTextItem(el, item);
+        });
+      });
+
+      anonymousSummary.textContent = data.shortSummary || "";
+      anonymousSummaryWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.shortSummary));
+
+      anonymousPriorityFixes.innerHTML = "";
+      (data.previewPriorityFixes || []).forEach(function(item) {
+        const li = document.createElement("li");
+        li.textContent = item;
+        anonymousPriorityFixes.appendChild(li);
+      });
+      anonymousPriorityWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.previewPriorityFixes && data.previewPriorityFixes.length));
+
+      anonymousKeywordGap.textContent = data.keywordGapInsight || data.nextStep || "";
+      anonymousKeywordGapWrap.classList.toggle("hidden", !(data.isAnonymousResult && (data.keywordGapInsight || data.nextStep)));
+
+      const priorityPreviewItems = (data.previewPriorityFixes && data.previewPriorityFixes.length)
+        ? data.previewPriorityFixes.slice(0, 3)
+        : (data.weakPoints || []).slice(0, 3);
+
+      renderPriorityFixDetails(
+        data.priorityFixDetails || [],
+        priorityPreviewItems.length ? priorityPreviewItems : [
+          "Add measurable results (revenue, growth, impact)",
+          "Strengthen your professional summary",
+          "Include missing keywords from the job description"
+        ]
+      );
+      renderPostResultJourney(data, scoreNumber, isCurrentlyPro);
+
+      renderRecruiterVerdict(data, scoreNumber);
+      renderScoreBreakdown(data.scoreBreakdown || [], scoreNumber);
+      renderKeywordImportance(data.keywordImportance || {}, data.missingKeywords || [], data.matchedKeywords || []);
+
+      const keywordPreviewItems = (data.missingKeywords || []).slice(0, 5);
+      resultKeywordPreview.innerHTML = "";
+      keywordPreviewItems.forEach(function(item) {
+        appendTextItem(resultKeywordPreview, item);
+      });
+      if (!keywordPreviewItems.length && data.keywordGapInsight) {
+        appendTextItem(resultKeywordPreview, data.keywordGapInsight);
+      }
+      resultKeywordTail.classList.toggle("hidden", isCurrentlyPro || !(data.missingKeywords && data.missingKeywords.length > keywordPreviewItems.length));
+
+      const freeRewrite = data.freeBulletRewrite || {};
+      const hasExampleRewrite = Boolean(freeRewrite.before && freeRewrite.after);
+      resultExampleBefore.textContent = hasExampleRewrite ? freeRewrite.before : "";
+      resultExampleAfter.textContent = hasExampleRewrite ? freeRewrite.after : "";
+      if (resultExampleCopyBtn) {
+        resultExampleCopyBtn.dataset.copyRewrite = resultExampleAfter.textContent;
+      }
+      if (resultExampleWhy && resultExampleWhyWrap) {
+        resultExampleWhy.textContent = hasExampleRewrite ? freeRewrite.whyWeak || "" : "";
+        resultExampleWhyWrap.classList.toggle("hidden", !resultExampleWhy.textContent);
+      }
+
+      const matchedKeywordCount = (data.matchedKeywords || []).length;
+      const missingKeywordCount = (data.missingKeywords || []).length;
+      const strongPointCount = (data.strongPoints || []).length;
+      const bulletCount = (data.bulletPoints || []).length;
+
+      let keywordStatus = "Low";
+      let structureStatus = "Medium";
+      let impactStatus = "Weak";
+
+      if (matchedKeywordCount >= missingKeywordCount && matchedKeywordCount >= 5) {
+        keywordStatus = "High";
+      } else if (matchedKeywordCount >= 3 || scoreNumber >= 60) {
+        keywordStatus = "Medium";
+      }
+
+      if (scoreNumber >= 75 || strongPointCount >= 4) {
+        structureStatus = "Strong";
+      } else if (scoreNumber < 45) {
+        structureStatus = "Low";
+      }
+
+      if (bulletCount >= 4 && strongPointCount >= 3) {
+        impactStatus = "Strong";
+      } else if (strongPointCount >= 2 || scoreNumber >= 60) {
+        impactStatus = "Medium";
+      }
+
+      setDiagnosisValue(resultKeywordStatus, keywordStatus);
+      setDiagnosisValue(resultStructureStatus, structureStatus);
+      setDiagnosisValue(resultImpactStatus, impactStatus);
+      if (atsReadabilitySummary) {
+        atsReadabilitySummary.textContent = "Keyword match: " + keywordStatus + ". Structure: " + structureStatus + ". Impact: " + impactStatus + ". The free preview shows the main scan signals; the full report expands this into detailed ATS, readability and role-fit checks.";
+      }
+      updateAuditSummary(data, scoreNumber);
+      updateUnlockCtaForResult(data, scoreNumber);
+
+      const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
+      const hasFullPlanContent = !!(
+        hasProfessionalSummary ||
+        (data.firstPageDiagnosis && Object.keys(data.firstPageDiagnosis).length) ||
+        (data.priorityFixes && data.priorityFixes.length) ||
+        (data.bulletRewriteDetails && data.bulletRewriteDetails.length) ||
+        (data.sectionRewritePlan && data.sectionRewritePlan.length) ||
+        (data.lineFeedback && data.lineFeedback.length) ||
+        (data.guidedWorkflow && data.guidedWorkflow.length) ||
+        (data.skillsSection && data.skillsSection.length) ||
+        (data.atsTips && data.atsTips.length) ||
+        (data.interviewRisks && data.interviewRisks.length)
+      );
+      const actionPlanItems = buildActionPlanItems(data);
+      renderInteractiveChecklist(data, actionPlanItems);
+      professionalSummaryEl.textContent = data.professionalSummary || "";
+      proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
+
+      if (isCurrentlyPro && hasFullPlanContent) {
+        renderProCommandCentre(data, scoreNumber, actionPlanItems);
+        renderFirstPageDiagnosis(data);
+        renderProSnapshot(data, actionPlanItems);
+        renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
+        renderSectionRewritePlan(data);
+        renderLineFeedback(data);
+        renderGuidedWorkflow(data, actionPlanItems);
+        const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
+        if (proRewriteWrap) {
+          proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
+        }
+      } else {
+        if (proCommandWrap) {
+          proCommandWrap.classList.add("hidden");
+        }
+        if (proFirstPageWrap) {
+          proFirstPageWrap.classList.add("hidden");
+        }
+        if (proSnapshotWrap) {
+          proSnapshotWrap.classList.add("hidden");
+        }
+        if (proSectionRewriteWrap) {
+          proSectionRewriteWrap.classList.add("hidden");
+        }
+        if (proLineFeedbackWrap) {
+          proLineFeedbackWrap.classList.add("hidden");
+        }
+        if (proWorkflowWrap) {
+          proWorkflowWrap.classList.add("hidden");
+        }
+        if (proRewriteWrap) {
+          proRewriteWrap.classList.add("hidden");
+        }
+      }
+
+      proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !((data.priorityFixDetails && data.priorityFixDetails.length) || (data.priorityFixes && data.priorityFixes.length)));
+      proSkillsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.skillsSection && data.skillsSection.length));
+      proAtsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.atsTips && data.atsTips.length));
+      proRisksWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.interviewRisks && data.interviewRisks.length));
+      proActionPlan.innerHTML = "";
+      actionPlanItems.forEach(function(item) {
+        appendTextItem(proActionPlan, item);
+      });
+      proActionPlanWrap.classList.toggle("hidden", !isCurrentlyPro || !actionPlanItems.length);
+      const lockedInsights = document.getElementById("lockedInsights");
+      if (lockedInsights) {
+        lockedInsights.classList.add("hidden");
+      }
+      resultsUpgradeCta.classList.add("hidden");
+      unlockFullReportBtn.classList.remove("hidden");
+      generateUnlockedReportBtn.classList.add("hidden");
+      proMonthlyBtn.classList.remove("hidden");
+      updateReportUnlockButtons(getAccountStateFromBody().signedIn);
+      anonymousSummaryWrap.classList.add("hidden");
+      anonymousPriorityWrap.classList.add("hidden");
+      anonymousKeywordGapWrap.classList.add("hidden");
+      if (resultKeywordSection) {
+        resultKeywordSection.classList.toggle("hidden", !isCurrentlyPro);
+      }
+      if (resultPriorityPreviewWrap) {
+        resultPriorityPreviewWrap.classList.toggle("hidden", isCurrentlyPro);
+      }
+      if (resultExampleWrap) {
+        resultExampleWrap.classList.toggle("hidden", !hasExampleRewrite || Boolean(isCurrentlyPro && data.bulletRewriteDetails?.length));
+      }
+      resultRewriteUnavailable.classList.toggle("hidden", isCurrentlyPro || hasExampleRewrite);
+      detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
+      detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
+      bulletsWrap.classList.toggle("hidden", !isCurrentlyPro || !bulletCount || Boolean(data.bulletRewriteDetails?.length));
+      bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
+      resultDisclaimerWrap.classList.remove("hidden");
+      if (lockedReportSections) {
+        lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
+      }
+      if (recheckWrap) {
+        recheckWrap.classList.remove("hidden");
+      }
+      fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
+      if (proReportActions) {
+        proReportActions.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
+      }
+      if (proReportStatus) {
+        proReportStatus.textContent = "";
+      }
+      anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
+      anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
+      proUnlockPrompt.classList.toggle("hidden", isCurrentlyPro);
+      lockedPreviewCard.classList.add("hidden");
+      setCheckerLoading(false);
+      resultsPanel.classList.remove("hidden");
+      resultsPanel.setAttribute("aria-hidden", "false");
+    }
+
     optimiseBtn.addEventListener("click", async function() {
       optimiseBtn.disabled = true;
       const originalText = optimiseBtn.textContent;
@@ -9859,6 +10307,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       const jobDescription = jobDescriptionInput.value.trim();
       const cvText = cvTextInput.value.trim();
       const selectedRolePreset = getSelectedRolePreset();
+      const cvFile = selectedFile;
       const effectiveJobDescription = buildEffectiveJobDescription(jobDescription);
 
       if (!jobDescription && !cvText && !selectedFile) {
@@ -9895,10 +10344,11 @@ passwordLoginBtn.addEventListener("click", async function() {
         const formData = new FormData();
         formData.append("jobDescription", effectiveJobDescription);
         formData.append("cvText", cvText || "");
-        formData.append("attribution", JSON.stringify(getAttributionMetadata()));
+        const attribution = getAttributionMetadata();
+        formData.append("attribution", JSON.stringify(attribution));
 
-        if (selectedFile) {
-          formData.append("cvFile", selectedFile, selectedFile.name);
+        if (cvFile) {
+          formData.append("cvFile", cvFile, cvFile.name);
         }
 
         const res = await fetch("/api/optimise", {
@@ -9950,263 +10400,24 @@ passwordLoginBtn.addEventListener("click", async function() {
           return;
         }
 
-        const scoreNumber = getScoreNumber(data.score);
-        const narrative = buildResultNarrative(scoreNumber, data);
         const accountState = getCurrentAccountState(data);
         const isCurrentlyPro = accountState === "signed_in_pro";
         const isAnonymousResult = !!data.isAnonymousResult;
-        const resultKeywordSection = resultKeywordPreview ? resultKeywordPreview.closest(".result-section") : null;
-        currentResultData = isCurrentlyPro ? data : null;
-
-        document.getElementById("score").textContent = scoreNumber ? String(scoreNumber) + "/100" : (data.score ?? "");
-        updateScoreRing(scoreNumber);
-        updateReadinessLabel(scoreNumber);
-        const cvReadiness = getCvReadiness(scoreNumber);
-        renderScoreComparison(previousScoreSnapshot, scoreNumber);
-        document.getElementById("nextStep").textContent = data.nextStep || "";
-        document.getElementById("source").textContent = data.source || "unknown";
-        resultStatusHeadline.textContent = narrative.headline;
-        if (scoreKicker) {
-          scoreKicker.textContent = accountState === "loading"
-            ? "Your CV analysis"
-            : (isCurrentlyPro ? "Your full CV analysis" : "Your free CV check");
-        }
-        if (resultPlanBadge) {
-          resultPlanBadge.classList.toggle("hidden", !isCurrentlyPro);
-        }
-        resultStatusCopy.textContent = isCurrentlyPro
-          ? "Full analysis based on your CV and the job description."
-          : narrative.copy;
-        resultPotentialCopy.textContent = isCurrentlyPro
-          ? "Use the full guidance below to improve role fit, clarity, and keyword coverage."
-          : cvReadiness.copy;
-        if (resultKeywordTitle) {
-          resultKeywordTitle.textContent = isCurrentlyPro ? "Add these keywords to match the role" : "Missing keywords";
-        }
-        if (resultKeywordSubtitle) {
-          resultKeywordSubtitle.textContent = isCurrentlyPro
-            ? "Use these terms naturally across your summary, experience, and skills sections."
-            : "These missing terms make your CV look less aligned with the role.";
-        }
-
-        const sections = [
-          ["matchedKeywords", data.matchedKeywords || []],
-          ["keywords", data.missingKeywords || []],
-          ["strongPoints", data.strongPoints || []],
-          ["weakPoints", data.weakPoints || []],
-          ["bullets", data.bulletPoints || []],
-          ["priorityFixes", data.priorityFixes || []],
-          ["skillsSection", data.skillsSection || []],
-          ["atsTips", data.atsTips || []],
-          ["interviewRisks", data.interviewRisks || []]
-        ];
-
-        sections.forEach(function(pair) {
-          const id = pair[0];
-          const items = pair[1];
-          const el = document.getElementById(id);
-          el.innerHTML = "";
-          items.forEach(function(item) {
-            appendTextItem(el, item);
-          });
-        });
-
-        anonymousSummary.textContent = data.shortSummary || "";
-        anonymousSummaryWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.shortSummary));
-
-        anonymousPriorityFixes.innerHTML = "";
-        (data.previewPriorityFixes || []).forEach(function(item) {
-          const li = document.createElement("li");
-          li.textContent = item;
-          anonymousPriorityFixes.appendChild(li);
-        });
-        anonymousPriorityWrap.classList.toggle("hidden", !(data.isAnonymousResult && data.previewPriorityFixes && data.previewPriorityFixes.length));
-
-        anonymousKeywordGap.textContent = data.keywordGapInsight || data.nextStep || "";
-        anonymousKeywordGapWrap.classList.toggle("hidden", !(data.isAnonymousResult && (data.keywordGapInsight || data.nextStep)));
-
-        const priorityPreviewItems = (data.previewPriorityFixes && data.previewPriorityFixes.length)
-          ? data.previewPriorityFixes.slice(0, 3)
-          : (data.weakPoints || []).slice(0, 3);
-
-        renderPriorityFixDetails(
-          data.priorityFixDetails || [],
-          priorityPreviewItems.length ? priorityPreviewItems : [
-            "Add measurable results (revenue, growth, impact)",
-            "Strengthen your professional summary",
-            "Include missing keywords from the job description"
-          ]
-        );
-        renderPostResultJourney(data, scoreNumber, isCurrentlyPro);
-
-        renderRecruiterVerdict(data, scoreNumber);
-        renderScoreBreakdown(data.scoreBreakdown || [], scoreNumber);
-        renderKeywordImportance(data.keywordImportance || {}, data.missingKeywords || [], data.matchedKeywords || []);
-
-        const keywordPreviewItems = (data.missingKeywords || []).slice(0, 5);
-        resultKeywordPreview.innerHTML = "";
-        keywordPreviewItems.forEach(function(item) {
-          appendTextItem(resultKeywordPreview, item);
-        });
-        if (!keywordPreviewItems.length && data.keywordGapInsight) {
-          appendTextItem(resultKeywordPreview, data.keywordGapInsight);
-        }
-        resultKeywordTail.classList.toggle("hidden", isCurrentlyPro || !(data.missingKeywords && data.missingKeywords.length > keywordPreviewItems.length));
-
-        const freeRewrite = data.freeBulletRewrite || {};
-        const hasExampleRewrite = Boolean(freeRewrite.before && freeRewrite.after);
-        resultExampleBefore.textContent = hasExampleRewrite ? freeRewrite.before : "";
-        resultExampleAfter.textContent = hasExampleRewrite ? freeRewrite.after : "";
-        if (resultExampleCopyBtn) {
-          resultExampleCopyBtn.dataset.copyRewrite = resultExampleAfter.textContent;
-        }
-        if (resultExampleWhy && resultExampleWhyWrap) {
-          resultExampleWhy.textContent = hasExampleRewrite ? freeRewrite.whyWeak || "" : "";
-          resultExampleWhyWrap.classList.toggle("hidden", !resultExampleWhy.textContent);
-        }
-
-        const matchedKeywordCount = (data.matchedKeywords || []).length;
-        const missingKeywordCount = (data.missingKeywords || []).length;
-        const strongPointCount = (data.strongPoints || []).length;
-        const bulletCount = (data.bulletPoints || []).length;
-
-        let keywordStatus = "Low";
-        let structureStatus = "Medium";
-        let impactStatus = "Weak";
-
-        if (matchedKeywordCount >= missingKeywordCount && matchedKeywordCount >= 5) {
-          keywordStatus = "High";
-        } else if (matchedKeywordCount >= 3 || scoreNumber >= 60) {
-          keywordStatus = "Medium";
-        }
-
-        if (scoreNumber >= 75 || strongPointCount >= 4) {
-          structureStatus = "Strong";
-        } else if (scoreNumber < 45) {
-          structureStatus = "Low";
-        }
-
-        if (bulletCount >= 4 && strongPointCount >= 3) {
-          impactStatus = "Strong";
-        } else if (strongPointCount >= 2 || scoreNumber >= 60) {
-          impactStatus = "Medium";
-        }
-
-        setDiagnosisValue(resultKeywordStatus, keywordStatus);
-        setDiagnosisValue(resultStructureStatus, structureStatus);
-        setDiagnosisValue(resultImpactStatus, impactStatus);
-        if (atsReadabilitySummary) {
-          atsReadabilitySummary.textContent = "Keyword match: " + keywordStatus + ". Structure: " + structureStatus + ". Impact: " + impactStatus + ". The free preview shows the main scan signals; the full report expands this into detailed ATS, readability and role-fit checks.";
-        }
-        updateAuditSummary(data, scoreNumber);
-        updateUnlockCtaForResult(data, scoreNumber);
-
-        const hasProfessionalSummary = !!(data.professionalSummary && data.professionalSummary.trim());
-        const hasFullPlanContent = !!(
-          hasProfessionalSummary ||
-          (data.firstPageDiagnosis && Object.keys(data.firstPageDiagnosis).length) ||
-          (data.priorityFixes && data.priorityFixes.length) ||
-          (data.bulletRewriteDetails && data.bulletRewriteDetails.length) ||
-          (data.sectionRewritePlan && data.sectionRewritePlan.length) ||
-          (data.lineFeedback && data.lineFeedback.length) ||
-          (data.guidedWorkflow && data.guidedWorkflow.length) ||
-          (data.skillsSection && data.skillsSection.length) ||
-          (data.atsTips && data.atsTips.length) ||
-          (data.interviewRisks && data.interviewRisks.length)
-        );
-        const actionPlanItems = buildActionPlanItems(data);
-        renderInteractiveChecklist(data, actionPlanItems);
-        professionalSummaryEl.textContent = data.professionalSummary || "";
-        proSummaryWrap.classList.toggle("hidden", !isCurrentlyPro || !hasProfessionalSummary);
-
-        if (isCurrentlyPro && hasFullPlanContent) {
-          renderProCommandCentre(data, scoreNumber, actionPlanItems);
-          renderFirstPageDiagnosis(data);
-          renderProSnapshot(data, actionPlanItems);
-          renderPriorityFixDetailsForElement(proPriorityDetails, data.priorityFixDetails || [], data.priorityFixes || []);
-          renderSectionRewritePlan(data);
-          renderLineFeedback(data);
-          renderGuidedWorkflow(data, actionPlanItems);
-          const proRewriteItems = renderRewriteDetailsForElement(proRewriteDetails, data, 5);
-          if (proRewriteWrap) {
-            proRewriteWrap.classList.toggle("hidden", !proRewriteItems.length);
-          }
+        const scoreNumber = getScoreNumber(data.score);
+        if (!isCurrentlyPro) {
+          currentReportDraft = {
+            cvText,
+            jobDescription,
+            file: cvFile,
+            rolePreset: selectedRolePreset?.key || "",
+            result: data,
+            attribution,
+            previousScore: previousScoreSnapshot
+          };
         } else {
-          if (proCommandWrap) {
-            proCommandWrap.classList.add("hidden");
-          }
-          if (proFirstPageWrap) {
-            proFirstPageWrap.classList.add("hidden");
-          }
-          if (proSnapshotWrap) {
-            proSnapshotWrap.classList.add("hidden");
-          }
-          if (proSectionRewriteWrap) {
-            proSectionRewriteWrap.classList.add("hidden");
-          }
-          if (proLineFeedbackWrap) {
-            proLineFeedbackWrap.classList.add("hidden");
-          }
-          if (proWorkflowWrap) {
-            proWorkflowWrap.classList.add("hidden");
-          }
-          if (proRewriteWrap) {
-            proRewriteWrap.classList.add("hidden");
-          }
+          currentReportDraft = null;
         }
-
-        proPriorityWrap.classList.toggle("hidden", !isCurrentlyPro || !((data.priorityFixDetails && data.priorityFixDetails.length) || (data.priorityFixes && data.priorityFixes.length)));
-        proSkillsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.skillsSection && data.skillsSection.length));
-        proAtsWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.atsTips && data.atsTips.length));
-        proRisksWrap.classList.toggle("hidden", !isCurrentlyPro || !(data.interviewRisks && data.interviewRisks.length));
-        proActionPlan.innerHTML = "";
-        actionPlanItems.forEach(function(item) {
-          appendTextItem(proActionPlan, item);
-        });
-        proActionPlanWrap.classList.toggle("hidden", !isCurrentlyPro || !actionPlanItems.length);
-        const lockedInsights = document.getElementById("lockedInsights");
-        if (lockedInsights) {
-          lockedInsights.classList.add("hidden");
-        }
-        resultsUpgradeCta.classList.add("hidden");
-        anonymousSummaryWrap.classList.add("hidden");
-        anonymousPriorityWrap.classList.add("hidden");
-        anonymousKeywordGapWrap.classList.add("hidden");
-        if (resultKeywordSection) {
-          resultKeywordSection.classList.toggle("hidden", !isCurrentlyPro);
-        }
-        if (resultPriorityPreviewWrap) {
-          resultPriorityPreviewWrap.classList.toggle("hidden", isCurrentlyPro);
-        }
-        if (resultExampleWrap) {
-          resultExampleWrap.classList.toggle("hidden", !hasExampleRewrite || Boolean(isCurrentlyPro && data.bulletRewriteDetails?.length));
-        }
-        resultRewriteUnavailable.classList.toggle("hidden", isCurrentlyPro || hasExampleRewrite);
-        detailKeywordsWrap.classList.toggle("hidden", !isCurrentlyPro);
-        detailStrengthsWrap.classList.toggle("hidden", !isCurrentlyPro);
-        bulletsWrap.classList.toggle("hidden", !isCurrentlyPro || !bulletCount || Boolean(data.bulletRewriteDetails?.length));
-        bestNextStepWrap.classList.toggle("hidden", !isCurrentlyPro);
-        resultDisclaimerWrap.classList.remove("hidden");
-        if (lockedReportSections) {
-          lockedReportSections.classList.toggle("hidden", isCurrentlyPro);
-        }
-        if (recheckWrap) {
-          recheckWrap.classList.remove("hidden");
-        }
-        fullPlanReadyBanner.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
-        if (proReportActions) {
-          proReportActions.classList.toggle("hidden", !(isCurrentlyPro && hasFullPlanContent));
-        }
-        if (proReportStatus) {
-          proReportStatus.textContent = "";
-        }
-        anonymousSignupPromptCopy.textContent = "Create a free account to save your CV check and come back to it later.";
-        anonymousSignupPrompt.classList.toggle("hidden", !isAnonymousResult || isCurrentlyPro);
-        proUnlockPrompt.classList.toggle("hidden", isCurrentlyPro);
-        lockedPreviewCard.classList.add("hidden");
-        setCheckerLoading(false);
-        resultsPanel.classList.remove("hidden");
-        resultsPanel.setAttribute("aria-hidden", "false");
+        renderAnalysisResult(data, previousScoreSnapshot, accountState);
         requestAnimationFrame(function() {
           resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
         });
@@ -10288,19 +10499,20 @@ passwordLoginBtn.addEventListener("click", async function() {
 
           shouldPromptPasswordSetup = cameFromMagicLink;
 
-          refreshAuthUi();
+          window.setTimeout(refreshAuthUi, 0);
           return;
         }
 
         if (event === "SIGNED_OUT") {
+          clearReportOnSignOut();
           shouldPromptPasswordSetup = false;
           clearAccountSnapshot();
-          refreshAuthUi();
+          window.setTimeout(refreshAuthUi, 0);
           return;
         }
 
         if (event === "USER_UPDATED") {
-          refreshAuthUi();
+          window.setTimeout(refreshAuthUi, 0);
           return;
         }
 
@@ -10311,6 +10523,7 @@ passwordLoginBtn.addEventListener("click", async function() {
       initialiseRolePresetFromUrl();
       trackEvent("page_view");
       trackEvent("homepage_loaded");
+      window.cvReportDraft.removeExpiredDrafts();
       await loadUserState();
       await handleCheckoutReturn();
       reportEmbedHeight();

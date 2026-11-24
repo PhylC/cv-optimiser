@@ -9,6 +9,7 @@ import os
 import re
 import secrets
 import time
+from urllib.parse import urlencode
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -951,6 +952,7 @@ SUPPORT_PAGES: dict[str, dict[str, Any]] = {
                 ],
             },
             ("CV uploads and sensitive information", "CVs can contain personal information. Please avoid uploading information that is not needed for a CV check, such as national insurance numbers, full home addresses, passport details, bank details, or other highly sensitive information."),
+            ("Continuing a paid report", "When you choose to unlock a report, your browser can keep a temporary draft of the CV, target job advert and result so you can continue after sign-in and payment. Use the same browser. Drafts expire after an hour."),
             ("Payments", "Payments are processed by Stripe. CV Optimiser does not store full card details."),
             ("AI processing", "CV checks may be processed using AI services to generate suggestions. Do not upload content you are not comfortable having processed for this purpose."),
             ("Data retention", "We only keep information for as long as reasonably needed to provide the service, manage accounts, maintain records, improve reliability, and meet legal or security obligations. If the service stores report history for signed-in users, that history may remain available in the user account unless deleted or removed as part of normal account management."),
@@ -8270,7 +8272,7 @@ def build_site_header(active_key: Optional[str] = None, cta_href: str = "/#tool"
           </div>
         </div>
         <nav id="mobileNavPanel" class="mobile-nav-panel" aria-label="Mobile primary navigation">
-          <a href="/#tool">Check CV</a>
+          <a href="{html.escape(cta_href)}">Check CV</a>
           <a href="/guides">Guides</a>
           <a href="/upgrade" data-upgrade-link>Pricing / Upgrade</a>
           <a href="/example-cv-report">Example Report</a>
@@ -11309,7 +11311,7 @@ def render_example_report_page(slug: str = "example-cv-report") -> str:
     """
 
 
-def render_cv_improvement_case_study_page() -> str:
+def render_cv_improvement_case_study_page(checker_href: str = "/#tool") -> str:
     page_url = canonical_url("/cv-improvement-case-study")
     return f"""
     <!doctype html>
@@ -11412,7 +11414,7 @@ def render_cv_improvement_case_study_page() -> str:
       </head>
       <body data-auth-state="loading">
         <div class="page content-page">
-          {build_site_header("example-cv-report")}
+          {build_site_header("example-cv-report", cta_href=checker_href)}
 
           <main>
             <section class="hero">
@@ -11550,7 +11552,7 @@ Account manager with 8 years of retail experience managing national customers an
               <h2>Run the same kind of check on your CV</h2>
               <p>Use your real CV and a real job advert. Treat the result as an editing guide, keep every claim truthful and re-check after making changes.</p>
               <div class="cta-row">
-                <a class="cta cta-button" href="/#tool">Check your CV now</a>
+                <a class="cta cta-button" href="{html.escape(checker_href)}">Check your CV now</a>
                 <a class="text-link" href="/how-cv-optimiser-scores-your-cv">Read the scoring methodology</a>
                 <a class="text-link" href="/example-cv-report">View the full example report</a>
               </div>
@@ -15039,7 +15041,13 @@ def example_cv_report_page(request: Request) -> str:
 @app.get("/cv-improvement-case-study/", response_class=HTMLResponse, include_in_schema=False)
 def cv_improvement_case_study_page(request: Request) -> str:
     log_seo_page_hit(request.url.path)
-    return render_cv_improvement_case_study_page()
+    campaign = {
+        key: request.query_params[key][:120]
+        for key in ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term")
+        if request.query_params.get(key)
+    }
+    query = "?" + urlencode(campaign) if campaign else ""
+    return render_cv_improvement_case_study_page(f"/{query}#tool")
 
 
 def make_role_example_report_handler(slug: str):
@@ -16398,7 +16406,7 @@ def create_checkout_session(
         email=user["email"],
         metadata={**attribution_metadata, "checkout_plan": checkout_plan, "stripe_checkout_session_id": session.id},
     )
-    return {"url": session.url}
+    return {"url": session.url, "session_id": session.id}
 
 
 @app.post("/api/create-portal-session")
