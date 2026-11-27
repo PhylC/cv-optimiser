@@ -50,10 +50,10 @@ def test_best_uk_cv_checker_page_matches_search_intent() -> None:
 def test_homepage_search_snippet_describes_the_free_job_advert_check() -> None:
     source = INDEX_HTML.read_text(encoding="utf-8")
 
-    title = "Free UK CV Checker for Your Job Advert | CV Optimiser"
+    title = "Free CV Checker UK: Match Your CV to a Job | CV Optimiser"
     description = (
-        "Check your CV against a UK job advert. "
-        "Get a free role-fit score, missing keywords and priority fixes before you apply."
+        "Paste your CV and a UK job advert to get a free match score and see what to fix before you apply. "
+        "No account needed for your first check."
     )
 
     assert f"<title>{title}</title>" in source
@@ -68,7 +68,7 @@ def test_homepage_search_snippet_describes_the_free_job_advert_check() -> None:
 def test_sitemap_dates_only_the_pages_changed_today() -> None:
     source = MAIN_PY.read_text(encoding="utf-8")
 
-    assert 'canonical_url("/"): "2026-11-21"' in source
+    assert 'canonical_url("/"): "2026-11-27"' in source
     assert 'canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21"' in source
     assert 'canonical_url("/best-free-cv-checker-uk"): "2026-11-21"' in source
     assert 'lastmod = SITEMAP_LASTMOD_BY_LOC.get(entry["loc"])' in source

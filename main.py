@@ -3705,7 +3705,7 @@ SITEMAP_LASTMOD_BY_LOC = {
     canonical_url("/it-helpdesk-cv-checker"): "2026-11-21",
     canonical_url("/cv-checker-for-management-jobs"): "2026-11-21",
     canonical_url("/how-it-works"): "2026-11-21",
-    canonical_url("/"): "2026-11-21",
+    canonical_url("/"): "2026-11-27",
     canonical_url("/best-cv-checker-for-uk-job-applications"): "2026-11-21",
     canonical_url("/best-free-cv-checker-uk"): "2026-11-21",
     canonical_url("/admin-cv-example-report"): "2026-11-21",
