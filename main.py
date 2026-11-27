@@ -15111,6 +15111,11 @@ def google_verification() -> PlainTextResponse:
     return PlainTextResponse("google-site-verification: google4cffcb1da00a66a5.html")
 
 
+@app.get("/BingSiteAuth.xml", include_in_schema=False)
+def bing_verification() -> FileResponse:
+    return FileResponse(BASE_DIR / "BingSiteAuth.xml", media_type="application/xml")
+
+
 @app.get("/sitemap.xml")
 def sitemap() -> Response:
     parts = []
